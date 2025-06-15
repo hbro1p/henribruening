@@ -22,6 +22,7 @@ const childhoodPhotos = [
   '/lovable-uploads/bddcd903-c8b2-4227-ae73-e02ef74677e8.png',
   '/lovable-uploads/6ec47f29-1fb9-49bb-8516-e14f19cf4543.png',
   '/lovable-uploads/fa680976-4829-434b-85b7-9133a0d2e836.png',
+  '/lovable-uploads/fe4388d1-4683-49bc-840c-c226a1cc3c2a.png',
 ];
 
 const Pictures = () => {
