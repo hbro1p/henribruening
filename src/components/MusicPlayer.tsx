@@ -1,61 +1,39 @@
-import React, { useState, useRef, useEffect } from 'react';
+
+import React, { useState } from 'react';
+import ReactPlayer from 'react-player/youtube';
 import { Play, Pause, Music } from 'lucide-react';
 
 const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
 
-  // A royalty-free lofi track to match the vibe
-  const audioSrc = "https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3";
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (audio) {
-      // We'll try to autoplay. If the browser blocks it, the user can start it with the play button.
-      const playPromise = audio.play();
-      if (playPromise !== undefined) {
-        playPromise.then(() => {
-          setIsPlaying(true);
-        }).catch(() => {
-          setIsPlaying(false);
-          console.log("Audio autoplay was prevented by the browser. User must interact to start playback.");
-        });
-      }
-    }
-  }, []);
+  // YouTube playlist URL as requested
+  const audioSrc = "https://www.youtube.com/watch?v=Uw_a2yH_Xpc&list=RDUw_a2yH_Xpc&start_radio=1";
 
   const togglePlayPause = () => {
-    const audio = audioRef.current;
-    if (audio) {
-      if (isPlaying) {
-        audio.pause();
-        setIsPlaying(false);
-      } else {
-        const playPromise = audio.play();
-        if (playPromise !== undefined) {
-          playPromise
-            .then(() => {
-              setIsPlaying(true);
-            })
-            .catch(error => {
-              console.error("Audio playback failed:", error);
-              setIsPlaying(false);
-            });
-        }
-      }
-    }
+    setIsPlaying(!isPlaying);
   };
 
   return (
     <div className="fixed bottom-8 right-8 bg-windows-gray p-2 border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black w-64 shadow-2xl font-pixel">
-      <audio ref={audioRef} src={audioSrc} loop />
+      <div className='hidden'>
+        <ReactPlayer
+          url={audioSrc}
+          playing={isPlaying}
+          loop
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onError={(e) => console.error('ReactPlayer error:', e)}
+          width="0"
+          height="0"
+        />
+      </div>
       <div className="flex items-center space-x-3">
         <div className="flex-shrink-0 text-black">
           <Music className="w-6 h-6" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm text-black truncate">Now Playing:</p>
-          <p className="text-sm text-black truncate">"Lost in 35mm"</p>
+          <p className="text-sm text-black truncate">lo-fi mood — Henri’s Playlist</p>
         </div>
         <div className="flex items-center space-x-2">
             <div className={`flex items-end h-5 space-x-1`}>
