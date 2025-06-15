@@ -31,13 +31,6 @@ const photoCategories = {
   random: []
 };
 
-const categoryIcons = {
-  childhood: '👶',
-  nature: '🌿',
-  vibe: '✨',
-  random: '🎲'
-};
-
 const Pictures = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -107,8 +100,7 @@ const Pictures = () => {
                   onClick={() => setSelectedCategory(category)}
                   className="flex flex-col items-center justify-center space-y-3 w-32 h-32 p-4 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white transition-all hover:scale-105"
                 >
-                  <div className="text-3xl">{categoryIcons[category as keyof typeof categoryIcons]}</div>
-                  <Folder className="w-8 h-8 text-black" />
+                  <Folder className="w-12 h-12 text-black" />
                   <span className="text-sm text-black capitalize font-bold">{category}</span>
                 </button>
               ))}
