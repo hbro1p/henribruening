@@ -33,7 +33,7 @@ const MusicPlayer = () => {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-sm text-black truncate">Now Playing:</p>
-          <p className="text-sm text-black truncate">lo-fi mood — Henri’s Playlist</p>
+          <p className="text-sm text-black truncate">2000s Throwback</p>
         </div>
         <div className="flex items-center space-x-2">
             <div className={`flex items-end h-5 space-x-1`}>
