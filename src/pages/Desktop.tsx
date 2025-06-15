@@ -1,8 +1,7 @@
 
 import React from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
-import { Folder, User, Mail } from 'lucide-react';
-import MusicPlayer from '@/components/MusicPlayer';
+import { Folder, User, Mail, Joystick } from 'lucide-react';
 import Clock from '@/components/Clock';
 
 const Desktop = () => {
@@ -12,9 +11,9 @@ const Desktop = () => {
         <DesktopIcon icon={Folder} label="My Pictures" to="/pictures" />
         <DesktopIcon icon={User} label="About Me" to="/about" />
         <DesktopIcon icon={Mail} label="Contact" to="/contact" />
+        <DesktopIcon icon={Joystick} label="Game.exe" to="/game" />
       </div>
       <Clock />
-      <MusicPlayer />
     </div>
   );
 };
