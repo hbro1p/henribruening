@@ -3,7 +3,7 @@ import React from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
 import { Folder, User, Mail } from 'lucide-react';
 import MusicPlayer from '@/components/MusicPlayer';
-import GlitchClock from '@/components/GlitchClock';
+import Clock from '@/components/Clock';
 
 const Desktop = () => {
   return (
@@ -13,7 +13,7 @@ const Desktop = () => {
         <DesktopIcon icon={User} label="About Me" to="/about" />
         <DesktopIcon icon={Mail} label="Contact" to="/contact" />
       </div>
-      <GlitchClock />
+      <Clock />
       <MusicPlayer />
     </div>
   );
