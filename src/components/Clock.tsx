@@ -20,8 +20,8 @@ const Clock = () => {
   }, []);
 
   return (
-    <div className="fixed top-8 right-8 bg-windows-gray text-black font-pixel p-2 border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black shadow-lg">
-      <p className="text-2xl tracking-widest">{time}</p>
+    <div className="fixed top-4 right-4 md:top-8 md:right-8 bg-windows-gray text-black font-pixel p-2 border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black shadow-lg">
+      <p className="text-lg md:text-2xl tracking-widest">{time}</p>
     </div>
   );
 };
