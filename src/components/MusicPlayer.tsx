@@ -10,19 +10,8 @@ const playlist2000s = [
   "https://www.youtube.com/watch?v=4JkIs37a2JE", // Since U Been Gone - Kelly Clarkson
   "https://www.youtube.com/watch?v=F57P9C4SAW4", // Hollaback Girl - Gwen Stefani
   "https://www.youtube.com/watch?v=fJ9rUzIMcZQ", // Complicated - Avril Lavigne
-  "https://www.youtube.com/watch?v=YQHsXMglC9A", // Hello - Evanescence
+  "https://www.youtube.com/watch?v=YQHsXMglC9A", // Bring Me To Life - Evanescence
   "https://www.youtube.com/watch?v=hLQl3WQQoQ0", // SexyBack - Justin Timberlake
-];
-
-const songTitles = [
-  "Hey Ya! - OutKast",
-  "Hips Don't Lie - Shakira", 
-  "Crazy - Gnarls Barkley",
-  "Since U Been Gone - Kelly Clarkson",
-  "Hollaback Girl - Gwen Stefani",
-  "Complicated - Avril Lavigne",
-  "Bring Me To Life - Evanescence",
-  "SexyBack - Justin Timberlake",
 ];
 
 const MusicPlayer = () => {
@@ -64,9 +53,8 @@ const MusicPlayer = () => {
           <Music className="w-6 h-6" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs text-black truncate">Now Playing:</p>
-          <p className="text-xs text-black truncate font-bold">{songTitles[currentTrack]}</p>
-          <p className="text-xs text-black truncate">Track {currentTrack + 1} of {playlist2000s.length}</p>
+          <p className="text-xs text-black truncate font-bold">Vibe: 2000s mix playing</p>
+          <p className="text-xs text-black truncate">Nostalgic hits collection</p>
         </div>
         <div className="flex items-center space-x-2">
           <div className={`flex items-end h-5 space-x-1`}>
