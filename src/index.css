@@ -7,7 +7,7 @@
   body {
     @apply bg-[#000000] text-white font-pixel antialiased;
     background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-    cursor: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAADNJREFUOE9jZKAQMFKon2HUAAYv6OEXhJgP2L9//4+kpKRAABgZGRn/A2IZzMDBAADE7QwHPEmN2AAAAABJRU5ErkJggg=="), auto;
+    cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABMSURBVHgB7dChAYAwEETBqg7Qys0M7OBOjCag3aEcDoOTKrJg23+Qk5D+9HwB/8M0BsyYMWOkLdOWtq3blm3Lth1blj179uw5Y8Z8suUDAHteB3wAt7nIAAAAAElFTkSuQmCC'), auto;
   }
 }
 
