@@ -2,6 +2,7 @@
 import React from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
 import { Folder, User, Mail } from 'lucide-react';
+import MusicPlayer from '@/components/MusicPlayer';
 
 const Desktop = () => {
   return (
@@ -11,10 +12,7 @@ const Desktop = () => {
         <DesktopIcon icon={User} label="About Me" to="/about" />
         <DesktopIcon icon={Mail} label="Contact" to="/contact" />
       </div>
-      <div className="fixed bottom-8 right-8 bg-yellow-200 text-black p-4 font-pixel text-lg shadow-lg transform -rotate-3 border-2 border-black">
-        <p>"Click something.</p>
-        <p>I'm watching 👀"</p>
-      </div>
+      <MusicPlayer />
     </div>
   );
 };

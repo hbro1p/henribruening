@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -97,6 +98,10 @@ export default {
         'progress': {
           '0%': { width: '0%' },
           '100%': { width: '100%' },
+        },
+        'equalizer': {
+          '0%, 40%, 100%': { transform: 'scaleY(0.4)' },
+          '20%': { transform: 'scaleY(1.0)' },
         }
 			},
 			animation: {
@@ -104,6 +109,7 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
         'blink': 'blink 1s step-end infinite',
         'progress': 'progress 3s linear forwards',
+        'equalizer': 'equalizer 1.2s ease-in-out infinite',
 			}
 		}
 	},
