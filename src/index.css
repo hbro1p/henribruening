@@ -9,11 +9,15 @@
     background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
     cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABMSURBVHgB7dChAYAwEETBqg7Qys0M7OBOjCag3aEcDoOTKrJg23+Qk5D+9HwB/8M0BsyYMWOkLdOWtq3blm3Lth1blj179uw5Y8Z8suUDAHteB3wAt7nIAAAAAElFTkSuQmCC'), auto;
   }
+}
 
-  button,
-  a,
-  [role="button"] {
-    @apply cursor-pointer;
-  }
+/*
+  We are defining the cursor for interactive elements outside of any layer.
+  This gives the rule higher specificity, ensuring it overrides the custom body cursor.
+*/
+button,
+a,
+[role="button"] {
+  @apply cursor-pointer;
 }
 
