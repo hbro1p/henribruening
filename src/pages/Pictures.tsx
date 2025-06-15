@@ -25,35 +25,44 @@ const childhoodPhotos = [
 
 const Pictures = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center">
-      <h1 className="text-4xl mb-4">[ My Pictures ] / Childhood</h1>
-      <p className="mb-8">A collection of captured moments.</p>
+    <div className="flex items-center justify-center min-h-screen p-4 sm:p-8">
+      {/* Window Frame */}
+      <div className="bg-windows-gray p-1 border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black w-full max-w-5xl shadow-2xl">
+        <div className="border-b-2 border-r-2 border-white border-t-2 border-l-2 border-black p-4 sm:p-8">
+          <div className="flex flex-col items-center justify-center text-center">
+            <h1 className="text-4xl mb-4 text-black">[ My Pictures ] / Childhood</h1>
+            <p className="mb-8 text-black">A collection of captured moments.</p>
 
-      <div className="w-full max-w-xs sm:max-w-xl md:max-w-2xl lg:max-w-4xl">
-        <Carousel className="w-full">
-          <CarouselContent>
-            {childhoodPhotos.map((src, index) => (
-              <CarouselItem key={index}>
-                <div className="p-1">
-                  <Card className="border-2 border-white bg-black">
-                    <CardContent className="flex aspect-[4/3] items-center justify-center p-2 bg-windows-gray">
-                      <img src={src} alt={`Childhood memory ${index + 1}`} className="max-h-full max-w-full object-contain" />
-                    </CardContent>
-                  </Card>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="text-black bg-white/80 hover:bg-white" />
-          <CarouselNext className="text-black bg-white/80 hover:bg-white" />
-        </Carousel>
+            <div className="w-full max-w-xs sm:max-w-xl md:max-w-2xl">
+              <Carousel className="w-full" opts={{ loop: true }}>
+                <CarouselContent>
+                  {childhoodPhotos.map((src, index) => (
+                    <CarouselItem key={index}>
+                      <div className="p-1">
+                        <Card className="border-2 border-black bg-black overflow-hidden shadow-inner">
+                          <CardContent className="flex aspect-[4/3] items-center justify-center p-0">
+                            <img src={src} alt={`Childhood memory ${index + 1}`} className="max-h-full max-w-full object-contain" />
+                          </CardContent>
+                        </Card>
+                        <p className="text-black mt-2 text-sm">Memory #{index + 1}</p>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="text-white bg-black/50 hover:bg-black" />
+                <CarouselNext className="text-white bg-black/50 hover:bg-black" />
+              </Carousel>
+            </div>
+
+            <Link to="/desktop" className="mt-8 text-xl underline text-windows-blue hover:text-blue-700 transition-colors">
+              &lt;- Back to Desktop
+            </Link>
+          </div>
+        </div>
       </div>
-
-      <Link to="/desktop" className="mt-8 text-xl underline hover:text-windows-blue transition-colors">
-        &lt;- Back to Desktop
-      </Link>
     </div>
   );
 };
 
 export default Pictures;
+
