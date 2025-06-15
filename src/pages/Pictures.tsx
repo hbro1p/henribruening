@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,16 +17,14 @@ const photoCategories = {
     '/lovable-uploads/11426e6a-a4c2-4c7f-b77a-39f003d387a0.png',
     '/lovable-uploads/e378b9f1-3788-4f80-8440-9f7aa812f996.png',
     '/lovable-uploads/3943ad97-e99e-45b6-863a-12464d45fa16.png',
-  ],
-  nature: [
     '/lovable-uploads/f4585003-208e-4956-afe1-9ecc43e1f6e8.png',
     '/lovable-uploads/68f734f2-f15f-4e8e-99ca-8a31a9e80f11.png',
     '/lovable-uploads/95043074-e8f9-429d-bdb3-512cce121583.png',
-  ],
-  vibe: [
     '/lovable-uploads/bddcd903-c8b2-4227-ae73-e02ef74677e8.png',
     '/lovable-uploads/6ec47f29-1fb9-49bb-8516-e14f19cf4543.png',
   ],
+  nature: [],
+  vibe: [],
   random: []
 };
 

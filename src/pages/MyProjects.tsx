@@ -71,34 +71,34 @@ const MyProjects = () => {
             <div className="grid gap-8 text-left w-full max-w-2xl">
               <div className="bg-white p-6 border-2 border-black">
                 <h3 className="text-xl font-bold text-black mb-2 flex items-center gap-2">
-                  🛠 Internly
+                  Internly
                 </h3>
                 <p className="text-black mb-4">Currently developing a platform to connect students with internships</p>
                 <div className="space-y-2">
                   <a href="https://internly.replit.app" target="_blank" rel="noopener noreferrer" 
                      className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
-                    🌐 Website <ExternalLink className="w-4 h-4" />
+                    Website <ExternalLink className="w-4 h-4" />
                   </a>
                   <a href="https://www.instagram.com/internly.de/" target="_blank" rel="noopener noreferrer" 
                      className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
-                    📷 Instagram <ExternalLink className="w-4 h-4" />
+                    Instagram <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
               </div>
 
               <div className="bg-white p-6 border-2 border-black">
                 <h3 className="text-xl font-bold text-black mb-2 flex items-center gap-2">
-                  📣 Echo Coesfeld
+                  Echo Coesfeld
                 </h3>
                 <p className="text-black mb-4">A public voice project using QR codes & interviews to gather real opinions from people in Coesfeld</p>
                 <div className="space-y-2">
                   <a href="https://www.instagram.com/echo.coesfeld/" target="_blank" rel="noopener noreferrer" 
                      className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
-                    📷 Instagram <ExternalLink className="w-4 h-4" />
+                    Instagram <ExternalLink className="w-4 h-4" />
                   </a>
                   <a href="https://www.tiktok.com/@echo.coesfeld" target="_blank" rel="noopener noreferrer" 
                      className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
-                    📷 TikTok <ExternalLink className="w-4 h-4" />
+                    TikTok <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
               </div>

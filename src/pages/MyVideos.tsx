@@ -71,60 +71,60 @@ const MyVideos = () => {
             <div className="grid gap-8 text-left w-full max-w-2xl">
               <div className="bg-white p-6 border-2 border-black">
                 <h3 className="text-xl font-bold text-black mb-2 flex items-center gap-2">
-                  ▶️ Ute Uphues
+                  Ute Uphues
                 </h3>
                 <p className="text-black mb-4">Teen coaching videos created for Ute's TikTok and Instagram</p>
                 <div className="space-y-2">
                   <a href="https://www.tiktok.com/@ute.uphues" target="_blank" rel="noopener noreferrer" 
                      className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
-                    📷 TikTok <ExternalLink className="w-4 h-4" />
+                    TikTok <ExternalLink className="w-4 h-4" />
                   </a>
                   <a href="https://ute-uphues.replit.app" target="_blank" rel="noopener noreferrer" 
                      className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
-                    🌐 Website I built <ExternalLink className="w-4 h-4" />
+                    Website I built <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
               </div>
 
               <div className="bg-white p-6 border-2 border-black">
                 <h3 className="text-xl font-bold text-black mb-2 flex items-center gap-2">
-                  ▶️ Real Estate Internship (Mallorca)
+                  Real Estate Internship (Mallorca)
                 </h3>
                 <p className="text-black mb-4">A creative and content-focused internship at FALC Real Estate in Cala Millor</p>
                 <div className="space-y-2">
                   <a href="https://www.instagram.com/p/DIjcdGZIAcr/" target="_blank" rel="noopener noreferrer" 
                      className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
-                    📷 Instagram <ExternalLink className="w-4 h-4" />
+                    Instagram <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
               </div>
 
               <div className="bg-white p-6 border-2 border-black">
                 <h3 className="text-xl font-bold text-black mb-2 flex items-center gap-2">
-                  ▶️ HenriAWB – Blackstories with a Hook
+                  HenriAWB – Blackstories with a Hook
                 </h3>
                 <p className="text-black mb-4">Entertaining TikToks with surprising twists, hooks, and storytelling</p>
                 <div className="space-y-2">
                   <a href="https://www.youtube.com/@Henriawb" target="_blank" rel="noopener noreferrer" 
                      className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
-                    📷 YouTube <ExternalLink className="w-4 h-4" />
+                    YouTube <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
               </div>
 
               <div className="bg-white p-6 border-2 border-black">
                 <h3 className="text-xl font-bold text-black mb-2 flex items-center gap-2">
-                  ▶️ ThisTimeFr
+                  ThisTimeFr
                 </h3>
                 <p className="text-black mb-4">My storytelling identity for vlogs, creative clips, and travel adventures</p>
                 <div className="space-y-2">
                   <a href="https://www.tiktok.com/@thistimefrr" target="_blank" rel="noopener noreferrer" 
                      className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
-                    📷 TikTok <ExternalLink className="w-4 h-4" />
+                    TikTok <ExternalLink className="w-4 h-4" />
                   </a>
                   <a href="https://www.youtube.com/@Thistimefr" target="_blank" rel="noopener noreferrer" 
                      className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
-                    📷 YouTube <ExternalLink className="w-4 h-4" />
+                    YouTube <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
               </div>
