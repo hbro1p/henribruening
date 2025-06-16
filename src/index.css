@@ -63,30 +63,6 @@ body {
   100% { transform: translateY(4px); }
 }
 
-/* Matrix Terminal Theme - Green monospace */
-.theme-matrix-terminal {
-  background: #000000;
-  background-image: 
-    radial-gradient(circle at 30% 70%, rgba(0, 255, 65, 0.1) 1px, transparent 1px),
-    radial-gradient(circle at 70% 30%, rgba(0, 255, 65, 0.08) 1px, transparent 1px),
-    radial-gradient(circle at 10% 50%, rgba(0, 255, 65, 0.06) 1px, transparent 1px),
-    radial-gradient(circle at 90% 50%, rgba(0, 255, 65, 0.05) 1px, transparent 1px),
-    radial-gradient(circle at 50% 0%, rgba(0, 255, 65, 0.05) 200px, transparent 400px);
-  background-size: 250px 250px, 350px 350px, 200px 200px, 300px 300px, 100vw 100vh;
-  color: #00ff41;
-  font-family: 'Courier New', monospace;
-}
-
-.theme-matrix-terminal .text-white {
-  color: #00ff41 !important;
-  text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
-}
-
-.theme-matrix-terminal .text-black {
-  color: #00ff41 !important;
-  text-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
-}
-
 /* Retro Chrome Theme - Silver/blue early 2000s style */
 .theme-retro-chrome {
   background: 

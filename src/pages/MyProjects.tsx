@@ -47,23 +47,36 @@ const MyProjects = () => {
               <p className="mb-6 text-black font-pixel drop-shadow-sm">Oops... looks like this section requires a password 😅</p>
               <p className="mb-6 text-black font-pixel drop-shadow-sm">Enter the password to continue.</p>
               
-              <form onSubmit={handlePasswordSubmit} className="w-full">
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
-                  className="w-full p-3 mb-4 border-2 border-black/30 bg-white text-black rounded shadow-inner font-pixel focus:outline-none focus:border-blue-500 focus:bg-blue-50"
-                  placeholder="Password"
-                />
+              <form onSubmit={handlePasswordSubmit} className="w-full space-y-4">
+                <div className="relative">
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
+                    className="w-full p-4 border-3 border-black/40 bg-white text-black rounded-lg shadow-inner font-pixel text-lg focus:outline-none focus:border-blue-500 focus:bg-blue-50 focus:shadow-lg transition-all duration-200"
+                    placeholder="Enter password..."
+                    style={{ 
+                      zIndex: 10,
+                      position: 'relative',
+                      pointerEvents: 'auto'
+                    }}
+                  />
+                  <div className="absolute inset-2 bg-gradient-to-br from-white/30 to-transparent rounded pointer-events-none"></div>
+                </div>
+                
                 {showError && (
-                  <p className="text-red-700 mb-4 text-sm font-pixel drop-shadow-sm">Incorrect password. Try again.</p>
+                  <div className="bg-red-100 border-2 border-red-400 p-3 rounded-lg">
+                    <p className="text-red-700 text-sm font-pixel drop-shadow-sm">Incorrect password. Try again.</p>
+                  </div>
                 )}
+                
                 <button
                   type="submit"
-                  className="w-full p-3 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-2 border-black/30 hover:from-gray-200 hover:via-gray-300 hover:to-gray-500 active:scale-95 text-black font-bold font-pixel transition-all rounded shadow-lg"
+                  className="w-full p-4 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-3 border-black/40 hover:from-gray-200 hover:via-gray-300 hover:to-gray-500 active:scale-95 text-black font-bold font-pixel text-lg transition-all rounded-lg shadow-lg hover:shadow-xl relative"
                 >
-                  Unlock
+                  <div className="absolute inset-1 bg-gradient-to-br from-white/30 to-transparent rounded pointer-events-none"></div>
+                  <span className="relative z-10">Unlock</span>
                 </button>
               </form>
 

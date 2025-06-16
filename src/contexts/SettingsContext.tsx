@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export type Language = 'english' | 'deutsch';
-export type Theme = 'space-mood' | 'dark-vhs' | 'matrix-terminal' | 'retro-chrome';
+export type Theme = 'space-mood' | 'dark-vhs' | 'retro-chrome';
 
 interface SettingsContextType {
   language: Language;
@@ -27,7 +27,6 @@ const translations = {
     'Appearance Theme': 'Appearance Theme:',
     'Space Mood': 'Space Mood',
     'Dark VHS': 'Dark VHS',
-    'Matrix Terminal': 'Matrix Terminal',
     'Retro Chrome': 'Retro Chrome',
     'Back to Desktop': 'Back to Desktop',
     'Now Playing': 'Now Playing',
@@ -53,7 +52,6 @@ const translations = {
     'Appearance Theme': 'Erscheinungsbild:',
     'Space Mood': 'Weltraumstimmung',
     'Dark VHS': 'Dunkles VHS',
-    'Matrix Terminal': 'Matrix Terminal',
     'Retro Chrome': 'Retro Chrom',
     'Back to Desktop': 'Zurück zum Desktop',
     'Now Playing': 'Jetzt läuft',
@@ -82,7 +80,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
       setLanguageState(savedLanguage);
     }
     
-    if (savedTheme && ['space-mood', 'dark-vhs', 'matrix-terminal', 'retro-chrome'].includes(savedTheme)) {
+    if (savedTheme && ['space-mood', 'dark-vhs', 'retro-chrome'].includes(savedTheme)) {
       setThemeState(savedTheme);
     }
   }, []);

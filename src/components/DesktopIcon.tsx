@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -48,17 +49,6 @@ const getIconStyles = (label: string, theme: string) => {
     };
   }
   
-  // Matrix Terminal theme
-  if (theme === 'matrix-terminal') {
-    return {
-      gradient: 'from-green-600 via-green-700 to-black',
-      border: 'border-green-500/30',
-      hoverBorder: 'group-hover:border-green-400/50',
-      shadow: 'shadow-lg shadow-green-500/20 group-hover:shadow-green-400/30',
-      highlight: 'bg-gradient-to-br from-green-200/40 to-transparent',
-    };
-  }
-  
   // Retro Chrome theme
   if (theme === 'retro-chrome') {
     return {
@@ -105,8 +95,6 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to }) => {
             ? 'text-black bg-gray-200/90 border border-gray-400 group-hover:bg-gray-100/90'
             : theme === 'dark-vhs'
             ? 'text-white bg-black/70 border border-white/20 group-hover:border-white/40'
-            : theme === 'matrix-terminal'
-            ? 'text-green-100 bg-black/70 border border-green-500/20 group-hover:border-green-400/40'
             : theme === 'retro-chrome'
             ? 'text-blue-100 bg-slate-800/70 border border-blue-400/30 group-hover:border-blue-300/50'
             : 'text-white bg-black/60 border border-white/20'
