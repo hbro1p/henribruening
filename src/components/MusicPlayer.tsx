@@ -65,19 +65,6 @@ const MusicPlayer = () => {
           eqBars: 'bg-white',
           statusLed: isPlaying ? 'bg-gradient-to-br from-white to-gray-500' : 'bg-gradient-to-br from-red-400 to-red-600'
         };
-      case 'matrix-terminal':
-        return {
-          outerFrame: 'bg-gradient-to-br from-green-800 via-green-900 to-black border-green-500/20 shadow-lg shadow-green-500/20',
-          innerBezel: 'bg-gradient-to-br from-black via-green-900 to-black border-green-500/30',
-          mainBody: 'bg-gradient-to-br from-black via-green-900 to-black border-green-500/20',
-          display: 'bg-gradient-to-b from-green-950 to-black border-green-500/50',
-          text: 'text-green-300',
-          subText: 'text-green-400',
-          buttonPrimary: 'bg-gradient-to-br from-green-500 via-green-600 to-green-800 border-green-400/30 hover:from-green-400 hover:via-green-500 hover:to-green-700',
-          buttonSecondary: 'bg-gradient-to-br from-green-600 via-green-700 to-black border-green-500/30 hover:from-green-500 hover:via-green-600 hover:to-green-800',
-          eqBars: 'bg-green-400',
-          statusLed: isPlaying ? 'bg-gradient-to-br from-green-300 to-green-600' : 'bg-gradient-to-br from-red-400 to-red-600'
-        };
       case 'retro-chrome':
         return {
           outerFrame: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600 border-blue-300/30 shadow-lg shadow-blue-500/20',

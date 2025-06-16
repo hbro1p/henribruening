@@ -11,6 +11,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useStorageImages } from '@/hooks/useStorageImages';
+import { useSettings } from '@/contexts/SettingsContext';
 
 // Fallback images for when storage is empty
 const fallbackImages = {
@@ -31,9 +32,23 @@ const fallbackImages = {
   random: []
 };
 
+const getFolderTheme = (category: string, theme: string) => {
+  if (theme !== 'space-mood') return '';
+  
+  const themes = {
+    childhood: 'folder-blue',
+    nature: 'folder-green', 
+    vibe: 'folder-purple',
+    random: 'folder-orange'
+  };
+  
+  return themes[category as keyof typeof themes] || '';
+};
+
 const Pictures = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { images: storageImages, loading, error, refetch } = useStorageImages();
+  const { theme } = useSettings();
 
   // Use storage images primarily, only fall back if storage category is completely empty
   const photoCategories = {
@@ -45,9 +60,10 @@ const Pictures = () => {
 
   if (selectedCategory) {
     const photos = photoCategories[selectedCategory as keyof typeof photoCategories];
+    const folderTheme = getFolderTheme(selectedCategory, theme);
     
     return (
-      <div className="flex items-center justify-center min-h-screen p-4 sm:p-8">
+      <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${folderTheme}`}>
         {/* Window Frame with 3D effect */}
         <div className="bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 p-2 border-2 border-black/30 w-full max-w-5xl shadow-2xl rounded-lg">
           {/* Title bar */}
