@@ -107,31 +107,31 @@ const Pictures = () => {
     };
     
     return (
-      <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
-        {/* Window Frame with consistent size */}
-        <div className={`p-2 border-2 border-black/30 w-full max-w-5xl min-h-[700px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
+      <div className={`flex items-center justify-center min-h-screen p-2 sm:p-4 md:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
+        {/* Fixed window dimensions to prevent layout shift */}
+        <div className={`p-2 border-2 border-black/30 w-full max-w-[95vw] sm:max-w-4xl lg:max-w-5xl h-[90vh] sm:h-[85vh] md:h-[700px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
           {/* Title bar */}
           <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
             <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
-              <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
-              <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-              <span className="text-white font-pixel text-sm ml-2">Pictures.exe / {selectedCategory}</span>
+              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+              <span className="text-white font-pixel text-xs sm:text-sm ml-2">Pictures.exe / {selectedCategory}</span>
             </div>
           </div>
           
-          {/* Window content */}
-          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b flex flex-col ${styles.windowContent}`} style={{ minHeight: 'calc(700px - 52px)' }}>
-            <div className="flex flex-col items-center justify-center text-center flex-1">
-              <h1 className={`text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>
+          {/* Window content with fixed dimensions */}
+          <div className={`p-3 sm:p-6 md:p-8 border-2 border-white/20 shadow-inner rounded-b flex flex-col h-[calc(100%-52px)] ${styles.windowContent}`}>
+            <div className="flex flex-col items-center text-center h-full">
+              <h1 className={`text-xl sm:text-2xl md:text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>
                 [ {t('My Pictures')} ] / {t('language') === 'deutsch' ? categoryTranslations[selectedCategory as keyof typeof categoryTranslations] : selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}
               </h1>
               
               {loading ? (
-                <p className={`mb-8 font-pixel drop-shadow-sm ${styles.text}`}>{t('language') === 'deutsch' ? 'Bilder werden geladen...' : 'Loading images...'}</p>
+                <p className={`mb-4 sm:mb-8 font-pixel drop-shadow-sm text-sm sm:text-base ${styles.text}`}>{t('language') === 'deutsch' ? 'Bilder werden geladen...' : 'Loading images...'}</p>
               ) : error ? (
-                <div className="text-center mb-8">
-                  <p className="text-red-600 mb-4 font-pixel drop-shadow-sm">{t('language') === 'deutsch' ? 'Fehler beim Laden der Bilder: ' : 'Error loading images: '}{error}</p>
+                <div className="text-center mb-4 sm:mb-8">
+                  <p className="text-red-600 mb-4 font-pixel drop-shadow-sm text-sm sm:text-base">{t('language') === 'deutsch' ? 'Fehler beim Laden der Bilder: ' : 'Error loading images: '}{error}</p>
                   <button
                     onClick={refetch}
                     className={`text-sm underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm mx-auto ${styles.link}`}
@@ -141,8 +141,8 @@ const Pictures = () => {
                   </button>
                 </div>
               ) : photos.length > 0 ? (
-                <>
-                  <div className="w-full max-w-xs sm:max-w-xl md:max-w-2xl flex-1 flex items-center justify-center">
+                <div className="flex-1 flex items-center justify-center w-full">
+                  <div className="w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl">
                     <Carousel className="w-full" opts={{ loop: true }}>
                       <CarouselContent>
                         {photos.map((src, index) => (
@@ -150,7 +150,7 @@ const Pictures = () => {
                             <div className="p-1">
                               <Card className="border-2 border-black/30 bg-gradient-to-br from-gray-800 to-black overflow-hidden shadow-2xl rounded-lg">
                                 <CardContent className="flex aspect-[4/3] items-center justify-center p-2">
-                                  <div className="bg-gradient-to-br from-gray-600 to-gray-800 p-2 rounded border border-black/20 shadow-inner">
+                                  <div className="bg-gradient-to-br from-gray-600 to-gray-800 p-2 rounded border border-black/20 shadow-inner h-full w-full flex items-center justify-center">
                                     <img 
                                       src={src} 
                                       alt={`${selectedCategory} memory ${index + 1}`} 
@@ -164,29 +164,29 @@ const Pictures = () => {
                                   </div>
                                 </CardContent>
                               </Card>
-                              <p className={`mt-2 text-sm font-pixel drop-shadow-sm ${styles.text}`}>
+                              <p className={`mt-2 text-xs sm:text-sm font-pixel drop-shadow-sm text-center ${styles.text}`}>
                                 {t('language') === 'deutsch' ? 'Erinnerung' : 'Memory'} #{index + 1}
                               </p>
                             </div>
                           </CarouselItem>
                         ))}
                       </CarouselContent>
-                      <CarouselPrevious className="text-white bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 border-2 border-black/30 shadow-lg" />
-                      <CarouselNext className="text-white bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 border-2 border-black/30 shadow-lg" />
+                      <CarouselPrevious className="text-white bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 border-2 border-black/30 shadow-lg left-2 sm:left-4" />
+                      <CarouselNext className="text-white bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 border-2 border-black/30 shadow-lg right-2 sm:right-4" />
                     </Carousel>
                   </div>
-                </>
+                </div>
               ) : (
-                <p className={`mb-8 font-pixel drop-shadow-sm ${styles.text}`}>
+                <p className={`mb-4 sm:mb-8 font-pixel drop-shadow-sm text-sm sm:text-base ${styles.text}`}>
                   {t('language') === 'deutsch' ? 'Noch keine Fotos in dieser Kategorie.' : 'No photos in this category yet.'}
                 </p>
               )}
 
               <button
                 onClick={() => setSelectedCategory(null)}
-                className={`mt-8 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}
+                className={`mt-4 sm:mt-8 text-base sm:text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}
               >
-                <ArrowLeft className="w-5 h-5" />
+                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                 {t('language') === 'deutsch' ? 'Zurück zu Ordnern' : 'Back to Folders'}
               </button>
             </div>
@@ -197,36 +197,36 @@ const Pictures = () => {
   }
 
   return (
-    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
-      {/* Window Frame with consistent size */}
-      <div className={`p-2 border-2 border-black/30 w-full max-w-5xl min-h-[700px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
+    <div className={`flex items-center justify-center min-h-screen p-2 sm:p-4 md:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
+      {/* Fixed window dimensions to prevent layout shift */}
+      <div className={`p-2 border-2 border-black/30 w-full max-w-[95vw] sm:max-w-4xl lg:max-w-5xl h-[90vh] sm:h-[85vh] md:h-[700px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
         {/* Title bar */}
         <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
-            <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
-            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-            <span className="text-white font-pixel text-sm ml-2">Pictures.exe</span>
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+            <span className="text-white font-pixel text-xs sm:text-sm ml-2">Pictures.exe</span>
           </div>
         </div>
         
-        {/* Window content */}
-        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b flex flex-col ${styles.windowContent}`} style={{ minHeight: 'calc(700px - 52px)' }}>
-          <div className="flex flex-col items-center justify-center text-center flex-1">
-            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Pictures')} ]</h1>
-            <p className={`mb-4 font-pixel drop-shadow-sm ${styles.text}`}>
+        {/* Window content with fixed dimensions */}
+        <div className={`p-3 sm:p-6 md:p-8 border-2 border-white/20 shadow-inner rounded-b flex flex-col h-[calc(100%-52px)] ${styles.windowContent}`}>
+          <div className="flex flex-col items-center text-center h-full">
+            <h1 className={`text-xl sm:text-2xl md:text-4xl mb-4 sm:mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Pictures')} ]</h1>
+            <p className={`mb-4 font-pixel drop-shadow-sm text-sm sm:text-base ${styles.text}`}>
               {t('language') === 'deutsch' ? 'Wählen Sie einen Ordner zum Erkunden.' : 'Choose a folder to explore.'}
             </p>
             
             {loading && (
-              <p className={`mb-4 text-sm font-pixel ${styles.text}`}>
+              <p className={`mb-4 text-xs sm:text-sm font-pixel ${styles.text}`}>
                 {t('language') === 'deutsch' ? 'Lade Bilder aus dem Speicher...' : 'Loading images from storage...'}
               </p>
             )}
             
             {error && (
               <div className="mb-4 text-center">
-                <p className="text-red-600 text-sm font-pixel mb-2">
+                <p className="text-red-600 text-xs sm:text-sm font-pixel mb-2">
                   {t('language') === 'deutsch' ? 'Speicherfehler: ' : 'Storage error: '}{error}
                 </p>
                 <button
@@ -239,7 +239,7 @@ const Pictures = () => {
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-16 mb-8 flex-1 items-center">
+            <div className="grid grid-cols-2 gap-4 sm:gap-8 md:gap-16 mb-4 sm:mb-8 flex-1 items-center">
               {Object.keys(photoCategories).map((category) => {
                 const imageCount = photoCategories[category as keyof typeof photoCategories].length;
                 const isFromStorage = storageImages[category as keyof typeof storageImages].length > 0;
@@ -255,26 +255,26 @@ const Pictures = () => {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className="flex flex-col items-center justify-center space-y-4 w-56 h-56 p-6 transition-all duration-200 hover:scale-105 active:scale-95"
+                    className="flex flex-col items-center justify-center space-y-2 sm:space-y-4 w-24 h-24 sm:w-40 sm:h-40 md:w-56 md:h-56 p-2 sm:p-4 md:p-6 transition-all duration-200 hover:scale-105 active:scale-95"
                   >
                     {/* Enhanced folder icon with 3D effect and proper colors */}
                     <div className="relative">
-                      <div className={`w-28 h-28 bg-gradient-to-br ${folderColors.gradient} rounded-lg border-2 border-black/20 shadow-xl flex items-center justify-center relative`}>
+                      <div className={`w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 bg-gradient-to-br ${folderColors.gradient} rounded-lg border-2 border-black/20 shadow-xl flex items-center justify-center relative`}>
                         {/* Highlight effect */}
-                        <div className="absolute top-1 left-1 w-20 h-12 bg-gradient-to-br from-white/40 to-transparent rounded blur-sm"></div>
+                        <div className="absolute top-1 left-1 w-8 h-4 sm:w-12 sm:h-6 md:w-20 md:h-12 bg-gradient-to-br from-white/40 to-transparent rounded blur-sm"></div>
                         
                         {/* Folder icon */}
-                        <Folder className={`w-16 h-16 ${folderColors.icon} drop-shadow-lg relative z-10`} />
+                        <Folder className={`w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 ${folderColors.icon} drop-shadow-lg relative z-10`} />
                         
                         {/* Count badge - only show for storage images */}
                         {imageCount > 0 && isFromStorage && (
-                          <div className={`absolute -top-2 -right-2 w-8 h-8 ${folderColors.badge} text-white text-sm rounded-full flex items-center justify-center font-bold border-2 border-white shadow-lg`}>
+                          <div className={`absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 ${folderColors.badge} text-white text-xs sm:text-sm rounded-full flex items-center justify-center font-bold border-2 border-white shadow-lg`}>
                             {imageCount}
                           </div>
                         )}
                       </div>
                     </div>
-                    <span className={`text-xl capitalize font-bold font-pixel drop-shadow-sm ${styles.text}`}>
+                    <span className={`text-sm sm:text-lg md:text-xl capitalize font-bold font-pixel drop-shadow-sm ${styles.text}`}>
                       {t('language') === 'deutsch' ? categoryTranslations[category as keyof typeof categoryTranslations] : category}
                     </span>
                   </button>
@@ -282,7 +282,7 @@ const Pictures = () => {
               })}
             </div>
 
-            <Link to="/desktop" className={`text-xl underline transition-colors font-pixel drop-shadow-sm ${styles.link}`}>
+            <Link to="/desktop" className={`text-base sm:text-xl underline transition-colors font-pixel drop-shadow-sm ${styles.link}`}>
               &lt;- {t('Back to Desktop')}
             </Link>
           </div>
