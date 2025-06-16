@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Music, SkipForward, SkipBack, Volume2, RotateCcw } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
@@ -76,55 +75,39 @@ const MusicPlayer = () => {
   }, [currentTrack, musicFiles]);
 
   const getThemeStyles = () => {
+    const baseStyles = {
+      container: 'bg-white/95 backdrop-blur-md border border-gray-200/50 shadow-xl',
+      text: 'text-gray-900',
+      subText: 'text-gray-600',
+      button: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300',
+      playButton: 'bg-blue-500 hover:bg-blue-600 text-white',
+      activeButton: 'bg-blue-100 text-blue-600 border-blue-300',
+      slider: 'accent-blue-500'
+    };
+
     switch (theme) {
-      case 'space-mood':
-        return {
-          outerFrame: 'bg-gradient-to-br from-gray-400 via-gray-500 to-gray-700 border-gray-600/30 shadow-lg shadow-black/20',
-          innerBezel: 'bg-gradient-to-br from-gray-800 via-black to-gray-700 border-gray-500/40',
-          mainBody: 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 border-gray-400/20',
-          display: 'bg-gradient-to-b from-gray-950 to-black border-gray-500/50',
-          text: 'text-gray-200',
-          subText: 'text-gray-300',
-          buttonPrimary: 'bg-gradient-to-br from-gray-500 via-gray-600 to-gray-800 border-gray-400/30 hover:from-gray-400 hover:via-gray-500 hover:to-gray-700',
-          buttonSecondary: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black border-gray-500/30 hover:from-gray-500 hover:via-gray-600 hover:to-gray-800',
-          statusLed: isPlaying ? 'bg-gradient-to-br from-green-400 to-green-600' : 'bg-gradient-to-br from-red-400 to-red-600'
-        };
       case 'dark-vhs':
         return {
-          outerFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black border-white/20 shadow-lg shadow-white/10',
-          innerBezel: 'bg-gradient-to-br from-gray-800 via-black to-gray-700 border-white/30',
-          mainBody: 'bg-gradient-to-br from-gray-700 via-black to-gray-800 border-white/20',
-          display: 'bg-gradient-to-b from-gray-950 to-black border-white/30',
+          container: 'bg-gray-900/95 backdrop-blur-md border border-gray-700/50 shadow-xl',
           text: 'text-white',
           subText: 'text-gray-300',
-          buttonPrimary: 'bg-gradient-to-br from-red-500 via-red-600 to-red-800 border-white/30 hover:from-red-400 hover:via-red-500 hover:to-red-700',
-          buttonSecondary: 'bg-gradient-to-br from-gray-500 via-gray-600 to-gray-800 border-white/30 hover:from-gray-400 hover:via-gray-500 hover:to-gray-700',
-          statusLed: isPlaying ? 'bg-gradient-to-br from-white to-gray-500' : 'bg-gradient-to-br from-red-400 to-red-600'
+          button: 'bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-600',
+          playButton: 'bg-red-600 hover:bg-red-500 text-white',
+          activeButton: 'bg-red-900/50 text-red-400 border-red-600',
+          slider: 'accent-red-500'
         };
       case 'retro-chrome':
         return {
-          outerFrame: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600 border-blue-300/30 shadow-lg shadow-blue-500/20',
-          innerBezel: 'bg-gradient-to-br from-slate-700 via-blue-800 to-slate-800 border-blue-400/40',
-          mainBody: 'bg-gradient-to-br from-slate-600 via-blue-700 to-slate-800 border-blue-300/20',
-          display: 'bg-gradient-to-b from-blue-950 to-slate-950 border-blue-400/50',
-          text: 'text-blue-200',
-          subText: 'text-blue-300',
-          buttonPrimary: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 border-blue-300/30 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700',
-          buttonSecondary: 'bg-gradient-to-br from-slate-500 via-blue-600 to-slate-700 border-blue-400/30 hover:from-slate-400 hover:via-blue-500 hover:to-slate-600',
-          statusLed: isPlaying ? 'bg-gradient-to-br from-cyan-400 to-blue-600' : 'bg-gradient-to-br from-blue-400 to-blue-600'
+          container: 'bg-blue-50/95 backdrop-blur-md border border-blue-200/50 shadow-xl',
+          text: 'text-blue-900',
+          subText: 'text-blue-700',
+          button: 'bg-blue-100 hover:bg-blue-200 text-blue-800 border border-blue-300',
+          playButton: 'bg-blue-600 hover:bg-blue-700 text-white',
+          activeButton: 'bg-blue-200 text-blue-700 border-blue-400',
+          slider: 'accent-blue-600'
         };
       default:
-        return {
-          outerFrame: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-black/20',
-          innerBezel: 'bg-gradient-to-br from-gray-900 via-black to-gray-800 border-gray-600',
-          mainBody: 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 border-gray-500',
-          display: 'bg-gradient-to-b from-green-900 to-green-950 border-black/50',
-          text: 'text-green-400',
-          subText: 'text-green-300',
-          buttonPrimary: 'bg-gradient-to-br from-red-400 via-red-500 to-red-700 border-black/30 hover:from-red-300 hover:via-red-400 hover:to-red-600',
-          buttonSecondary: 'bg-gradient-to-br from-gray-400 via-gray-500 to-gray-700 border-black/30 hover:from-gray-300 hover:via-gray-400 hover:to-gray-600',
-          statusLed: isPlaying ? 'bg-gradient-to-br from-lime-400 to-green-600' : 'bg-gradient-to-br from-red-400 to-red-600'
-        };
+        return baseStyles;
     }
   };
 
@@ -147,114 +130,89 @@ const MusicPlayer = () => {
         preload="metadata"
       />
       
-      {/* Only show visual controls on desktop route */}
+      {/* Material Design Music Player - Fixed size and position */}
       {location.pathname === '/desktop' && (
-        <div className="absolute bottom-16 right-8 transform hover:scale-105 transition-all duration-300">
-          {/* Outer frame with theme-appropriate styling */}
-          <div className={`p-2 rounded-xl shadow-2xl border-2 ${styles.outerFrame}`}>
-            {/* Inner bezel */}
-            <div className={`rounded-lg p-1 border ${styles.innerBezel}`}>
-              {/* Main player body */}
-              <div className={`rounded-md p-4 border shadow-inner ${styles.mainBody}`}>
+        <div className="fixed bottom-20 right-4 z-50">
+          <div className={`w-80 rounded-2xl p-4 transition-all duration-300 hover:scale-[1.02] ${styles.container}`}>
+            
+            {/* Track Info Display */}
+            <div className="mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center space-x-2">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isPlaying ? 'bg-green-500' : 'bg-gray-400'}`}>
+                    <Music className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`font-semibold text-sm truncate ${styles.text}`}>
+                      {loading ? 'Loading...' : musicFiles.length > 0 ? musicFiles[currentTrack]?.title || 'Unknown Track' : 'No Music'}
+                    </p>
+                    <p className={`text-xs ${styles.subText}`}>
+                      {musicFiles.length > 0 ? `Track ${currentTrack + 1} of ${musicFiles.length}` : '2000s Vibes'}
+                    </p>
+                  </div>
+                </div>
                 
-                {/* Top section with display */}
-                <div className="mb-4">
-                  {/* LCD-style display */}
-                  <div className={`p-3 rounded border-2 shadow-inner ${styles.display}`}>
-                    <div className="flex items-center justify-between">
-                      {/* Track info */}
-                      <div className="flex-1 min-w-0">
-                        <p className={`font-pixel text-xs font-bold drop-shadow-sm ${styles.text}`}>
-                          🎵 {loading ? 'LOADING...' : musicFiles.length > 0 ? '2000S VIBES' : 'NO MUSIC'}
-                        </p>
-                        {musicFiles.length > 0 && (
-                          <>
-                            <p className={`text-xs font-pixel ${styles.subText} truncate`}>
-                              {musicFiles[currentTrack]?.title || 'Unknown Track'}
-                            </p>
-                            <p className={`text-xs font-pixel ${styles.subText}`}>
-                              {t('TRACK')} {String(currentTrack + 1).padStart(2, '0')}/{musicFiles.length}
-                            </p>
-                          </>
-                        )}
-                      </div>
-                      
-                      {/* Loop indicator */}
-                      <div className="flex items-center space-x-2">
-                        <button
-                          onClick={() => setIsLooping(!isLooping)}
-                          className={`p-1 rounded transition-colors ${isLooping ? 'bg-green-500/20' : 'bg-gray-500/20'}`}
-                          title={isLooping ? 'Loop On' : 'Loop Off'}
-                        >
-                          <RotateCcw className={`w-3 h-3 ${isLooping ? styles.text : 'text-gray-500'}`} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Controls section */}
-                <div className="flex items-center justify-center space-x-3 mb-3">
-                  {/* Previous button */}
-                  <button
-                    onClick={prevTrack}
-                    disabled={musicFiles.length === 0}
-                    className={`relative w-10 h-10 rounded-full shadow-lg border-2 transition-all duration-200 active:scale-95 disabled:opacity-50 ${styles.buttonSecondary}`}
-                  >
-                    <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-full"></div>
-                    <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/30 to-transparent rounded-full"></div>
-                    <SkipBack className={`w-4 h-4 drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${styles.text}`} />
-                  </button>
-                  
-                  {/* Play/Pause button */}
-                  <button
-                    onClick={togglePlayPause}
-                    disabled={musicFiles.length === 0}
-                    className={`relative w-12 h-12 rounded-full shadow-xl border-2 transition-all duration-200 active:scale-95 disabled:opacity-50 ${styles.buttonPrimary}`}
-                  >
-                    <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-full"></div>
-                    <div className="absolute inset-x-1 bottom-1 h-3 bg-gradient-to-t from-black/30 to-transparent rounded-full"></div>
-                    {isPlaying ? 
-                      <Pause className="w-5 h-5 text-white drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" /> : 
-                      <Play className="w-5 h-5 text-white drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ml-0.5" />
-                    }
-                  </button>
-                  
-                  {/* Next button */}
-                  <button
-                    onClick={nextTrack}
-                    disabled={musicFiles.length === 0}
-                    className={`relative w-10 h-10 rounded-full shadow-lg border-2 transition-all duration-200 active:scale-95 disabled:opacity-50 ${styles.buttonSecondary}`}
-                  >
-                    <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-full"></div>
-                    <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/30 to-transparent rounded-full"></div>
-                    <SkipForward className={`w-4 h-4 drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${styles.text}`} />
-                  </button>
-                </div>
-
-                {/* Volume and status section */}
-                <div className="flex items-center justify-between">
-                  {/* Volume control */}
-                  <div className="flex items-center space-x-2 flex-1">
-                    <Volume2 className={`w-3 h-3 ${styles.text}`} />
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.1"
-                      value={volume}
-                      onChange={handleVolumeChange}
-                      className="flex-1 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
-                    />
-                  </div>
-                  
-                  {/* Status LED */}
-                  <div className="flex items-center space-x-2">
-                    <Music className={`w-4 h-4 ${styles.text}`} />
-                    <div className={`w-3 h-3 rounded-full shadow-sm ${styles.statusLed} ${isPlaying ? 'animate-pulse' : ''}`}></div>
-                  </div>
-                </div>
+                {/* Loop Toggle */}
+                <button
+                  onClick={() => setIsLooping(!isLooping)}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                    isLooping ? styles.activeButton : styles.button
+                  }`}
+                  title={isLooping ? 'Loop On' : 'Loop Off'}
+                >
+                  <RotateCcw className="w-4 h-4" />
+                </button>
               </div>
+            </div>
+
+            {/* Control Buttons */}
+            <div className="flex items-center justify-center space-x-4 mb-4">
+              <button
+                onClick={prevTrack}
+                disabled={musicFiles.length === 0}
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-50 ${styles.button}`}
+              >
+                <SkipBack className="w-5 h-5" />
+              </button>
+              
+              <button
+                onClick={togglePlayPause}
+                disabled={musicFiles.length === 0}
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all disabled:opacity-50 ${styles.playButton}`}
+              >
+                {isPlaying ? 
+                  <Pause className="w-6 h-6" /> : 
+                  <Play className="w-6 h-6 ml-0.5" />
+                }
+              </button>
+              
+              <button
+                onClick={nextTrack}
+                disabled={musicFiles.length === 0}
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-50 ${styles.button}`}
+              >
+                <SkipForward className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Volume Control */}
+            <div className="flex items-center space-x-3">
+              <Volume2 className={`w-4 h-4 ${styles.text}`} />
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={volume}
+                onChange={handleVolumeChange}
+                className={`flex-1 h-2 rounded-lg appearance-none cursor-pointer ${styles.slider}`}
+                style={{
+                  background: `linear-gradient(to right, currentColor 0%, currentColor ${volume * 100}%, #e5e7eb ${volume * 100}%, #e5e7eb 100%)`
+                }}
+              />
+              <span className={`text-xs font-mono w-8 ${styles.subText}`}>
+                {Math.round(volume * 100)}
+              </span>
             </div>
           </div>
         </div>
