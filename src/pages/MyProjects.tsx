@@ -31,6 +31,8 @@ const MyProjects = () => {
         text: 'text-orange-900',
         link: 'text-orange-800 hover:text-orange-900',
         button: 'bg-gradient-to-br from-orange-300 via-orange-400 to-orange-600 border-2 border-black/30 text-orange-900 hover:from-orange-200 hover:via-orange-300 hover:to-orange-500',
+        icon: 'text-orange-800',
+        iconBg: 'bg-gradient-to-br from-orange-500 to-orange-700',
       };
     }
     
@@ -42,6 +44,8 @@ const MyProjects = () => {
         text: 'text-white',
         link: 'text-orange-400 hover:text-orange-300',
         button: 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 border-2 border-white/30 text-white hover:from-gray-500 hover:via-gray-600 hover:to-gray-700',
+        icon: 'text-white',
+        iconBg: 'bg-gradient-to-br from-orange-500 to-orange-700',
       };
     }
     
@@ -53,6 +57,8 @@ const MyProjects = () => {
         text: 'text-orange-200',
         link: 'text-orange-300 hover:text-orange-200',
         button: 'bg-gradient-to-br from-slate-500 via-orange-600 to-slate-700 border-2 border-orange-300/30 text-white hover:from-slate-400 hover:via-orange-500 hover:to-slate-600',
+        icon: 'text-white',
+        iconBg: 'bg-gradient-to-br from-orange-500 to-orange-700',
       };
     }
     
@@ -64,6 +70,8 @@ const MyProjects = () => {
       text: 'text-black',
       link: 'text-green-800 hover:text-green-900',
       button: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-3 border-black/40 hover:from-gray-200 hover:via-gray-300 hover:to-gray-500 text-black',
+      icon: 'text-white',
+      iconBg: 'bg-gradient-to-br from-green-500 to-teal-600',
     };
   };
 
@@ -87,9 +95,9 @@ const MyProjects = () => {
           {/* Window content */}
           <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
             <div className="flex flex-col items-center justify-center text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-lg shadow-lg border-2 border-black/20 flex items-center justify-center mb-4">
+              <div className={`w-16 h-16 ${styles.iconBg} rounded-lg shadow-lg border-2 border-black/20 flex items-center justify-center mb-4`}>
                 <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded"></div>
-                <Code className="w-8 h-8 text-white drop-shadow-lg relative z-10" />
+                <Code className={`w-8 h-8 ${styles.icon} drop-shadow-lg relative z-10`} />
               </div>
               
               <h1 className={`text-2xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ My Projects ]</h1>

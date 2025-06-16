@@ -43,6 +43,41 @@ const getFolderTheme = (category: string, theme: string) => {
   return themes[category as keyof typeof themes] || '';
 };
 
+const getFolderColors = (category: string, theme: string) => {
+  if (theme === 'space-mood') {
+    const colors = {
+      childhood: {
+        gradient: 'from-blue-400 via-blue-500 to-blue-700',
+        icon: 'text-blue-800',
+        badge: 'bg-blue-600'
+      },
+      nature: {
+        gradient: 'from-green-400 via-green-500 to-green-700',
+        icon: 'text-green-800',
+        badge: 'bg-green-600'
+      },
+      vibe: {
+        gradient: 'from-purple-400 via-purple-500 to-purple-700',
+        icon: 'text-purple-800',
+        badge: 'bg-purple-600'
+      },
+      random: {
+        gradient: 'from-orange-400 via-orange-500 to-orange-700',
+        icon: 'text-orange-800',
+        badge: 'bg-orange-600'
+      }
+    };
+    return colors[category as keyof typeof colors] || colors.childhood;
+  }
+  
+  // Default for other themes
+  return {
+    gradient: 'from-gray-300 via-gray-400 to-gray-600',
+    icon: 'text-gray-800',
+    badge: 'bg-gray-600'
+  };
+};
+
 const Pictures = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { images: storageImages, loading, error, refetch } = useStorageImages();
@@ -224,30 +259,35 @@ const Pictures = () => {
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-6 mb-8">
+            <div className="grid grid-cols-2 gap-8 mb-8">
               {Object.keys(photoCategories).map((category) => {
                 const imageCount = photoCategories[category as keyof typeof photoCategories].length;
                 const isFromStorage = storageImages[category as keyof typeof storageImages].length > 0;
+                const folderColors = getFolderColors(category, theme);
                 return (
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className="flex flex-col items-center justify-center space-y-3 w-32 h-32 p-4 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-2 border-black/30 hover:from-gray-200 hover:via-gray-300 hover:to-gray-500 active:scale-95 transition-all rounded-lg shadow-lg"
+                    className="flex flex-col items-center justify-center space-y-4 w-40 h-40 p-6 transition-all duration-200 hover:scale-105 active:scale-95"
                   >
-                    {/* Folder icon with 3D effect */}
+                    {/* Enhanced folder icon with 3D effect and proper colors */}
                     <div className="relative">
-                      <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded"></div>
-                      <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/20 to-transparent rounded"></div>
-                      <Folder className="w-12 h-12 text-gray-800 drop-shadow-lg relative z-10" />
-                      {imageCount > 0 && (
-                        <div className={`absolute -top-1 -right-1 w-5 h-5 text-white text-xs rounded-full flex items-center justify-center font-bold border border-white ${
-                          isFromStorage ? 'bg-green-500' : 'bg-blue-500'
-                        }`}>
-                          {imageCount}
-                        </div>
-                      )}
+                      <div className={`w-20 h-20 bg-gradient-to-br ${folderColors.gradient} rounded-lg border-2 border-black/20 shadow-xl flex items-center justify-center relative`}>
+                        {/* Highlight effect */}
+                        <div className="absolute top-1 left-1 w-12 h-8 bg-gradient-to-br from-white/40 to-transparent rounded blur-sm"></div>
+                        
+                        {/* Folder icon */}
+                        <Folder className={`w-12 h-12 ${folderColors.icon} drop-shadow-lg relative z-10`} />
+                        
+                        {/* Count badge - only show for storage images */}
+                        {imageCount > 0 && isFromStorage && (
+                          <div className={`absolute -top-2 -right-2 w-6 h-6 ${folderColors.badge} text-white text-xs rounded-full flex items-center justify-center font-bold border-2 border-white shadow-lg`}>
+                            {imageCount}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <span className={`text-sm capitalize font-bold font-pixel drop-shadow-sm ${styles.text}`}>{category}</span>
+                    <span className={`text-lg capitalize font-bold font-pixel drop-shadow-sm ${styles.text}`}>{category}</span>
                   </button>
                 );
               })}
