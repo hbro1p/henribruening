@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
 import { Play, Pause, Music, SkipForward, SkipBack, Volume2 } from 'lucide-react';
