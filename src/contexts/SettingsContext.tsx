@@ -39,6 +39,7 @@ const translations = {
     'Submit': 'Submit',
     'Wrong Password': 'Wrong Password! Try again.',
     'This folder is protected': 'This folder is protected. Please enter the password to continue.',
+    'language': 'english',
   },
   deutsch: {
     'My Pictures': 'Meine Bilder',
@@ -64,6 +65,7 @@ const translations = {
     'Submit': 'Bestätigen',
     'Wrong Password': 'Falsches Passwort! Versuchen Sie es erneut.',
     'This folder is protected': 'Dieser Ordner ist geschützt. Bitte geben Sie das Passwort ein, um fortzufahren.',
+    'language': 'deutsch',
   }
 };
 

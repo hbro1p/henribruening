@@ -70,18 +70,36 @@ const getFolderColors = (category: string, theme: string) => {
     return colors[category as keyof typeof colors] || colors.childhood;
   }
   
-  // Default for other themes
-  return {
-    gradient: 'from-gray-300 via-gray-400 to-gray-600',
-    icon: 'text-gray-800',
-    badge: 'bg-gray-600'
+  // Consistent folder colors for all themes
+  const colors = {
+    childhood: {
+      gradient: 'from-blue-400 via-blue-500 to-blue-700',
+      icon: 'text-blue-800',
+      badge: 'bg-blue-600'
+    },
+    nature: {
+      gradient: 'from-green-400 via-green-500 to-green-700',
+      icon: 'text-green-800',
+      badge: 'bg-green-600'
+    },
+    vibe: {
+      gradient: 'from-purple-400 via-purple-500 to-purple-700',
+      icon: 'text-purple-800',
+      badge: 'bg-purple-600'
+    },
+    random: {
+      gradient: 'from-orange-400 via-orange-500 to-orange-700',
+      icon: 'text-orange-800',
+      badge: 'bg-orange-600'
+    }
   };
+  return colors[category as keyof typeof colors] || colors.childhood;
 };
 
 const Pictures = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { images: storageImages, loading, error, refetch } = useStorageImages();
-  const { theme } = useSettings();
+  const { theme, t } = useSettings();
 
   // Use storage images primarily, only fall back if storage category is completely empty
   const photoCategories = {
@@ -137,11 +155,17 @@ const Pictures = () => {
   if (selectedCategory) {
     const photos = photoCategories[selectedCategory as keyof typeof photoCategories];
     const folderTheme = getFolderTheme(selectedCategory, theme);
+    const categoryTranslations = {
+      childhood: 'Kindheit',
+      nature: 'Natur',
+      vibe: 'Stimmung',
+      random: 'Zufällig'
+    };
     
     return (
       <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
-        {/* Window Frame with 3D effect */}
-        <div className={`p-2 border-2 border-black/30 w-full max-w-5xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
+        {/* Window Frame with 3D effect - Fixed size to prevent layout shift */}
+        <div className={`p-2 border-2 border-black/30 w-full max-w-5xl min-h-[600px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
           {/* Title bar */}
           <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
             <div className="flex items-center space-x-2">
@@ -153,26 +177,28 @@ const Pictures = () => {
           </div>
           
           {/* Window content */}
-          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
-            <div className="flex flex-col items-center justify-center text-center">
-              <h1 className={`text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ My Pictures ] / {selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}</h1>
+          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b min-h-[500px] ${styles.windowContent}`}>
+            <div className="flex flex-col items-center justify-center text-center h-full">
+              <h1 className={`text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>
+                [ {t('My Pictures')} ] / {t('language') === 'deutsch' ? categoryTranslations[selectedCategory as keyof typeof categoryTranslations] : selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}
+              </h1>
               
               {loading ? (
-                <p className={`mb-8 font-pixel drop-shadow-sm ${styles.text}`}>Loading images...</p>
+                <p className={`mb-8 font-pixel drop-shadow-sm ${styles.text}`}>{t('language') === 'deutsch' ? 'Bilder werden geladen...' : 'Loading images...'}</p>
               ) : error ? (
                 <div className="text-center mb-8">
-                  <p className="text-red-600 mb-4 font-pixel drop-shadow-sm">Error loading images: {error}</p>
+                  <p className="text-red-600 mb-4 font-pixel drop-shadow-sm">{t('language') === 'deutsch' ? 'Fehler beim Laden der Bilder: ' : 'Error loading images: '}{error}</p>
                   <button
                     onClick={refetch}
                     className={`text-sm underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm mx-auto ${styles.link}`}
                   >
                     <RefreshCw className="w-4 h-4" />
-                    Retry
+                    {t('language') === 'deutsch' ? 'Erneut versuchen' : 'Retry'}
                   </button>
                 </div>
               ) : photos.length > 0 ? (
                 <>
-                  <div className="w-full max-w-xs sm:max-w-xl md:max-w-2xl">
+                  <div className="w-full max-w-xs sm:max-w-xl md:max-w-2xl flex-1 flex items-center justify-center">
                     <Carousel className="w-full" opts={{ loop: true }}>
                       <CarouselContent>
                         {photos.map((src, index) => (
@@ -194,7 +220,9 @@ const Pictures = () => {
                                   </div>
                                 </CardContent>
                               </Card>
-                              <p className={`mt-2 text-sm font-pixel drop-shadow-sm ${styles.text}`}>Memory #{index + 1}</p>
+                              <p className={`mt-2 text-sm font-pixel drop-shadow-sm ${styles.text}`}>
+                                {t('language') === 'deutsch' ? 'Erinnerung' : 'Memory'} #{index + 1}
+                              </p>
                             </div>
                           </CarouselItem>
                         ))}
@@ -205,7 +233,9 @@ const Pictures = () => {
                   </div>
                 </>
               ) : (
-                <p className={`mb-8 font-pixel drop-shadow-sm ${styles.text}`}>No photos in this category yet.</p>
+                <p className={`mb-8 font-pixel drop-shadow-sm ${styles.text}`}>
+                  {t('language') === 'deutsch' ? 'Noch keine Fotos in dieser Kategorie.' : 'No photos in this category yet.'}
+                </p>
               )}
 
               <button
@@ -213,7 +243,7 @@ const Pictures = () => {
                 className={`mt-8 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}
               >
                 <ArrowLeft className="w-5 h-5" />
-                Back to Folders
+                {t('language') === 'deutsch' ? 'Zurück zu Ordnern' : 'Back to Folders'}
               </button>
             </div>
           </div>
@@ -224,8 +254,8 @@ const Pictures = () => {
 
   return (
     <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
-      {/* Window Frame with 3D effect */}
-      <div className={`p-2 border-2 border-black/30 w-full max-w-5xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
+      {/* Window Frame with 3D effect - Fixed size to prevent layout shift */}
+      <div className={`p-2 border-2 border-black/30 w-full max-w-5xl min-h-[600px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
         {/* Title bar */}
         <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
           <div className="flex items-center space-x-2">
@@ -237,64 +267,79 @@ const Pictures = () => {
         </div>
         
         {/* Window content */}
-        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
-          <div className="flex flex-col items-center justify-center text-center">
-            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ My Pictures ]</h1>
-            <p className={`mb-4 font-pixel drop-shadow-sm ${styles.text}`}>Choose a folder to explore.</p>
+        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b min-h-[500px] ${styles.windowContent}`}>
+          <div className="flex flex-col items-center justify-center text-center h-full">
+            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Pictures')} ]</h1>
+            <p className={`mb-4 font-pixel drop-shadow-sm ${styles.text}`}>
+              {t('language') === 'deutsch' ? 'Wählen Sie einen Ordner zum Erkunden.' : 'Choose a folder to explore.'}
+            </p>
             
             {loading && (
-              <p className={`mb-4 text-sm font-pixel ${styles.text}`}>Loading images from storage...</p>
+              <p className={`mb-4 text-sm font-pixel ${styles.text}`}>
+                {t('language') === 'deutsch' ? 'Lade Bilder aus dem Speicher...' : 'Loading images from storage...'}
+              </p>
             )}
             
             {error && (
               <div className="mb-4 text-center">
-                <p className="text-red-600 text-sm font-pixel mb-2">Storage error: {error}</p>
+                <p className="text-red-600 text-sm font-pixel mb-2">
+                  {t('language') === 'deutsch' ? 'Speicherfehler: ' : 'Storage error: '}{error}
+                </p>
                 <button
                   onClick={refetch}
                   className={`text-xs underline transition-colors flex items-center gap-1 font-pixel mx-auto ${styles.link}`}
                 >
                   <RefreshCw className="w-3 h-3" />
-                  Refresh
+                  {t('language') === 'deutsch' ? 'Aktualisieren' : 'Refresh'}
                 </button>
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-8 mb-8">
+            <div className="grid grid-cols-2 gap-12 mb-8 flex-1 items-center">
               {Object.keys(photoCategories).map((category) => {
                 const imageCount = photoCategories[category as keyof typeof photoCategories].length;
                 const isFromStorage = storageImages[category as keyof typeof storageImages].length > 0;
                 const folderColors = getFolderColors(category, theme);
+                const categoryTranslations = {
+                  childhood: 'Kindheit',
+                  nature: 'Natur',
+                  vibe: 'Stimmung',
+                  random: 'Zufällig'
+                };
+                
                 return (
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className="flex flex-col items-center justify-center space-y-4 w-40 h-40 p-6 transition-all duration-200 hover:scale-105 active:scale-95"
+                    className="flex flex-col items-center justify-center space-y-4 w-48 h-48 p-6 transition-all duration-200 hover:scale-105 active:scale-95"
                   >
                     {/* Enhanced folder icon with 3D effect and proper colors */}
                     <div className="relative">
-                      <div className={`w-20 h-20 bg-gradient-to-br ${folderColors.gradient} rounded-lg border-2 border-black/20 shadow-xl flex items-center justify-center relative`}>
+                      <div className={`w-24 h-24 bg-gradient-to-br ${folderColors.gradient} rounded-lg border-2 border-black/20 shadow-xl flex items-center justify-center relative`}>
                         {/* Highlight effect */}
-                        <div className="absolute top-1 left-1 w-12 h-8 bg-gradient-to-br from-white/40 to-transparent rounded blur-sm"></div>
+                        <div className="absolute top-1 left-1 w-16 h-10 bg-gradient-to-br from-white/40 to-transparent rounded blur-sm"></div>
                         
                         {/* Folder icon */}
-                        <Folder className={`w-12 h-12 ${folderColors.icon} drop-shadow-lg relative z-10`} />
+                        <Folder className={`w-14 h-14 ${folderColors.icon} drop-shadow-lg relative z-10`} />
                         
                         {/* Count badge - only show for storage images */}
                         {imageCount > 0 && isFromStorage && (
-                          <div className={`absolute -top-2 -right-2 w-6 h-6 ${folderColors.badge} text-white text-xs rounded-full flex items-center justify-center font-bold border-2 border-white shadow-lg`}>
+                          <div className={`absolute -top-2 -right-2 w-7 h-7 ${folderColors.badge} text-white text-sm rounded-full flex items-center justify-center font-bold border-2 border-white shadow-lg`}>
                             {imageCount}
                           </div>
                         )}
                       </div>
                     </div>
-                    <span className={`text-lg capitalize font-bold font-pixel drop-shadow-sm ${styles.text}`}>{category}</span>
+                    <span className={`text-xl capitalize font-bold font-pixel drop-shadow-sm ${styles.text}`}>
+                      {t('language') === 'deutsch' ? categoryTranslations[category as keyof typeof categoryTranslations] : category}
+                    </span>
                   </button>
                 );
               })}
             </div>
 
             <Link to="/desktop" className={`text-xl underline transition-colors font-pixel drop-shadow-sm ${styles.link}`}>
-              &lt;- Back to Desktop
+              &lt;- {t('Back to Desktop')}
             </Link>
           </div>
         </div>
