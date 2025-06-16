@@ -21,6 +21,25 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Helper method to check if a file is an image
+  const isImageFile = (filename: string): boolean => {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+    const lowerFilename = filename.toLowerCase();
+    return imageExtensions.some(ext => lowerFilename.endsWith(ext));
+  };
+
+  // Helper method to match filename to category
+  const matchesCategory = (filename: string, category: string): boolean => {
+    const categoryKeywords = {
+      childhood: ['childhood', 'child', 'kid', 'baby', 'young'],
+      nature: ['nature', 'landscape', 'outdoor', 'tree', 'forest', 'mountain', 'beach', 'sky'],
+      vibe: ['vibe', 'mood', 'aesthetic', 'art', 'style', 'cool']
+    };
+
+    const keywords = categoryKeywords[category as keyof typeof categoryKeywords] || [];
+    return keywords.some(keyword => filename.includes(keyword));
+  };
+
   useEffect(() => {
     const fetchImages = async () => {
       try {
@@ -53,7 +72,7 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
               // Skip if it's a folder (id is null for folders)
               if (!file.id) continue;
               
-              if (file.name && this.isImageFile(file.name)) {
+              if (file.name && isImageFile(file.name)) {
                 const { data: urlData } = supabase.storage
                   .from(bucketName)
                   .getPublicUrl(`${folder}/${file.name}`);
@@ -83,7 +102,7 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
             // Skip folders
             if (file.id === null) continue;
             
-            if (file.name && this.isImageFile(file.name)) {
+            if (file.name && isImageFile(file.name)) {
               const { data: urlData } = supabase.storage
                 .from(bucketName)
                 .getPublicUrl(file.name);
@@ -92,11 +111,11 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
                 const fileName = file.name.toLowerCase();
                 
                 // Categorize based on filename
-                if (this.matchesCategory(fileName, 'childhood')) {
+                if (matchesCategory(fileName, 'childhood')) {
                   categorizedImages.childhood.push(urlData.publicUrl);
-                } else if (this.matchesCategory(fileName, 'nature')) {
+                } else if (matchesCategory(fileName, 'nature')) {
                   categorizedImages.nature.push(urlData.publicUrl);
-                } else if (this.matchesCategory(fileName, 'vibe')) {
+                } else if (matchesCategory(fileName, 'vibe')) {
                   categorizedImages.vibe.push(urlData.publicUrl);
                 } else {
                   categorizedImages.random.push(urlData.publicUrl);
@@ -125,25 +144,6 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
 
     fetchImages();
   }, [bucketName]);
-
-  // Helper method to check if a file is an image
-  const isImageFile = (filename: string): boolean => {
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
-    const lowerFilename = filename.toLowerCase();
-    return imageExtensions.some(ext => lowerFilename.endsWith(ext));
-  };
-
-  // Helper method to match filename to category
-  const matchesCategory = (filename: string, category: string): boolean => {
-    const categoryKeywords = {
-      childhood: ['childhood', 'child', 'kid', 'baby', 'young'],
-      nature: ['nature', 'landscape', 'outdoor', 'tree', 'forest', 'mountain', 'beach', 'sky'],
-      vibe: ['vibe', 'mood', 'aesthetic', 'art', 'style', 'cool']
-    };
-
-    const keywords = categoryKeywords[category as keyof typeof categoryKeywords] || [];
-    return keywords.some(keyword => filename.includes(keyword));
-  };
 
   const refetch = () => {
     setLoading(true);

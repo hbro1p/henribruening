@@ -32,31 +32,13 @@ const fallbackImages = {
   random: []
 };
 
-const getFolderColors = (category: string, theme: string) => {
+const getFolderColors = (theme: string) => {
   // Consistent folder colors for all themes - always blue for Pictures
-  const colors = {
-    childhood: {
-      gradient: 'from-blue-400 via-blue-500 to-blue-700',
-      icon: 'text-blue-800',
-      badge: 'bg-blue-600'
-    },
-    nature: {
-      gradient: 'from-blue-400 via-blue-500 to-blue-700',
-      icon: 'text-blue-800',
-      badge: 'bg-blue-600'
-    },
-    vibe: {
-      gradient: 'from-blue-400 via-blue-500 to-blue-700',
-      icon: 'text-blue-800',
-      badge: 'bg-blue-600'
-    },
-    random: {
-      gradient: 'from-blue-400 via-blue-500 to-blue-700',
-      icon: 'text-blue-800',
-      badge: 'bg-blue-600'
-    }
+  return {
+    gradient: 'from-blue-400 via-blue-500 to-blue-700',
+    icon: 'text-blue-800',
+    badge: 'bg-blue-600'
   };
-  return colors[category as keyof typeof colors] || colors.childhood;
 };
 
 const Pictures = () => {
@@ -126,8 +108,8 @@ const Pictures = () => {
     
     return (
       <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
-        {/* Window Frame with 3D effect - Consistent size */}
-        <div className={`p-2 border-2 border-black/30 w-full max-w-5xl h-[700px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
+        {/* Window Frame with consistent size */}
+        <div className={`p-2 border-2 border-black/30 w-full max-w-5xl min-h-[700px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
           {/* Title bar */}
           <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
             <div className="flex items-center space-x-2">
@@ -139,8 +121,8 @@ const Pictures = () => {
           </div>
           
           {/* Window content */}
-          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b h-[calc(100%-52px)] overflow-hidden ${styles.windowContent}`}>
-            <div className="flex flex-col items-center justify-center text-center h-full">
+          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b flex flex-col ${styles.windowContent}`} style={{ minHeight: 'calc(700px - 52px)' }}>
+            <div className="flex flex-col items-center justify-center text-center flex-1">
               <h1 className={`text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>
                 [ {t('My Pictures')} ] / {t('language') === 'deutsch' ? categoryTranslations[selectedCategory as keyof typeof categoryTranslations] : selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}
               </h1>
@@ -216,8 +198,8 @@ const Pictures = () => {
 
   return (
     <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
-      {/* Window Frame with 3D effect - Consistent size */}
-      <div className={`p-2 border-2 border-black/30 w-full max-w-5xl h-[700px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
+      {/* Window Frame with consistent size */}
+      <div className={`p-2 border-2 border-black/30 w-full max-w-5xl min-h-[700px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
         {/* Title bar */}
         <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
           <div className="flex items-center space-x-2">
@@ -229,8 +211,8 @@ const Pictures = () => {
         </div>
         
         {/* Window content */}
-        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b h-[calc(100%-52px)] overflow-hidden ${styles.windowContent}`}>
-          <div className="flex flex-col items-center justify-center text-center h-full">
+        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b flex flex-col ${styles.windowContent}`} style={{ minHeight: 'calc(700px - 52px)' }}>
+          <div className="flex flex-col items-center justify-center text-center flex-1">
             <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Pictures')} ]</h1>
             <p className={`mb-4 font-pixel drop-shadow-sm ${styles.text}`}>
               {t('language') === 'deutsch' ? 'Wählen Sie einen Ordner zum Erkunden.' : 'Choose a folder to explore.'}
@@ -261,7 +243,7 @@ const Pictures = () => {
               {Object.keys(photoCategories).map((category) => {
                 const imageCount = photoCategories[category as keyof typeof photoCategories].length;
                 const isFromStorage = storageImages[category as keyof typeof storageImages].length > 0;
-                const folderColors = getFolderColors(category, theme);
+                const folderColors = getFolderColors(theme);
                 const categoryTranslations = {
                   childhood: 'Kindheit',
                   nature: 'Natur',
