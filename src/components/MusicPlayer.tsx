@@ -1,41 +1,79 @@
-import React, { useState } from 'react';
-import ReactPlayer from 'react-player/youtube';
-import { Play, Pause, Music, SkipForward, SkipBack } from 'lucide-react';
+
+import React, { useState, useRef, useEffect } from 'react';
+import { Play, Pause, Music, SkipForward, SkipBack, Volume2, RotateCcw } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useSettings } from '@/contexts/SettingsContext';
-
-const playlist2000s = [
-  "https://www.youtube.com/watch?v=Uw_a2yH_Xpc", // Hey Ya! - OutKast
-  "https://www.youtube.com/watch?v=psuRGfAaju4", // Hips Don't Lie - Shakira
-  "https://www.youtube.com/watch?v=SR6iYWJxHqs", // Crazy - Gnarls Barkley
-  "https://www.youtube.com/watch?v=4JkIs37a2JE", // Since U Been Gone - Kelly Clarkson
-  "https://www.youtube.com/watch?v=F57P9C4SAW4", // Hollaback Girl - Gwen Stefani
-  "https://www.youtube.com/watch?v=fJ9rUzIMcZQ", // Complicated - Avril Lavigne
-  "https://www.youtube.com/watch?v=YQHsXMglC9A", // Bring Me To Life - Evanescence
-  "https://www.youtube.com/watch?v=hLQl3WQQoQ0", // SexyBack - Justin Timberlake
-];
+import { useMusicFiles } from '@/hooks/useMusicFiles';
 
 const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
+  const [volume, setVolume] = useState(0.8);
+  const [isLooping, setIsLooping] = useState(true);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const location = useLocation();
   const { t, theme } = useSettings();
+  const { musicFiles, loading, error } = useMusicFiles();
+
+  // Reset current track if it's out of bounds when files change
+  useEffect(() => {
+    if (musicFiles.length > 0 && currentTrack >= musicFiles.length) {
+      setCurrentTrack(0);
+    }
+  }, [musicFiles, currentTrack]);
 
   const togglePlayPause = () => {
-    setIsPlaying(!isPlaying);
+    if (!audioRef.current || musicFiles.length === 0) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(console.error);
+    }
   };
 
   const nextTrack = () => {
-    setCurrentTrack((prev) => (prev + 1) % playlist2000s.length);
+    if (musicFiles.length === 0) return;
+    setCurrentTrack((prev) => (prev + 1) % musicFiles.length);
   };
 
   const prevTrack = () => {
-    setCurrentTrack((prev) => (prev - 1 + playlist2000s.length) % playlist2000s.length);
+    if (musicFiles.length === 0) return;
+    setCurrentTrack((prev) => (prev - 1 + musicFiles.length) % musicFiles.length);
   };
 
   const handleEnded = () => {
-    nextTrack();
+    if (isLooping) {
+      nextTrack();
+    } else {
+      setIsPlaying(false);
+    }
   };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
+  };
+
+  // Update audio element when track changes
+  useEffect(() => {
+    if (audioRef.current && musicFiles.length > 0) {
+      const wasPlaying = isPlaying;
+      if (wasPlaying) {
+        audioRef.current.pause();
+      }
+      
+      audioRef.current.src = musicFiles[currentTrack]?.url || '';
+      audioRef.current.volume = volume;
+      
+      if (wasPlaying && musicFiles[currentTrack]?.url) {
+        audioRef.current.play().catch(console.error);
+      }
+    }
+  }, [currentTrack, musicFiles]);
 
   const getThemeStyles = () => {
     switch (theme) {
@@ -49,7 +87,6 @@ const MusicPlayer = () => {
           subText: 'text-gray-300',
           buttonPrimary: 'bg-gradient-to-br from-gray-500 via-gray-600 to-gray-800 border-gray-400/30 hover:from-gray-400 hover:via-gray-500 hover:to-gray-700',
           buttonSecondary: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black border-gray-500/30 hover:from-gray-500 hover:via-gray-600 hover:to-gray-800',
-          eqBars: 'bg-gray-400',
           statusLed: isPlaying ? 'bg-gradient-to-br from-green-400 to-green-600' : 'bg-gradient-to-br from-red-400 to-red-600'
         };
       case 'dark-vhs':
@@ -62,7 +99,6 @@ const MusicPlayer = () => {
           subText: 'text-gray-300',
           buttonPrimary: 'bg-gradient-to-br from-red-500 via-red-600 to-red-800 border-white/30 hover:from-red-400 hover:via-red-500 hover:to-red-700',
           buttonSecondary: 'bg-gradient-to-br from-gray-500 via-gray-600 to-gray-800 border-white/30 hover:from-gray-400 hover:via-gray-500 hover:to-gray-700',
-          eqBars: 'bg-white',
           statusLed: isPlaying ? 'bg-gradient-to-br from-white to-gray-500' : 'bg-gradient-to-br from-red-400 to-red-600'
         };
       case 'retro-chrome':
@@ -75,7 +111,6 @@ const MusicPlayer = () => {
           subText: 'text-blue-300',
           buttonPrimary: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 border-blue-300/30 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700',
           buttonSecondary: 'bg-gradient-to-br from-slate-500 via-blue-600 to-slate-700 border-blue-400/30 hover:from-slate-400 hover:via-blue-500 hover:to-slate-600',
-          eqBars: 'bg-blue-400',
           statusLed: isPlaying ? 'bg-gradient-to-br from-cyan-400 to-blue-600' : 'bg-gradient-to-br from-blue-400 to-blue-600'
         };
       default:
@@ -88,7 +123,6 @@ const MusicPlayer = () => {
           subText: 'text-green-300',
           buttonPrimary: 'bg-gradient-to-br from-red-400 via-red-500 to-red-700 border-black/30 hover:from-red-300 hover:via-red-400 hover:to-red-600',
           buttonSecondary: 'bg-gradient-to-br from-gray-400 via-gray-500 to-gray-700 border-black/30 hover:from-gray-300 hover:via-gray-400 hover:to-gray-600',
-          eqBars: 'bg-green-400',
           statusLed: isPlaying ? 'bg-gradient-to-br from-lime-400 to-green-600' : 'bg-gradient-to-br from-red-400 to-red-600'
         };
     }
@@ -96,22 +130,22 @@ const MusicPlayer = () => {
 
   const styles = getThemeStyles();
 
+  // Don't render if no music files and not loading
+  if (!loading && musicFiles.length === 0) {
+    return null;
+  }
+
   return (
     <>
-      {/* Always keep ReactPlayer mounted for continuous playback */}
-      <div className='hidden'>
-        <ReactPlayer
-          url={playlist2000s[currentTrack]}
-          playing={isPlaying}
-          volume={0.8}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          onEnded={handleEnded}
-          onError={(e) => console.error('ReactPlayer error:', e)}
-          width="0"
-          height="0"
-        />
-      </div>
+      {/* Hidden audio element */}
+      <audio
+        ref={audioRef}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        onEnded={handleEnded}
+        onError={(e) => console.error('Audio error:', e)}
+        preload="metadata"
+      />
       
       {/* Only show visual controls on desktop route */}
       {location.pathname === '/desktop' && (
@@ -125,54 +159,58 @@ const MusicPlayer = () => {
                 
                 {/* Top section with display */}
                 <div className="mb-4">
-                  {/* Clean LCD-style display */}
+                  {/* LCD-style display */}
                   <div className={`p-3 rounded border-2 shadow-inner ${styles.display}`}>
                     <div className="flex items-center justify-between">
                       {/* Track info */}
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <p className={`font-pixel text-xs font-bold drop-shadow-sm ${styles.text}`}>
-                          🎵 2000S {t('VIBES')}
+                          🎵 {loading ? 'LOADING...' : musicFiles.length > 0 ? '2000S VIBES' : 'NO MUSIC'}
                         </p>
-                        <p className={`text-xs font-pixel ${styles.subText}`}>
-                          {t('TRACK')} {String(currentTrack + 1).padStart(2, '0')}/{playlist2000s.length}
-                        </p>
+                        {musicFiles.length > 0 && (
+                          <>
+                            <p className={`text-xs font-pixel ${styles.subText} truncate`}>
+                              {musicFiles[currentTrack]?.title || 'Unknown Track'}
+                            </p>
+                            <p className={`text-xs font-pixel ${styles.subText}`}>
+                              {t('TRACK')} {String(currentTrack + 1).padStart(2, '0')}/{musicFiles.length}
+                            </p>
+                          </>
+                        )}
                       </div>
                       
-                      {/* Simple EQ visualization */}
-                      <div className="flex items-end h-6 space-x-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <div
-                            key={i}
-                            className={`w-1 rounded-full origin-bottom transition-all duration-200 ${styles.eqBars} ${
-                              isPlaying ? 'animate-equalizer' : 'h-2'
-                            }`}
-                            style={{
-                              animationDelay: `${i * 100}ms`,
-                              height: isPlaying ? `${Math.random() * 16 + 8}px` : '8px',
-                            }}
-                          ></div>
-                        ))}
+                      {/* Loop indicator */}
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => setIsLooping(!isLooping)}
+                          className={`p-1 rounded transition-colors ${isLooping ? 'bg-green-500/20' : 'bg-gray-500/20'}`}
+                          title={isLooping ? 'Loop On' : 'Loop Off'}
+                        >
+                          <RotateCcw className={`w-3 h-3 ${isLooping ? styles.text : 'text-gray-500'}`} />
+                        </button>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Clean controls section */}
-                <div className="flex items-center justify-center space-x-3">
+                {/* Controls section */}
+                <div className="flex items-center justify-center space-x-3 mb-3">
                   {/* Previous button */}
                   <button
                     onClick={prevTrack}
-                    className={`relative w-10 h-10 rounded-full shadow-lg border-2 transition-all duration-200 active:scale-95 ${styles.buttonSecondary}`}
+                    disabled={musicFiles.length === 0}
+                    className={`relative w-10 h-10 rounded-full shadow-lg border-2 transition-all duration-200 active:scale-95 disabled:opacity-50 ${styles.buttonSecondary}`}
                   >
                     <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-full"></div>
                     <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/30 to-transparent rounded-full"></div>
                     <SkipBack className={`w-4 h-4 drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${styles.text}`} />
                   </button>
                   
-                  {/* Play/Pause button - cleaner design */}
+                  {/* Play/Pause button */}
                   <button
                     onClick={togglePlayPause}
-                    className={`relative w-12 h-12 rounded-full shadow-xl border-2 transition-all duration-200 active:scale-95 ${styles.buttonPrimary}`}
+                    disabled={musicFiles.length === 0}
+                    className={`relative w-12 h-12 rounded-full shadow-xl border-2 transition-all duration-200 active:scale-95 disabled:opacity-50 ${styles.buttonPrimary}`}
                   >
                     <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-full"></div>
                     <div className="absolute inset-x-1 bottom-1 h-3 bg-gradient-to-t from-black/30 to-transparent rounded-full"></div>
@@ -185,7 +223,8 @@ const MusicPlayer = () => {
                   {/* Next button */}
                   <button
                     onClick={nextTrack}
-                    className={`relative w-10 h-10 rounded-full shadow-lg border-2 transition-all duration-200 active:scale-95 ${styles.buttonSecondary}`}
+                    disabled={musicFiles.length === 0}
+                    className={`relative w-10 h-10 rounded-full shadow-lg border-2 transition-all duration-200 active:scale-95 disabled:opacity-50 ${styles.buttonSecondary}`}
                   >
                     <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-full"></div>
                     <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/30 to-transparent rounded-full"></div>
@@ -193,10 +232,24 @@ const MusicPlayer = () => {
                   </button>
                 </div>
 
-                {/* Bottom status section */}
-                <div className="mt-4 flex items-center justify-center">
-                  {/* Simple status LED - no volume controls */}
-                  <div className="flex items-center space-x-3">
+                {/* Volume and status section */}
+                <div className="flex items-center justify-between">
+                  {/* Volume control */}
+                  <div className="flex items-center space-x-2 flex-1">
+                    <Volume2 className={`w-3 h-3 ${styles.text}`} />
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.1"
+                      value={volume}
+                      onChange={handleVolumeChange}
+                      className="flex-1 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                    />
+                  </div>
+                  
+                  {/* Status LED */}
+                  <div className="flex items-center space-x-2">
                     <Music className={`w-4 h-4 ${styles.text}`} />
                     <div className={`w-3 h-3 rounded-full shadow-sm ${styles.statusLed} ${isPlaying ? 'animate-pulse' : ''}`}></div>
                   </div>
