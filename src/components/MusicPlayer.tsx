@@ -142,18 +142,18 @@ const MusicPlayer = () => {
       
       {/* Folder-style Music Player */}
       {location.pathname === '/desktop' && (
-        <div className="fixed bottom-16 right-4 z-40">
-          <div className={`w-80 rounded-lg p-6 transition-all duration-300 hover:scale-[1.02] ${styles.container}`}>
+        <div className="fixed bottom-16 left-1/2 transform -translate-x-1/2 z-40 px-4">
+          <div className={`w-80 max-w-[calc(100vw-2rem)] rounded-lg p-6 transition-all duration-300 hover:scale-[1.02] ${styles.container}`}>
             
             {/* Music Icon Header */}
-            <div className="flex items-center justify-center mb-4">
+            <div className="flex items-center justify-center mb-6">
               <div className={`w-16 h-16 rounded-xl flex items-center justify-center ${isPlaying ? 'bg-green-500' : 'bg-gray-500'} shadow-lg border-2 border-white/20`}>
                 <Music className="w-8 h-8 text-white drop-shadow-lg" />
               </div>
             </div>
 
             {/* Track Info */}
-            <div className="text-center mb-4">
+            <div className="text-center mb-6">
               <p className={`font-bold text-base mb-2 px-2 leading-tight ${styles.text}`} style={{
                 fontSize: '14px',
                 lineHeight: '1.2',
@@ -168,48 +168,50 @@ const MusicPlayer = () => {
               </p>
             </div>
 
-            {/* Control Buttons */}
-            <div className="flex items-center justify-center space-x-3 mb-4">
-              <button
-                onClick={prevTrack}
-                disabled={musicFiles.length === 0}
-                className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
-              >
-                <SkipBack className="w-5 h-5" />
-              </button>
-              
-              <button
-                onClick={togglePlayPause}
-                disabled={musicFiles.length === 0}
-                className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/30 shadow-lg hover:scale-105 active:scale-95 ${styles.playButton}`}
-              >
-                {isPlaying ? 
-                  <Pause className="w-7 h-7 drop-shadow-sm" /> : 
-                  <Play className="w-7 h-7 ml-1 drop-shadow-sm" />
-                }
-              </button>
-              
-              <button
-                onClick={nextTrack}
-                disabled={musicFiles.length === 0}
-                className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
-              >
-                <SkipForward className="w-5 h-5" />
-              </button>
+            {/* Control Buttons - Perfectly Centered */}
+            <div className="flex items-center justify-center mb-6">
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={prevTrack}
+                  disabled={musicFiles.length === 0}
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
+                >
+                  <SkipBack className="w-5 h-5" />
+                </button>
+                
+                <button
+                  onClick={togglePlayPause}
+                  disabled={musicFiles.length === 0}
+                  className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/30 shadow-lg hover:scale-105 active:scale-95 ${styles.playButton}`}
+                >
+                  {isPlaying ? 
+                    <Pause className="w-7 h-7 drop-shadow-sm" /> : 
+                    <Play className="w-7 h-7 ml-1 drop-shadow-sm" />
+                  }
+                </button>
+                
+                <button
+                  onClick={nextTrack}
+                  disabled={musicFiles.length === 0}
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
+                >
+                  <SkipForward className="w-5 h-5" />
+                </button>
 
-              <button
-                onClick={restartTrack}
-                disabled={musicFiles.length === 0}
-                className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
-                title={t('Restart Track')}
-              >
-                <RotateCcw className="w-5 h-5" />
-              </button>
+                <button
+                  onClick={restartTrack}
+                  disabled={musicFiles.length === 0}
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
+                  title={t('Restart Track')}
+                >
+                  <RotateCcw className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
-            {/* Volume Control */}
-            <div className="flex items-center space-x-3 px-2">
-              <Volume2 className={`w-5 h-5 ${styles.text}`} />
+            {/* Volume Control - Centered */}
+            <div className="flex items-center justify-center space-x-3 px-2">
+              <Volume2 className={`w-5 h-5 flex-shrink-0 ${styles.text}`} />
               <input
                 type="range"
                 min="0"
@@ -217,12 +219,12 @@ const MusicPlayer = () => {
                 step="0.1"
                 value={volume}
                 onChange={handleVolumeChange}
-                className={`flex-1 h-3 rounded-lg appearance-none cursor-pointer ${styles.slider}`}
+                className={`flex-1 h-3 rounded-lg appearance-none cursor-pointer max-w-32 ${styles.slider}`}
                 style={{
                   background: `linear-gradient(to right, currentColor 0%, currentColor ${volume * 100}%, #e2e8f0 ${volume * 100}%, #e2e8f0 100%)`
                 }}
               />
-              <span className={`text-sm font-mono w-10 text-center font-bold ${styles.subText}`}>
+              <span className={`text-sm font-mono w-10 text-center font-bold flex-shrink-0 ${styles.subText}`}>
                 {Math.round(volume * 100)}%
               </span>
             </div>
