@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
 import { Play, Pause, Music, SkipForward, SkipBack } from 'lucide-react';
+import { useLocation } from 'react-router-dom';
 
 const playlist2000s = [
   "https://www.youtube.com/watch?v=Uw_a2yH_Xpc", // Hey Ya! - OutKast
@@ -17,6 +18,7 @@ const playlist2000s = [
 const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
+  const location = useLocation();
 
   const togglePlayPause = () => {
     setIsPlaying(!isPlaying);
@@ -34,8 +36,26 @@ const MusicPlayer = () => {
     nextTrack();
   };
 
+  // Only show on desktop route
+  if (location.pathname !== '/desktop') {
+    return (
+      <div className='hidden'>
+        <ReactPlayer
+          url={playlist2000s[currentTrack]}
+          playing={isPlaying}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onEnded={handleEnded}
+          onError={(e) => console.error('ReactPlayer error:', e)}
+          width="0"
+          height="0"
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="fixed bottom-8 right-8 bg-windows-gray p-2 border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black w-80 shadow-2xl font-pixel z-50">
+    <div className="absolute bottom-8 right-8 bg-windows-gray p-2 border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black w-80 shadow-2xl font-pixel">
       <div className='hidden'>
         <ReactPlayer
           url={playlist2000s[currentTrack]}
