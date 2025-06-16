@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
@@ -54,6 +53,11 @@ const Pictures = () => {
     random: storageImages.random.length > 0 ? storageImages.random : fallbackImages.random
   };
 
+  // Debug logging to see what's happening
+  console.log('Selected category:', selectedCategory);
+  console.log('Storage images:', storageImages);
+  console.log('Photo categories:', photoCategories);
+
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
       return {
@@ -106,6 +110,9 @@ const Pictures = () => {
       random: 'Zufällig'
     };
     
+    console.log(`Photos for ${selectedCategory}:`, photos);
+    console.log(`Photos length: ${photos.length}`);
+    
     return (
       <div className={`flex items-center justify-center min-h-screen p-2 sm:p-4 md:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
         {/* Fixed window dimensions to prevent layout shift */}
@@ -142,7 +149,7 @@ const Pictures = () => {
                 </div>
               ) : photos.length > 0 ? (
                 <div className="flex-1 flex items-center justify-center w-full">
-                  <div className="w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl relative">
+                  <div className="w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl">
                     <Carousel 
                       className="w-full" 
                       opts={{ 
@@ -150,13 +157,12 @@ const Pictures = () => {
                         align: "center",
                         skipSnaps: false,
                         dragFree: false,
-                        containScroll: "trimSnaps",
-                        duration: 20
+                        containScroll: "trimSnaps"
                       }}
                     >
                       <CarouselContent>
                         {photos.map((src, index) => (
-                          <CarouselItem key={index} className="basis-full">
+                          <CarouselItem key={`${selectedCategory}-${index}`} className="basis-full">
                             <div className="p-2">
                               <Card className="border-2 border-black/30 bg-gradient-to-br from-gray-800 to-black overflow-hidden shadow-2xl rounded-lg">
                                 <CardContent className="flex aspect-[4/3] items-center justify-center p-2">
@@ -164,19 +170,21 @@ const Pictures = () => {
                                     <img 
                                       src={src} 
                                       alt={`${selectedCategory} memory ${index + 1}`} 
-                                      className="max-h-full max-w-full object-contain rounded pointer-events-none select-none"
-                                      draggable={false}
+                                      className="max-h-full max-w-full object-contain rounded"
                                       onError={(e) => {
                                         console.error('Image failed to load:', src);
                                         const target = e.target as HTMLImageElement;
                                         target.style.display = 'none';
+                                      }}
+                                      onLoad={() => {
+                                        console.log('Image loaded successfully:', src);
                                       }}
                                     />
                                   </div>
                                 </CardContent>
                               </Card>
                               <p className={`mt-2 text-xs sm:text-sm font-pixel drop-shadow-sm text-center ${styles.text}`}>
-                                {t('language') === 'deutsch' ? 'Erinnerung' : 'Memory'} #{index + 1}
+                                {t('language') === 'deutsch' ? 'Erinnerung' : 'Memory'} #{index + 1} / {photos.length}
                               </p>
                             </div>
                           </CarouselItem>
