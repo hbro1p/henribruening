@@ -1,7 +1,7 @@
 
 import React from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
-import { Folder, User, Mail, Joystick, Video, Code, Settings } from 'lucide-react';
+import { Folder, User, Mail, Video, Code, Settings } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 
 const Desktop = () => {
@@ -17,7 +17,6 @@ const Desktop = () => {
         <DesktopIcon icon={User} label={t('About Me')} to="/about" />
         <DesktopIcon icon={Mail} label={t('Contact')} to="/contact" />
         <DesktopIcon icon={Settings} label={t('Settings')} to="/settings" />
-        <DesktopIcon icon={Joystick} label={t('Game.exe')} to="/game" />
       </div>
     </div>
   );
