@@ -52,7 +52,8 @@ const MyProjects = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-3 mb-4 border-2 border-black/30 bg-gradient-to-br from-white to-gray-100 text-black rounded shadow-inner font-pixel"
+                  autoComplete="current-password"
+                  className="w-full p-3 mb-4 border-2 border-black/30 bg-white text-black rounded shadow-inner font-pixel focus:outline-none focus:border-blue-500 focus:bg-blue-50"
                   placeholder="Password"
                 />
                 {showError && (

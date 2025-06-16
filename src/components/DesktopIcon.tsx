@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -10,31 +9,31 @@ interface DesktopIconProps {
 }
 
 const getIconStyles = (label: string, theme: string) => {
-  // Space Mood theme - Clean Windows XP-style 2000s aesthetic
+  // Space Mood theme - Professional Windows XP-style
   if (theme === 'space-mood') {
     const colors = {
-      'My Pictures': 'from-blue-400 to-blue-600',
-      'Meine Bilder': 'from-blue-400 to-blue-600',
-      'My Videos': 'from-red-400 to-red-600',
-      'Meine Videos': 'from-red-400 to-red-600',
-      'My Projects': 'from-green-400 to-green-600',
-      'Meine Projekte': 'from-green-400 to-green-600',
-      'About Me': 'from-orange-400 to-orange-600',
-      'Über Mich': 'from-orange-400 to-orange-600',
-      'Contact': 'from-purple-400 to-purple-600',
-      'Kontakt': 'from-purple-400 to-purple-600',
-      'Settings': 'from-gray-400 to-gray-600',
-      'Einstellungen': 'from-gray-400 to-gray-600',
-      'Game.exe': 'from-yellow-400 to-yellow-600',
-      'Spiel.exe': 'from-yellow-400 to-yellow-600',
+      'My Pictures': 'from-blue-500 to-blue-700',
+      'Meine Bilder': 'from-blue-500 to-blue-700',
+      'My Videos': 'from-green-500 to-green-700',
+      'Meine Videos': 'from-green-500 to-green-700',
+      'My Projects': 'from-orange-500 to-orange-700',
+      'Meine Projekte': 'from-orange-500 to-orange-700',
+      'About Me': 'from-teal-500 to-teal-700',
+      'Über Mich': 'from-teal-500 to-teal-700',
+      'Contact': 'from-red-500 to-red-700',
+      'Kontakt': 'from-red-500 to-red-700',
+      'Settings': 'from-gray-500 to-gray-700',
+      'Einstellungen': 'from-gray-500 to-gray-700',
+      'Game.exe': 'from-purple-500 to-purple-700',
+      'Spiel.exe': 'from-purple-500 to-purple-700',
     };
     
     return {
-      gradient: colors[label as keyof typeof colors] || 'from-blue-400 to-blue-600',
-      border: 'border-gray-300',
-      hoverBorder: 'group-hover:border-gray-400',
-      shadow: 'shadow-md group-hover:shadow-lg',
-      highlight: 'bg-gradient-to-br from-white/40 to-transparent',
+      gradient: colors[label as keyof typeof colors] || 'from-blue-500 to-blue-700',
+      border: 'border-gray-400',
+      hoverBorder: 'group-hover:border-gray-500',
+      shadow: 'shadow-lg group-hover:shadow-xl',
+      highlight: 'bg-gradient-to-br from-white/50 to-transparent',
     };
   }
   
@@ -103,7 +102,7 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to }) => {
       <div className="h-8 flex items-center">
         <span className={`text-sm font-pixel select-none px-2 py-1 rounded transition-all duration-200 ${
           theme === 'space-mood' 
-            ? 'text-white bg-blue-600/80 border border-gray-300 group-hover:bg-blue-500/80'
+            ? 'text-black bg-gray-200/90 border border-gray-400 group-hover:bg-gray-100/90'
             : theme === 'dark-vhs'
             ? 'text-white bg-black/70 border border-white/20 group-hover:border-white/40'
             : theme === 'matrix-terminal'

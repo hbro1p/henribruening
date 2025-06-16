@@ -41,16 +41,16 @@ const MusicPlayer = () => {
     switch (theme) {
       case 'space-mood':
         return {
-          outerFrame: 'bg-gradient-to-br from-purple-800 via-purple-900 to-black border-purple-400/30 shadow-lg shadow-purple-500/20',
-          innerBezel: 'bg-gradient-to-br from-purple-900 via-black to-purple-800 border-purple-300/40',
-          mainBody: 'bg-gradient-to-br from-purple-800 via-black to-purple-900 border-purple-400/20',
-          display: 'bg-gradient-to-b from-purple-950 to-black border-purple-400/50',
-          text: 'text-purple-200',
-          subText: 'text-purple-300',
-          buttonPrimary: 'bg-gradient-to-br from-purple-500 via-purple-600 to-purple-800 border-purple-300/30 hover:from-purple-400 hover:via-purple-500 hover:to-purple-700',
-          buttonSecondary: 'bg-gradient-to-br from-purple-600 via-purple-700 to-black border-purple-400/30 hover:from-purple-500 hover:via-purple-600 hover:to-purple-800',
-          eqBars: 'bg-purple-400',
-          statusLed: isPlaying ? 'bg-gradient-to-br from-cyan-400 to-purple-600' : 'bg-gradient-to-br from-red-400 to-red-600'
+          outerFrame: 'bg-gradient-to-br from-gray-400 via-gray-500 to-gray-700 border-gray-600/30 shadow-lg shadow-black/20',
+          innerBezel: 'bg-gradient-to-br from-gray-800 via-black to-gray-700 border-gray-500/40',
+          mainBody: 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 border-gray-400/20',
+          display: 'bg-gradient-to-b from-gray-950 to-black border-gray-500/50',
+          text: 'text-gray-200',
+          subText: 'text-gray-300',
+          buttonPrimary: 'bg-gradient-to-br from-gray-500 via-gray-600 to-gray-800 border-gray-400/30 hover:from-gray-400 hover:via-gray-500 hover:to-gray-700',
+          buttonSecondary: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black border-gray-500/30 hover:from-gray-500 hover:via-gray-600 hover:to-gray-800',
+          eqBars: 'bg-gray-400',
+          statusLed: isPlaying ? 'bg-gradient-to-br from-green-400 to-green-600' : 'bg-gradient-to-br from-red-400 to-red-600'
         };
       case 'dark-vhs':
         return {
