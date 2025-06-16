@@ -144,24 +144,27 @@ const Pictures = () => {
                 <div className="flex-1 flex items-center justify-center w-full">
                   <div className="w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl">
                     <Carousel 
-                      className="w-full" 
+                      className="w-full select-none" 
                       opts={{ 
                         loop: true,
-                        dragFree: true,
+                        align: "center",
+                        skipSnaps: false,
+                        dragFree: false,
                         containScroll: "trimSnaps"
                       }}
                     >
-                      <CarouselContent className="-ml-2 md:-ml-4">
+                      <CarouselContent className="-ml-1 touch-pan-x">
                         {photos.map((src, index) => (
-                          <CarouselItem key={index} className="pl-2 md:pl-4">
-                            <div className="p-1">
+                          <CarouselItem key={index} className="pl-1 basis-full">
+                            <div className="p-2">
                               <Card className="border-2 border-black/30 bg-gradient-to-br from-gray-800 to-black overflow-hidden shadow-2xl rounded-lg">
                                 <CardContent className="flex aspect-[4/3] items-center justify-center p-2">
                                   <div className="bg-gradient-to-br from-gray-600 to-gray-800 p-2 rounded border border-black/20 shadow-inner h-full w-full flex items-center justify-center">
                                     <img 
                                       src={src} 
                                       alt={`${selectedCategory} memory ${index + 1}`} 
-                                      className="max-h-full max-w-full object-contain rounded"
+                                      className="max-h-full max-w-full object-contain rounded pointer-events-none select-none"
+                                      draggable={false}
                                       onError={(e) => {
                                         console.error('Image failed to load:', src);
                                         const target = e.target as HTMLImageElement;
@@ -178,8 +181,8 @@ const Pictures = () => {
                           </CarouselItem>
                         ))}
                       </CarouselContent>
-                      <CarouselPrevious className="text-white bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 border-2 border-black/30 shadow-lg -left-8 sm:-left-12" />
-                      <CarouselNext className="text-white bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 border-2 border-black/30 shadow-lg -right-8 sm:-right-12" />
+                      <CarouselPrevious className="text-white bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 border-2 border-black/30 shadow-lg -left-6 sm:-left-8" />
+                      <CarouselNext className="text-white bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 border-2 border-black/30 shadow-lg -right-6 sm:-right-8" />
                     </Carousel>
                   </div>
                 </div>
