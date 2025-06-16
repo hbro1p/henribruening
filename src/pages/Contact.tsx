@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Mail } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 
 const Contact = () => {
@@ -72,23 +72,39 @@ const Contact = () => {
         <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
           <div className="flex flex-col items-center justify-center text-center">
             <h1 className={`text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ Get In Touch ]</h1>
-            <p className={`mb-8 text-lg drop-shadow-sm ${styles.text}`}>Let's connect. Find me on Instagram.</p>
+            <p className={`mb-8 text-lg drop-shadow-sm ${styles.text}`}>Let's connect via Instagram or Email.</p>
 
-            <a
-              href="https://www.instagram.com/henribruening/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`inline-flex items-center justify-center transition-all duration-200 rounded-lg shadow-lg active:scale-95 ${styles.button}`}
-            >
-              <div className="flex items-center px-6 py-3 relative">
-                {/* Button highlights */}
-                <div className="absolute inset-x-1 top-1 h-2 bg-gradient-to-b from-white/40 to-transparent rounded-t"></div>
-                <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/20 to-transparent rounded-b"></div>
-                
-                <MessageSquare className="mr-3 h-6 w-6 drop-shadow-sm" />
-                <span className="text-xl font-pixel drop-shadow-sm">@henribruening</span>
-              </div>
-            </a>
+            <div className="space-y-4 w-full">
+              <a
+                href="https://www.instagram.com/henribruening/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`inline-flex items-center justify-center transition-all duration-200 rounded-lg shadow-lg active:scale-95 w-full ${styles.button}`}
+              >
+                <div className="flex items-center px-6 py-3 relative">
+                  {/* Button highlights */}
+                  <div className="absolute inset-x-1 top-1 h-2 bg-gradient-to-b from-white/40 to-transparent rounded-t"></div>
+                  <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/20 to-transparent rounded-b"></div>
+                  
+                  <MessageSquare className="mr-3 h-6 w-6 drop-shadow-sm" />
+                  <span className="text-xl font-pixel drop-shadow-sm">@henribruening</span>
+                </div>
+              </a>
+
+              <a
+                href="mailto:Henri.coesfeld@gmail.com"
+                className={`inline-flex items-center justify-center transition-all duration-200 rounded-lg shadow-lg active:scale-95 w-full ${styles.button}`}
+              >
+                <div className="flex items-center px-6 py-3 relative">
+                  {/* Button highlights */}
+                  <div className="absolute inset-x-1 top-1 h-2 bg-gradient-to-b from-white/40 to-transparent rounded-t"></div>
+                  <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/20 to-transparent rounded-b"></div>
+                  
+                  <Mail className="mr-3 h-6 w-6 drop-shadow-sm" />
+                  <span className="text-xl font-pixel drop-shadow-sm">Henri.coesfeld@gmail.com</span>
+                </div>
+              </a>
+            </div>
 
             <Link to="/desktop" className={`mt-8 text-xl underline transition-colors font-pixel drop-shadow-sm ${styles.link}`}>
               &lt;- Back to Desktop
