@@ -33,8 +33,6 @@ const fallbackImages = {
 };
 
 const getFolderTheme = (category: string, theme: string) => {
-  if (theme !== 'space-mood') return '';
-  
   const themes = {
     childhood: 'folder-blue',
     nature: 'folder-green', 
@@ -58,16 +56,59 @@ const Pictures = () => {
     random: storageImages.random.length > 0 ? storageImages.random : fallbackImages.random
   };
 
+  const getWindowStyles = () => {
+    if (theme === 'space-mood') {
+      return {
+        windowFrame: 'bg-gradient-to-br from-blue-300 via-blue-400 to-blue-600',
+        titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800',
+        windowContent: 'bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400',
+        text: 'text-blue-900',
+        link: 'text-blue-800 hover:text-blue-900',
+      };
+    }
+    
+    if (theme === 'dark-vhs') {
+      return {
+        windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
+        titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800',
+        windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
+        text: 'text-white',
+        link: 'text-blue-400 hover:text-blue-300',
+      };
+    }
+    
+    if (theme === 'retro-chrome') {
+      return {
+        windowFrame: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600',
+        titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-slate-700',
+        windowContent: 'bg-gradient-to-br from-slate-600 via-blue-700 to-slate-800',
+        text: 'text-blue-200',
+        link: 'text-blue-300 hover:text-blue-200',
+      };
+    }
+    
+    // Default fallback
+    return {
+      windowFrame: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600',
+      titleBar: 'bg-gradient-to-r from-orange-600 via-orange-700 to-red-700',
+      windowContent: 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400',
+      text: 'text-black',
+      link: 'text-orange-800 hover:text-orange-900',
+    };
+  };
+
+  const styles = getWindowStyles();
+
   if (selectedCategory) {
     const photos = photoCategories[selectedCategory as keyof typeof photoCategories];
     const folderTheme = getFolderTheme(selectedCategory, theme);
     
     return (
-      <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${folderTheme}`}>
+      <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
         {/* Window Frame with 3D effect */}
-        <div className="bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 p-2 border-2 border-black/30 w-full max-w-5xl shadow-2xl rounded-lg">
+        <div className={`p-2 border-2 border-black/30 w-full max-w-5xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
           {/* Title bar */}
-          <div className="bg-gradient-to-r from-orange-600 via-orange-700 to-red-700 p-2 rounded-t border-b-2 border-black/20 shadow-inner">
+          <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
               <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
@@ -77,18 +118,18 @@ const Pictures = () => {
           </div>
           
           {/* Window content */}
-          <div className="bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b">
+          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
             <div className="flex flex-col items-center justify-center text-center">
-              <h1 className="text-4xl mb-4 text-black font-pixel drop-shadow-lg">[ My Pictures ] / {selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}</h1>
+              <h1 className={`text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ My Pictures ] / {selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}</h1>
               
               {loading ? (
-                <p className="text-black mb-8 font-pixel drop-shadow-sm">Loading images...</p>
+                <p className={`mb-8 font-pixel drop-shadow-sm ${styles.text}`}>Loading images...</p>
               ) : error ? (
                 <div className="text-center mb-8">
                   <p className="text-red-600 mb-4 font-pixel drop-shadow-sm">Error loading images: {error}</p>
                   <button
                     onClick={refetch}
-                    className="text-sm underline text-orange-800 hover:text-orange-900 transition-colors flex items-center gap-2 font-pixel drop-shadow-sm mx-auto"
+                    className={`text-sm underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm mx-auto ${styles.link}`}
                   >
                     <RefreshCw className="w-4 h-4" />
                     Retry
@@ -118,7 +159,7 @@ const Pictures = () => {
                                   </div>
                                 </CardContent>
                               </Card>
-                              <p className="text-black mt-2 text-sm font-pixel drop-shadow-sm">Memory #{index + 1}</p>
+                              <p className={`mt-2 text-sm font-pixel drop-shadow-sm ${styles.text}`}>Memory #{index + 1}</p>
                             </div>
                           </CarouselItem>
                         ))}
@@ -129,12 +170,12 @@ const Pictures = () => {
                   </div>
                 </>
               ) : (
-                <p className="text-black mb-8 font-pixel drop-shadow-sm">No photos in this category yet.</p>
+                <p className={`mb-8 font-pixel drop-shadow-sm ${styles.text}`}>No photos in this category yet.</p>
               )}
 
               <button
                 onClick={() => setSelectedCategory(null)}
-                className="mt-8 text-xl underline text-orange-800 hover:text-orange-900 transition-colors flex items-center gap-2 font-pixel drop-shadow-sm"
+                className={`mt-8 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}
               >
                 <ArrowLeft className="w-5 h-5" />
                 Back to Folders
@@ -147,11 +188,11 @@ const Pictures = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4 sm:p-8">
+    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
       {/* Window Frame with 3D effect */}
-      <div className="bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 p-2 border-2 border-black/30 w-full max-w-5xl shadow-2xl rounded-lg">
+      <div className={`p-2 border-2 border-black/30 w-full max-w-5xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
         {/* Title bar */}
-        <div className="bg-gradient-to-r from-orange-600 via-orange-700 to-red-700 p-2 rounded-t border-b-2 border-black/20 shadow-inner">
+        <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
             <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
@@ -161,13 +202,13 @@ const Pictures = () => {
         </div>
         
         {/* Window content */}
-        <div className="bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b">
+        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
           <div className="flex flex-col items-center justify-center text-center">
-            <h1 className="text-4xl mb-8 text-black font-pixel drop-shadow-lg">[ My Pictures ]</h1>
-            <p className="mb-4 text-black font-pixel drop-shadow-sm">Choose a folder to explore.</p>
+            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ My Pictures ]</h1>
+            <p className={`mb-4 font-pixel drop-shadow-sm ${styles.text}`}>Choose a folder to explore.</p>
             
             {loading && (
-              <p className="mb-4 text-sm text-gray-600 font-pixel">Loading images from storage...</p>
+              <p className={`mb-4 text-sm font-pixel ${styles.text}`}>Loading images from storage...</p>
             )}
             
             {error && (
@@ -175,7 +216,7 @@ const Pictures = () => {
                 <p className="text-red-600 text-sm font-pixel mb-2">Storage error: {error}</p>
                 <button
                   onClick={refetch}
-                  className="text-xs underline text-orange-800 hover:text-orange-900 transition-colors flex items-center gap-1 font-pixel mx-auto"
+                  className={`text-xs underline transition-colors flex items-center gap-1 font-pixel mx-auto ${styles.link}`}
                 >
                   <RefreshCw className="w-3 h-3" />
                   Refresh
@@ -206,13 +247,13 @@ const Pictures = () => {
                         </div>
                       )}
                     </div>
-                    <span className="text-sm text-black capitalize font-bold font-pixel drop-shadow-sm">{category}</span>
+                    <span className={`text-sm capitalize font-bold font-pixel drop-shadow-sm ${styles.text}`}>{category}</span>
                   </button>
                 );
               })}
             </div>
 
-            <Link to="/desktop" className="text-xl underline text-orange-800 hover:text-orange-900 transition-colors font-pixel drop-shadow-sm">
+            <Link to="/desktop" className={`text-xl underline transition-colors font-pixel drop-shadow-sm ${styles.link}`}>
               &lt;- Back to Desktop
             </Link>
           </div>
