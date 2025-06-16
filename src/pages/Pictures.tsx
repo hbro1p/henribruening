@@ -142,20 +142,21 @@ const Pictures = () => {
                 </div>
               ) : photos.length > 0 ? (
                 <div className="flex-1 flex items-center justify-center w-full">
-                  <div className="w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl">
+                  <div className="w-full max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl relative">
                     <Carousel 
-                      className="w-full select-none" 
+                      className="w-full" 
                       opts={{ 
                         loop: true,
                         align: "center",
                         skipSnaps: false,
                         dragFree: false,
-                        containScroll: "trimSnaps"
+                        containScroll: "trimSnaps",
+                        duration: 20
                       }}
                     >
-                      <CarouselContent className="-ml-1 touch-pan-x">
+                      <CarouselContent>
                         {photos.map((src, index) => (
-                          <CarouselItem key={index} className="pl-1 basis-full">
+                          <CarouselItem key={index} className="basis-full">
                             <div className="p-2">
                               <Card className="border-2 border-black/30 bg-gradient-to-br from-gray-800 to-black overflow-hidden shadow-2xl rounded-lg">
                                 <CardContent className="flex aspect-[4/3] items-center justify-center p-2">
@@ -181,8 +182,8 @@ const Pictures = () => {
                           </CarouselItem>
                         ))}
                       </CarouselContent>
-                      <CarouselPrevious className="text-white bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 border-2 border-black/30 shadow-lg -left-6 sm:-left-8" />
-                      <CarouselNext className="text-white bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 border-2 border-black/30 shadow-lg -right-6 sm:-right-8" />
+                      <CarouselPrevious className="text-white bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 border-2 border-black/30 shadow-lg" />
+                      <CarouselNext className="text-white bg-gradient-to-br from-gray-600 to-gray-800 hover:from-gray-500 hover:to-gray-700 border-2 border-black/30 shadow-lg" />
                     </Carousel>
                   </div>
                 </div>
