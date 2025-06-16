@@ -210,10 +210,10 @@ const Pictures = () => {
           </div>
         </div>
         
-        {/* Window content with absolutely positioned and centered folder grid */}
-        <div className={`p-3 sm:p-6 md:p-8 border-2 border-white/20 shadow-inner rounded-b relative ${styles.windowContent}`} style={{ height: 'calc(100% - 52px)' }}>
-          {/* Header section - positioned at top */}
-          <div className="text-center mb-6">
+        {/* Window content with responsive folder grid */}
+        <div className={`p-3 sm:p-6 md:p-8 border-2 border-white/20 shadow-inner rounded-b flex flex-col ${styles.windowContent}`} style={{ height: 'calc(100% - 52px)' }}>
+          {/* Header section */}
+          <div className="text-center mb-4 sm:mb-6">
             <h1 className={`text-xl sm:text-2xl md:text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Pictures')} ]</h1>
             <p className={`mb-4 font-pixel drop-shadow-sm text-sm sm:text-base ${styles.text}`}>
               {t('language') === 'deutsch' ? 'Wählen Sie einen Ordner zum Erkunden.' : 'Choose a folder to explore.'}
@@ -241,9 +241,9 @@ const Pictures = () => {
             )}
           </div>
 
-          {/* Absolutely positioned and centered folder grid - prevents any shifting */}
-          <div className="absolute inset-0 flex items-center justify-center" style={{ top: '140px', bottom: '80px' }}>
-            <div className="grid grid-cols-2 gap-8 sm:gap-12 md:gap-16 lg:gap-20">
+          {/* Responsive folder grid - centered and fluid */}
+          <div className="flex-1 flex items-center justify-center">
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12 place-items-center">
               {Object.keys(photoCategories).map((category) => {
                 const folderColors = getFolderColors(theme);
                 const categoryTranslations = {
@@ -257,21 +257,21 @@ const Pictures = () => {
                   <div key={category} className="flex flex-col items-center justify-center">
                     <button
                       onClick={() => setSelectedCategory(category)}
-                      className="flex flex-col items-center justify-center space-y-3 sm:space-y-4 p-3 sm:p-4 transition-all duration-200 hover:scale-105 active:scale-95"
+                      className="flex flex-col items-center justify-center space-y-2 sm:space-y-3 p-2 sm:p-3 transition-all duration-200 hover:scale-105 active:scale-95"
                     >
-                      {/* Clean folder icon without any badges or counts */}
+                      {/* Responsive folder icon */}
                       <div className="relative">
-                        <div className={`w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-44 lg:h-44 bg-gradient-to-br ${folderColors.gradient} rounded-lg border-2 border-black/20 shadow-xl flex items-center justify-center relative`}>
+                        <div className={`w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 bg-gradient-to-br ${folderColors.gradient} rounded-lg border-2 border-black/20 shadow-xl flex items-center justify-center relative`}>
                           {/* Highlight effect */}
-                          <div className="absolute top-1 left-1 w-10 h-5 sm:w-12 sm:h-6 md:w-16 md:h-8 lg:w-20 lg:h-10 bg-gradient-to-br from-white/40 to-transparent rounded blur-sm"></div>
+                          <div className="absolute top-1 left-1 w-8 h-4 sm:w-10 sm:h-5 md:w-14 md:h-7 lg:w-16 lg:h-8 bg-gradient-to-br from-white/40 to-transparent rounded blur-sm"></div>
                           
                           {/* Folder icon */}
-                          <Folder className={`w-12 h-12 sm:w-14 sm:h-14 md:w-18 md:h-18 lg:w-22 lg:h-22 ${folderColors.icon} drop-shadow-lg relative z-10`} />
+                          <Folder className={`w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-18 lg:h-18 ${folderColors.icon} drop-shadow-lg relative z-10`} />
                         </div>
                       </div>
                       
                       {/* Folder label */}
-                      <span className={`text-sm sm:text-base md:text-lg lg:text-xl capitalize font-bold font-pixel drop-shadow-sm ${styles.text} text-center max-w-28 sm:max-w-32 md:max-w-40 lg:max-w-48`}>
+                      <span className={`text-xs sm:text-sm md:text-base lg:text-lg capitalize font-bold font-pixel drop-shadow-sm ${styles.text} text-center max-w-24 sm:max-w-28 md:max-w-36 lg:max-w-40`}>
                         {t('language') === 'deutsch' ? categoryTranslations[category as keyof typeof categoryTranslations] : category}
                       </span>
                     </button>
@@ -281,8 +281,8 @@ const Pictures = () => {
             </div>
           </div>
 
-          {/* Footer - positioned at bottom */}
-          <div className="absolute bottom-6 left-0 right-0 text-center">
+          {/* Footer */}
+          <div className="text-center mt-4 sm:mt-6">
             <Link to="/desktop" className={`text-base sm:text-xl underline transition-colors font-pixel drop-shadow-sm ${styles.link}`}>
               &lt;- {t('Back to Desktop')}
             </Link>
