@@ -149,7 +149,7 @@ const MusicPlayer = () => {
       
       {/* Only show visual controls on desktop route */}
       {location.pathname === '/desktop' && (
-        <div className="absolute bottom-8 right-8 transform hover:scale-105 transition-all duration-300">
+        <div className="absolute bottom-16 right-8 transform hover:scale-105 transition-all duration-300">
           {/* Outer frame with theme-appropriate styling */}
           <div className={`p-2 rounded-xl shadow-2xl border-2 ${styles.outerFrame}`}>
             {/* Inner bezel */}
