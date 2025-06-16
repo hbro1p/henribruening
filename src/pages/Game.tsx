@@ -99,19 +99,28 @@ const Game = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 sm:p-8 bg-black">
-      <div className="bg-windows-gray p-1 border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black w-full max-w-2xl shadow-2xl">
-        <div className="bg-windows-blue text-white p-2 border-b-2 border-black font-pixel text-sm">
-          Game.exe - Vibe Catcher 2000
+      {/* Window Frame with 3D effect */}
+      <div className="bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 p-2 border-2 border-black/30 w-full max-w-2xl shadow-2xl rounded-lg">
+        {/* Title bar */}
+        <div className="bg-gradient-to-r from-yellow-600 via-orange-600 to-red-600 p-2 rounded-t border-b-2 border-black/20 shadow-inner">
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+            <span className="text-white font-pixel text-sm ml-2">Game.exe - Vibe Catcher 2000</span>
+          </div>
         </div>
-        <div className="border-b-2 border-r-2 border-white border-t-2 border-l-2 border-black p-6">
+        
+        {/* Window content */}
+        <div className="bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 p-6 border-2 border-white/20 shadow-inner rounded-b">
           
           {!gameStarted && !gameEnded && (
             <div className="text-center">
-              <h1 className="text-3xl mb-4 text-black font-pixel">VIBE CATCHER 2000</h1>
-              <p className="mb-6 text-black">Catch the falling words to collect vibes!</p>
+              <h1 className="text-3xl mb-4 text-black font-pixel drop-shadow-lg">VIBE CATCHER 2000</h1>
+              <p className="mb-6 text-black font-pixel drop-shadow-sm">Catch the falling words to collect vibes!</p>
               <button
                 onClick={startGame}
-                className="px-6 py-3 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white text-black font-pixel"
+                className="px-6 py-3 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-2 border-black/30 hover:from-gray-200 hover:via-gray-300 hover:to-gray-500 active:scale-95 text-black font-pixel font-bold transition-all rounded shadow-lg"
               >
                 START GAME
               </button>
@@ -120,20 +129,20 @@ const Game = () => {
 
           {gameStarted && !gameEnded && (
             <div>
-              <div className="flex justify-between mb-4 text-black font-pixel">
+              <div className="flex justify-between mb-4 text-black font-pixel drop-shadow-sm">
                 <span>Score: {score}</span>
                 <span>Time: {timeLeft}s</span>
               </div>
               <div 
                 ref={gameAreaRef}
-                className="relative bg-black border-2 border-gray-400 h-96 overflow-hidden"
+                className="relative bg-gradient-to-br from-black via-gray-900 to-black border-2 border-gray-600 h-96 overflow-hidden rounded shadow-inner"
                 style={{ width: '100%' }}
               >
                 {fallingWords.map((word) => (
                   <button
                     key={word.id}
                     onClick={() => catchWord(word.id)}
-                    className="absolute bg-green-400 text-black px-2 py-1 text-sm font-pixel border border-white hover:bg-green-300 cursor-pointer"
+                    className="absolute bg-gradient-to-br from-green-400 to-green-600 text-black px-2 py-1 text-sm font-pixel border-2 border-black/20 hover:from-green-300 hover:to-green-500 cursor-pointer rounded shadow-lg active:scale-95 transition-all"
                     style={{
                       left: `${word.x}px`,
                       top: `${word.y}px`,
@@ -149,19 +158,19 @@ const Game = () => {
 
           {gameEnded && (
             <div className="text-center">
-              <h2 className="text-2xl mb-4 text-black font-pixel">GAME OVER</h2>
-              <p className="mb-2 text-black font-pixel">Final Score: {score}</p>
-              <p className="mb-6 text-black font-pixel italic">"{message}"</p>
+              <h2 className="text-2xl mb-4 text-black font-pixel drop-shadow-lg">GAME OVER</h2>
+              <p className="mb-2 text-black font-pixel drop-shadow-sm">Final Score: {score}</p>
+              <p className="mb-6 text-black font-pixel italic drop-shadow-sm">"{message}"</p>
               <div className="space-y-4">
                 <button
                   onClick={startGame}
-                  className="block mx-auto px-6 py-3 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white text-black font-pixel"
+                  className="block mx-auto px-6 py-3 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-2 border-black/30 hover:from-gray-200 hover:via-gray-300 hover:to-gray-500 active:scale-95 text-black font-pixel font-bold transition-all rounded shadow-lg"
                 >
                   PLAY AGAIN
                 </button>
                 <Link 
                   to="/desktop"
-                  className="block text-windows-blue hover:text-blue-700 transition-colors font-pixel underline"
+                  className="block text-yellow-800 hover:text-yellow-900 transition-colors font-pixel underline drop-shadow-sm"
                 >
                   &lt;- Back to Desktop
                 </Link>
@@ -173,7 +182,7 @@ const Game = () => {
             <div className="mt-6 text-center">
               <Link 
                 to="/desktop"
-                className="text-windows-blue hover:text-blue-700 transition-colors font-pixel underline"
+                className="text-yellow-800 hover:text-yellow-900 transition-colors font-pixel underline drop-shadow-sm"
               >
                 &lt;- Back to Desktop
               </Link>

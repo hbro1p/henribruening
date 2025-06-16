@@ -23,34 +23,50 @@ const MyProjects = () => {
   if (!isUnlocked) {
     return (
       <div className="flex items-center justify-center min-h-screen p-4 sm:p-8">
-        <div className="bg-windows-gray p-1 border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black w-full max-w-md shadow-2xl">
-          <div className="border-b-2 border-r-2 border-white border-t-2 border-l-2 border-black p-4 sm:p-8">
+        {/* Window Frame with 3D effect */}
+        <div className="bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 p-2 border-2 border-black/30 w-full max-w-md shadow-2xl rounded-lg">
+          {/* Title bar */}
+          <div className="bg-gradient-to-r from-green-600 via-green-700 to-teal-700 p-2 rounded-t border-b-2 border-black/20 shadow-inner">
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+              <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+              <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+              <span className="text-white font-pixel text-sm ml-2">Projects.exe - LOCKED</span>
+            </div>
+          </div>
+          
+          {/* Window content */}
+          <div className="bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b">
             <div className="flex flex-col items-center justify-center text-center">
-              <Code className="w-16 h-16 text-black mb-4" />
-              <h1 className="text-2xl mb-4 text-black">[ My Projects ]</h1>
-              <p className="mb-6 text-black">Oops... looks like this section requires a password 😅</p>
-              <p className="mb-6 text-black">Enter the password to continue.</p>
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-600 rounded-lg shadow-lg border-2 border-black/20 flex items-center justify-center mb-4">
+                <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded"></div>
+                <Code className="w-8 h-8 text-white drop-shadow-lg relative z-10" />
+              </div>
+              
+              <h1 className="text-2xl mb-4 text-black font-pixel drop-shadow-lg">[ My Projects ]</h1>
+              <p className="mb-6 text-black font-pixel drop-shadow-sm">Oops... looks like this section requires a password 😅</p>
+              <p className="mb-6 text-black font-pixel drop-shadow-sm">Enter the password to continue.</p>
               
               <form onSubmit={handlePasswordSubmit} className="w-full">
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-2 mb-4 border-2 border-black bg-white text-black"
+                  className="w-full p-3 mb-4 border-2 border-black/30 bg-gradient-to-br from-white to-gray-100 text-black rounded shadow-inner font-pixel"
                   placeholder="Password"
                 />
                 {showError && (
-                  <p className="text-red-600 mb-4 text-sm">Incorrect password. Try again.</p>
+                  <p className="text-red-700 mb-4 text-sm font-pixel drop-shadow-sm">Incorrect password. Try again.</p>
                 )}
                 <button
                   type="submit"
-                  className="w-full p-2 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white text-black font-bold"
+                  className="w-full p-3 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-2 border-black/30 hover:from-gray-200 hover:via-gray-300 hover:to-gray-500 active:scale-95 text-black font-bold font-pixel transition-all rounded shadow-lg"
                 >
                   Unlock
                 </button>
               </form>
 
-              <Link to="/desktop" className="mt-6 text-xl underline text-windows-blue hover:text-blue-700 transition-colors flex items-center gap-2">
+              <Link to="/desktop" className="mt-6 text-xl underline text-green-800 hover:text-green-900 transition-colors flex items-center gap-2 font-pixel drop-shadow-sm">
                 <ArrowLeft className="w-5 h-5" />
                 Back to Desktop
               </Link>
@@ -63,48 +79,62 @@ const MyProjects = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 sm:p-8">
-      <div className="bg-windows-gray p-1 border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black w-full max-w-4xl shadow-2xl">
-        <div className="border-b-2 border-r-2 border-white border-t-2 border-l-2 border-black p-4 sm:p-8">
+      {/* Window Frame with 3D effect */}
+      <div className="bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 p-2 border-2 border-black/30 w-full max-w-4xl shadow-2xl rounded-lg">
+        {/* Title bar */}
+        <div className="bg-gradient-to-r from-green-600 via-green-700 to-teal-700 p-2 rounded-t border-b-2 border-black/20 shadow-inner">
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+            <span className="text-white font-pixel text-sm ml-2">Projects.exe</span>
+          </div>
+        </div>
+        
+        {/* Window content */}
+        <div className="bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b">
           <div className="flex flex-col items-center justify-center text-center">
-            <h1 className="text-4xl mb-8 text-black">[ My Projects ]</h1>
+            <h1 className="text-4xl mb-8 text-black font-pixel drop-shadow-lg">[ My Projects ]</h1>
             
             <div className="grid gap-8 text-left w-full max-w-2xl">
-              <div className="bg-white p-6 border-2 border-black">
-                <h3 className="text-xl font-bold text-black mb-2 flex items-center gap-2">
+              <div className="bg-gradient-to-br from-white via-gray-100 to-gray-200 p-6 border-2 border-black/30 rounded-lg shadow-lg">
+                <div className="absolute inset-x-2 top-2 h-2 bg-gradient-to-b from-white/40 to-transparent rounded-t"></div>
+                <h3 className="text-xl font-bold text-black mb-2 flex items-center gap-2 font-pixel drop-shadow-sm">
                   Internly
                 </h3>
-                <p className="text-black mb-4">Currently developing a platform to connect students with internships</p>
+                <p className="text-black mb-4 drop-shadow-sm">Currently developing a platform to connect students with internships</p>
                 <div className="space-y-2">
                   <a href="https://internly.replit.app" target="_blank" rel="noopener noreferrer" 
-                     className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
+                     className="flex items-center gap-2 text-blue-800 hover:text-blue-900 underline font-pixel drop-shadow-sm">
                     Website <ExternalLink className="w-4 h-4" />
                   </a>
                   <a href="https://www.instagram.com/internly.de/" target="_blank" rel="noopener noreferrer" 
-                     className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
+                     className="flex items-center gap-2 text-blue-800 hover:text-blue-900 underline font-pixel drop-shadow-sm">
                     Instagram <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
               </div>
 
-              <div className="bg-white p-6 border-2 border-black">
-                <h3 className="text-xl font-bold text-black mb-2 flex items-center gap-2">
+              <div className="bg-gradient-to-br from-white via-gray-100 to-gray-200 p-6 border-2 border-black/30 rounded-lg shadow-lg relative">
+                <div className="absolute inset-x-2 top-2 h-2 bg-gradient-to-b from-white/40 to-transparent rounded-t"></div>
+                <h3 className="text-xl font-bold text-black mb-2 flex items-center gap-2 font-pixel drop-shadow-sm">
                   Echo Coesfeld
                 </h3>
-                <p className="text-black mb-4">A public voice project using QR codes & interviews to gather real opinions from people in Coesfeld</p>
+                <p className="text-black mb-4 drop-shadow-sm">A public voice project using QR codes & interviews to gather real opinions from people in Coesfeld</p>
                 <div className="space-y-2">
                   <a href="https://www.instagram.com/echo.coesfeld/" target="_blank" rel="noopener noreferrer" 
-                     className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
+                     className="flex items-center gap-2 text-blue-800 hover:text-blue-900 underline font-pixel drop-shadow-sm">
                     Instagram <ExternalLink className="w-4 h-4" />
                   </a>
                   <a href="https://www.tiktok.com/@echo.coesfeld" target="_blank" rel="noopener noreferrer" 
-                     className="flex items-center gap-2 text-windows-blue hover:text-blue-700 underline">
+                     className="flex items-center gap-2 text-blue-800 hover:text-blue-900 underline font-pixel drop-shadow-sm">
                     TikTok <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
               </div>
             </div>
 
-            <Link to="/desktop" className="mt-8 text-xl underline text-windows-blue hover:text-blue-700 transition-colors flex items-center gap-2">
+            <Link to="/desktop" className="mt-8 text-xl underline text-green-800 hover:text-green-900 transition-colors flex items-center gap-2 font-pixel drop-shadow-sm">
               <ArrowLeft className="w-5 h-5" />
               Back to Desktop
             </Link>

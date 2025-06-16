@@ -54,83 +54,104 @@ const MusicPlayer = () => {
       
       {/* Only show visual controls on desktop route */}
       {location.pathname === '/desktop' && (
-        <div className="absolute bottom-8 right-8 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 p-1 rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-300">
-          <div className="bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 rounded-2xl p-4 backdrop-blur-sm border border-white/20">
-            <div className="flex items-center space-x-4">
-              {/* Album art / Visualizer */}
-              <div className="flex-shrink-0 relative">
-                <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 via-purple-400 to-pink-400 rounded-xl flex items-center justify-center shadow-lg">
-                  <Music className="w-6 h-6 text-white drop-shadow-sm" />
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-xl"></div>
-                </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full border-2 border-white animate-pulse"></div>
-              </div>
-              
-              {/* Track info */}
-              <div className="flex-1 min-w-0">
-                <p className="text-sm text-white font-pixel font-bold truncate drop-shadow-sm">
-                  🎵 2000s Vibes
-                </p>
-                <p className="text-xs text-cyan-200 truncate font-pixel">
-                  Track {currentTrack + 1} of {playlist2000s.length}
-                </p>
-              </div>
-              
-              {/* Controls and visualizer */}
-              <div className="flex items-center space-x-3">
-                {/* Equalizer bars */}
-                <div className="flex items-end h-6 space-x-1">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className={`w-1 bg-gradient-to-t from-cyan-400 to-pink-400 rounded-full origin-bottom transition-all duration-200 ${
-                        isPlaying ? 'animate-equalizer' : 'h-2'
-                      }`}
-                      style={{
-                        animationDelay: `${i * 100}ms`,
-                        height: isPlaying ? `${Math.random() * 16 + 8}px` : '8px',
-                      }}
-                    ></div>
-                  ))}
-                </div>
+        <div className="absolute bottom-8 right-8 transform hover:scale-105 transition-all duration-300">
+          {/* Outer frame with metallic look */}
+          <div className="bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 p-2 rounded-xl shadow-2xl border-2 border-black/20">
+            {/* Inner bezel */}
+            <div className="bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-lg p-1 border border-gray-600">
+              {/* Main player body */}
+              <div className="bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 rounded-md p-4 border border-gray-500 shadow-inner">
                 
-                {/* Control buttons */}
-                <div className="flex space-x-1">
+                {/* Top section with display */}
+                <div className="mb-4">
+                  {/* LCD-style display */}
+                  <div className="bg-gradient-to-b from-green-900 to-green-950 p-3 rounded border-2 border-black/50 shadow-inner">
+                    <div className="flex items-center justify-between">
+                      {/* Track info */}
+                      <div className="flex-1">
+                        <p className="text-green-400 font-pixel text-xs font-bold drop-shadow-sm">
+                          🎵 2000S VIBES
+                        </p>
+                        <p className="text-green-300 text-xs font-pixel">
+                          TRACK {String(currentTrack + 1).padStart(2, '0')}/{playlist2000s.length}
+                        </p>
+                      </div>
+                      
+                      {/* EQ visualization */}
+                      <div className="flex items-end h-6 space-x-1">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className={`w-1 bg-green-400 rounded-full origin-bottom transition-all duration-200 ${
+                              isPlaying ? 'animate-equalizer' : 'h-2'
+                            }`}
+                            style={{
+                              animationDelay: `${i * 100}ms`,
+                              height: isPlaying ? `${Math.random() * 16 + 8}px` : '8px',
+                            }}
+                          ></div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Controls section */}
+                <div className="flex items-center justify-center space-x-2">
+                  {/* Previous button */}
                   <button
                     onClick={prevTrack}
-                    className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl shadow-lg transition-all duration-200 hover:scale-110 transform-gpu border border-white/20"
+                    className="relative w-10 h-10 bg-gradient-to-br from-gray-400 via-gray-500 to-gray-700 rounded-full shadow-lg border-2 border-black/30 hover:from-gray-300 hover:via-gray-400 hover:to-gray-600 transition-all duration-200 active:scale-95"
                   >
-                    <SkipBack className="w-4 h-4 text-white drop-shadow-sm" />
+                    <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-full"></div>
+                    <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/30 to-transparent rounded-full"></div>
+                    <SkipBack className="w-4 h-4 text-gray-100 drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                   </button>
                   
+                  {/* Play/Pause button - larger and central */}
                   <button
                     onClick={togglePlayPause}
-                    className="p-2 bg-gradient-to-br from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 rounded-xl shadow-lg transition-all duration-200 hover:scale-110 transform-gpu border border-white/20"
+                    className="relative w-12 h-12 bg-gradient-to-br from-red-400 via-red-500 to-red-700 rounded-full shadow-xl border-2 border-black/30 hover:from-red-300 hover:via-red-400 hover:to-red-600 transition-all duration-200 active:scale-95"
                   >
+                    <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-full"></div>
+                    <div className="absolute inset-x-1 bottom-1 h-3 bg-gradient-to-t from-black/30 to-transparent rounded-full"></div>
                     {isPlaying ? 
-                      <Pause className="w-4 h-4 text-white drop-shadow-sm" /> : 
-                      <Play className="w-4 h-4 text-white drop-shadow-sm ml-0.5" />
+                      <Pause className="w-5 h-5 text-white drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" /> : 
+                      <Play className="w-5 h-5 text-white drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ml-0.5" />
                     }
                   </button>
                   
+                  {/* Next button */}
                   <button
                     onClick={nextTrack}
-                    className="p-2 bg-gradient-to-br from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-lg transition-all duration-200 hover:scale-110 transform-gpu border border-white/20"
+                    className="relative w-10 h-10 bg-gradient-to-br from-gray-400 via-gray-500 to-gray-700 rounded-full shadow-lg border-2 border-black/30 hover:from-gray-300 hover:via-gray-400 hover:to-gray-600 transition-all duration-200 active:scale-95"
                   >
-                    <SkipForward className="w-4 h-4 text-white drop-shadow-sm" />
+                    <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-full"></div>
+                    <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/30 to-transparent rounded-full"></div>
+                    <SkipForward className="w-4 h-4 text-gray-100 drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
                   </button>
                 </div>
-                
-                {/* Volume indicator */}
-                <div className="flex items-center">
-                  <Volume2 className="w-4 h-4 text-cyan-300 drop-shadow-sm" />
+
+                {/* Volume and status indicators */}
+                <div className="mt-4 flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Volume2 className="w-3 h-3 text-gray-300" />
+                    <div className="flex space-x-1">
+                      {Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="w-1 h-3 bg-gradient-to-t from-blue-600 to-blue-400 rounded-full shadow-sm"></div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Status LED */}
+                  <div className="w-2 h-2 bg-gradient-to-br from-lime-400 to-green-600 rounded-full shadow-sm animate-pulse"></div>
+                </div>
+
+                {/* Progress bar */}
+                <div className="mt-3 w-full h-2 bg-gradient-to-r from-gray-800 to-gray-900 rounded-full border border-black/50 shadow-inner overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 rounded-full animate-pulse shadow-sm" style={{ width: '60%' }}></div>
                 </div>
               </div>
-            </div>
-            
-            {/* Progress bar */}
-            <div className="mt-3 w-full h-1 bg-white/20 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 rounded-full animate-pulse"></div>
             </div>
           </div>
         </div>
