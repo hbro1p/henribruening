@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
 import { Play, Pause, Music, SkipForward, SkipBack } from 'lucide-react';
@@ -36,26 +35,9 @@ const MusicPlayer = () => {
     nextTrack();
   };
 
-  // Only show on desktop route
-  if (location.pathname !== '/desktop') {
-    return (
-      <div className='hidden'>
-        <ReactPlayer
-          url={playlist2000s[currentTrack]}
-          playing={isPlaying}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          onEnded={handleEnded}
-          onError={(e) => console.error('ReactPlayer error:', e)}
-          width="0"
-          height="0"
-        />
-      </div>
-    );
-  }
-
   return (
-    <div className="absolute bottom-8 right-8 bg-windows-gray p-2 border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black w-80 shadow-2xl font-pixel">
+    <>
+      {/* Always keep ReactPlayer mounted for continuous playback */}
       <div className='hidden'>
         <ReactPlayer
           url={playlist2000s[currentTrack]}
@@ -68,51 +50,57 @@ const MusicPlayer = () => {
           height="0"
         />
       </div>
-      <div className="flex items-center space-x-3">
-        <div className="flex-shrink-0 text-black">
-          <Music className="w-6 h-6" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-xs text-black truncate font-bold">Vibe: 2000s mix playing</p>
-          <p className="text-xs text-black truncate">Nostalgic hits collection</p>
-        </div>
-        <div className="flex items-center space-x-2">
-          <div className={`flex items-end h-5 space-x-1`}>
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className={`w-1 bg-black origin-bottom ${isPlaying ? 'animate-equalizer' : ''}`}
-                style={{
-                  animationDelay: `${i * 150}ms`,
-                  transform: `scaleY(${isPlaying ? 1 : 0.3})`,
-                  transition: 'transform 0.2s ease-out'
-                }}
-              ></div>
-            ))}
+      
+      {/* Only show visual controls on desktop route */}
+      {location.pathname === '/desktop' && (
+        <div className="absolute bottom-8 right-8 bg-windows-gray p-2 border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black w-80 shadow-2xl font-pixel">
+          <div className="flex items-center space-x-3">
+            <div className="flex-shrink-0 text-black">
+              <Music className="w-6 h-6" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-black truncate font-bold">Vibe: 2000s mix playing</p>
+              <p className="text-xs text-black truncate">Nostalgic hits collection</p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className={`flex items-end h-5 space-x-1`}>
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-1 bg-black origin-bottom ${isPlaying ? 'animate-equalizer' : ''}`}
+                    style={{
+                      animationDelay: `${i * 150}ms`,
+                      transform: `scaleY(${isPlaying ? 1 : 0.3})`,
+                      transition: 'transform 0.2s ease-out'
+                    }}
+                  ></div>
+                ))}
+              </div>
+              <div className="flex space-x-1">
+                <button
+                  onClick={prevTrack}
+                  className="p-1 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white"
+                >
+                  <SkipBack className="w-4 h-4 text-black" />
+                </button>
+                <button
+                  onClick={togglePlayPause}
+                  className="p-1 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white"
+                >
+                  {isPlaying ? <Pause className="w-4 h-4 text-black" /> : <Play className="w-4 h-4 text-black" />}
+                </button>
+                <button
+                  onClick={nextTrack}
+                  className="p-1 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white"
+                >
+                  <SkipForward className="w-4 h-4 text-black" />
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="flex space-x-1">
-            <button
-              onClick={prevTrack}
-              className="p-1 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white"
-            >
-              <SkipBack className="w-4 h-4 text-black" />
-            </button>
-            <button
-              onClick={togglePlayPause}
-              className="p-1 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white"
-            >
-              {isPlaying ? <Pause className="w-4 h-4 text-black" /> : <Play className="w-4 h-4 text-black" />}
-            </button>
-            <button
-              onClick={nextTrack}
-              className="p-1 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white"
-            >
-              <SkipForward className="w-4 h-4 text-black" />
-            </button>
-          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
