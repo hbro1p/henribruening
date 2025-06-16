@@ -20,6 +20,22 @@ const MusicPlayer = () => {
   const [currentTrack, setCurrentTrack] = useState(0);
   const location = useLocation();
 
+  const nextTrack = () => {
+    setCurrentTrack((prev) => (prev + 1) % playlist2000s.length);
+  };
+
+  const prevTrack = () => {
+    setCurrentTrack((prev) => (prev - 1 + playlist2000s.length) % playlist2000s.length);
+  };
+
+  const handleEnded = () => {
+    nextTrack();
+  };
+
+  const togglePlayPause = () => {
+    setIsPlaying(!isPlaying);
+  };
+
   // Only show the music player on the desktop route
   if (location.pathname !== '/desktop') {
     return (
@@ -37,22 +53,6 @@ const MusicPlayer = () => {
       </div>
     );
   }
-
-  const togglePlayPause = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const nextTrack = () => {
-    setCurrentTrack((prev) => (prev + 1) % playlist2000s.length);
-  };
-
-  const prevTrack = () => {
-    setCurrentTrack((prev) => (prev - 1 + playlist2000s.length) % playlist2000s.length);
-  };
-
-  const handleEnded = () => {
-    nextTrack();
-  };
 
   return (
     <>
