@@ -11,6 +11,7 @@ import MyVideos from "./pages/MyVideos";
 import MyProjects from "./pages/MyProjects";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import Game from "./pages/Game";
 import MusicPlayer from "./components/MusicPlayer";
@@ -31,6 +32,7 @@ const App = () => (
           <Route path="/projects" element={<MyProjects />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="/game" element={<Game />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
