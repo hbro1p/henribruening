@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export type Language = 'english' | 'deutsch';
-export type Theme = 'retro-gradient' | 'dark-vhs' | 'space-mood' | 'light-os';
+export type Theme = 'dreamos' | 'dark-vhs' | 'space-mood' | 'light-os';
 
 interface SettingsContextType {
   language: Language;
@@ -25,7 +25,7 @@ const translations = {
     'Game.exe': 'Game.exe',
     'Language': 'Language:',
     'Appearance Theme': 'Appearance Theme:',
-    'Retro Gradient': 'Retro Gradient',
+    'DreamOS': 'DreamOS',
     'Dark VHS': 'Dark VHS',
     'Space Mood': 'Space Mood',
     'Light OS 2001': 'Light OS 2001',
@@ -51,7 +51,7 @@ const translations = {
     'Game.exe': 'Spiel.exe',
     'Language': 'Sprache:',
     'Appearance Theme': 'Erscheinungsbild:',
-    'Retro Gradient': 'Retro Gradient',
+    'DreamOS': 'DreamOS',
     'Dark VHS': 'Dunkles VHS',
     'Space Mood': 'Weltraum-Stimmung',
     'Light OS 2001': 'Helles OS 2001',
@@ -71,7 +71,7 @@ const translations = {
 
 export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>('english');
-  const [theme, setThemeState] = useState<Theme>('space-mood');
+  const [theme, setThemeState] = useState<Theme>('space-mood'); // Space Mood as default
 
   // Load settings from localStorage on mount
   useEffect(() => {
@@ -82,7 +82,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
       setLanguageState(savedLanguage);
     }
     
-    if (savedTheme && ['retro-gradient', 'dark-vhs', 'space-mood', 'light-os'].includes(savedTheme)) {
+    if (savedTheme && ['dreamos', 'dark-vhs', 'space-mood', 'light-os'].includes(savedTheme)) {
       setThemeState(savedTheme);
     }
   }, []);
