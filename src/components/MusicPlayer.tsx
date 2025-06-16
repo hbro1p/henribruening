@@ -168,13 +168,13 @@ const MusicPlayer = () => {
               </p>
             </div>
 
-            {/* Control Buttons - Perfectly Centered */}
+            {/* Control Buttons - All Same Size */}
             <div className="flex items-center justify-center mb-6">
               <div className="flex items-center space-x-3">
                 <button
                   onClick={prevTrack}
                   disabled={musicFiles.length === 0}
-                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
+                  className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
                 >
                   <SkipBack className="w-5 h-5" />
                 </button>
@@ -182,18 +182,18 @@ const MusicPlayer = () => {
                 <button
                   onClick={togglePlayPause}
                   disabled={musicFiles.length === 0}
-                  className={`w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/30 shadow-lg hover:scale-105 active:scale-95 ${styles.playButton}`}
+                  className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/30 shadow-lg hover:scale-105 active:scale-95 ${styles.playButton}`}
                 >
                   {isPlaying ? 
-                    <Pause className="w-7 h-7 drop-shadow-sm" /> : 
-                    <Play className="w-7 h-7 ml-1 drop-shadow-sm" />
+                    <Pause className="w-6 h-6 drop-shadow-sm" /> : 
+                    <Play className="w-6 h-6 ml-0.5 drop-shadow-sm" />
                   }
                 </button>
                 
                 <button
                   onClick={nextTrack}
                   disabled={musicFiles.length === 0}
-                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
+                  className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
                 >
                   <SkipForward className="w-5 h-5" />
                 </button>
@@ -201,7 +201,7 @@ const MusicPlayer = () => {
                 <button
                   onClick={restartTrack}
                   disabled={musicFiles.length === 0}
-                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
+                  className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
                   title={t('Restart Track')}
                 >
                   <RotateCcw className="w-5 h-5" />
