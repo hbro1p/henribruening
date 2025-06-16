@@ -18,19 +18,19 @@ body {
 
 /* Dark VHS Theme - Improved visibility with matte black/gray */
 .theme-dark-vhs {
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 25%, #333333 75%, #404040 100%);
+  background: linear-gradient(135deg, #2a2a2a 0%, #3d3d3d 25%, #4a4a4a 75%, #5a5a5a 100%);
   background-attachment: fixed;
   color: #e0e0e0;
 }
 
 .theme-dark-vhs .text-white {
-  color: #e0e0e0 !important;
-  text-shadow: 0 0 5px rgba(224, 224, 224, 0.3);
+  color: #f0f0f0 !important;
+  text-shadow: 0 0 3px rgba(240, 240, 240, 0.3);
 }
 
 .theme-dark-vhs .text-black {
-  color: #e0e0e0 !important;
-  text-shadow: 0 0 3px rgba(224, 224, 224, 0.2);
+  color: #f0f0f0 !important;
+  text-shadow: 0 0 2px rgba(240, 240, 240, 0.2);
 }
 
 .theme-dark-vhs::before {
@@ -44,12 +44,12 @@ body {
     0deg,
     transparent,
     transparent 3px,
-    rgba(224, 224, 224, 0.02) 3px,
-    rgba(224, 224, 224, 0.02) 6px
+    rgba(240, 240, 240, 0.015) 3px,
+    rgba(240, 240, 240, 0.015) 6px
   );
   pointer-events: none;
   z-index: 1;
-  animation: scanlines 0.2s linear infinite;
+  animation: scanlines 0.3s linear infinite;
 }
 
 @keyframes scanlines {
@@ -105,7 +105,7 @@ body {
 }
 
 .folder-purple {
-  background: linear-gradient(135deg, #eeddff 0%, #ddaaf 25%, #cc77ff 75%, #bb44ff 100%);
+  background: linear-gradient(135deg, #eeddff 0%, #ddaaff 25%, #cc77ff 75%, #bb44ff 100%);
 }
 
 @layer base {

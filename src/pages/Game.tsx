@@ -1,319 +1,345 @@
 
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowLeft, Zap, Heart, Shield, Sword } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 
-interface Dot {
-  id: number;
-  x: number;
-  y: number;
-  color: string;
-  points: number;
+interface Enemy {
+  name: string;
+  health: number;
+  maxHealth: number;
+  attack: number;
 }
 
-const colors = [
-  { color: '#ff6b6b', points: 10 },
-  { color: '#4ecdc4', points: 15 },
-  { color: '#45b7d1', points: 20 },
-  { color: '#96ceb4', points: 25 },
-  { color: '#feca57', points: 30 },
-];
+interface Player {
+  health: number;
+  maxHealth: number;
+  attack: number;
+  defense: number;
+  level: number;
+  experience: number;
+  experienceToNext: number;
+}
 
 const Game = () => {
+  const { theme } = useSettings();
   const [gameStarted, setGameStarted] = useState(false);
-  const [gameEnded, setGameEnded] = useState(false);
-  const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(30);
-  const [dots, setDots] = useState<Dot[]>([]);
-  const [combo, setCombo] = useState(0);
-  const gameAreaRef = useRef<HTMLDivElement>(null);
-  const gameTimerRef = useRef<NodeJS.Timeout>();
-  const spawnTimerRef = useRef<NodeJS.Timeout>();
-  const { t, theme } = useSettings();
+  const [player, setPlayer] = useState<Player>({
+    health: 100,
+    maxHealth: 100,
+    attack: 10,
+    defense: 5,
+    level: 1,
+    experience: 0,
+    experienceToNext: 100
+  });
 
-  const spawnDot = useCallback(() => {
-    if (!gameStarted || gameEnded) return;
+  const enemies = [
+    { name: 'Goblin', health: 30, maxHealth: 30, attack: 8 },
+    { name: 'Orc', health: 50, maxHealth: 50, attack: 12 },
+    { name: 'Dragon', health: 100, maxHealth: 100, attack: 20 },
+  ];
 
-    const colorData = colors[Math.floor(Math.random() * colors.length)];
-    const newDot: Dot = {
-      id: Math.random(),
-      x: Math.random() * 320 + 40, // Keep dots away from edges
-      y: Math.random() * 240 + 40,
-      color: colorData.color,
-      points: colorData.points
-    };
+  const [currentEnemy, setCurrentEnemy] = useState<Enemy | null>(null);
+  const [battleLog, setBattleLog] = useState<string[]>([]);
+  const [gameOver, setGameOver] = useState(false);
+  const [victory, setVictory] = useState(false);
 
-    setDots(prev => [...prev, newDot]);
+  const getThemeStyles = () => {
+    switch (theme) {
+      case 'space-mood':
+        return {
+          windowFrame: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600',
+          titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700',
+          windowContent: 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400',
+          text: 'text-black',
+          button: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white',
+          statBar: 'bg-gradient-to-r from-green-400 to-green-600',
+          enemyStatBar: 'bg-gradient-to-r from-red-400 to-red-600',
+          logBg: 'bg-gradient-to-br from-gray-100 to-gray-200 border-gray-400',
+        };
+      case 'dark-vhs':
+        return {
+          windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
+          titleBar: 'bg-gradient-to-r from-red-600 via-red-700 to-red-800',
+          windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
+          text: 'text-white',
+          button: 'bg-gradient-to-br from-red-500 via-red-600 to-red-800 hover:from-red-400 hover:via-red-500 hover:to-red-700 text-white',
+          statBar: 'bg-gradient-to-r from-green-400 to-green-600',
+          enemyStatBar: 'bg-gradient-to-r from-red-400 to-red-600',
+          logBg: 'bg-gradient-to-br from-gray-800 to-black border-white/20 text-white',
+        };
+      case 'retro-chrome':
+        return {
+          windowFrame: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600',
+          titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-slate-700',
+          windowContent: 'bg-gradient-to-br from-slate-600 via-blue-700 to-slate-800',
+          text: 'text-blue-200',
+          button: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white',
+          statBar: 'bg-gradient-to-r from-cyan-400 to-blue-600',
+          enemyStatBar: 'bg-gradient-to-r from-red-400 to-red-600',
+          logBg: 'bg-gradient-to-br from-slate-800 to-blue-900 border-blue-400/30 text-blue-200',
+        };
+      default:
+        return {
+          windowFrame: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600',
+          titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700',
+          windowContent: 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400',
+          text: 'text-black',
+          button: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white',
+          statBar: 'bg-gradient-to-r from-green-400 to-green-600',
+          enemyStatBar: 'bg-gradient-to-r from-red-400 to-red-600',
+          logBg: 'bg-gradient-to-br from-gray-100 to-gray-200 border-gray-400',
+        };
+    }
+  };
 
-    // Remove dot after 3 seconds if not clicked
-    setTimeout(() => {
-      setDots(prev => prev.filter(dot => dot.id !== newDot.id));
-    }, 3000);
-  }, [gameStarted, gameEnded]);
+  const styles = getThemeStyles();
 
-  const clickDot = (dotId: number, points: number) => {
-    setDots(prev => prev.filter(dot => dot.id !== dotId));
-    setScore(prev => prev + points + combo);
-    setCombo(prev => prev + 5);
+  const spawnEnemy = useCallback(() => {
+    const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
+    setCurrentEnemy({ ...randomEnemy });
+    setBattleLog(prev => [...prev, `A wild ${randomEnemy.name} appears!`]);
+  }, []);
+
+  const levelUp = useCallback(() => {
+    setPlayer(prev => ({
+      ...prev,
+      level: prev.level + 1,
+      maxHealth: prev.maxHealth + 20,
+      health: prev.maxHealth + 20,
+      attack: prev.attack + 3,
+      defense: prev.defense + 2,
+      experience: prev.experience - prev.experienceToNext,
+      experienceToNext: Math.floor(prev.experienceToNext * 1.5)
+    }));
+    setBattleLog(prev => [...prev, `🎉 Level up! You are now level ${player.level + 1}!`]);
+  }, [player.level]);
+
+  const playerAttack = () => {
+    if (!currentEnemy) return;
+
+    const damage = Math.max(1, player.attack - Math.floor(Math.random() * 5));
+    const newEnemyHealth = Math.max(0, currentEnemy.health - damage);
+    
+    setCurrentEnemy(prev => prev ? { ...prev, health: newEnemyHealth } : null);
+    setBattleLog(prev => [...prev, `You deal ${damage} damage to ${currentEnemy.name}!`]);
+
+    if (newEnemyHealth <= 0) {
+      const expGained = currentEnemy.maxHealth * 2;
+      setBattleLog(prev => [...prev, `${currentEnemy.name} defeated! +${expGained} XP`]);
+      
+      setPlayer(prev => {
+        const newExp = prev.experience + expGained;
+        if (newExp >= prev.experienceToNext) {
+          setTimeout(levelUp, 1000);
+        }
+        return { ...prev, experience: newExp };
+      });
+
+      setTimeout(() => {
+        spawnEnemy();
+      }, 2000);
+    } else {
+      // Enemy attacks back
+      setTimeout(() => {
+        const enemyDamage = Math.max(1, currentEnemy.attack - player.defense);
+        const newPlayerHealth = Math.max(0, player.health - enemyDamage);
+        
+        setPlayer(prev => ({ ...prev, health: newPlayerHealth }));
+        setBattleLog(prev => [...prev, `${currentEnemy.name} deals ${enemyDamage} damage to you!`]);
+
+        if (newPlayerHealth <= 0) {
+          setGameOver(true);
+          setBattleLog(prev => [...prev, '💀 Game Over! You have been defeated.']);
+        }
+      }, 1000);
+    }
+  };
+
+  const heal = () => {
+    const healAmount = Math.floor(player.maxHealth * 0.3);
+    const newHealth = Math.min(player.maxHealth, player.health + healAmount);
+    setPlayer(prev => ({ ...prev, health: newHealth }));
+    setBattleLog(prev => [...prev, `You heal for ${healAmount} HP!`]);
   };
 
   const startGame = () => {
     setGameStarted(true);
-    setGameEnded(false);
-    setScore(0);
-    setTimeLeft(30);
-    setDots([]);
-    setCombo(0);
+    setBattleLog(['🎮 Welcome to the Retro RPG Adventure!']);
+    spawnEnemy();
   };
 
-  const endGame = () => {
-    setGameEnded(true);
+  const resetGame = () => {
     setGameStarted(false);
-    if (spawnTimerRef.current) clearInterval(spawnTimerRef.current);
-    if (gameTimerRef.current) clearInterval(gameTimerRef.current);
-  };
-
-  // Game timer
-  useEffect(() => {
-    if (gameStarted && !gameEnded) {
-      gameTimerRef.current = setInterval(() => {
-        setTimeLeft(prev => {
-          if (prev <= 1) {
-            endGame();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      return () => {
-        if (gameTimerRef.current) clearInterval(gameTimerRef.current);
-      };
-    }
-  }, [gameStarted, gameEnded]);
-
-  // Dot spawning
-  useEffect(() => {
-    if (gameStarted && !gameEnded) {
-      spawnTimerRef.current = setInterval(spawnDot, 800);
-      return () => {
-        if (spawnTimerRef.current) clearInterval(spawnTimerRef.current);
-      };
-    }
-  }, [gameStarted, gameEnded, spawnDot]);
-
-  const getGrade = () => {
-    if (score >= 1000) return 'S+';
-    if (score >= 750) return 'S';
-    if (score >= 500) return 'A';
-    if (score >= 300) return 'B';
-    if (score >= 150) return 'C';
-    return 'D';
+    setGameOver(false);
+    setVictory(false);
+    setCurrentEnemy(null);
+    setBattleLog([]);
+    setPlayer({
+      health: 100,
+      maxHealth: 100,
+      attack: 10,
+      defense: 5,
+      level: 1,
+      experience: 0,
+      experienceToNext: 100
+    });
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen p-4">
-      <div className={`p-3 border-2 w-full max-w-2xl shadow-2xl rounded-lg ${
-        theme === 'space-mood'
-          ? 'bg-gradient-to-br from-black/80 via-blue-900/40 to-purple-900/40 border-blue-400/30'
-          : theme === 'dark-vhs'
-          ? 'bg-gradient-to-br from-black/90 via-gray-900/50 to-black/80 border-white/20'
-          : theme === 'matrix-terminal'
-          ? 'bg-gradient-to-br from-black/90 via-green-900/40 to-black/80 border-green-500/30'
-          : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-black/30'
-      }`}>
+    <div className="flex items-center justify-center min-h-screen p-4 sm:p-8">
+      {/* Window Frame */}
+      <div className={`p-2 border-2 border-black/30 w-full max-w-4xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
         {/* Title bar */}
-        <div className={`p-3 rounded-t border-b-2 ${
-          theme === 'space-mood'
-            ? 'bg-gradient-to-r from-blue-800/80 via-purple-800/80 to-blue-900/80 border-blue-400/20'
-            : theme === 'dark-vhs'
-            ? 'bg-gradient-to-r from-gray-800/80 via-black/90 to-gray-700/80 border-white/10'
-            : theme === 'matrix-terminal'
-            ? 'bg-gradient-to-r from-green-800/80 via-black/90 to-green-700/80 border-green-500/20'
-            : 'bg-gradient-to-r from-blue-700 via-blue-800 to-blue-900 border-black/20'
-        }`}>
-          <div className="flex items-center space-x-3">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            <span className={`font-pixel text-lg ${
-              theme === 'space-mood' ? 'text-blue-200' 
-              : theme === 'dark-vhs' ? 'text-white' 
-              : theme === 'matrix-terminal' ? 'text-green-400' 
-              : 'text-white'
-            }`}>Dot Catcher</span>
+        <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+            <span className="text-white font-pixel text-sm ml-2">RetroRPG.exe</span>
           </div>
         </div>
         
-        {/* Game content */}
-        <div className="p-6">
-          
-          {!gameStarted && !gameEnded && (
-            <div className="text-center">
-              <h1 className={`text-3xl mb-4 font-pixel ${
-                theme === 'space-mood' ? 'text-blue-200' 
-                : theme === 'dark-vhs' ? 'text-white' 
-                : theme === 'matrix-terminal' ? 'text-green-400' 
-                : 'text-black'
-              }`}>DOT CATCHER</h1>
-              <div className={`mb-6 font-pixel space-y-2 ${
-                theme === 'space-mood' ? 'text-blue-300' 
-                : theme === 'dark-vhs' ? 'text-gray-300' 
-                : theme === 'matrix-terminal' ? 'text-green-300' 
-                : 'text-black'
-              }`}>
-                <p>🎯 Click the colored dots to score points!</p>
-                <p>⚡ Build combos for bonus points</p>
-                <p>⏰ You have 30 seconds - go fast!</p>
-              </div>
-              <button
-                onClick={startGame}
-                className={`px-8 py-4 border-2 font-pixel font-bold transition-all rounded shadow-lg text-lg active:scale-95 ${
-                  theme === 'space-mood'
-                    ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-blue-400/30 text-white hover:from-blue-400 hover:to-purple-500'
-                    : theme === 'dark-vhs'
-                    ? 'bg-gradient-to-br from-gray-600 to-black border-white/20 text-white hover:from-gray-500 hover:to-gray-800'
-                    : theme === 'matrix-terminal'
-                    ? 'bg-gradient-to-br from-green-600 to-black border-green-500/30 text-green-100 hover:from-green-500 hover:to-green-800'
-                    : 'bg-gradient-to-br from-green-400 to-green-600 border-black/30 text-white hover:from-green-300 hover:to-green-500'
-                }`}
-              >
-                🚀 START GAME
-              </button>
-            </div>
-          )}
-
-          {gameStarted && !gameEnded && (
-            <div>
-              {/* Game UI */}
-              <div className={`flex justify-between items-center mb-4 font-pixel ${
-                theme === 'space-mood' ? 'text-blue-200' 
-                : theme === 'dark-vhs' ? 'text-white' 
-                : theme === 'matrix-terminal' ? 'text-green-400' 
-                : 'text-black'
-              }`}>
-                <div className="flex space-x-4">
-                  <span>💯 {score}</span>
-                  <span>⏱️ {timeLeft}s</span>
-                </div>
-                <div>
-                  <span>🔥 +{combo}</span>
-                </div>
-              </div>
-              
-              {/* Game Area */}
-              <div 
-                ref={gameAreaRef}
-                className={`relative border-2 h-80 overflow-hidden rounded ${
-                  theme === 'space-mood'
-                    ? 'bg-gradient-to-br from-black/60 via-blue-900/20 to-purple-900/20 border-blue-400/20'
-                    : theme === 'dark-vhs'
-                    ? 'bg-gradient-to-br from-black/80 via-gray-900/20 to-black/60 border-white/10'
-                    : theme === 'matrix-terminal'
-                    ? 'bg-gradient-to-br from-black/80 via-green-900/20 to-black/60 border-green-500/20'
-                    : 'bg-gradient-to-br from-black via-blue-900 to-purple-900 border-gray-600'
-                }`}
-              >
-                {dots.map((dot) => (
-                  <button
-                    key={dot.id}
-                    onClick={() => clickDot(dot.id, dot.points)}
-                    className="absolute w-8 h-8 rounded-full hover:scale-110 cursor-pointer transition-all duration-100 border-2 border-white/30 shadow-lg"
-                    style={{
-                      left: `${dot.x}px`,
-                      top: `${dot.y}px`,
-                      backgroundColor: dot.color,
-                      transform: 'translate(-50%, -50%)',
-                      boxShadow: `0 0 20px ${dot.color}50`
-                    }}
-                  >
-                    <span className="text-xs font-bold text-white">+{dot.points}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {gameEnded && (
-            <div className="text-center">
-              <h2 className={`text-3xl mb-4 font-pixel ${
-                theme === 'space-mood' ? 'text-blue-200' 
-                : theme === 'dark-vhs' ? 'text-white' 
-                : theme === 'matrix-terminal' ? 'text-green-400' 
-                : 'text-black'
-              }`}>GAME COMPLETE</h2>
-              <div className="mb-6 space-y-2">
-                <div className={`text-4xl font-pixel ${
-                  theme === 'space-mood' ? 'text-purple-300' 
-                  : theme === 'dark-vhs' ? 'text-gray-200' 
-                  : theme === 'matrix-terminal' ? 'text-green-300' 
-                  : 'text-yellow-600'
-                }`}>
-                  GRADE: {getGrade()}
-                </div>
-                <div className={`grid grid-cols-1 gap-4 mt-4 font-pixel ${
-                  theme === 'space-mood' ? 'text-blue-300' 
-                  : theme === 'dark-vhs' ? 'text-gray-300' 
-                  : theme === 'matrix-terminal' ? 'text-green-300' 
-                  : 'text-black'
-                }`}>
-                  <div className={`p-3 rounded border ${
-                    theme === 'space-mood' ? 'bg-blue-900/20 border-blue-400/20' 
-                    : theme === 'dark-vhs' ? 'bg-white/10 border-white/20' 
-                    : theme === 'matrix-terminal' ? 'bg-green-900/20 border-green-500/20' 
-                    : 'bg-white/20 border-black/20'
-                  }`}>
-                    <div>💯 Final Score</div>
-                    <div className="text-2xl font-bold">{score}</div>
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-4">
+        {/* Window content */}
+        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
+          <div className="text-center">
+            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ Retro RPG Adventure ]</h1>
+            
+            {!gameStarted ? (
+              <div className="space-y-6">
+                <p className={`mb-6 font-pixel text-lg ${styles.text}`}>
+                  🗡️ Embark on a classic RPG adventure! Fight enemies, level up, and survive as long as you can!
+                </p>
                 <button
                   onClick={startGame}
-                  className={`block mx-auto px-8 py-4 border-2 font-pixel font-bold transition-all rounded shadow-lg text-lg active:scale-95 ${
-                    theme === 'space-mood'
-                      ? 'bg-gradient-to-br from-blue-500 to-purple-600 border-blue-400/30 text-white hover:from-blue-400 hover:to-purple-500'
-                      : theme === 'dark-vhs'
-                      ? 'bg-gradient-to-br from-gray-600 to-black border-white/20 text-white hover:from-gray-500 hover:to-gray-800'
-                      : theme === 'matrix-terminal'
-                      ? 'bg-gradient-to-br from-green-600 to-black border-green-500/30 text-green-100 hover:from-green-500 hover:to-green-800'
-                      : 'bg-gradient-to-br from-blue-400 to-blue-600 border-black/30 text-white hover:from-blue-300 hover:to-blue-500'
-                  }`}
+                  className={`px-8 py-4 font-pixel text-lg border-2 border-black/30 shadow-lg transition-all active:scale-95 rounded ${styles.button}`}
                 >
-                  🔄 PLAY AGAIN
+                  Start Adventure
                 </button>
-                <Link 
-                  to="/desktop"
-                  className={`block transition-colors font-pixel underline text-lg ${
-                    theme === 'space-mood' ? 'text-purple-300 hover:text-purple-200' 
-                    : theme === 'dark-vhs' ? 'text-gray-300 hover:text-white' 
-                    : theme === 'matrix-terminal' ? 'text-green-300 hover:text-green-200' 
-                    : 'text-purple-800 hover:text-purple-900'
-                  }`}
-                >
-                  🏠 Return to Desktop
-                </Link>
               </div>
-            </div>
-          )}
+            ) : (
+              <div className="space-y-6">
+                {/* Player Stats */}
+                <div className={`p-4 border-2 rounded shadow-inner ${styles.logBg}`}>
+                  <h3 className={`font-pixel mb-2 ${styles.text}`}>Player Stats</h3>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Heart className="w-4 h-4" />
+                        <span className={`font-pixel ${styles.text}`}>Health: {player.health}/{player.maxHealth}</span>
+                      </div>
+                      <div className="w-full bg-gray-600 rounded h-2 mt-1">
+                        <div 
+                          className={`h-2 rounded transition-all ${styles.statBar}`}
+                          style={{ width: `${(player.health / player.maxHealth) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <Zap className="w-4 h-4" />
+                        <span className={`font-pixel ${styles.text}`}>Level {player.level}</span>
+                      </div>
+                      <div className="w-full bg-gray-600 rounded h-2 mt-1">
+                        <div 
+                          className="bg-gradient-to-r from-purple-400 to-purple-600 h-2 rounded transition-all"
+                          style={{ width: `${(player.experience / player.experienceToNext) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Sword className="w-4 h-4" />
+                      <span className={`font-pixel ${styles.text}`}>Attack: {player.attack}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Shield className="w-4 h-4" />
+                      <span className={`font-pixel ${styles.text}`}>Defense: {player.defense}</span>
+                    </div>
+                  </div>
+                </div>
 
-          {!gameEnded && (
-            <div className="mt-6 text-center">
-              <Link 
-                to="/desktop"
-                className={`transition-colors font-pixel underline ${
-                  theme === 'space-mood' ? 'text-purple-300 hover:text-purple-200' 
-                  : theme === 'dark-vhs' ? 'text-gray-300 hover:text-white' 
-                  : theme === 'matrix-terminal' ? 'text-green-300 hover:text-green-200' 
-                  : 'text-purple-800 hover:text-purple-900'
-                }`}
-              >
-                🏠 Return to Desktop
-              </Link>
-            </div>
-          )}
+                {/* Enemy Stats */}
+                {currentEnemy && (
+                  <div className={`p-4 border-2 rounded shadow-inner ${styles.logBg}`}>
+                    <h3 className={`font-pixel mb-2 ${styles.text}`}>Enemy</h3>
+                    <div className="text-sm">
+                      <div className="flex items-center gap-2">
+                        <span className={`font-pixel ${styles.text}`}>{currentEnemy.name}</span>
+                      </div>
+                      <div className="w-full bg-gray-600 rounded h-2 mt-1">
+                        <div 
+                          className={`h-2 rounded transition-all ${styles.enemyStatBar}`}
+                          style={{ width: `${(currentEnemy.health / currentEnemy.maxHealth) * 100}%` }}
+                        ></div>
+                      </div>
+                      <span className={`font-pixel text-xs ${styles.text}`}>
+                        {currentEnemy.health}/{currentEnemy.maxHealth} HP
+                      </span>
+                    </div>
+                  </div>
+                )}
 
+                {/* Action Buttons */}
+                {!gameOver && currentEnemy && (
+                  <div className="flex gap-4 justify-center">
+                    <button
+                      onClick={playerAttack}
+                      className={`px-6 py-3 font-pixel border-2 border-black/30 shadow-lg transition-all active:scale-95 rounded ${styles.button}`}
+                    >
+                      ⚔️ Attack
+                    </button>
+                    <button
+                      onClick={heal}
+                      className={`px-6 py-3 font-pixel border-2 border-black/30 shadow-lg transition-all active:scale-95 rounded ${styles.button}`}
+                    >
+                      ❤️ Heal
+                    </button>
+                  </div>
+                )}
+
+                {/* Battle Log */}
+                <div className={`p-4 border-2 rounded shadow-inner max-h-40 overflow-y-auto ${styles.logBg}`}>
+                  <h3 className={`font-pixel mb-2 ${styles.text}`}>Battle Log</h3>
+                  <div className="space-y-1">
+                    {battleLog.slice(-8).map((log, index) => (
+                      <p key={index} className={`text-xs font-pixel ${styles.text}`}>
+                        {log}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Game Over */}
+                {gameOver && (
+                  <div className="text-center space-y-4">
+                    <button
+                      onClick={resetGame}
+                      className={`px-8 py-4 font-pixel text-lg border-2 border-black/30 shadow-lg transition-all active:scale-95 rounded ${styles.button}`}
+                    >
+                      Play Again
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <Link 
+              to="/desktop" 
+              className={`mt-8 inline-block text-xl underline transition-colors font-pixel drop-shadow-sm ${
+                theme === 'space-mood' 
+                  ? 'text-blue-800 hover:text-blue-900'
+                  : theme === 'dark-vhs'
+                  ? 'text-red-400 hover:text-red-300'
+                  : theme === 'retro-chrome'
+                  ? 'text-blue-300 hover:text-blue-200'
+                  : 'text-blue-800 hover:text-blue-900'
+              }`}
+            >
+              <ArrowLeft className="w-5 h-5 inline mr-2" />
+              Back to Desktop
+            </Link>
+          </div>
         </div>
       </div>
     </div>
