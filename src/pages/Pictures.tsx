@@ -35,12 +35,12 @@ const Pictures = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { images: storageImages, loading, error, refetch } = useStorageImages();
 
-  // Combine storage images with fallback images
+  // Use storage images primarily, only fall back if storage category is completely empty
   const photoCategories = {
-    childhood: [...(storageImages.childhood || []), ...(storageImages.childhood.length === 0 ? fallbackImages.childhood : [])],
-    nature: [...(storageImages.nature || []), ...fallbackImages.nature],
-    vibe: [...(storageImages.vibe || []), ...fallbackImages.vibe],
-    random: [...(storageImages.random || []), ...fallbackImages.random]
+    childhood: storageImages.childhood.length > 0 ? storageImages.childhood : fallbackImages.childhood,
+    nature: storageImages.nature.length > 0 ? storageImages.nature : fallbackImages.nature,
+    vibe: storageImages.vibe.length > 0 ? storageImages.vibe : fallbackImages.vibe,
+    random: storageImages.random.length > 0 ? storageImages.random : fallbackImages.random
   };
 
   if (selectedCategory) {
@@ -170,6 +170,7 @@ const Pictures = () => {
             <div className="grid grid-cols-2 gap-6 mb-8">
               {Object.keys(photoCategories).map((category) => {
                 const imageCount = photoCategories[category as keyof typeof photoCategories].length;
+                const isFromStorage = storageImages[category as keyof typeof storageImages].length > 0;
                 return (
                   <button
                     key={category}
@@ -182,7 +183,9 @@ const Pictures = () => {
                       <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/20 to-transparent rounded"></div>
                       <Folder className="w-12 h-12 text-gray-800 drop-shadow-lg relative z-10" />
                       {imageCount > 0 && (
-                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold border border-white">
+                        <div className={`absolute -top-1 -right-1 w-5 h-5 text-white text-xs rounded-full flex items-center justify-center font-bold border border-white ${
+                          isFromStorage ? 'bg-green-500' : 'bg-blue-500'
+                        }`}>
                           {imageCount}
                         </div>
                       )}

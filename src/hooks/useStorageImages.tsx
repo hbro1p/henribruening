@@ -27,25 +27,6 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
         setLoading(true);
         setError(null);
 
-        // Fetch all files from the pictures bucket
-        const { data: files, error: listError } = await supabase.storage
-          .from(bucketName)
-          .list('', {
-            limit: 1000,
-            sortBy: { column: 'name', order: 'asc' }
-          });
-
-        if (listError) {
-          console.error('Error listing files:', listError);
-          setError(listError.message);
-          return;
-        }
-
-        if (!files) {
-          setError('No files found');
-          return;
-        }
-
         // Initialize categories
         const categorizedImages: Record<string, string[]> = {
           childhood: [],
@@ -54,40 +35,11 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
           random: []
         };
 
-        // Process files and categorize them
-        for (const file of files) {
-          if (file.name && (file.name.toLowerCase().includes('.jpg') || 
-                           file.name.toLowerCase().includes('.jpeg') || 
-                           file.name.toLowerCase().includes('.png') || 
-                           file.name.toLowerCase().includes('.gif') || 
-                           file.name.toLowerCase().includes('.webp'))) {
-            
-            // Get public URL for the image
-            const { data: urlData } = supabase.storage
-              .from(bucketName)
-              .getPublicUrl(file.name);
-
-            if (urlData?.publicUrl) {
-              const fileName = file.name.toLowerCase();
-              
-              // Categorize based on filename or folder structure
-              if (fileName.includes('childhood') || fileName.includes('child') || fileName.includes('kid')) {
-                categorizedImages.childhood.push(urlData.publicUrl);
-              } else if (fileName.includes('nature') || fileName.includes('landscape') || fileName.includes('outdoor')) {
-                categorizedImages.nature.push(urlData.publicUrl);
-              } else if (fileName.includes('vibe') || fileName.includes('mood') || fileName.includes('aesthetic')) {
-                categorizedImages.vibe.push(urlData.publicUrl);
-              } else {
-                categorizedImages.random.push(urlData.publicUrl);
-              }
-            }
-          }
-        }
-
-        // Also check for folder-based organization
+        // Check for folder-based organization first
         const folders = ['childhood', 'nature', 'vibe', 'random'];
         
         for (const folder of folders) {
+          console.log(`Checking folder: ${folder}`);
           const { data: folderFiles, error: folderError } = await supabase.storage
             .from(bucketName)
             .list(folder, {
@@ -96,12 +48,15 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
             });
 
           if (!folderError && folderFiles) {
+            console.log(`Found ${folderFiles.length} files in ${folder} folder`);
             for (const file of folderFiles) {
-              if (file.name && (file.name.toLowerCase().includes('.jpg') || 
-                               file.name.toLowerCase().includes('.jpeg') || 
-                               file.name.toLowerCase().includes('.png') || 
-                               file.name.toLowerCase().includes('.gif') || 
-                               file.name.toLowerCase().includes('.webp'))) {
+              if (file.name && (
+                file.name.toLowerCase().includes('.jpg') || 
+                file.name.toLowerCase().includes('.jpeg') || 
+                file.name.toLowerCase().includes('.png') || 
+                file.name.toLowerCase().includes('.gif') || 
+                file.name.toLowerCase().includes('.webp')
+              )) {
                 
                 const { data: urlData } = supabase.storage
                   .from(bucketName)
@@ -109,14 +64,62 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
 
                 if (urlData?.publicUrl) {
                   categorizedImages[folder as keyof typeof categorizedImages].push(urlData.publicUrl);
+                  console.log(`Added image to ${folder}: ${file.name}`);
                 }
+              }
+            }
+          } else if (folderError) {
+            console.log(`No folder found for ${folder} or error:`, folderError);
+          }
+        }
+
+        // Also check root level files and categorize them
+        const { data: rootFiles, error: rootError } = await supabase.storage
+          .from(bucketName)
+          .list('', {
+            limit: 1000,
+            sortBy: { column: 'name', order: 'asc' }
+          });
+
+        if (!rootError && rootFiles) {
+          console.log(`Found ${rootFiles.length} files in root`);
+          for (const file of rootFiles) {
+            // Skip folders
+            if (file.id === null) continue;
+            
+            if (file.name && (
+              file.name.toLowerCase().includes('.jpg') || 
+              file.name.toLowerCase().includes('.jpeg') || 
+              file.name.toLowerCase().includes('.png') || 
+              file.name.toLowerCase().includes('.gif') || 
+              file.name.toLowerCase().includes('.webp')
+            )) {
+              
+              const { data: urlData } = supabase.storage
+                .from(bucketName)
+                .getPublicUrl(file.name);
+
+              if (urlData?.publicUrl) {
+                const fileName = file.name.toLowerCase();
+                
+                // Categorize based on filename
+                if (fileName.includes('childhood') || fileName.includes('child') || fileName.includes('kid')) {
+                  categorizedImages.childhood.push(urlData.publicUrl);
+                } else if (fileName.includes('nature') || fileName.includes('landscape') || fileName.includes('outdoor')) {
+                  categorizedImages.nature.push(urlData.publicUrl);
+                } else if (fileName.includes('vibe') || fileName.includes('mood') || fileName.includes('aesthetic')) {
+                  categorizedImages.vibe.push(urlData.publicUrl);
+                } else {
+                  categorizedImages.random.push(urlData.publicUrl);
+                }
+                console.log(`Categorized root image: ${file.name}`);
               }
             }
           }
         }
 
         setImages(categorizedImages);
-        console.log('Categorized images:', categorizedImages);
+        console.log('Final categorized images:', categorizedImages);
         
       } catch (err) {
         console.error('Error fetching images:', err);
@@ -129,5 +132,12 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
     fetchImages();
   }, [bucketName]);
 
-  return { images, loading, error, refetch: () => window.location.reload() };
+  const refetch = () => {
+    setLoading(true);
+    setError(null);
+    // Trigger useEffect by changing a dependency or call fetchImages directly
+    window.location.reload();
+  };
+
+  return { images, loading, error, refetch };
 };

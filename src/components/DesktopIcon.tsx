@@ -9,33 +9,33 @@ interface DesktopIconProps {
 }
 
 const getIconStyles = (label: string, theme: string) => {
-  // Space Mood theme - Retro cosmic style with unified vintage palette
+  // Space Mood theme - Clean Windows XP-style 2000s aesthetic
   if (theme === 'space-mood') {
     const spaceColors = {
-      'My Pictures': 'from-purple-400 via-pink-400 to-purple-600',
-      'Meine Bilder': 'from-purple-400 via-pink-400 to-purple-600',
-      'My Videos': 'from-blue-400 via-cyan-400 to-blue-600',
-      'Meine Videos': 'from-blue-400 via-cyan-400 to-blue-600',
-      'My Projects': 'from-green-400 via-emerald-400 to-green-600',
-      'Meine Projekte': 'from-green-400 via-emerald-400 to-green-600',
-      'About Me': 'from-indigo-400 via-purple-400 to-pink-400',
-      'Über Mich': 'from-indigo-400 via-purple-400 to-pink-400',
-      'Contact': 'from-cyan-400 via-blue-400 to-indigo-400',
-      'Kontakt': 'from-cyan-400 via-blue-400 to-indigo-400',
-      'Settings': 'from-gray-400 via-slate-400 to-zinc-400',
-      'Einstellungen': 'from-gray-400 via-slate-400 to-zinc-400',
-      'Game.exe': 'from-yellow-400 via-orange-400 to-red-400',
-      'Spiel.exe': 'from-yellow-400 via-orange-400 to-red-400',
+      'My Pictures': 'from-blue-500 via-blue-600 to-blue-700',
+      'Meine Bilder': 'from-blue-500 via-blue-600 to-blue-700',
+      'My Videos': 'from-red-500 via-red-600 to-red-700',
+      'Meine Videos': 'from-red-500 via-red-600 to-red-700',
+      'My Projects': 'from-green-500 via-green-600 to-green-700',
+      'Meine Projekte': 'from-green-500 via-green-600 to-green-700',
+      'About Me': 'from-orange-500 via-orange-600 to-orange-700',
+      'Über Mich': 'from-orange-500 via-orange-600 to-orange-700',
+      'Contact': 'from-purple-500 via-purple-600 to-purple-700',
+      'Kontakt': 'from-purple-500 via-purple-600 to-purple-700',
+      'Settings': 'from-gray-500 via-gray-600 to-gray-700',
+      'Einstellungen': 'from-gray-500 via-gray-600 to-gray-700',
+      'Game.exe': 'from-yellow-500 via-yellow-600 to-yellow-700',
+      'Spiel.exe': 'from-yellow-500 via-yellow-600 to-yellow-700',
     };
     
     return {
-      gradient: spaceColors[label as keyof typeof spaceColors] || 'from-purple-400 to-blue-400',
-      border: 'border-purple-300/30',
-      hoverBorder: 'group-hover:border-purple-200/50',
-      glowEffect: 'shadow-lg shadow-purple-500/20 group-hover:shadow-purple-400/30',
-      innerGlow: 'bg-gradient-to-br from-white/30 via-purple-100/20 to-transparent',
-      highlight: 'bg-gradient-to-br from-white/50 to-transparent',
-      statusGlow: 'from-cyan-300 via-blue-400 to-purple-500 shadow-lg shadow-blue-400/50'
+      gradient: spaceColors[label as keyof typeof spaceColors] || 'from-blue-500 to-blue-700',
+      border: 'border-white/40',
+      hoverBorder: 'group-hover:border-white/60',
+      glowEffect: 'shadow-lg shadow-black/30 group-hover:shadow-lg group-hover:shadow-white/20',
+      innerGlow: 'bg-gradient-to-br from-white/30 via-white/10 to-transparent',
+      highlight: 'bg-gradient-to-br from-white/60 to-transparent',
+      statusGlow: 'from-white via-gray-200 to-gray-400 shadow-lg shadow-white/40'
     };
   }
   
@@ -102,29 +102,29 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to }) => {
     >
       {/* Fixed size container for consistent layout */}
       <div className="w-20 h-20 flex items-center justify-center">
-        <div className={`relative w-16 h-16 bg-gradient-to-br ${styles.gradient} rounded-xl transition-all duration-300 flex items-center justify-center border-2 ${styles.border} ${styles.hoverBorder} ${styles.glowEffect}`}>
-          {/* Retro-style depth effects */}
-          <div className={`absolute inset-0.5 ${styles.innerGlow} rounded-xl`}></div>
-          <div className="absolute inset-1 bg-gradient-to-tl from-white/10 via-transparent to-transparent rounded-lg"></div>
+        <div className={`relative w-16 h-16 bg-gradient-to-br ${styles.gradient} rounded transition-all duration-300 flex items-center justify-center border-2 ${styles.border} ${styles.hoverBorder} ${styles.glowEffect}`}>
+          {/* Windows XP-style depth effects for Space Mood */}
+          <div className={`absolute inset-0.5 ${styles.innerGlow} rounded`}></div>
+          <div className="absolute inset-1 bg-gradient-to-tl from-white/20 via-transparent to-transparent rounded"></div>
           
           {/* Icon with enhanced styling */}
-          <Icon className="w-8 h-8 text-white drop-shadow-lg relative z-10 filter brightness-110 contrast-125" />
+          <Icon className="w-8 h-8 text-white drop-shadow-lg relative z-10 filter brightness-110" />
           
-          {/* Vintage-style highlight gloss */}
-          <div className={`absolute top-1 left-1 w-4 h-4 ${styles.highlight} rounded-full blur-sm`}></div>
+          {/* Clean highlight for Windows XP feel */}
+          <div className={`absolute top-1 left-1 w-6 h-3 ${styles.highlight} rounded blur-sm`}></div>
           
-          {/* Retro status indicator with theme-appropriate glow */}
-          <div className={`absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-br ${styles.statusGlow} rounded-full border-2 border-black/30`}>
-            <div className="absolute inset-0.5 bg-gradient-to-br from-white/40 to-transparent rounded-full"></div>
+          {/* Clean status indicator */}
+          <div className={`absolute -bottom-1 -right-1 w-3 h-3 bg-gradient-to-br ${styles.statusGlow} rounded-full border border-black/20`}>
+            <div className="absolute inset-0.5 bg-gradient-to-br from-white/50 to-transparent rounded-full"></div>
           </div>
         </div>
       </div>
       
-      {/* Enhanced label with retro styling */}
+      {/* Clean label styling for Windows XP aesthetic */}
       <div className="h-8 flex items-center">
-        <span className={`text-sm font-pixel select-none drop-shadow-lg px-3 py-1 rounded-md backdrop-blur-sm border shadow-lg transition-all duration-300 ${
+        <span className={`text-sm font-pixel select-none drop-shadow-lg px-2 py-1 rounded backdrop-blur-sm border transition-all duration-300 ${
           theme === 'space-mood' 
-            ? 'text-purple-100 bg-gradient-to-b from-purple-900/70 to-purple-950/90 border-purple-400/30 group-hover:border-purple-300/50 group-hover:bg-gradient-to-b group-hover:from-purple-800/80 group-hover:to-purple-900/90'
+            ? 'text-white bg-gradient-to-b from-blue-600/80 to-blue-800/90 border-white/30 group-hover:border-white/50 group-hover:bg-gradient-to-b group-hover:from-blue-500/80 group-hover:to-blue-700/90'
             : theme === 'dark-vhs'
             ? 'text-white bg-gradient-to-b from-black/70 to-gray-900/90 border-white/20 group-hover:border-white/40'
             : theme === 'matrix-terminal'
@@ -135,7 +135,7 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to }) => {
         }`}>
           <div className={`absolute inset-x-0.5 top-0 h-0.5 rounded-t ${
             theme === 'space-mood' 
-              ? 'bg-gradient-to-b from-purple-300/30 to-transparent'
+              ? 'bg-gradient-to-b from-white/40 to-transparent'
               : theme === 'dark-vhs'
               ? 'bg-gradient-to-b from-white/20 to-transparent'
               : theme === 'matrix-terminal'
