@@ -210,79 +210,84 @@ const Pictures = () => {
           </div>
         </div>
         
-        {/* Window content with responsive folder grid */}
-        <div className={`p-3 sm:p-6 md:p-8 border-2 border-white/20 shadow-inner rounded-b flex flex-col ${styles.windowContent}`} style={{ height: 'calc(100% - 52px)' }}>
-          {/* Header section */}
-          <div className="text-center mb-4 sm:mb-6">
+        {/* Window content with fixed height and stable layout */}
+        <div className={`border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`} style={{ height: 'calc(100% - 52px)' }}>
+          {/* Fixed header section - always same height */}
+          <div className="px-3 sm:px-6 md:px-8 pt-3 sm:pt-6 md:pt-8 pb-4 text-center">
             <h1 className={`text-xl sm:text-2xl md:text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Pictures')} ]</h1>
-            <p className={`mb-4 font-pixel drop-shadow-sm text-sm sm:text-base ${styles.text}`}>
+            <p className={`mb-2 font-pixel drop-shadow-sm text-sm sm:text-base ${styles.text}`}>
               {t('language') === 'deutsch' ? 'Wählen Sie einen Ordner zum Erkunden.' : 'Choose a folder to explore.'}
             </p>
             
-            {loading && (
-              <p className={`mb-4 text-xs sm:text-sm font-pixel ${styles.text}`}>
-                {t('language') === 'deutsch' ? 'Lade Bilder aus dem Speicher...' : 'Loading images from storage...'}
-              </p>
-            )}
-            
-            {error && (
-              <div className="mb-4 text-center">
-                <p className="text-red-600 text-xs sm:text-sm font-pixel mb-2">
-                  {t('language') === 'deutsch' ? 'Speicherfehler: ' : 'Storage error: '}{error}
+            {/* Fixed height status area to prevent shifts */}
+            <div className="h-8 flex items-center justify-center">
+              {loading && (
+                <p className={`text-xs sm:text-sm font-pixel ${styles.text}`}>
+                  {t('language') === 'deutsch' ? 'Lade Bilder aus dem Speicher...' : 'Loading images from storage...'}
                 </p>
-                <button
-                  onClick={refetch}
-                  className={`text-xs underline transition-colors flex items-center gap-1 font-pixel mx-auto ${styles.link}`}
-                >
-                  <RefreshCw className="w-3 h-3" />
-                  {t('language') === 'deutsch' ? 'Aktualisieren' : 'Refresh'}
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Responsive folder grid - centered and fluid */}
-          <div className="flex-1 flex items-center justify-center">
-            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12 place-items-center">
-              {Object.keys(photoCategories).map((category) => {
-                const folderColors = getFolderColors(theme);
-                const categoryTranslations = {
-                  childhood: 'Kindheit',
-                  nature: 'Natur',
-                  vibe: 'Stimmung',
-                  random: 'Zufällig'
-                };
-                
-                return (
-                  <div key={category} className="flex flex-col items-center justify-center">
-                    <button
-                      onClick={() => setSelectedCategory(category)}
-                      className="flex flex-col items-center justify-center space-y-2 sm:space-y-3 p-2 sm:p-3 transition-all duration-200 hover:scale-105 active:scale-95"
-                    >
-                      {/* Responsive folder icon */}
-                      <div className="relative">
-                        <div className={`w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 bg-gradient-to-br ${folderColors.gradient} rounded-lg border-2 border-black/20 shadow-xl flex items-center justify-center relative`}>
-                          {/* Highlight effect */}
-                          <div className="absolute top-1 left-1 w-8 h-4 sm:w-10 sm:h-5 md:w-14 md:h-7 lg:w-16 lg:h-8 bg-gradient-to-br from-white/40 to-transparent rounded blur-sm"></div>
-                          
-                          {/* Folder icon */}
-                          <Folder className={`w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-18 lg:h-18 ${folderColors.icon} drop-shadow-lg relative z-10`} />
-                        </div>
-                      </div>
-                      
-                      {/* Folder label */}
-                      <span className={`text-xs sm:text-sm md:text-base lg:text-lg capitalize font-bold font-pixel drop-shadow-sm ${styles.text} text-center max-w-24 sm:max-w-28 md:max-w-36 lg:max-w-40`}>
-                        {t('language') === 'deutsch' ? categoryTranslations[category as keyof typeof categoryTranslations] : category}
-                      </span>
-                    </button>
-                  </div>
-                );
-              })}
+              )}
+              
+              {error && (
+                <div className="text-center">
+                  <p className="text-red-600 text-xs sm:text-sm font-pixel mb-2">
+                    {t('language') === 'deutsch' ? 'Speicherfehler: ' : 'Storage error: '}{error}
+                  </p>
+                  <button
+                    onClick={refetch}
+                    className={`text-xs underline transition-colors flex items-center gap-1 font-pixel mx-auto ${styles.link}`}
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    {t('language') === 'deutsch' ? 'Aktualisieren' : 'Refresh'}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Footer */}
-          <div className="text-center mt-4 sm:mt-6">
+          {/* Fixed center area for folders - stable positioning */}
+          <div className="relative px-3 sm:px-6 md:px-8" style={{ height: 'calc(100% - 200px)' }}>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="grid grid-cols-2 gap-6 sm:gap-8 md:gap-12 lg:gap-16">
+                {Object.keys(photoCategories).map((category) => {
+                  const folderColors = getFolderColors(theme);
+                  const categoryTranslations = {
+                    childhood: 'Kindheit',
+                    nature: 'Natur',
+                    vibe: 'Stimmung',
+                    random: 'Zufällig'
+                  };
+                  
+                  return (
+                    <div key={category} className="flex flex-col items-center justify-center">
+                      <button
+                        onClick={() => setSelectedCategory(category)}
+                        className="flex flex-col items-center justify-center space-y-2 sm:space-y-3 p-2 sm:p-3 transition-all duration-200 hover:scale-105 active:scale-95"
+                      >
+                        {/* Consistent folder icon sizing across devices */}
+                        <div className="relative">
+                          <div className={`w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 bg-gradient-to-br ${folderColors.gradient} rounded-lg border-2 border-black/20 shadow-xl flex items-center justify-center relative`}>
+                            {/* Highlight effect */}
+                            <div className="absolute top-1 left-1 w-6 h-3 sm:w-8 sm:h-4 md:w-10 md:h-5 lg:w-12 lg:h-6 bg-gradient-to-br from-white/40 to-transparent rounded blur-sm"></div>
+                            
+                            {/* Folder icon */}
+                            <Folder className={`w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 ${folderColors.icon} drop-shadow-lg relative z-10`} />
+                          </div>
+                        </div>
+                        
+                        {/* Folder label */}
+                        <span className={`text-xs sm:text-sm md:text-base capitalize font-bold font-pixel drop-shadow-sm ${styles.text} text-center w-20 sm:w-24 md:w-28 lg:w-32`}>
+                          {t('language') === 'deutsch' ? categoryTranslations[category as keyof typeof categoryTranslations] : category}
+                        </span>
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Fixed footer */}
+          <div className="px-3 sm:px-6 md:px-8 pb-3 sm:pb-6 md:pb-8 text-center">
             <Link to="/desktop" className={`text-base sm:text-xl underline transition-colors font-pixel drop-shadow-sm ${styles.link}`}>
               &lt;- {t('Back to Desktop')}
             </Link>
