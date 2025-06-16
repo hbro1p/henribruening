@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
-import { Folder, ArrowLeft } from 'lucide-react';
+import { Folder, ArrowLeft, RefreshCw } from 'lucide-react';
 import {
   Carousel,
   CarouselContent,
@@ -10,8 +10,10 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useStorageImages } from '@/hooks/useStorageImages';
 
-const photoCategories = {
+// Fallback images for when storage is empty
+const fallbackImages = {
   childhood: [
     '/lovable-uploads/0b9567c9-f15e-4950-9188-94a62078629d.png',
     '/lovable-uploads/0321fd14-b0f2-474f-8227-bb3c92cfbbb4.png',
@@ -31,6 +33,15 @@ const photoCategories = {
 
 const Pictures = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const { images: storageImages, loading, error, refetch } = useStorageImages();
+
+  // Combine storage images with fallback images
+  const photoCategories = {
+    childhood: [...(storageImages.childhood || []), ...(storageImages.childhood.length === 0 ? fallbackImages.childhood : [])],
+    nature: [...(storageImages.nature || []), ...fallbackImages.nature],
+    vibe: [...(storageImages.vibe || []), ...fallbackImages.vibe],
+    random: [...(storageImages.random || []), ...fallbackImages.random]
+  };
 
   if (selectedCategory) {
     const photos = photoCategories[selectedCategory as keyof typeof photoCategories];
@@ -54,7 +65,20 @@ const Pictures = () => {
             <div className="flex flex-col items-center justify-center text-center">
               <h1 className="text-4xl mb-4 text-black font-pixel drop-shadow-lg">[ My Pictures ] / {selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}</h1>
               
-              {photos.length > 0 ? (
+              {loading ? (
+                <p className="text-black mb-8 font-pixel drop-shadow-sm">Loading images...</p>
+              ) : error ? (
+                <div className="text-center mb-8">
+                  <p className="text-red-600 mb-4 font-pixel drop-shadow-sm">Error loading images: {error}</p>
+                  <button
+                    onClick={refetch}
+                    className="text-sm underline text-orange-800 hover:text-orange-900 transition-colors flex items-center gap-2 font-pixel drop-shadow-sm mx-auto"
+                  >
+                    <RefreshCw className="w-4 h-4" />
+                    Retry
+                  </button>
+                </div>
+              ) : photos.length > 0 ? (
                 <>
                   <div className="w-full max-w-xs sm:max-w-xl md:max-w-2xl">
                     <Carousel className="w-full" opts={{ loop: true }}>
@@ -65,7 +89,16 @@ const Pictures = () => {
                               <Card className="border-2 border-black/30 bg-gradient-to-br from-gray-800 to-black overflow-hidden shadow-2xl rounded-lg">
                                 <CardContent className="flex aspect-[4/3] items-center justify-center p-2">
                                   <div className="bg-gradient-to-br from-gray-600 to-gray-800 p-2 rounded border border-black/20 shadow-inner">
-                                    <img src={src} alt={`${selectedCategory} memory ${index + 1}`} className="max-h-full max-w-full object-contain rounded" />
+                                    <img 
+                                      src={src} 
+                                      alt={`${selectedCategory} memory ${index + 1}`} 
+                                      className="max-h-full max-w-full object-contain rounded"
+                                      onError={(e) => {
+                                        console.error('Image failed to load:', src);
+                                        const target = e.target as HTMLImageElement;
+                                        target.style.display = 'none';
+                                      }}
+                                    />
                                   </div>
                                 </CardContent>
                               </Card>
@@ -115,24 +148,49 @@ const Pictures = () => {
         <div className="bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400 p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b">
           <div className="flex flex-col items-center justify-center text-center">
             <h1 className="text-4xl mb-8 text-black font-pixel drop-shadow-lg">[ My Pictures ]</h1>
-            <p className="mb-8 text-black font-pixel drop-shadow-sm">Choose a folder to explore.</p>
+            <p className="mb-4 text-black font-pixel drop-shadow-sm">Choose a folder to explore.</p>
+            
+            {loading && (
+              <p className="mb-4 text-sm text-gray-600 font-pixel">Loading images from storage...</p>
+            )}
+            
+            {error && (
+              <div className="mb-4 text-center">
+                <p className="text-red-600 text-sm font-pixel mb-2">Storage error: {error}</p>
+                <button
+                  onClick={refetch}
+                  className="text-xs underline text-orange-800 hover:text-orange-900 transition-colors flex items-center gap-1 font-pixel mx-auto"
+                >
+                  <RefreshCw className="w-3 h-3" />
+                  Refresh
+                </button>
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-6 mb-8">
-              {Object.keys(photoCategories).map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className="flex flex-col items-center justify-center space-y-3 w-32 h-32 p-4 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-2 border-black/30 hover:from-gray-200 hover:via-gray-300 hover:to-gray-500 active:scale-95 transition-all rounded-lg shadow-lg"
-                >
-                  {/* Folder icon with 3D effect */}
-                  <div className="relative">
-                    <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded"></div>
-                    <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/20 to-transparent rounded"></div>
-                    <Folder className="w-12 h-12 text-gray-800 drop-shadow-lg relative z-10" />
-                  </div>
-                  <span className="text-sm text-black capitalize font-bold font-pixel drop-shadow-sm">{category}</span>
-                </button>
-              ))}
+              {Object.keys(photoCategories).map((category) => {
+                const imageCount = photoCategories[category as keyof typeof photoCategories].length;
+                return (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className="flex flex-col items-center justify-center space-y-3 w-32 h-32 p-4 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-2 border-black/30 hover:from-gray-200 hover:via-gray-300 hover:to-gray-500 active:scale-95 transition-all rounded-lg shadow-lg"
+                  >
+                    {/* Folder icon with 3D effect */}
+                    <div className="relative">
+                      <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded"></div>
+                      <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/20 to-transparent rounded"></div>
+                      <Folder className="w-12 h-12 text-gray-800 drop-shadow-lg relative z-10" />
+                      {imageCount > 0 && (
+                        <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold border border-white">
+                          {imageCount}
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-sm text-black capitalize font-bold font-pixel drop-shadow-sm">{category}</span>
+                  </button>
+                );
+              })}
             </div>
 
             <Link to="/desktop" className="text-xl underline text-orange-800 hover:text-orange-900 transition-colors font-pixel drop-shadow-sm">
