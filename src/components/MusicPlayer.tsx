@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
-import { Play, Pause, Music, SkipForward, SkipBack } from 'lucide-react';
+import { Play, Pause, Music, SkipForward, SkipBack, Volume2 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 const playlist2000s = [
@@ -53,49 +54,83 @@ const MusicPlayer = () => {
       
       {/* Only show visual controls on desktop route */}
       {location.pathname === '/desktop' && (
-        <div className="absolute bottom-8 right-8 bg-windows-gray p-2 border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black w-80 shadow-2xl font-pixel">
-          <div className="flex items-center space-x-3">
-            <div className="flex-shrink-0 text-black">
-              <Music className="w-6 h-6" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs text-black truncate font-bold">Vibe: 2000s mix playing</p>
-              <p className="text-xs text-black truncate">Nostalgic hits collection</p>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className={`flex items-end h-5 space-x-1`}>
-                {Array.from({ length: 4 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className={`w-1 bg-black origin-bottom ${isPlaying ? 'animate-equalizer' : ''}`}
-                    style={{
-                      animationDelay: `${i * 150}ms`,
-                      transform: `scaleY(${isPlaying ? 1 : 0.3})`,
-                      transition: 'transform 0.2s ease-out'
-                    }}
-                  ></div>
-                ))}
+        <div className="absolute bottom-8 right-8 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 p-1 rounded-3xl shadow-2xl transform hover:scale-105 transition-all duration-300">
+          <div className="bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 rounded-2xl p-4 backdrop-blur-sm border border-white/20">
+            <div className="flex items-center space-x-4">
+              {/* Album art / Visualizer */}
+              <div className="flex-shrink-0 relative">
+                <div className="w-12 h-12 bg-gradient-to-br from-cyan-400 via-purple-400 to-pink-400 rounded-xl flex items-center justify-center shadow-lg">
+                  <Music className="w-6 h-6 text-white drop-shadow-sm" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-xl"></div>
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full border-2 border-white animate-pulse"></div>
               </div>
-              <div className="flex space-x-1">
-                <button
-                  onClick={prevTrack}
-                  className="p-1 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white"
-                >
-                  <SkipBack className="w-4 h-4 text-black" />
-                </button>
-                <button
-                  onClick={togglePlayPause}
-                  className="p-1 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white"
-                >
-                  {isPlaying ? <Pause className="w-4 h-4 text-black" /> : <Play className="w-4 h-4 text-black" />}
-                </button>
-                <button
-                  onClick={nextTrack}
-                  className="p-1 bg-windows-gray border-t-2 border-l-2 border-white border-b-2 border-r-2 border-black active:border-t-2 active:border-l-2 active:border-black active:border-b-2 active:border-r-2 active:border-white"
-                >
-                  <SkipForward className="w-4 h-4 text-black" />
-                </button>
+              
+              {/* Track info */}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-white font-pixel font-bold truncate drop-shadow-sm">
+                  🎵 2000s Vibes
+                </p>
+                <p className="text-xs text-cyan-200 truncate font-pixel">
+                  Track {currentTrack + 1} of {playlist2000s.length}
+                </p>
               </div>
+              
+              {/* Controls and visualizer */}
+              <div className="flex items-center space-x-3">
+                {/* Equalizer bars */}
+                <div className="flex items-end h-6 space-x-1">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-1 bg-gradient-to-t from-cyan-400 to-pink-400 rounded-full origin-bottom transition-all duration-200 ${
+                        isPlaying ? 'animate-equalizer' : 'h-2'
+                      }`}
+                      style={{
+                        animationDelay: `${i * 100}ms`,
+                        height: isPlaying ? `${Math.random() * 16 + 8}px` : '8px',
+                      }}
+                    ></div>
+                  ))}
+                </div>
+                
+                {/* Control buttons */}
+                <div className="flex space-x-1">
+                  <button
+                    onClick={prevTrack}
+                    className="p-2 bg-gradient-to-br from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 rounded-xl shadow-lg transition-all duration-200 hover:scale-110 transform-gpu border border-white/20"
+                  >
+                    <SkipBack className="w-4 h-4 text-white drop-shadow-sm" />
+                  </button>
+                  
+                  <button
+                    onClick={togglePlayPause}
+                    className="p-2 bg-gradient-to-br from-green-500 to-emerald-500 hover:from-green-400 hover:to-emerald-400 rounded-xl shadow-lg transition-all duration-200 hover:scale-110 transform-gpu border border-white/20"
+                  >
+                    {isPlaying ? 
+                      <Pause className="w-4 h-4 text-white drop-shadow-sm" /> : 
+                      <Play className="w-4 h-4 text-white drop-shadow-sm ml-0.5" />
+                    }
+                  </button>
+                  
+                  <button
+                    onClick={nextTrack}
+                    className="p-2 bg-gradient-to-br from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 rounded-xl shadow-lg transition-all duration-200 hover:scale-110 transform-gpu border border-white/20"
+                  >
+                    <SkipForward className="w-4 h-4 text-white drop-shadow-sm" />
+                  </button>
+                </div>
+                
+                {/* Volume indicator */}
+                <div className="flex items-center">
+                  <Volume2 className="w-4 h-4 text-cyan-300 drop-shadow-sm" />
+                </div>
+              </div>
+            </div>
+            
+            {/* Progress bar */}
+            <div className="mt-3 w-full h-1 bg-white/20 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 rounded-full animate-pulse"></div>
             </div>
           </div>
         </div>
