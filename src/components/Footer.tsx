@@ -52,14 +52,14 @@ const Footer = () => {
             onClick={() => setShowImprint(true)}
             className={`underline transition-colors ${styles.footer}`}
           >
-            Imprint
+            {t('Imprint')}
           </button>
           <span className={styles.footer}>|</span>
           <button
             onClick={() => setShowPrivacy(true)}
             className={`underline transition-colors ${styles.footer}`}
           >
-            Privacy
+            {t('Privacy')}
           </button>
         </div>
       </div>
@@ -69,7 +69,7 @@ const Footer = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className={`max-w-md w-full p-6 rounded-lg border-2 shadow-2xl ${styles.overlay}`}>
             <div className="flex justify-between items-center mb-4">
-              <h2 className={`text-xl font-pixel font-bold ${styles.header}`}>Imprint</h2>
+              <h2 className={`text-xl font-pixel font-bold ${styles.header}`}>{t('Imprint')}</h2>
               <button
                 onClick={() => setShowImprint(false)}
                 className="p-1 rounded bg-red-500 hover:bg-red-600 transition-colors"
@@ -93,7 +93,7 @@ const Footer = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className={`max-w-2xl w-full p-6 rounded-lg border-2 shadow-2xl max-h-[80vh] overflow-y-auto ${styles.overlay}`}>
             <div className="flex justify-between items-center mb-4">
-              <h2 className={`text-xl font-pixel font-bold ${styles.header}`}>Privacy Policy</h2>
+              <h2 className={`text-xl font-pixel font-bold ${styles.header}`}>{t('Privacy Policy')}</h2>
               <button
                 onClick={() => setShowPrivacy(false)}
                 className="p-1 rounded bg-red-500 hover:bg-red-600 transition-colors"
@@ -102,13 +102,13 @@ const Footer = () => {
               </button>
             </div>
             <div className={`font-pixel text-sm ${styles.text} space-y-4`}>
-              <p>This personal website does not collect or store personal data.</p>
-              <p>No tracking cookies, analytics services or third-party advertising are used.</p>
-              <p>Uploaded media is static and privately hosted. No visitor data is analyzed or monetized.</p>
-              <p>Any form submissions or visitor interactions are purely voluntary and not recorded or evaluated.</p>
+              <p>{t('This personal website does not collect or store personal data.')}</p>
+              <p>{t('No tracking cookies, analytics services or third-party advertising are used.')}</p>
+              <p>{t('Uploaded media is static and privately hosted. No visitor data is analyzed or monetized.')}</p>
+              <p>{t('Any form submissions or visitor interactions are purely voluntary and not recorded or evaluated.')}</p>
               
               <div className="mt-6 pt-4 border-t border-gray-300">
-                <p className="font-bold mb-2">Responsible for content:</p>
+                <p className="font-bold mb-2">{t('Responsible for content:')}</p>
                 <p>Henri Brüning</p>
                 <p>Email: Henri.coesfeld@gmail.com</p>
                 <p>Hengtestraße 68</p>

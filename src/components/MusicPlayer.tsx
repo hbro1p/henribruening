@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Music, SkipForward, SkipBack, Volume2, RotateCcw } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
@@ -160,10 +161,10 @@ const MusicPlayer = () => {
                 overflowWrap: 'break-word',
                 hyphens: 'auto'
               }}>
-                {loading ? 'Loading...' : musicFiles.length > 0 ? musicFiles[currentTrack]?.title || 'Unknown Track' : 'No Music'}
+                {loading ? t('Loading...') : musicFiles.length > 0 ? musicFiles[currentTrack]?.title || t('Unknown Track') : t('No Music')}
               </p>
               <p className={`text-sm font-medium ${styles.subText}`}>
-                {musicFiles.length > 0 ? `Track ${currentTrack + 1} of ${musicFiles.length}` : '🎵 Chill Out'}
+                {musicFiles.length > 0 ? `${t('Track')} ${currentTrack + 1} ${t('of')} ${musicFiles.length}` : `🎵 ${t('Chill Out')}`}
               </p>
             </div>
 
@@ -200,7 +201,7 @@ const MusicPlayer = () => {
                 onClick={restartTrack}
                 disabled={musicFiles.length === 0}
                 className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 disabled:opacity-50 border-2 border-white/20 shadow-md hover:scale-105 active:scale-95 ${styles.button}`}
-                title="Restart Track"
+                title={t('Restart Track')}
               >
                 <RotateCcw className="w-5 h-5" />
               </button>

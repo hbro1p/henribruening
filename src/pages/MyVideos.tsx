@@ -8,7 +8,7 @@ const MyVideos = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [password, setPassword] = useState('');
   const [showError, setShowError] = useState(false);
-  const { theme } = useSettings();
+  const { theme, t } = useSettings();
 
   const correctPassword = 'henribrueningvideos#2025!';
 
@@ -102,9 +102,9 @@ const MyVideos = () => {
           <div className={`p-4 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
             <div className="flex flex-col items-center justify-center text-center">
               <Video className={`w-16 h-16 mb-4 ${styles.text}`} />
-              <h1 className={`text-2xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ My Videos ]</h1>
-              <p className={`mb-6 font-pixel drop-shadow-sm ${styles.text}`}>Oops... looks like this section requires a password 😅</p>
-              <p className={`mb-6 font-pixel drop-shadow-sm ${styles.text}`}>Enter the password to continue.</p>
+              <h1 className={`text-2xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Videos')} ]</h1>
+              <p className={`mb-6 font-pixel drop-shadow-sm ${styles.text}`}>{t('Oops... looks like this section requires a password')} 😅</p>
+              <p className={`mb-6 font-pixel drop-shadow-sm ${styles.text}`}>{t('Enter the password to continue.')}</p>
               
               <form onSubmit={handlePasswordSubmit} className="w-full">
                 <input
@@ -112,22 +112,22 @@ const MyVideos = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={`w-full p-2 mb-4 border-2 font-pixel ${styles.input}`}
-                  placeholder="Password"
+                  placeholder={t('Password')}
                 />
                 {showError && (
-                  <p className="text-red-600 mb-4 text-sm font-pixel">Incorrect password. Try again.</p>
+                  <p className="text-red-600 mb-4 text-sm font-pixel">{t('Incorrect password. Try again.')}</p>
                 )}
                 <button
                   type="submit"
                   className={`w-full p-2 border-2 border-black/30 font-pixel transition-all active:scale-95 rounded ${styles.button}`}
                 >
-                  Unlock
+                  {t('Unlock')}
                 </button>
               </form>
 
               <Link to="/desktop" className={`mt-6 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
                 <ArrowLeft className="w-5 h-5" />
-                Back to Desktop
+                {t('Back to Desktop')}
               </Link>
             </div>
           </div>
@@ -150,14 +150,14 @@ const MyVideos = () => {
         
         <div className={`p-4 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
           <div className="flex flex-col items-center justify-center text-center">
-            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ My Videos ]</h1>
+            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Videos')} ]</h1>
             
             <div className="grid gap-8 text-left w-full max-w-2xl">
               <div className={`p-6 border-2 ${styles.cardBg}`}>
                 <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
                   Ute Uphues
                 </h3>
-                <p className={`mb-4 font-pixel ${styles.text}`}>Teen coaching videos created for Ute's TikTok and Instagram</p>
+                <p className={`mb-4 font-pixel ${styles.text}`}>{t('Teen coaching videos created for Ute\'s TikTok and Instagram')}</p>
                 <div className="space-y-2">
                   <a href="https://www.tiktok.com/@ute.uphues" target="_blank" rel="noopener noreferrer" 
                      className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
@@ -165,7 +165,7 @@ const MyVideos = () => {
                   </a>
                   <a href="https://ute-uphues.replit.app" target="_blank" rel="noopener noreferrer" 
                      className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
-                    Website I built <ExternalLink className="w-4 h-4" />
+                    {t('Website I built')} <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
               </div>
@@ -174,7 +174,7 @@ const MyVideos = () => {
                 <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
                   Real Estate Internship (Mallorca)
                 </h3>
-                <p className={`mb-4 font-pixel ${styles.text}`}>A creative and content-focused internship at FALC Real Estate in Cala Millor</p>
+                <p className={`mb-4 font-pixel ${styles.text}`}>{t('A creative and content-focused internship at FALC Real Estate in Cala Millor')}</p>
                 <div className="space-y-2">
                   <a href="https://www.instagram.com/p/DIjcdGZIAcr/" target="_blank" rel="noopener noreferrer" 
                      className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
@@ -187,7 +187,7 @@ const MyVideos = () => {
                 <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
                   HenriAWB – Blackstories with a Hook
                 </h3>
-                <p className={`mb-4 font-pixel ${styles.text}`}>Entertaining TikToks with surprising twists, hooks, and storytelling</p>
+                <p className={`mb-4 font-pixel ${styles.text}`}>{t('Entertaining TikToks with surprising twists, hooks, and storytelling')}</p>
                 <div className="space-y-2">
                   <a href="https://www.youtube.com/@Henriawb" target="_blank" rel="noopener noreferrer" 
                      className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
@@ -200,7 +200,7 @@ const MyVideos = () => {
                 <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
                   ThisTimeFr
                 </h3>
-                <p className={`mb-4 font-pixel ${styles.text}`}>My storytelling identity for vlogs, creative clips, and travel adventures</p>
+                <p className={`mb-4 font-pixel ${styles.text}`}>{t('My storytelling identity for vlogs, creative clips, and travel adventures')}</p>
                 <div className="space-y-2">
                   <a href="https://www.tiktok.com/@thistimefrr" target="_blank" rel="noopener noreferrer" 
                      className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
@@ -216,7 +216,7 @@ const MyVideos = () => {
 
             <Link to="/desktop" className={`mt-8 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
               <ArrowLeft className="w-5 h-5" />
-              Back to Desktop
+              {t('Back to Desktop')}
             </Link>
           </div>
         </div>

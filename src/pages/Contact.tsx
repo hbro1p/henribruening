@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageSquare, Mail } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 
 const Contact = () => {
-  const { theme } = useSettings();
+  const { theme, t } = useSettings();
 
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
@@ -71,8 +70,8 @@ const Contact = () => {
         {/* Window content */}
         <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
           <div className="flex flex-col items-center justify-center text-center">
-            <h1 className={`text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ Get In Touch ]</h1>
-            <p className={`mb-8 text-lg drop-shadow-sm ${styles.text}`}>Let's connect via Instagram or Email.</p>
+            <h1 className={`text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('Get In Touch')} ]</h1>
+            <p className={`mb-8 text-lg drop-shadow-sm ${styles.text}`}>{t('Let\'s connect via Instagram or Email.')}</p>
 
             <div className="space-y-4 w-full">
               <a
@@ -107,7 +106,7 @@ const Contact = () => {
             </div>
 
             <Link to="/desktop" className={`mt-8 text-xl underline transition-colors font-pixel drop-shadow-sm ${styles.link}`}>
-              &lt;- Back to Desktop
+              &lt;- {t('Back to Desktop')}
             </Link>
           </div>
         </div>
