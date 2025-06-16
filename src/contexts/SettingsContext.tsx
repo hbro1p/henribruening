@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export type Language = 'english' | 'deutsch';
-export type Theme = 'dreamos' | 'dark-vhs' | 'space-mood' | 'light-os';
+export type Theme = 'space-mood' | 'dark-vhs' | 'matrix-terminal' | 'retro-chrome';
 
 interface SettingsContextType {
   language: Language;
@@ -25,10 +25,10 @@ const translations = {
     'Game.exe': 'Game.exe',
     'Language': 'Language:',
     'Appearance Theme': 'Appearance Theme:',
-    'DreamOS': 'DreamOS',
-    'Dark VHS': 'Dark VHS',
     'Space Mood': 'Space Mood',
-    'Light OS 2001': 'Light OS 2001',
+    'Dark VHS': 'Dark VHS',
+    'Matrix Terminal': 'Matrix Terminal',
+    'Retro Chrome': 'Retro Chrome',
     'Back to Desktop': 'Back to Desktop',
     'Now Playing': 'Now Playing',
     'TRACK': 'TRACK',
@@ -51,10 +51,10 @@ const translations = {
     'Game.exe': 'Spiel.exe',
     'Language': 'Sprache:',
     'Appearance Theme': 'Erscheinungsbild:',
-    'DreamOS': 'DreamOS',
+    'Space Mood': 'Weltraumstimmung',
     'Dark VHS': 'Dunkles VHS',
-    'Space Mood': 'Weltraum-Stimmung',
-    'Light OS 2001': 'Helles OS 2001',
+    'Matrix Terminal': 'Matrix Terminal',
+    'Retro Chrome': 'Retro Chrom',
     'Back to Desktop': 'Zurück zum Desktop',
     'Now Playing': 'Jetzt läuft',
     'TRACK': 'TITEL',
@@ -82,7 +82,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
       setLanguageState(savedLanguage);
     }
     
-    if (savedTheme && ['dreamos', 'dark-vhs', 'space-mood', 'light-os'].includes(savedTheme)) {
+    if (savedTheme && ['space-mood', 'dark-vhs', 'matrix-terminal', 'retro-chrome'].includes(savedTheme)) {
       setThemeState(savedTheme);
     }
   }, []);
