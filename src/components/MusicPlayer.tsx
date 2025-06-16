@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
 import { Play, Pause, Music, SkipForward, SkipBack, Volume2 } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import { useSettings } from '@/contexts/SettingsContext';
 
 const playlist2000s = [
   "https://www.youtube.com/watch?v=Uw_a2yH_Xpc", // Hey Ya! - OutKast
@@ -19,6 +19,7 @@ const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
   const location = useLocation();
+  const { t } = useSettings();
 
   const togglePlayPause = () => {
     setIsPlaying(!isPlaying);
@@ -70,10 +71,10 @@ const MusicPlayer = () => {
                       {/* Track info */}
                       <div className="flex-1">
                         <p className="text-green-400 font-pixel text-xs font-bold drop-shadow-sm">
-                          🎵 2000S VIBES
+                          🎵 2000S {t('VIBES')}
                         </p>
                         <p className="text-green-300 text-xs font-pixel">
-                          TRACK {String(currentTrack + 1).padStart(2, '0')}/{playlist2000s.length}
+                          {t('TRACK')} {String(currentTrack + 1).padStart(2, '0')}/{playlist2000s.length}
                         </p>
                       </div>
                       

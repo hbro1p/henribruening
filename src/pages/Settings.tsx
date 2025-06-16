@@ -1,31 +1,31 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSettings } from '@/contexts/SettingsContext';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 const Settings = () => {
-  const [language, setLanguage] = useState('english');
-  const [theme, setTheme] = useState('retro-gradient');
+  const { language, theme, setLanguage, setTheme, t } = useSettings();
 
   const themes = [
     {
-      id: 'retro-gradient',
-      name: 'Retro Gradient',
+      id: 'retro-gradient' as const,
+      name: t('Retro Gradient'),
       preview: 'bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500'
     },
     {
-      id: 'dark-vhs',
-      name: 'Dark VHS',
+      id: 'dark-vhs' as const,
+      name: t('Dark VHS'),
       preview: 'bg-gradient-to-br from-black via-green-900 to-purple-900'
     },
     {
-      id: 'space-mood',
-      name: 'Space Mood',
+      id: 'space-mood' as const,
+      name: t('Space Mood'),
       preview: 'bg-gradient-to-br from-indigo-900 via-blue-900 to-black'
     },
     {
-      id: 'light-os',
-      name: 'Light OS 2001',
+      id: 'light-os' as const,
+      name: t('Light OS 2001'),
       preview: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500'
     }
   ];
@@ -47,7 +47,7 @@ const Settings = () => {
             <div className="w-4 h-4 bg-gradient-to-br from-green-400 via-green-500 to-green-700 rounded-full border-2 border-black/30 shadow-lg">
               <div className="absolute inset-0.5 bg-gradient-to-br from-green-300 to-transparent rounded-full"></div>
             </div>
-            <span className="text-white font-pixel text-lg ml-3 drop-shadow-lg">Settings</span>
+            <span className="text-white font-pixel text-lg ml-3 drop-shadow-lg">{t('Settings')}</span>
           </div>
         </div>
         
@@ -59,7 +59,7 @@ const Settings = () => {
             {/* Language Section */}
             <div className="bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 p-6 rounded-lg border-3 border-black/20 shadow-xl">
               <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-lg"></div>
-              <h2 className="text-2xl font-pixel text-black mb-6 drop-shadow-sm relative z-10">Language:</h2>
+              <h2 className="text-2xl font-pixel text-black mb-6 drop-shadow-sm relative z-10">{t('Language')}</h2>
               <RadioGroup value={language} onValueChange={setLanguage} className="relative z-10">
                 <div className="flex items-center space-x-3">
                   <div className="relative">
@@ -71,7 +71,7 @@ const Settings = () => {
                     <div className="absolute inset-1 bg-gradient-to-br from-white/50 to-transparent rounded-full pointer-events-none"></div>
                   </div>
                   <label htmlFor="english" className="text-xl font-pixel text-black drop-shadow-sm cursor-pointer">
-                    English
+                    {t('English')}
                   </label>
                 </div>
                 <div className="flex items-center space-x-3">
@@ -84,7 +84,7 @@ const Settings = () => {
                     <div className="absolute inset-1 bg-gradient-to-br from-white/50 to-transparent rounded-full pointer-events-none"></div>
                   </div>
                   <label htmlFor="deutsch" className="text-xl font-pixel text-black drop-shadow-sm cursor-pointer">
-                    Deutsch
+                    {t('German')}
                   </label>
                 </div>
               </RadioGroup>
@@ -93,7 +93,7 @@ const Settings = () => {
             {/* Theme Section */}
             <div className="bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 p-6 rounded-lg border-3 border-black/20 shadow-xl">
               <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-lg"></div>
-              <h2 className="text-2xl font-pixel text-black mb-6 drop-shadow-sm relative z-10">Theme:</h2>
+              <h2 className="text-2xl font-pixel text-black mb-6 drop-shadow-sm relative z-10">{t('Appearance Theme')}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
                 {themes.map((themeOption) => (
                   <button
@@ -120,10 +120,10 @@ const Settings = () => {
             <div className="bg-gradient-to-br from-gray-400 via-gray-500 to-gray-600 p-6 rounded-lg border-3 border-black/30 shadow-xl">
               <div className="absolute inset-1 bg-gradient-to-br from-white/10 to-black/10 rounded-lg"></div>
               <div className="space-y-2 text-black font-pixel relative z-10">
-                <div className="text-lg drop-shadow-sm">Henri OS v2.1</div>
-                <div className="text-base drop-shadow-sm">Build 2024.12</div>
-                <div className="text-base drop-shadow-sm">Creative Edition</div>
-                <div className="text-sm drop-shadow-sm mt-4 opacity-80">© 2024 Henri Brüning</div>
+                <div className="text-lg drop-shadow-sm">Henri OS v1.0</div>
+                <div className="text-base drop-shadow-sm">Designed by Henri Brüning</div>
+                <div className="text-base drop-shadow-sm">Built for: nostalgia, creativity, and curiosity</div>
+                <div className="text-sm drop-shadow-sm mt-4 opacity-80">Support: [X] not found</div>
               </div>
             </div>
 
@@ -131,7 +131,7 @@ const Settings = () => {
               to="/desktop" 
               className="inline-block mt-8 text-2xl underline text-blue-800 hover:text-blue-900 transition-colors font-pixel drop-shadow-sm hover:scale-105 transform-gpu duration-200"
             >
-              &lt;- Back to Desktop
+              &lt;- {t('Back to Desktop')}
             </Link>
           </div>
         </div>
