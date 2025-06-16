@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useSettings } from '@/contexts/SettingsContext';
 
 interface DesktopIconProps {
   icon: React.ElementType;
@@ -26,36 +27,46 @@ const iconColors = {
 };
 
 const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to }) => {
+  const { theme } = useSettings();
   const gradientClass = iconColors[label as keyof typeof iconColors] || 'from-gray-500 to-gray-700';
+  
+  const getLabelStyling = () => {
+    switch (theme) {
+      case 'space-mood':
+        return 'text-white bg-gradient-to-b from-black/60 to-blue-900/60 border-blue-300/30';
+      case 'dark-vhs':
+        return 'text-white bg-gradient-to-b from-black/80 to-gray-900/80 border-white/30';
+      case 'matrix-terminal':
+        return 'text-green-400 bg-gradient-to-b from-black/80 to-green-900/60 border-green-500/30';
+      case 'retro-chrome':
+        return 'text-blue-900 bg-gradient-to-b from-white/60 to-blue-100/80 border-blue-300/50';
+      default:
+        return 'text-white bg-gradient-to-b from-black/60 to-blue-900/60 border-blue-300/30';
+    }
+  };
   
   return (
     <Link
       to={to}
       className="group flex flex-col items-center justify-center space-y-3 text-center transition-all duration-300 hover:scale-105 transform-gpu"
     >
-      {/* Fixed size container for consistent layout */}
       <div className="w-20 h-20 flex items-center justify-center">
         <div className={`relative w-16 h-16 bg-gradient-to-br ${gradientClass} rounded-xl shadow-2xl group-hover:shadow-3xl transition-all duration-300 flex items-center justify-center border-2 border-black/30 group-hover:border-black/40`}>
-          {/* Realistic depth effects */}
           <div className="absolute inset-0.5 bg-gradient-to-br from-white/25 via-transparent to-black/15 rounded-xl"></div>
           <div className="absolute inset-1 bg-gradient-to-tl from-white/15 via-transparent to-transparent rounded-lg"></div>
           
-          {/* Icon with enhanced contrast */}
           <Icon className="w-8 h-8 text-white drop-shadow-lg relative z-10 filter brightness-110 contrast-125" />
           
-          {/* Highlight gloss */}
           <div className="absolute top-1 left-1 w-4 h-4 bg-gradient-to-br from-white/40 to-transparent rounded-full blur-sm"></div>
           
-          {/* Status indicator */}
           <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-br from-lime-400 via-green-500 to-green-600 rounded-full border-2 border-black/30 shadow-lg">
             <div className="absolute inset-0.5 bg-gradient-to-br from-lime-300 to-transparent rounded-full"></div>
           </div>
         </div>
       </div>
       
-      {/* Fixed height label container */}
       <div className="h-8 flex items-center">
-        <span className="text-sm text-white font-pixel select-none drop-shadow-lg bg-gradient-to-b from-black/60 to-black/80 px-3 py-1 rounded-md backdrop-blur-sm border border-white/20 shadow-lg">
+        <span className={`text-sm font-pixel select-none drop-shadow-lg px-3 py-1 rounded-md backdrop-blur-sm border shadow-lg ${getLabelStyling()}`}>
           <div className="absolute inset-x-0.5 top-0 h-0.5 bg-gradient-to-b from-white/20 to-transparent rounded-t"></div>
           {label}
         </span>
