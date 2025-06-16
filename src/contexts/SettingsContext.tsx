@@ -71,7 +71,7 @@ const translations = {
 
 export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>('english');
-  const [theme, setThemeState] = useState<Theme>('retro-gradient');
+  const [theme, setThemeState] = useState<Theme>('space-mood');
 
   // Load settings from localStorage on mount
   useEffect(() => {

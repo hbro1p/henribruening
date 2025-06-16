@@ -9,8 +9,9 @@ const Desktop = () => {
   const { t } = useSettings();
 
   return (
-    <div className="min-h-screen w-full flex items-start justify-start p-8">
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-8">
+    <div className="min-h-screen w-full flex items-start justify-start p-6">
+      {/* Consistent grid layout with proper spacing */}
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 w-full">
         <DesktopIcon icon={Folder} label={t('My Pictures')} to="/pictures" />
         <DesktopIcon icon={Video} label={t('My Videos')} to="/videos" />
         <DesktopIcon icon={Code} label={t('My Projects')} to="/projects" />
