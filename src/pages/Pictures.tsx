@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
-import { Folder, ArrowLeft, RefreshCw } from 'lucide-react';
+import { Folder, ArrowLeft, RefreshCw, X } from 'lucide-react';
 import {
   Carousel,
   CarouselContent,
@@ -31,13 +32,55 @@ const fallbackImages = {
   random: []
 };
 
-const getFolderColors = (theme: string) => {
-  // Consistent folder colors for all themes - always blue for Pictures
-  return {
-    gradient: 'from-blue-400 via-blue-500 to-blue-700',
-    icon: 'text-blue-800',
-    badge: 'bg-blue-600'
+const getFolderColors = (category: string) => {
+  const colors = {
+    childhood: {
+      gradient: 'from-yellow-300 via-yellow-400 to-yellow-600',
+      icon: 'text-yellow-800',
+      badge: 'bg-yellow-600',
+      viewerGradient: 'from-yellow-200 via-yellow-300 to-yellow-400',
+      titleBar: 'from-yellow-600 via-yellow-700 to-yellow-800',
+      windowContent: 'from-yellow-200 via-yellow-300 to-yellow-400',
+      text: 'text-yellow-900',
+      link: 'text-yellow-800 hover:text-yellow-900',
+      background: 'folder-yellow'
+    },
+    nature: {
+      gradient: 'from-green-300 via-green-400 to-green-600',
+      icon: 'text-green-800',
+      badge: 'bg-green-600',
+      viewerGradient: 'from-green-200 via-green-300 to-green-400',
+      titleBar: 'from-green-600 via-green-700 to-green-800',
+      windowContent: 'from-green-200 via-green-300 to-green-400',
+      text: 'text-green-900',
+      link: 'text-green-800 hover:text-green-900',
+      background: 'folder-green'
+    },
+    vibe: {
+      gradient: 'from-purple-300 via-purple-400 to-purple-600',
+      icon: 'text-purple-800',
+      badge: 'bg-purple-600',
+      viewerGradient: 'from-purple-200 via-purple-300 to-purple-400',
+      titleBar: 'from-purple-600 via-purple-700 to-purple-800',
+      windowContent: 'from-purple-200 via-purple-300 to-purple-400',
+      text: 'text-purple-900',
+      link: 'text-purple-800 hover:text-purple-900',
+      background: 'folder-purple'
+    },
+    random: {
+      gradient: 'from-red-300 via-red-400 to-red-600',
+      icon: 'text-red-800',
+      badge: 'bg-red-600',
+      viewerGradient: 'from-red-200 via-red-300 to-red-400',
+      titleBar: 'from-red-600 via-red-700 to-red-800',
+      windowContent: 'from-red-200 via-red-300 to-red-400',
+      text: 'text-red-900',
+      link: 'text-red-800 hover:text-red-900',
+      background: 'folder-red'
+    }
   };
+  
+  return colors[category as keyof typeof colors] || colors.random;
 };
 
 const Pictures = () => {
@@ -53,12 +96,7 @@ const Pictures = () => {
     random: storageImages.random.length > 0 ? storageImages.random : fallbackImages.random
   };
 
-  // Debug logging to see what's happening
-  console.log('Selected category:', selectedCategory);
-  console.log('Storage images:', storageImages);
-  console.log('Photo categories:', photoCategories);
-
-  const getWindowStyles = () => {
+  const getDefaultWindowStyles = () => {
     if (theme === 'space-mood') {
       return {
         windowFrame: 'bg-gradient-to-br from-blue-300 via-blue-400 to-blue-600',
@@ -99,8 +137,6 @@ const Pictures = () => {
     };
   };
 
-  const styles = getWindowStyles();
-
   if (selectedCategory) {
     const photos = photoCategories[selectedCategory as keyof typeof photoCategories];
     const categoryTranslations = {
@@ -110,38 +146,47 @@ const Pictures = () => {
       random: 'Zufällig'
     };
     
-    console.log(`Photos for ${selectedCategory}:`, photos);
-    console.log(`Photos length: ${photos.length}`);
+    const folderColors = getFolderColors(selectedCategory);
     
     return (
-      <div className={`flex items-center justify-center min-h-screen p-2 sm:p-4 md:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
+      <div className={`flex items-center justify-center min-h-screen p-2 sm:p-4 md:p-8 ${folderColors.background}`}>
         {/* Fixed window dimensions to prevent layout shift */}
-        <div className={`p-2 border-2 border-black/30 w-full max-w-[95vw] sm:max-w-4xl lg:max-w-5xl h-[90vh] sm:h-[85vh] md:h-[700px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
-          {/* Title bar */}
-          <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-              <span className="text-white font-pixel text-xs sm:text-sm ml-2">Pictures.exe / {selectedCategory}</span>
+        <div className={`p-2 border-2 border-black/30 w-full max-w-[95vw] sm:max-w-4xl lg:max-w-5xl h-[90vh] sm:h-[85vh] md:h-[700px] shadow-2xl rounded-lg bg-gradient-to-br ${folderColors.viewerGradient}`}>
+          {/* Title bar with close button */}
+          <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner bg-gradient-to-r ${folderColors.titleBar} relative`}>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+                <span className="text-white font-pixel text-xs sm:text-sm ml-2">Pictures.exe / {selectedCategory}</span>
+              </div>
+              
+              {/* Close button */}
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className="p-1 rounded bg-red-500 hover:bg-red-600 transition-colors"
+              >
+                <X className="w-4 h-4 text-white" />
+              </button>
             </div>
           </div>
           
           {/* Window content with fixed dimensions */}
-          <div className={`p-3 sm:p-6 md:p-8 border-2 border-white/20 shadow-inner rounded-b flex flex-col h-[calc(100%-52px)] ${styles.windowContent}`}>
+          <div className={`p-3 sm:p-6 md:p-8 border-2 border-white/20 shadow-inner rounded-b flex flex-col h-[calc(100%-52px)] bg-gradient-to-br ${folderColors.windowContent}`}>
             <div className="flex flex-col items-center text-center h-full">
-              <h1 className={`text-xl sm:text-2xl md:text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>
+              <h1 className={`text-xl sm:text-2xl md:text-4xl mb-4 font-pixel drop-shadow-lg ${folderColors.text}`}>
                 [ {t('My Pictures')} ] / {t('language') === 'deutsch' ? categoryTranslations[selectedCategory as keyof typeof categoryTranslations] : selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}
               </h1>
               
               {loading ? (
-                <p className={`mb-4 sm:mb-8 font-pixel drop-shadow-sm text-sm sm:text-base ${styles.text}`}>{t('language') === 'deutsch' ? 'Bilder werden geladen...' : 'Loading images...'}</p>
+                <p className={`mb-4 sm:mb-8 font-pixel drop-shadow-sm text-sm sm:text-base ${folderColors.text}`}>{t('language') === 'deutsch' ? 'Bilder werden geladen...' : 'Loading images...'}</p>
               ) : error ? (
                 <div className="text-center mb-4 sm:mb-8">
                   <p className="text-red-600 mb-4 font-pixel drop-shadow-sm text-sm sm:text-base">{t('language') === 'deutsch' ? 'Fehler beim Laden der Bilder: ' : 'Error loading images: '}{error}</p>
                   <button
                     onClick={refetch}
-                    className={`text-sm underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm mx-auto ${styles.link}`}
+                    className={`text-sm underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm mx-auto ${folderColors.link}`}
                   >
                     <RefreshCw className="w-4 h-4" />
                     {t('language') === 'deutsch' ? 'Erneut versuchen' : 'Retry'}
@@ -170,20 +215,18 @@ const Pictures = () => {
                                     <img 
                                       src={src} 
                                       alt={`${selectedCategory} memory ${index + 1}`} 
-                                      className="max-h-full max-w-full object-contain rounded"
+                                      className="max-h-full max-w-full object-contain rounded select-none"
+                                      draggable={false}
                                       onError={(e) => {
                                         console.error('Image failed to load:', src);
                                         const target = e.target as HTMLImageElement;
                                         target.style.display = 'none';
                                       }}
-                                      onLoad={() => {
-                                        console.log('Image loaded successfully:', src);
-                                      }}
                                     />
                                   </div>
                                 </CardContent>
                               </Card>
-                              <p className={`mt-2 text-xs sm:text-sm font-pixel drop-shadow-sm text-center ${styles.text}`}>
+                              <p className={`mt-2 text-xs sm:text-sm font-pixel drop-shadow-sm text-center ${folderColors.text}`}>
                                 {t('language') === 'deutsch' ? 'Erinnerung' : 'Memory'} #{index + 1} / {photos.length}
                               </p>
                             </div>
@@ -196,14 +239,14 @@ const Pictures = () => {
                   </div>
                 </div>
               ) : (
-                <p className={`mb-4 sm:mb-8 font-pixel drop-shadow-sm text-sm sm:text-base ${styles.text}`}>
+                <p className={`mb-4 sm:mb-8 font-pixel drop-shadow-sm text-sm sm:text-base ${folderColors.text}`}>
                   {t('language') === 'deutsch' ? 'Noch keine Fotos in dieser Kategorie.' : 'No photos in this category yet.'}
                 </p>
               )}
 
               <button
                 onClick={() => setSelectedCategory(null)}
-                className={`mt-4 sm:mt-8 text-base sm:text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}
+                className={`mt-4 sm:mt-8 text-base sm:text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${folderColors.link}`}
               >
                 <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                 {t('language') === 'deutsch' ? 'Zurück zu Ordnern' : 'Back to Folders'}
@@ -215,12 +258,14 @@ const Pictures = () => {
     );
   }
 
+  const defaultStyles = getDefaultWindowStyles();
+
   return (
     <div className={`flex items-center justify-center min-h-screen p-2 sm:p-4 md:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
       {/* Fixed window with consistent dimensions - no layout shift */}
-      <div className={`p-2 border-2 border-black/30 w-full max-w-[95vw] sm:max-w-4xl lg:max-w-5xl h-[90vh] sm:h-[85vh] md:h-[700px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
+      <div className={`p-2 border-2 border-black/30 w-full max-w-[95vw] sm:max-w-4xl lg:max-w-5xl h-[90vh] sm:h-[85vh] md:h-[700px] shadow-2xl rounded-lg ${defaultStyles.windowFrame}`}>
         {/* Title bar */}
-        <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
+        <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${defaultStyles.titleBar}`}>
           <div className="flex items-center space-x-2">
             <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
             <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
@@ -230,18 +275,18 @@ const Pictures = () => {
         </div>
         
         {/* Window content with fixed height and stable layout */}
-        <div className={`border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`} style={{ height: 'calc(100% - 52px)' }}>
+        <div className={`border-2 border-white/20 shadow-inner rounded-b ${defaultStyles.windowContent}`} style={{ height: 'calc(100% - 52px)' }}>
           {/* Fixed header section - always same height */}
           <div className="px-3 sm:px-6 md:px-8 pt-3 sm:pt-6 md:pt-8 pb-4 text-center">
-            <h1 className={`text-xl sm:text-2xl md:text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Pictures')} ]</h1>
-            <p className={`mb-2 font-pixel drop-shadow-sm text-sm sm:text-base ${styles.text}`}>
+            <h1 className={`text-xl sm:text-2xl md:text-4xl mb-4 font-pixel drop-shadow-lg ${defaultStyles.text}`}>[ {t('My Pictures')} ]</h1>
+            <p className={`mb-2 font-pixel drop-shadow-sm text-sm sm:text-base ${defaultStyles.text}`}>
               {t('language') === 'deutsch' ? 'Wählen Sie einen Ordner zum Erkunden.' : 'Choose a folder to explore.'}
             </p>
             
             {/* Fixed height status area to prevent shifts */}
             <div className="h-8 flex items-center justify-center">
               {loading && (
-                <p className={`text-xs sm:text-sm font-pixel ${styles.text}`}>
+                <p className={`text-xs sm:text-sm font-pixel ${defaultStyles.text}`}>
                   {t('language') === 'deutsch' ? 'Lade Bilder aus dem Speicher...' : 'Loading images from storage...'}
                 </p>
               )}
@@ -253,7 +298,7 @@ const Pictures = () => {
                   </p>
                   <button
                     onClick={refetch}
-                    className={`text-xs underline transition-colors flex items-center gap-1 font-pixel mx-auto ${styles.link}`}
+                    className={`text-xs underline transition-colors flex items-center gap-1 font-pixel mx-auto ${defaultStyles.link}`}
                   >
                     <RefreshCw className="w-3 h-3" />
                     {t('language') === 'deutsch' ? 'Aktualisieren' : 'Refresh'}
@@ -268,7 +313,7 @@ const Pictures = () => {
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="grid grid-cols-2 gap-6 sm:gap-8 md:gap-12 lg:gap-16">
                 {Object.keys(photoCategories).map((category) => {
-                  const folderColors = getFolderColors(theme);
+                  const folderColors = getFolderColors(category);
                   const categoryTranslations = {
                     childhood: 'Kindheit',
                     nature: 'Natur',
@@ -294,7 +339,7 @@ const Pictures = () => {
                         </div>
                         
                         {/* Folder label */}
-                        <span className={`text-xs sm:text-sm md:text-base capitalize font-bold font-pixel drop-shadow-sm ${styles.text} text-center w-20 sm:w-24 md:w-28 lg:w-32`}>
+                        <span className={`text-xs sm:text-sm md:text-base capitalize font-bold font-pixel drop-shadow-sm ${defaultStyles.text} text-center w-20 sm:w-24 md:w-28 lg:w-32`}>
                           {t('language') === 'deutsch' ? categoryTranslations[category as keyof typeof categoryTranslations] : category}
                         </span>
                       </button>
@@ -307,7 +352,7 @@ const Pictures = () => {
 
           {/* Fixed footer */}
           <div className="px-3 sm:px-6 md:px-8 pb-3 sm:pb-6 md:pb-8 text-center">
-            <Link to="/desktop" className={`text-base sm:text-xl underline transition-colors font-pixel drop-shadow-sm ${styles.link}`}>
+            <Link to="/desktop" className={`text-base sm:text-xl underline transition-colors font-pixel drop-shadow-sm ${defaultStyles.link}`}>
               &lt;- {t('Back to Desktop')}
             </Link>
           </div>

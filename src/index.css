@@ -108,6 +108,10 @@ body {
   background: linear-gradient(135deg, #eeddff 0%, #ddaaff 25%, #cc77ff 75%, #bb44ff 100%);
 }
 
+.folder-yellow {
+  background: linear-gradient(135deg, #ffffcc 0%, #ffffaa 25%, #ffff77 75%, #ffff44 100%);
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
