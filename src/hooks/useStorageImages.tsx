@@ -50,14 +50,10 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
           if (!folderError && folderFiles) {
             console.log(`Found ${folderFiles.length} files in ${folder} folder`);
             for (const file of folderFiles) {
-              if (file.name && (
-                file.name.toLowerCase().includes('.jpg') || 
-                file.name.toLowerCase().includes('.jpeg') || 
-                file.name.toLowerCase().includes('.png') || 
-                file.name.toLowerCase().includes('.gif') || 
-                file.name.toLowerCase().includes('.webp')
-              )) {
-                
+              // Skip if it's a folder (id is null for folders)
+              if (!file.id) continue;
+              
+              if (file.name && this.isImageFile(file.name)) {
                 const { data: urlData } = supabase.storage
                   .from(bucketName)
                   .getPublicUrl(`${folder}/${file.name}`);
@@ -87,14 +83,7 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
             // Skip folders
             if (file.id === null) continue;
             
-            if (file.name && (
-              file.name.toLowerCase().includes('.jpg') || 
-              file.name.toLowerCase().includes('.jpeg') || 
-              file.name.toLowerCase().includes('.png') || 
-              file.name.toLowerCase().includes('.gif') || 
-              file.name.toLowerCase().includes('.webp')
-            )) {
-              
+            if (file.name && this.isImageFile(file.name)) {
               const { data: urlData } = supabase.storage
                 .from(bucketName)
                 .getPublicUrl(file.name);
@@ -103,11 +92,11 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
                 const fileName = file.name.toLowerCase();
                 
                 // Categorize based on filename
-                if (fileName.includes('childhood') || fileName.includes('child') || fileName.includes('kid')) {
+                if (this.matchesCategory(fileName, 'childhood')) {
                   categorizedImages.childhood.push(urlData.publicUrl);
-                } else if (fileName.includes('nature') || fileName.includes('landscape') || fileName.includes('outdoor')) {
+                } else if (this.matchesCategory(fileName, 'nature')) {
                   categorizedImages.nature.push(urlData.publicUrl);
-                } else if (fileName.includes('vibe') || fileName.includes('mood') || fileName.includes('aesthetic')) {
+                } else if (this.matchesCategory(fileName, 'vibe')) {
                   categorizedImages.vibe.push(urlData.publicUrl);
                 } else {
                   categorizedImages.random.push(urlData.publicUrl);
@@ -117,6 +106,11 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
             }
           }
         }
+
+        // Log final counts
+        Object.keys(categorizedImages).forEach(category => {
+          console.log(`${category}: ${categorizedImages[category].length} images`);
+        });
 
         setImages(categorizedImages);
         console.log('Final categorized images:', categorizedImages);
@@ -131,6 +125,25 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
 
     fetchImages();
   }, [bucketName]);
+
+  // Helper method to check if a file is an image
+  const isImageFile = (filename: string): boolean => {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+    const lowerFilename = filename.toLowerCase();
+    return imageExtensions.some(ext => lowerFilename.endsWith(ext));
+  };
+
+  // Helper method to match filename to category
+  const matchesCategory = (filename: string, category: string): boolean => {
+    const categoryKeywords = {
+      childhood: ['childhood', 'child', 'kid', 'baby', 'young'],
+      nature: ['nature', 'landscape', 'outdoor', 'tree', 'forest', 'mountain', 'beach', 'sky'],
+      vibe: ['vibe', 'mood', 'aesthetic', 'art', 'style', 'cool']
+    };
+
+    const keywords = categoryKeywords[category as keyof typeof categoryKeywords] || [];
+    return keywords.some(keyword => filename.includes(keyword));
+  };
 
   const refetch = () => {
     setLoading(true);
@@ -164,14 +177,10 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
           if (!folderError && folderFiles) {
             console.log(`Found ${folderFiles.length} files in ${folder} folder`);
             for (const file of folderFiles) {
-              if (file.name && (
-                file.name.toLowerCase().includes('.jpg') || 
-                file.name.toLowerCase().includes('.jpeg') || 
-                file.name.toLowerCase().includes('.png') || 
-                file.name.toLowerCase().includes('.gif') || 
-                file.name.toLowerCase().includes('.webp')
-              )) {
-                
+              // Skip if it's a folder (id is null for folders)
+              if (!file.id) continue;
+              
+              if (file.name && isImageFile(file.name)) {
                 const { data: urlData } = supabase.storage
                   .from('pictures')
                   .getPublicUrl(`${folder}/${file.name}`);
@@ -201,14 +210,7 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
             // Skip folders
             if (file.id === null) continue;
             
-            if (file.name && (
-              file.name.toLowerCase().includes('.jpg') || 
-              file.name.toLowerCase().includes('.jpeg') || 
-              file.name.toLowerCase().includes('.png') || 
-              file.name.toLowerCase().includes('.gif') || 
-              file.name.toLowerCase().includes('.webp')
-            )) {
-              
+            if (file.name && isImageFile(file.name)) {
               const { data: urlData } = supabase.storage
                 .from('pictures')
                 .getPublicUrl(file.name);
@@ -217,11 +219,11 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
                 const fileName = file.name.toLowerCase();
                 
                 // Categorize based on filename
-                if (fileName.includes('childhood') || fileName.includes('child') || fileName.includes('kid')) {
+                if (matchesCategory(fileName, 'childhood')) {
                   categorizedImages.childhood.push(urlData.publicUrl);
-                } else if (fileName.includes('nature') || fileName.includes('landscape') || fileName.includes('outdoor')) {
+                } else if (matchesCategory(fileName, 'nature')) {
                   categorizedImages.nature.push(urlData.publicUrl);
-                } else if (fileName.includes('vibe') || fileName.includes('mood') || fileName.includes('aesthetic')) {
+                } else if (matchesCategory(fileName, 'vibe')) {
                   categorizedImages.vibe.push(urlData.publicUrl);
                 } else {
                   categorizedImages.random.push(urlData.publicUrl);
@@ -231,6 +233,11 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
             }
           }
         }
+
+        // Log final counts
+        Object.keys(categorizedImages).forEach(category => {
+          console.log(`${category}: ${categorizedImages[category].length} images`);
+        });
 
         setImages(categorizedImages);
         console.log('Final categorized images:', categorizedImages);

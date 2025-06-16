@@ -32,45 +32,8 @@ const fallbackImages = {
   random: []
 };
 
-const getFolderTheme = (category: string, theme: string) => {
-  const themes = {
-    childhood: 'folder-blue',
-    nature: 'folder-green', 
-    vibe: 'folder-purple',
-    random: 'folder-orange'
-  };
-  
-  return themes[category as keyof typeof themes] || '';
-};
-
 const getFolderColors = (category: string, theme: string) => {
-  if (theme === 'space-mood') {
-    const colors = {
-      childhood: {
-        gradient: 'from-blue-400 via-blue-500 to-blue-700',
-        icon: 'text-blue-800',
-        badge: 'bg-blue-600'
-      },
-      nature: {
-        gradient: 'from-green-400 via-green-500 to-green-700',
-        icon: 'text-green-800',
-        badge: 'bg-green-600'
-      },
-      vibe: {
-        gradient: 'from-purple-400 via-purple-500 to-purple-700',
-        icon: 'text-purple-800',
-        badge: 'bg-purple-600'
-      },
-      random: {
-        gradient: 'from-orange-400 via-orange-500 to-orange-700',
-        icon: 'text-orange-800',
-        badge: 'bg-orange-600'
-      }
-    };
-    return colors[category as keyof typeof colors] || colors.childhood;
-  }
-  
-  // Consistent folder colors for all themes
+  // Consistent folder colors for all themes - always blue for Pictures
   const colors = {
     childhood: {
       gradient: 'from-blue-400 via-blue-500 to-blue-700',
@@ -78,19 +41,19 @@ const getFolderColors = (category: string, theme: string) => {
       badge: 'bg-blue-600'
     },
     nature: {
-      gradient: 'from-green-400 via-green-500 to-green-700',
-      icon: 'text-green-800',
-      badge: 'bg-green-600'
+      gradient: 'from-blue-400 via-blue-500 to-blue-700',
+      icon: 'text-blue-800',
+      badge: 'bg-blue-600'
     },
     vibe: {
-      gradient: 'from-purple-400 via-purple-500 to-purple-700',
-      icon: 'text-purple-800',
-      badge: 'bg-purple-600'
+      gradient: 'from-blue-400 via-blue-500 to-blue-700',
+      icon: 'text-blue-800',
+      badge: 'bg-blue-600'
     },
     random: {
-      gradient: 'from-orange-400 via-orange-500 to-orange-700',
-      icon: 'text-orange-800',
-      badge: 'bg-orange-600'
+      gradient: 'from-blue-400 via-blue-500 to-blue-700',
+      icon: 'text-blue-800',
+      badge: 'bg-blue-600'
     }
   };
   return colors[category as keyof typeof colors] || colors.childhood;
@@ -154,7 +117,6 @@ const Pictures = () => {
 
   if (selectedCategory) {
     const photos = photoCategories[selectedCategory as keyof typeof photoCategories];
-    const folderTheme = getFolderTheme(selectedCategory, theme);
     const categoryTranslations = {
       childhood: 'Kindheit',
       nature: 'Natur',
@@ -164,8 +126,8 @@ const Pictures = () => {
     
     return (
       <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
-        {/* Window Frame with 3D effect - Fixed size to prevent layout shift */}
-        <div className={`p-2 border-2 border-black/30 w-full max-w-5xl min-h-[600px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
+        {/* Window Frame with 3D effect - Consistent size */}
+        <div className={`p-2 border-2 border-black/30 w-full max-w-5xl h-[700px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
           {/* Title bar */}
           <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
             <div className="flex items-center space-x-2">
@@ -177,7 +139,7 @@ const Pictures = () => {
           </div>
           
           {/* Window content */}
-          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b min-h-[500px] ${styles.windowContent}`}>
+          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b h-[calc(100%-52px)] overflow-hidden ${styles.windowContent}`}>
             <div className="flex flex-col items-center justify-center text-center h-full">
               <h1 className={`text-4xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>
                 [ {t('My Pictures')} ] / {t('language') === 'deutsch' ? categoryTranslations[selectedCategory as keyof typeof categoryTranslations] : selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}
@@ -254,8 +216,8 @@ const Pictures = () => {
 
   return (
     <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
-      {/* Window Frame with 3D effect - Fixed size to prevent layout shift */}
-      <div className={`p-2 border-2 border-black/30 w-full max-w-5xl min-h-[600px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
+      {/* Window Frame with 3D effect - Consistent size */}
+      <div className={`p-2 border-2 border-black/30 w-full max-w-5xl h-[700px] shadow-2xl rounded-lg ${styles.windowFrame}`}>
         {/* Title bar */}
         <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
           <div className="flex items-center space-x-2">
@@ -267,7 +229,7 @@ const Pictures = () => {
         </div>
         
         {/* Window content */}
-        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b min-h-[500px] ${styles.windowContent}`}>
+        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b h-[calc(100%-52px)] overflow-hidden ${styles.windowContent}`}>
           <div className="flex flex-col items-center justify-center text-center h-full">
             <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Pictures')} ]</h1>
             <p className={`mb-4 font-pixel drop-shadow-sm ${styles.text}`}>
@@ -295,7 +257,7 @@ const Pictures = () => {
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-12 mb-8 flex-1 items-center">
+            <div className="grid grid-cols-2 gap-16 mb-8 flex-1 items-center">
               {Object.keys(photoCategories).map((category) => {
                 const imageCount = photoCategories[category as keyof typeof photoCategories].length;
                 const isFromStorage = storageImages[category as keyof typeof storageImages].length > 0;
@@ -311,20 +273,20 @@ const Pictures = () => {
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className="flex flex-col items-center justify-center space-y-4 w-48 h-48 p-6 transition-all duration-200 hover:scale-105 active:scale-95"
+                    className="flex flex-col items-center justify-center space-y-4 w-56 h-56 p-6 transition-all duration-200 hover:scale-105 active:scale-95"
                   >
                     {/* Enhanced folder icon with 3D effect and proper colors */}
                     <div className="relative">
-                      <div className={`w-24 h-24 bg-gradient-to-br ${folderColors.gradient} rounded-lg border-2 border-black/20 shadow-xl flex items-center justify-center relative`}>
+                      <div className={`w-28 h-28 bg-gradient-to-br ${folderColors.gradient} rounded-lg border-2 border-black/20 shadow-xl flex items-center justify-center relative`}>
                         {/* Highlight effect */}
-                        <div className="absolute top-1 left-1 w-16 h-10 bg-gradient-to-br from-white/40 to-transparent rounded blur-sm"></div>
+                        <div className="absolute top-1 left-1 w-20 h-12 bg-gradient-to-br from-white/40 to-transparent rounded blur-sm"></div>
                         
                         {/* Folder icon */}
-                        <Folder className={`w-14 h-14 ${folderColors.icon} drop-shadow-lg relative z-10`} />
+                        <Folder className={`w-16 h-16 ${folderColors.icon} drop-shadow-lg relative z-10`} />
                         
                         {/* Count badge - only show for storage images */}
                         {imageCount > 0 && isFromStorage && (
-                          <div className={`absolute -top-2 -right-2 w-7 h-7 ${folderColors.badge} text-white text-sm rounded-full flex items-center justify-center font-bold border-2 border-white shadow-lg`}>
+                          <div className={`absolute -top-2 -right-2 w-8 h-8 ${folderColors.badge} text-white text-sm rounded-full flex items-center justify-center font-bold border-2 border-white shadow-lg`}>
                             {imageCount}
                           </div>
                         )}
