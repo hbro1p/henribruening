@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
-import { Play, Pause, Music, SkipForward, SkipBack, Volume2 } from 'lucide-react';
+import { Play, Pause, Music, SkipForward, SkipBack } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useSettings } from '@/contexts/SettingsContext';
-import { Slider } from '@/components/ui/slider';
 
 const playlist2000s = [
   "https://www.youtube.com/watch?v=Uw_a2yH_Xpc", // Hey Ya! - OutKast
@@ -19,7 +18,6 @@ const playlist2000s = [
 const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
-  const [volume, setVolume] = useState(0.8);
   const location = useLocation();
   const { t, theme } = useSettings();
 
@@ -39,9 +37,77 @@ const MusicPlayer = () => {
     nextTrack();
   };
 
-  const handleVolumeChange = (value: number[]) => {
-    setVolume(value[0]);
+  const getThemeStyles = () => {
+    switch (theme) {
+      case 'space-mood':
+        return {
+          outerFrame: 'bg-gradient-to-br from-purple-800 via-purple-900 to-black border-purple-400/30 shadow-lg shadow-purple-500/20',
+          innerBezel: 'bg-gradient-to-br from-purple-900 via-black to-purple-800 border-purple-300/40',
+          mainBody: 'bg-gradient-to-br from-purple-800 via-black to-purple-900 border-purple-400/20',
+          display: 'bg-gradient-to-b from-purple-950 to-black border-purple-400/50',
+          text: 'text-purple-200',
+          subText: 'text-purple-300',
+          buttonPrimary: 'bg-gradient-to-br from-purple-500 via-purple-600 to-purple-800 border-purple-300/30 hover:from-purple-400 hover:via-purple-500 hover:to-purple-700',
+          buttonSecondary: 'bg-gradient-to-br from-purple-600 via-purple-700 to-black border-purple-400/30 hover:from-purple-500 hover:via-purple-600 hover:to-purple-800',
+          eqBars: 'bg-purple-400',
+          statusLed: isPlaying ? 'bg-gradient-to-br from-cyan-400 to-purple-600' : 'bg-gradient-to-br from-red-400 to-red-600'
+        };
+      case 'dark-vhs':
+        return {
+          outerFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black border-white/20 shadow-lg shadow-white/10',
+          innerBezel: 'bg-gradient-to-br from-gray-800 via-black to-gray-700 border-white/30',
+          mainBody: 'bg-gradient-to-br from-gray-700 via-black to-gray-800 border-white/20',
+          display: 'bg-gradient-to-b from-gray-950 to-black border-white/30',
+          text: 'text-white',
+          subText: 'text-gray-300',
+          buttonPrimary: 'bg-gradient-to-br from-red-500 via-red-600 to-red-800 border-white/30 hover:from-red-400 hover:via-red-500 hover:to-red-700',
+          buttonSecondary: 'bg-gradient-to-br from-gray-500 via-gray-600 to-gray-800 border-white/30 hover:from-gray-400 hover:via-gray-500 hover:to-gray-700',
+          eqBars: 'bg-white',
+          statusLed: isPlaying ? 'bg-gradient-to-br from-white to-gray-500' : 'bg-gradient-to-br from-red-400 to-red-600'
+        };
+      case 'matrix-terminal':
+        return {
+          outerFrame: 'bg-gradient-to-br from-green-800 via-green-900 to-black border-green-500/20 shadow-lg shadow-green-500/20',
+          innerBezel: 'bg-gradient-to-br from-black via-green-900 to-black border-green-500/30',
+          mainBody: 'bg-gradient-to-br from-black via-green-900 to-black border-green-500/20',
+          display: 'bg-gradient-to-b from-green-950 to-black border-green-500/50',
+          text: 'text-green-300',
+          subText: 'text-green-400',
+          buttonPrimary: 'bg-gradient-to-br from-green-500 via-green-600 to-green-800 border-green-400/30 hover:from-green-400 hover:via-green-500 hover:to-green-700',
+          buttonSecondary: 'bg-gradient-to-br from-green-600 via-green-700 to-black border-green-500/30 hover:from-green-500 hover:via-green-600 hover:to-green-800',
+          eqBars: 'bg-green-400',
+          statusLed: isPlaying ? 'bg-gradient-to-br from-green-300 to-green-600' : 'bg-gradient-to-br from-red-400 to-red-600'
+        };
+      case 'retro-chrome':
+        return {
+          outerFrame: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600 border-blue-300/30 shadow-lg shadow-blue-500/20',
+          innerBezel: 'bg-gradient-to-br from-slate-700 via-blue-800 to-slate-800 border-blue-400/40',
+          mainBody: 'bg-gradient-to-br from-slate-600 via-blue-700 to-slate-800 border-blue-300/20',
+          display: 'bg-gradient-to-b from-blue-950 to-slate-950 border-blue-400/50',
+          text: 'text-blue-200',
+          subText: 'text-blue-300',
+          buttonPrimary: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 border-blue-300/30 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700',
+          buttonSecondary: 'bg-gradient-to-br from-slate-500 via-blue-600 to-slate-700 border-blue-400/30 hover:from-slate-400 hover:via-blue-500 hover:to-slate-600',
+          eqBars: 'bg-blue-400',
+          statusLed: isPlaying ? 'bg-gradient-to-br from-cyan-400 to-blue-600' : 'bg-gradient-to-br from-blue-400 to-blue-600'
+        };
+      default:
+        return {
+          outerFrame: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-black/20',
+          innerBezel: 'bg-gradient-to-br from-gray-900 via-black to-gray-800 border-gray-600',
+          mainBody: 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 border-gray-500',
+          display: 'bg-gradient-to-b from-green-900 to-green-950 border-black/50',
+          text: 'text-green-400',
+          subText: 'text-green-300',
+          buttonPrimary: 'bg-gradient-to-br from-red-400 via-red-500 to-red-700 border-black/30 hover:from-red-300 hover:via-red-400 hover:to-red-600',
+          buttonSecondary: 'bg-gradient-to-br from-gray-400 via-gray-500 to-gray-700 border-black/30 hover:from-gray-300 hover:via-gray-400 hover:to-gray-600',
+          eqBars: 'bg-green-400',
+          statusLed: isPlaying ? 'bg-gradient-to-br from-lime-400 to-green-600' : 'bg-gradient-to-br from-red-400 to-red-600'
+        };
+    }
   };
+
+  const styles = getThemeStyles();
 
   return (
     <>
@@ -50,7 +116,7 @@ const MusicPlayer = () => {
         <ReactPlayer
           url={playlist2000s[currentTrack]}
           playing={isPlaying}
-          volume={volume}
+          volume={0.8}
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
           onEnded={handleEnded}
@@ -63,68 +129,36 @@ const MusicPlayer = () => {
       {/* Only show visual controls on desktop route */}
       {location.pathname === '/desktop' && (
         <div className="absolute bottom-8 right-8 transform hover:scale-105 transition-all duration-300">
-          {/* Outer frame with metallic look */}
-          <div className={`p-2 rounded-xl shadow-2xl border-2 ${
-            theme === 'dark-vhs' 
-              ? 'bg-gradient-to-br from-gray-700 via-gray-800 to-black border-white/20'
-              : theme === 'matrix-terminal'
-              ? 'bg-gradient-to-br from-green-900 via-black to-green-800 border-green-500/20'
-              : 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-black/20'
-          }`}>
+          {/* Outer frame with theme-appropriate styling */}
+          <div className={`p-2 rounded-xl shadow-2xl border-2 ${styles.outerFrame}`}>
             {/* Inner bezel */}
-            <div className={`rounded-lg p-1 border ${
-              theme === 'dark-vhs'
-                ? 'bg-gradient-to-br from-gray-900 via-black to-gray-800 border-white/30'
-                : theme === 'matrix-terminal'
-                ? 'bg-gradient-to-br from-black via-green-900 to-black border-green-500/30'
-                : 'bg-gradient-to-br from-gray-800 via-gray-900 to-black border-gray-600'
-            }`}>
+            <div className={`rounded-lg p-1 border ${styles.innerBezel}`}>
               {/* Main player body */}
-              <div className={`rounded-md p-4 border shadow-inner ${
-                theme === 'dark-vhs'
-                  ? 'bg-gradient-to-br from-gray-800 via-black to-gray-900 border-white/20'
-                  : theme === 'matrix-terminal'
-                  ? 'bg-gradient-to-br from-black via-green-900 to-black border-green-500/20'
-                  : 'bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 border-gray-500'
-              }`}>
+              <div className={`rounded-md p-4 border shadow-inner ${styles.mainBody}`}>
                 
                 {/* Top section with display */}
                 <div className="mb-4">
-                  {/* LCD-style display */}
-                  <div className={`p-3 rounded border-2 shadow-inner ${
-                    theme === 'dark-vhs'
-                      ? 'bg-gradient-to-b from-gray-900 to-black border-white/30'
-                      : theme === 'matrix-terminal'
-                      ? 'bg-gradient-to-b from-green-900 to-green-950 border-green-500/50'
-                      : 'bg-gradient-to-b from-green-900 to-green-950 border-black/50'
-                  }`}>
+                  {/* Clean LCD-style display */}
+                  <div className={`p-3 rounded border-2 shadow-inner ${styles.display}`}>
                     <div className="flex items-center justify-between">
                       {/* Track info */}
                       <div className="flex-1">
-                        <p className={`font-pixel text-xs font-bold drop-shadow-sm ${
-                          theme === 'dark-vhs'
-                            ? 'text-white'
-                            : 'text-green-400'
-                        }`}>
+                        <p className={`font-pixel text-xs font-bold drop-shadow-sm ${styles.text}`}>
                           🎵 2000S {t('VIBES')}
                         </p>
-                        <p className={`text-xs font-pixel ${
-                          theme === 'dark-vhs'
-                            ? 'text-gray-300'
-                            : 'text-green-300'
-                        }`}>
+                        <p className={`text-xs font-pixel ${styles.subText}`}>
                           {t('TRACK')} {String(currentTrack + 1).padStart(2, '0')}/{playlist2000s.length}
                         </p>
                       </div>
                       
-                      {/* EQ visualization */}
+                      {/* Simple EQ visualization */}
                       <div className="flex items-end h-6 space-x-1">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <div
                             key={i}
-                            className={`w-1 rounded-full origin-bottom transition-all duration-200 ${
-                              theme === 'dark-vhs' ? 'bg-white' : 'bg-green-400'
-                            } ${isPlaying ? 'animate-equalizer' : 'h-2'}`}
+                            className={`w-1 rounded-full origin-bottom transition-all duration-200 ${styles.eqBars} ${
+                              isPlaying ? 'animate-equalizer' : 'h-2'
+                            }`}
                             style={{
                               animationDelay: `${i * 100}ms`,
                               height: isPlaying ? `${Math.random() * 16 + 8}px` : '8px',
@@ -136,30 +170,22 @@ const MusicPlayer = () => {
                   </div>
                 </div>
 
-                {/* Controls section */}
-                <div className="flex items-center justify-center space-x-2">
+                {/* Clean controls section */}
+                <div className="flex items-center justify-center space-x-3">
                   {/* Previous button */}
                   <button
                     onClick={prevTrack}
-                    className={`relative w-10 h-10 rounded-full shadow-lg border-2 transition-all duration-200 active:scale-95 ${
-                      theme === 'dark-vhs'
-                        ? 'bg-gradient-to-br from-gray-500 via-gray-600 to-gray-800 border-white/30 hover:from-gray-400 hover:via-gray-500 hover:to-gray-700'
-                        : theme === 'matrix-terminal'
-                        ? 'bg-gradient-to-br from-green-600 via-green-700 to-black border-green-500/30 hover:from-green-500 hover:via-green-600 hover:to-green-800'
-                        : 'bg-gradient-to-br from-gray-400 via-gray-500 to-gray-700 border-black/30 hover:from-gray-300 hover:via-gray-400 hover:to-gray-600'
-                    }`}
+                    className={`relative w-10 h-10 rounded-full shadow-lg border-2 transition-all duration-200 active:scale-95 ${styles.buttonSecondary}`}
                   >
                     <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-full"></div>
                     <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/30 to-transparent rounded-full"></div>
-                    <SkipBack className={`w-4 h-4 drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${
-                      theme === 'dark-vhs' ? 'text-white' : theme === 'matrix-terminal' ? 'text-green-300' : 'text-gray-100'
-                    }`} />
+                    <SkipBack className={`w-4 h-4 drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${styles.text}`} />
                   </button>
                   
-                  {/* Play/Pause button - larger and central */}
+                  {/* Play/Pause button - cleaner design */}
                   <button
                     onClick={togglePlayPause}
-                    className="relative w-12 h-12 bg-gradient-to-br from-red-400 via-red-500 to-red-700 rounded-full shadow-xl border-2 border-black/30 hover:from-red-300 hover:via-red-400 hover:to-red-600 transition-all duration-200 active:scale-95"
+                    className={`relative w-12 h-12 rounded-full shadow-xl border-2 transition-all duration-200 active:scale-95 ${styles.buttonPrimary}`}
                   >
                     <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-full"></div>
                     <div className="absolute inset-x-1 bottom-1 h-3 bg-gradient-to-t from-black/30 to-transparent rounded-full"></div>
@@ -172,57 +198,21 @@ const MusicPlayer = () => {
                   {/* Next button */}
                   <button
                     onClick={nextTrack}
-                    className={`relative w-10 h-10 rounded-full shadow-lg border-2 transition-all duration-200 active:scale-95 ${
-                      theme === 'dark-vhs'
-                        ? 'bg-gradient-to-br from-gray-500 via-gray-600 to-gray-800 border-white/30 hover:from-gray-400 hover:via-gray-500 hover:to-gray-700'
-                        : theme === 'matrix-terminal'
-                        ? 'bg-gradient-to-br from-green-600 via-green-700 to-black border-green-500/30 hover:from-green-500 hover:via-green-600 hover:to-green-800'
-                        : 'bg-gradient-to-br from-gray-400 via-gray-500 to-gray-700 border-black/30 hover:from-gray-300 hover:via-gray-400 hover:to-gray-600'
-                    }`}
+                    className={`relative w-10 h-10 rounded-full shadow-lg border-2 transition-all duration-200 active:scale-95 ${styles.buttonSecondary}`}
                   >
                     <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded-full"></div>
                     <div className="absolute inset-x-1 bottom-1 h-2 bg-gradient-to-t from-black/30 to-transparent rounded-full"></div>
-                    <SkipForward className={`w-4 h-4 drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${
-                      theme === 'dark-vhs' ? 'text-white' : theme === 'matrix-terminal' ? 'text-green-300' : 'text-gray-100'
-                    }`} />
+                    <SkipForward className={`w-4 h-4 drop-shadow-sm absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${styles.text}`} />
                   </button>
                 </div>
 
-                {/* Volume and status indicators */}
-                <div className="mt-4 flex items-center justify-between">
-                  <div className="flex items-center space-x-2 flex-1">
-                    <Volume2 className={`w-3 h-3 ${
-                      theme === 'dark-vhs' ? 'text-white' : theme === 'matrix-terminal' ? 'text-green-400' : 'text-gray-300'
-                    }`} />
-                    <div className="flex-1 max-w-20">
-                      <Slider
-                        value={[volume]}
-                        onValueChange={handleVolumeChange}
-                        max={1}
-                        min={0}
-                        step={0.01}
-                        className="w-full"
-                      />
-                    </div>
+                {/* Bottom status section */}
+                <div className="mt-4 flex items-center justify-center">
+                  {/* Simple status LED - no volume controls */}
+                  <div className="flex items-center space-x-3">
+                    <Music className={`w-4 h-4 ${styles.text}`} />
+                    <div className={`w-3 h-3 rounded-full shadow-sm ${styles.statusLed} ${isPlaying ? 'animate-pulse' : ''}`}></div>
                   </div>
-                  
-                  {/* Status LED */}
-                  <div className={`w-2 h-2 rounded-full shadow-sm animate-pulse ${
-                    isPlaying 
-                      ? 'bg-gradient-to-br from-lime-400 to-green-600'
-                      : 'bg-gradient-to-br from-red-400 to-red-600'
-                  }`}></div>
-                </div>
-
-                {/* Progress bar */}
-                <div className={`mt-3 w-full h-2 rounded-full border shadow-inner overflow-hidden ${
-                  theme === 'dark-vhs'
-                    ? 'bg-gradient-to-r from-gray-900 to-black border-white/20'
-                    : theme === 'matrix-terminal'
-                    ? 'bg-gradient-to-r from-black to-green-900 border-green-500/20'
-                    : 'bg-gradient-to-r from-gray-800 to-gray-900 border-black/50'
-                }`}>
-                  <div className="h-full bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 rounded-full animate-pulse shadow-sm" style={{ width: '60%' }}></div>
                 </div>
               </div>
             </div>

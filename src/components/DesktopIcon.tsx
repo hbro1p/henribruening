@@ -8,25 +8,92 @@ interface DesktopIconProps {
   to: string;
 }
 
-const iconColors = {
-  'My Pictures': 'from-orange-500 via-red-500 to-pink-600',
-  'Meine Bilder': 'from-orange-500 via-red-500 to-pink-600',
-  'My Videos': 'from-purple-500 via-blue-500 to-cyan-500',
-  'Meine Videos': 'from-purple-500 via-blue-500 to-cyan-500',
-  'My Projects': 'from-green-500 via-emerald-500 to-teal-500',
-  'Meine Projekte': 'from-green-500 via-emerald-500 to-teal-500',
-  'About Me': 'from-indigo-500 via-purple-500 to-pink-500',
-  'Über Mich': 'from-indigo-500 via-purple-500 to-pink-500',
-  'Contact': 'from-blue-500 via-cyan-500 to-teal-500',
-  'Kontakt': 'from-blue-500 via-cyan-500 to-teal-500',
-  'Settings': 'from-slate-500 via-gray-500 to-zinc-500',
-  'Einstellungen': 'from-slate-500 via-gray-500 to-zinc-500',
-  'Game.exe': 'from-yellow-500 via-orange-500 to-red-500',
-  'Spiel.exe': 'from-yellow-500 via-orange-500 to-red-500',
+const getIconStyles = (label: string, theme: string) => {
+  // Space Mood theme - Retro cosmic style with unified vintage palette
+  if (theme === 'space-mood') {
+    const spaceColors = {
+      'My Pictures': 'from-purple-400 via-pink-400 to-purple-600',
+      'Meine Bilder': 'from-purple-400 via-pink-400 to-purple-600',
+      'My Videos': 'from-blue-400 via-cyan-400 to-blue-600',
+      'Meine Videos': 'from-blue-400 via-cyan-400 to-blue-600',
+      'My Projects': 'from-green-400 via-emerald-400 to-green-600',
+      'Meine Projekte': 'from-green-400 via-emerald-400 to-green-600',
+      'About Me': 'from-indigo-400 via-purple-400 to-pink-400',
+      'Über Mich': 'from-indigo-400 via-purple-400 to-pink-400',
+      'Contact': 'from-cyan-400 via-blue-400 to-indigo-400',
+      'Kontakt': 'from-cyan-400 via-blue-400 to-indigo-400',
+      'Settings': 'from-gray-400 via-slate-400 to-zinc-400',
+      'Einstellungen': 'from-gray-400 via-slate-400 to-zinc-400',
+      'Game.exe': 'from-yellow-400 via-orange-400 to-red-400',
+      'Spiel.exe': 'from-yellow-400 via-orange-400 to-red-400',
+    };
+    
+    return {
+      gradient: spaceColors[label as keyof typeof spaceColors] || 'from-purple-400 to-blue-400',
+      border: 'border-purple-300/30',
+      hoverBorder: 'group-hover:border-purple-200/50',
+      glowEffect: 'shadow-lg shadow-purple-500/20 group-hover:shadow-purple-400/30',
+      innerGlow: 'bg-gradient-to-br from-white/30 via-purple-100/20 to-transparent',
+      highlight: 'bg-gradient-to-br from-white/50 to-transparent',
+      statusGlow: 'from-cyan-300 via-blue-400 to-purple-500 shadow-lg shadow-blue-400/50'
+    };
+  }
+  
+  // Dark VHS theme - Monochrome with subtle white glow
+  if (theme === 'dark-vhs') {
+    return {
+      gradient: 'from-gray-600 via-gray-700 to-gray-900',
+      border: 'border-white/20',
+      hoverBorder: 'group-hover:border-white/40',
+      glowEffect: 'shadow-lg shadow-white/10 group-hover:shadow-white/20',
+      innerGlow: 'bg-gradient-to-br from-white/20 via-transparent to-black/10',
+      highlight: 'bg-gradient-to-br from-white/30 to-transparent',
+      statusGlow: 'from-white via-gray-300 to-gray-500 shadow-lg shadow-white/30'
+    };
+  }
+  
+  // Matrix Terminal theme - Green matrix style
+  if (theme === 'matrix-terminal') {
+    return {
+      gradient: 'from-green-600 via-green-700 to-black',
+      border: 'border-green-500/30',
+      hoverBorder: 'group-hover:border-green-400/50',
+      glowEffect: 'shadow-lg shadow-green-500/20 group-hover:shadow-green-400/30',
+      innerGlow: 'bg-gradient-to-br from-green-300/20 via-transparent to-black/10',
+      highlight: 'bg-gradient-to-br from-green-200/40 to-transparent',
+      statusGlow: 'from-green-300 via-green-400 to-green-600 shadow-lg shadow-green-400/50'
+    };
+  }
+  
+  // Retro Chrome theme - Silver/blue metallic
+  if (theme === 'retro-chrome') {
+    return {
+      gradient: 'from-slate-400 via-blue-500 to-slate-600',
+      border: 'border-blue-300/30',
+      hoverBorder: 'group-hover:border-blue-200/50',
+      glowEffect: 'shadow-lg shadow-blue-500/20 group-hover:shadow-blue-400/30',
+      innerGlow: 'bg-gradient-to-br from-white/25 via-blue-100/20 to-transparent',
+      highlight: 'bg-gradient-to-br from-white/40 to-transparent',
+      statusGlow: 'from-blue-300 via-cyan-400 to-blue-500 shadow-lg shadow-blue-400/50'
+    };
+  }
+  
+  // Default fallback
+  return {
+    gradient: 'from-gray-500 to-gray-700',
+    border: 'border-black/30',
+    hoverBorder: 'group-hover:border-black/50',
+    glowEffect: 'shadow-lg',
+    innerGlow: 'bg-gradient-to-br from-white/20 via-transparent to-black/10',
+    highlight: 'bg-gradient-to-br from-white/30 to-transparent',
+    statusGlow: 'from-gray-400 via-gray-500 to-gray-600'
+  };
 };
 
 const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to }) => {
-  const gradientClass = iconColors[label as keyof typeof iconColors] || 'from-gray-500 to-gray-700';
+  // Get theme from body class
+  const theme = document.body.className.replace('theme-', '') || 'space-mood';
+  const styles = getIconStyles(label, theme);
   
   return (
     <Link
@@ -35,28 +102,48 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to }) => {
     >
       {/* Fixed size container for consistent layout */}
       <div className="w-20 h-20 flex items-center justify-center">
-        <div className={`relative w-16 h-16 bg-gradient-to-br ${gradientClass} rounded-xl shadow-2xl group-hover:shadow-3xl transition-all duration-300 flex items-center justify-center border-2 border-black/30 group-hover:border-black/40`}>
-          {/* Realistic depth effects */}
-          <div className="absolute inset-0.5 bg-gradient-to-br from-white/25 via-transparent to-black/15 rounded-xl"></div>
-          <div className="absolute inset-1 bg-gradient-to-tl from-white/15 via-transparent to-transparent rounded-lg"></div>
+        <div className={`relative w-16 h-16 bg-gradient-to-br ${styles.gradient} rounded-xl transition-all duration-300 flex items-center justify-center border-2 ${styles.border} ${styles.hoverBorder} ${styles.glowEffect}`}>
+          {/* Retro-style depth effects */}
+          <div className={`absolute inset-0.5 ${styles.innerGlow} rounded-xl`}></div>
+          <div className="absolute inset-1 bg-gradient-to-tl from-white/10 via-transparent to-transparent rounded-lg"></div>
           
-          {/* Icon with enhanced contrast */}
+          {/* Icon with enhanced styling */}
           <Icon className="w-8 h-8 text-white drop-shadow-lg relative z-10 filter brightness-110 contrast-125" />
           
-          {/* Highlight gloss */}
-          <div className="absolute top-1 left-1 w-4 h-4 bg-gradient-to-br from-white/40 to-transparent rounded-full blur-sm"></div>
+          {/* Vintage-style highlight gloss */}
+          <div className={`absolute top-1 left-1 w-4 h-4 ${styles.highlight} rounded-full blur-sm`}></div>
           
-          {/* Status indicator */}
-          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-br from-lime-400 via-green-500 to-green-600 rounded-full border-2 border-black/30 shadow-lg">
-            <div className="absolute inset-0.5 bg-gradient-to-br from-lime-300 to-transparent rounded-full"></div>
+          {/* Retro status indicator with theme-appropriate glow */}
+          <div className={`absolute -bottom-1 -right-1 w-4 h-4 bg-gradient-to-br ${styles.statusGlow} rounded-full border-2 border-black/30`}>
+            <div className="absolute inset-0.5 bg-gradient-to-br from-white/40 to-transparent rounded-full"></div>
           </div>
         </div>
       </div>
       
-      {/* Fixed height label container */}
+      {/* Enhanced label with retro styling */}
       <div className="h-8 flex items-center">
-        <span className="text-sm text-white font-pixel select-none drop-shadow-lg bg-gradient-to-b from-black/60 to-black/80 px-3 py-1 rounded-md backdrop-blur-sm border border-white/20 shadow-lg">
-          <div className="absolute inset-x-0.5 top-0 h-0.5 bg-gradient-to-b from-white/20 to-transparent rounded-t"></div>
+        <span className={`text-sm font-pixel select-none drop-shadow-lg px-3 py-1 rounded-md backdrop-blur-sm border shadow-lg transition-all duration-300 ${
+          theme === 'space-mood' 
+            ? 'text-purple-100 bg-gradient-to-b from-purple-900/70 to-purple-950/90 border-purple-400/30 group-hover:border-purple-300/50 group-hover:bg-gradient-to-b group-hover:from-purple-800/80 group-hover:to-purple-900/90'
+            : theme === 'dark-vhs'
+            ? 'text-white bg-gradient-to-b from-black/70 to-gray-900/90 border-white/20 group-hover:border-white/40'
+            : theme === 'matrix-terminal'
+            ? 'text-green-100 bg-gradient-to-b from-black/70 to-green-900/90 border-green-500/20 group-hover:border-green-400/40'
+            : theme === 'retro-chrome'
+            ? 'text-blue-100 bg-gradient-to-b from-slate-800/70 to-blue-900/90 border-blue-400/30 group-hover:border-blue-300/50'
+            : 'text-white bg-gradient-to-b from-black/60 to-black/80 border-white/20'
+        }`}>
+          <div className={`absolute inset-x-0.5 top-0 h-0.5 rounded-t ${
+            theme === 'space-mood' 
+              ? 'bg-gradient-to-b from-purple-300/30 to-transparent'
+              : theme === 'dark-vhs'
+              ? 'bg-gradient-to-b from-white/20 to-transparent'
+              : theme === 'matrix-terminal'
+              ? 'bg-gradient-to-b from-green-400/30 to-transparent'
+              : theme === 'retro-chrome'
+              ? 'bg-gradient-to-b from-blue-300/30 to-transparent'
+              : 'bg-gradient-to-b from-white/20 to-transparent'
+          }`}></div>
           {label}
         </span>
       </div>
