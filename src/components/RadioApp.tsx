@@ -50,7 +50,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
         };
       default: // space-mood - RED theme to match desktop icon
         return {
-          fullBackground: 'folder-red', // Red theme for Radio
+          fullBackground: 'bg-gradient-to-br from-red-100 via-red-200 to-red-300',
           container: 'bg-gradient-to-br from-red-100 via-red-200 to-red-300 border-2 border-red-600 shadow-lg shadow-red-600/20',
           text: 'text-red-900 font-mono',
           subText: 'text-red-700',
@@ -68,9 +68,9 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
   return (
     <div className={`fixed inset-0 flex items-center justify-center z-50 p-4 ${styles.fullBackground}`}>
       <div className={`w-96 max-w-full rounded-lg p-6 relative ${styles.container}`}>
-        {/* Header with Back to Desktop button */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
+        {/* Header with Radio Icon and Title */}
+        <div className="flex items-center justify-center mb-6">
+          <div className="flex items-center space-x-4">
             <div className={`relative w-20 h-16 rounded-lg flex items-center justify-center ${isPlaying ? 'bg-red-500' : 'bg-gray-600'} shadow-lg border-2`}>
               {/* Speaker grilles */}
               <div className="absolute left-1 top-2 bottom-2 w-2 bg-black/30 rounded-sm flex flex-col justify-around">
@@ -90,8 +90,8 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
               <Radio className="w-8 h-8 text-white z-10" />
             </div>
             
-            <div>
-              <h2 className={`text-xl font-bold ${styles.text}`}>
+            <div className="text-center">
+              <h2 className={`text-2xl font-bold ${styles.text}`}>
                 RETRO RADIO
               </h2>
               <p className={`text-sm ${styles.subText}`}>
@@ -99,34 +99,43 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
               </p>
             </div>
           </div>
-          
-          <button
-            onClick={handleClose}
-            className={`px-3 py-2 rounded flex items-center space-x-2 ${styles.backButton}`}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="text-sm">{t('Back to Desktop')}</span>
-          </button>
         </div>
 
-        {/* Station Info - Static, no animations */}
+        {/* Station Info Display */}
         <div className="text-center mb-6">
-          <div className={`bg-black/30 rounded p-3 border ${theme === 'retro-chrome' ? 'border-blue-400/30 bg-white/10' : theme === 'space-mood' ? 'border-red-400/30 bg-red-50/10' : 'border-current/30'}`}>
-            <p className={`text-sm mb-1 ${styles.text}`}>
+          <div className={`bg-black/20 rounded-lg p-4 border-2 ${theme === 'retro-chrome' ? 'border-blue-400/50 bg-white/20' : theme === 'space-mood' ? 'border-red-400/50 bg-red-50/20' : 'border-green-400/50'}`}>
+            <p className={`text-lg font-bold mb-2 ${styles.text}`}>
               {musicFiles.length > 0 ? '♪ NOW PLAYING ♪' : 'NO SIGNAL'}
             </p>
-            <p className={`text-xs ${styles.subText} truncate`}>
-              {musicFiles.length > 0 ? musicFiles[currentTrack]?.title || 'Unknown Track' : 'Upload music to /music/ folder'}
+            <p className={`text-sm ${styles.subText} truncate`}>
+              {musicFiles.length > 0 && currentTrack < musicFiles.length ? 
+                musicFiles[currentTrack]?.title || 'Unknown Track' : 
+                'Upload music to /music/ folder'
+              }
+            </p>
+            <p className={`text-xs mt-1 ${styles.subText}`}>
+              {musicFiles.length > 0 ? `Track ${currentTrack + 1} of ${musicFiles.length}` : ''}
             </p>
           </div>
         </div>
 
+        {/* Back to Desktop Button */}
+        <div className="flex justify-center mb-6">
+          <button
+            onClick={handleClose}
+            className={`px-4 py-2 rounded-lg flex items-center space-x-2 transition-all ${styles.backButton}`}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm font-medium">{t('Back to Desktop')}</span>
+          </button>
+        </div>
+
         {/* Controls */}
-        <div className="flex items-center justify-center space-x-4 mb-6">
+        <div className="flex items-center justify-center space-x-6">
           <button
             onClick={prevTrack}
             disabled={musicFiles.length === 0}
-            className={`w-12 h-12 rounded flex items-center justify-center transition-all disabled:opacity-50 ${styles.button}`}
+            className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all disabled:opacity-50 ${styles.button} hover:scale-105`}
           >
             <SkipBack className="w-5 h-5" />
           </button>
@@ -134,7 +143,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
           <button
             onClick={togglePlayPause}
             disabled={musicFiles.length === 0 || isLoading}
-            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all disabled:opacity-50 ${styles.activeButton} shadow-lg`}
+            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all disabled:opacity-50 ${styles.activeButton} shadow-lg hover:scale-105`}
           >
             {isLoading ? (
               <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -148,15 +157,10 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
           <button
             onClick={nextTrack}
             disabled={musicFiles.length === 0}
-            className={`w-12 h-12 rounded flex items-center justify-center transition-all disabled:opacity-50 ${styles.button}`}
+            className={`w-12 h-12 rounded-lg flex items-center justify-center transition-all disabled:opacity-50 ${styles.button} hover:scale-105`}
           >
             <SkipForward className="w-5 h-5" />
           </button>
-        </div>
-
-        {/* Station Display */}
-        <div className={`text-center text-xs ${styles.subText}`}>
-          {musicFiles.length > 0 ? `Track ${currentTrack + 1}/${musicFiles.length}` : 'No tracks loaded'}
         </div>
       </div>
     </div>
