@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Code, ExternalLink } from 'lucide-react';
@@ -10,7 +9,7 @@ const MyProjects = () => {
   const [showError, setShowError] = useState(false);
   const { theme, t } = useSettings();
 
-  const correctPassword = 'henribrueningprojects#2025!';
+  const correctPassword = '!henri25_portfolio#';
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();

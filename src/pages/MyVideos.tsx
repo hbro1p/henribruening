@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Video, ExternalLink } from 'lucide-react';
@@ -9,7 +10,7 @@ const MyVideos = () => {
   const [showError, setShowError] = useState(false);
   const { theme, t } = useSettings();
 
-  const correctPassword = 'henribrueningvideos#2025!';
+  const correctPassword = '!henri25_portfolio#';
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -208,6 +209,32 @@ const MyVideos = () => {
                   <a href="https://www.youtube.com/@Thistimefr" target="_blank" rel="noopener noreferrer" 
                      className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
                     YouTube <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+
+              <div className={`p-6 border-2 ${styles.cardBg}`}>
+                <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
+                  {t('language') === 'deutsch' ? 'Weitere Videos' : 'More Videos'}
+                </h3>
+                <p className={`mb-4 font-pixel ${styles.text}`}>
+                  {t('language') === 'deutsch' 
+                    ? 'Weitere Videos aus verschiedenen Projekten und Kollaborationen'
+                    : 'Additional videos from various projects and collaborations'
+                  }
+                </p>
+                <div className="space-y-2">
+                  <a href="https://www.youtube.com/watch?v=jr0z7nFgE7Q&t=25s" target="_blank" rel="noopener noreferrer" 
+                     className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
+                    {t('language') === 'deutsch' ? 'Ein Tag als Immobilienmakler' : 'A Day as a Real Estate Agent'} <ExternalLink className="w-4 h-4" />
+                  </a>
+                  <a href="https://www.instagram.com/reel/C2Il3BRoCV5/" target="_blank" rel="noopener noreferrer" 
+                     className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
+                    Thomas Puke DEVK - {t('language') === 'deutsch' ? 'Kurzwerbung' : 'Short Advertisement'} <ExternalLink className="w-4 h-4" />
+                  </a>
+                  <a href="https://heriburg-gymnasium.de/projektwoche-2025/" target="_blank" rel="noopener noreferrer" 
+                     className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
+                    {t('language') === 'deutsch' ? 'Film zur Projektwoche' : 'Project Week Film'} <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
               </div>
