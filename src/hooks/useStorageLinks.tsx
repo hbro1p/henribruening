@@ -28,7 +28,26 @@ export const useStorageLinks = (bucketName: string) => {
         throw listError;
       }
 
+      // Process files to extract URLs from text files
       const linkPromises = files?.map(async (file) => {
+        if (file.name.endsWith('.txt') || file.name.endsWith('.url')) {
+          // Download the file content to get the actual URL
+          const { data: fileData, error: downloadError } = await supabase.storage
+            .from(bucketName)
+            .download(file.name);
+
+          if (!downloadError && fileData) {
+            const text = await fileData.text();
+            const url = text.trim();
+            
+            return {
+              name: file.name.replace(/\.(txt|url)$/, ''),
+              url: url
+            };
+          }
+        }
+        
+        // Fallback: treat as direct file and get public URL
         const { data } = await supabase.storage
           .from(bucketName)
           .getPublicUrl(file.name);
@@ -40,7 +59,7 @@ export const useStorageLinks = (bucketName: string) => {
       }) || [];
 
       const resolvedLinks = await Promise.all(linkPromises);
-      setLinks(resolvedLinks);
+      setLinks(resolvedLinks.filter(link => link.url && link.url.trim() !== ''));
     } catch (err) {
       console.error(`Error fetching links from ${bucketName}:`, err);
       setError(err instanceof Error ? err.message : 'Unknown error');

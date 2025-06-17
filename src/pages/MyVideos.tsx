@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Video, ExternalLink, Plus } from 'lucide-react';
@@ -238,14 +237,21 @@ const MyVideos = () => {
                         rel="noopener noreferrer" 
                         className={`flex items-center gap-2 underline font-pixel ${styles.link}`}
                       >
-                        {link.name.replace(/\.[^/.]+$/, "")} <ExternalLink className="w-4 h-4" />
+                        {link.name} <ExternalLink className="w-4 h-4" />
                       </a>
                     ))}
                   </div>
                 ) : (
-                  <p className={`text-sm font-pixel ${styles.text}`}>
-                    {t('language') === 'deutsch' ? 'Noch keine zusätzlichen Links verfügbar.' : 'No additional links available yet.'}
-                  </p>
+                  <div className={`text-sm font-pixel ${styles.text}`}>
+                    <p className="mb-2">
+                      {t('language') === 'deutsch' ? 'Noch keine zusätzlichen Links verfügbar.' : 'No additional links available yet.'}
+                    </p>
+                    <p className="text-xs opacity-70">
+                      {t('language') === 'deutsch' 
+                        ? 'Tipp: Lade eine .txt Datei mit einer URL in den video-links Bucket hoch, um sie hier anzuzeigen.' 
+                        : 'Tip: Upload a .txt file with a URL to the video-links bucket to display it here.'}
+                    </p>
+                  </div>
                 )}
               </div>
             </div>
