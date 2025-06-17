@@ -87,7 +87,7 @@ const Pictures = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { images: storageImages, loading, error, refetch } = useStorageImages();
   const { theme, t } = useSettings();
-  const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const imageContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Use storage images primarily, only fall back if storage category is completely empty
   const photoCategories = {
@@ -213,7 +213,11 @@ const Pictures = () => {
                               <Card className="border-2 border-black/30 bg-gradient-to-br from-gray-800 to-black overflow-hidden shadow-2xl rounded-lg">
                                 <CardContent className="flex aspect-[4/3] items-center justify-center p-2 relative">
                                   <div 
-                                    ref={(el) => containerRefs.current[index] = el}
+                                    ref={(el) => {
+                                      if (el) {
+                                        imageContainerRefs.current[index] = el;
+                                      }
+                                    }}
                                     className="bg-gradient-to-br from-gray-600 to-gray-800 p-2 rounded border border-black/20 shadow-inner h-full w-full flex items-center justify-center relative"
                                   >
                                     <img 
@@ -230,7 +234,7 @@ const Pictures = () => {
                                     {/* Fullscreen button */}
                                     <div className="absolute top-2 right-2">
                                       <FullscreenButton 
-                                        targetElement={containerRefs.current[index]} 
+                                        targetElement={imageContainerRefs.current[index]} 
                                         className="opacity-70 hover:opacity-100"
                                       />
                                     </div>

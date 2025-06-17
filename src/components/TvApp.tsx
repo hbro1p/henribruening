@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -265,20 +264,6 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                         targetElement={videoContainerRef.current} 
                         className="opacity-70 hover:opacity-100"
                       />
-                    </div>
-                    
-                    {/* Video overlay info */}
-                    <div className={`absolute bottom-4 left-4 bg-black/80 rounded px-3 py-1 border border-${styles.accent}/30`}>
-                      <p className={`${styles.text} font-pixel text-sm`}>
-                        {videos[currentVideo]?.title || 'Unknown Channel'}
-                      </p>
-                    </div>
-                    
-                    {/* Channel number overlay */}
-                    <div className={`absolute top-4 right-4 bg-black/80 rounded px-2 py-1 border border-${styles.accent}/30`}>
-                      <p className={`${styles.text} font-pixel text-xs`}>
-                        CH {currentVideo + 1}
-                      </p>
                     </div>
                   </div>
                 ) : (
