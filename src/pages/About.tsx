@@ -65,19 +65,22 @@ const About = () => {
         {/* Window content */}
         <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
           <div className="flex flex-col items-start">
-            <h1 className={`text-4xl mb-6 font-pixel drop-shadow-lg self-start ${styles.text}`}>[ {t('A Walk Through My Brain')} ]</h1>
+            <h1 className={`text-4xl mb-6 font-pixel drop-shadow-lg self-start ${styles.text}`}>[ A Walk Through My Brain ]</h1>
             <div className={`space-y-4 text-lg text-left ${styles.text}`}>
               <p className="drop-shadow-sm">
-                {t('Hi, I\'m Henri – a 17-year-old creative from Germany who sees the world through a lens that\'s a little nostalgic, a little curious, and always searching for meaning. I started taking photos not because I wanted to be a photographer, but because I wanted to hold on to feelings. To moments. To the little things that usually slip by unnoticed.')}
+                I'm Henri – a 17-year-old creative with a passion for turning ideas into real, visual experiences. Whether it's through editing videos, taking photos, designing digital spaces, or planning entire content flows, I love making things that feel intentional, emotional, and a little different.
               </p>
               <p className="drop-shadow-sm">
-                {t('I\'m someone who loves to explore – new places, new people, new ways of expressing myself. Whether it\'s through photography, video, design, or just late-night ideas written down in my notes app, I enjoy creating things that make others feel something. I believe creativity should be a playground, not a pressure – and that\'s the energy I try to bring into everything I do.')}
+                I'm not someone who sticks to one lane. I move between visuals and strategy, between intuition and structure. I enjoy working on projects from start to finish – not just the creative spark, but also the editing, the planning, and the final polish.
               </p>
               <p className="drop-shadow-sm">
-                {t('I\'ve always been fascinated by the mix of old and new. I love analog cameras just as much as glitchy websites. I enjoy building digital spaces that feel human, that are imperfect, honest, and a little playful. This site is a piece of that – not just a portfolio, but a small reflection of who I am, where I\'ve been, and what I\'m still figuring out.')}
+                My skills are broad, but they all come down to one thing: creating things that connect. I know how to tell a story, how to build atmosphere through sound and visuals, and how to manage the details behind the scenes. I enjoy working independently when needed, but I also love collaborating – bouncing ideas, building together, and learning from others.
               </p>
               <p className="drop-shadow-sm">
-                {t('If you want to connect, collaborate, or just share thoughts – feel free to reach out. I\'m always open to new ideas, new perspectives, and new stories.')}
+                I'm inspired by contrast – between digital and analog, old-school energy and modern tools. I don't chase trends. I create spaces that reflect what feels true to me, and I enjoy learning by doing, not waiting for permission.
+              </p>
+              <p className="drop-shadow-sm">
+                This site is a reflection of how I think: curious, hands-on, and always evolving.
               </p>
             </div>
             <Link to="/desktop" className={`mt-8 text-xl underline transition-colors font-pixel drop-shadow-sm self-start ${styles.link}`}>
