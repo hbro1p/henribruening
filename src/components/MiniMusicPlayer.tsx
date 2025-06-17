@@ -19,7 +19,8 @@ const MiniMusicPlayer: React.FC<MiniMusicPlayerProps> = ({ currentTrack, onOpenR
           accent: 'bg-green-400',
           textPrimary: 'text-green-400',
           textSecondary: 'text-green-300/80',
-          glow: 'shadow-green-400/20'
+          glow: 'shadow-green-400/20',
+          radioContainer: 'bg-gray-800 border-green-400/50'
         };
       case 'retro-chrome':
         return {
@@ -27,7 +28,8 @@ const MiniMusicPlayer: React.FC<MiniMusicPlayerProps> = ({ currentTrack, onOpenR
           accent: 'bg-blue-500',
           textPrimary: 'text-blue-800',
           textSecondary: 'text-blue-700/80',
-          glow: 'shadow-blue-500/20'
+          glow: 'shadow-blue-500/20',
+          radioContainer: 'bg-blue-300 border-blue-500/50'
         };
       default: // space-mood
         return {
@@ -35,7 +37,8 @@ const MiniMusicPlayer: React.FC<MiniMusicPlayerProps> = ({ currentTrack, onOpenR
           accent: 'bg-cyan-400',
           textPrimary: 'text-cyan-400',
           textSecondary: 'text-cyan-300/80',
-          glow: 'shadow-cyan-400/20'
+          glow: 'shadow-cyan-400/20',
+          radioContainer: 'bg-gray-800 border-cyan-400/50'
         };
     }
   };
@@ -50,7 +53,7 @@ const MiniMusicPlayer: React.FC<MiniMusicPlayerProps> = ({ currentTrack, onOpenR
       <div className="flex items-center space-x-3">
         {/* Radio Icon with Signal Animation */}
         <div className="relative flex-shrink-0">
-          <div className={`w-10 h-8 ${styles.container.includes('blue-200') ? 'bg-blue-300' : 'bg-gray-800'} rounded border ${styles.container.includes('green') ? 'border-green-400/50' : styles.container.includes('blue') ? 'border-blue-500/50' : 'border-cyan-400/50'} flex items-center justify-center relative overflow-hidden`}>
+          <div className={`w-10 h-8 ${styles.radioContainer} rounded border flex items-center justify-center relative overflow-hidden`}>
             {/* Retro radio design */}
             <div className={`absolute top-0.5 left-1 right-1 h-0.5 ${styles.accent} rounded-full opacity-60`} />
             <Radio className="w-4 h-4 relative z-10" />

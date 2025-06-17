@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Play, Pause, SkipForward, SkipBack, Tv } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -20,6 +19,50 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   const { videos, loading } = useTvVideos();
 
   const correctPassword = 'henritv#2025!';
+
+  const getThemeStyles = () => {
+    switch (theme) {
+      case 'dark-vhs':
+        return {
+          container: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black border-4 border-green-400',
+          header: 'bg-gradient-to-r from-gray-800 to-gray-700 border-b-2 border-green-400',
+          button: 'bg-gray-700 hover:bg-gray-600 text-green-400 border border-green-500/50',
+          activeButton: 'bg-green-900 hover:bg-green-800 text-green-300 border border-green-500',
+          closeButton: 'bg-red-800 hover:bg-red-700 text-red-300 border border-red-500',
+          text: 'text-green-400',
+          subText: 'text-green-300',
+          accent: 'green-400',
+          passwordContainer: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-green-500 shadow-lg shadow-green-500/20',
+          passwordButton: 'bg-green-900 hover:bg-green-800 text-green-300 font-mono border border-green-500'
+        };
+      case 'retro-chrome':
+        return {
+          container: 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 border-4 border-blue-600',
+          header: 'bg-gradient-to-r from-blue-300 to-blue-400 border-b-2 border-blue-600',
+          button: 'bg-blue-200 hover:bg-blue-300 text-blue-800 border border-blue-500',
+          activeButton: 'bg-blue-400 hover:bg-blue-500 text-blue-800 border border-blue-600',
+          closeButton: 'bg-red-200 hover:bg-red-300 text-red-800 border border-red-500',
+          text: 'text-blue-800',
+          subText: 'text-blue-700',
+          accent: 'blue-500',
+          passwordContainer: 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 border-2 border-blue-600 shadow-lg',
+          passwordButton: 'bg-blue-400 hover:bg-blue-500 text-blue-800 font-mono border border-blue-600'
+        };
+      default: // space-mood
+        return {
+          container: 'bg-gradient-to-br from-gray-900 via-blue-900 to-black border-4 border-cyan-400',
+          header: 'bg-gradient-to-r from-gray-800 to-blue-800 border-b-2 border-cyan-400',
+          button: 'bg-gray-700 hover:bg-gray-600 text-cyan-400 border border-cyan-500/50',
+          activeButton: 'bg-cyan-900 hover:bg-cyan-800 text-cyan-300 border border-cyan-500',
+          closeButton: 'bg-red-800 hover:bg-red-700 text-red-300 border border-red-500',
+          text: 'text-cyan-400',
+          subText: 'text-cyan-300',
+          accent: 'cyan-400',
+          passwordContainer: 'bg-gradient-to-br from-gray-900 via-blue-900 to-black border-2 border-cyan-500 shadow-lg shadow-cyan-500/20',
+          passwordButton: 'bg-cyan-900 hover:bg-cyan-800 text-cyan-300 font-mono border border-cyan-500'
+        };
+    }
+  };
 
   useEffect(() => {
     if (videos.length > 0 && currentVideo >= videos.length) {
@@ -80,43 +123,53 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   if (!isAuthenticated) {
+    const styles = getThemeStyles();
+
     return (
       <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-red-500 rounded-lg p-8 w-96 max-w-full shadow-lg shadow-red-500/20 relative">
+        <div className={`${styles.passwordContainer} rounded-lg p-8 w-96 max-w-full relative`}>
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 w-8 h-8 rounded flex items-center justify-center bg-gray-800 hover:bg-gray-700 text-red-400 border border-red-500/50"
+            className={`absolute top-4 right-4 w-8 h-8 rounded flex items-center justify-center ${styles.closeButton}`}
           >
             <X className="w-4 h-4" />
           </button>
           
           <div className="text-center mb-6">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gray-800 rounded-lg flex items-center justify-center border-2 border-red-500 relative">
-              <Tv className="w-8 h-8 text-red-400" />
-              {/* Static lines on the TV icon */}
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-red-400/20 to-transparent opacity-50" />
+            <div className={`w-16 h-16 mx-auto mb-4 bg-gray-800 rounded-lg flex items-center justify-center border-2 border-${styles.accent} relative`}>
+              <Tv className={`w-8 h-8 text-${styles.accent}`} />
+              <div className={`absolute inset-0 bg-gradient-to-b from-transparent via-${styles.accent}/20 to-transparent opacity-50`} />
             </div>
-            <h2 className="text-xl font-mono text-red-400 mb-2">SECURE TV ACCESS</h2>
-            <p className="text-sm text-red-300 font-mono">PASSWORD REQUIRED</p>
+            <h2 className={`text-xl font-mono ${styles.text} mb-2`}>SECURE TV ACCESS</h2>
+            <p className={`text-sm ${styles.subText} font-mono`}>PASSWORD REQUIRED</p>
           </div>
 
-          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            if (password === correctPassword) {
+              setIsAuthenticated(true);
+              setPasswordError('');
+            } else {
+              setPasswordError('Invalid password');
+              setPassword('');
+            }
+          }} className="space-y-4">
             <div>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter password..."
-                className="w-full px-3 py-2 bg-black/50 border border-red-500/50 rounded text-red-300 font-mono placeholder-red-500/50 focus:outline-none focus:border-red-400"
+                className={`w-full px-3 py-2 bg-black/50 border border-${styles.accent}/50 rounded ${styles.subText} font-mono placeholder-${styles.accent}/50 focus:outline-none focus:border-${styles.accent}`}
                 autoFocus
               />
               {passwordError && (
-                <p className="text-red-400 text-xs font-mono mt-1">❌ {passwordError}</p>
+                <p className={`${styles.text} text-xs font-mono mt-1`}>❌ {passwordError}</p>
               )}
             </div>
             <button
               type="submit"
-              className="w-full py-2 bg-red-900 hover:bg-red-800 text-red-300 font-mono border border-red-500 rounded transition-colors"
+              className={`w-full py-2 ${styles.passwordButton} rounded transition-colors`}
             >
               UNLOCK CHANNEL
             </button>
@@ -126,9 +179,11 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
     );
   }
 
+  const styles = getThemeStyles();
+
   return (
     <div className="fixed inset-0 bg-black flex items-center justify-center z-50 p-4">
-      <div className="relative w-full max-w-4xl h-full max-h-[80vh] bg-gradient-to-br from-gray-900 via-gray-800 to-black border-4 border-gray-600 rounded-lg overflow-hidden shadow-2xl">
+      <div className={`relative w-full max-w-4xl h-full max-h-[80vh] ${styles.container} rounded-lg overflow-hidden shadow-2xl`}>
         {/* CRT TV Frame Effect */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20 pointer-events-none z-10" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10 pointer-events-none z-10" />
@@ -136,30 +191,29 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-10 h-10 rounded bg-red-800 hover:bg-red-700 text-red-300 border border-red-500 flex items-center justify-center z-20"
+          className={`absolute top-4 right-4 w-10 h-10 rounded ${styles.closeButton} flex items-center justify-center z-20`}
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* TV Header with VHS controls */}
-        <div className="relative z-20 p-4 bg-gradient-to-r from-gray-800 to-gray-700 border-b-2 border-gray-600">
+        <div className={`relative z-20 p-4 ${styles.header}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gray-900 rounded border-2 border-gray-500 flex items-center justify-center relative">
-                <Tv className="w-6 h-6 text-green-400" />
-                {/* Screen glitch effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-green-400/10 to-transparent animate-pulse" />
+              <div className={`w-12 h-12 bg-gray-900 rounded border-2 border-${styles.accent} flex items-center justify-center relative`}>
+                <Tv className={`w-6 h-6 text-${styles.accent}`} />
+                <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-${styles.accent}/10 to-transparent animate-pulse`} />
               </div>
               <div>
-                <h2 className="text-lg font-mono text-green-400">RETRO TV</h2>
-                <p className="text-xs font-mono text-green-300">
+                <h2 className={`text-lg font-mono ${styles.text}`}>RETRO TV</h2>
+                <p className={`text-xs font-mono ${styles.subText}`}>
                   {loading ? 'SEARCHING CHANNELS...' : videos.length > 0 ? `CH ${currentVideo + 1}/${videos.length}` : 'NO SIGNAL'}
                 </p>
               </div>
             </div>
             
             {/* VHS-style indicators */}
-            <div className="flex items-center space-x-4 text-green-400 font-mono text-xs">
+            <div className={`flex items-center space-x-4 ${styles.text} font-mono text-xs`}>
               <div className="flex items-center space-x-1">
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                 <span>REC</span>
@@ -180,7 +234,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
               <div 
                 className="absolute inset-0 pointer-events-none z-10 opacity-30"
                 style={{
-                  background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 0, 0.03) 2px, rgba(0, 255, 0, 0.03) 4px)',
+                  background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 0, 0.03) 2px, rgba(0, 255, 0, 0.03) 4px)`,
                   animation: 'scanlines 0.1s linear infinite'
                 }}
               />
@@ -194,7 +248,6 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                 }}
               />
               
-              {/* CRT curvature effect */}
               <div className="absolute inset-2 bg-gradient-radial from-transparent via-transparent to-black/20 pointer-events-none z-10 rounded" />
               
               <video
@@ -205,25 +258,28 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                 autoPlay
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
-                onEnded={handleVideoEnded}
+                onEnded={() => {
+                  if (videos.length === 0) return;
+                  setCurrentVideo((prev) => (prev + 1) % videos.length);
+                }}
                 style={{ 
                   filter: 'contrast(1.1) brightness(0.9) saturate(1.2)',
                   transform: 'scale(0.98)' // Slight inset for CRT effect
                 }}
               >
-                <source src={videos[currentVideo]?.url} type="video/mp4" />
+                {videos[currentVideo] && <source src={videos[currentVideo].url} type="video/mp4" />}
               </video>
               
               {/* Video overlay info */}
-              <div className="absolute bottom-4 left-4 bg-black/80 rounded px-3 py-1 border border-green-500/30">
-                <p className="text-green-400 font-mono text-sm">
+              <div className={`absolute bottom-4 left-4 bg-black/80 rounded px-3 py-1 border border-${styles.accent}/30`}>
+                <p className={`${styles.text} font-mono text-sm`}>
                   {videos[currentVideo]?.title || 'Unknown Channel'}
                 </p>
               </div>
               
               {/* Channel number overlay */}
-              <div className="absolute top-4 right-4 bg-black/80 rounded px-2 py-1 border border-green-500/30">
-                <p className="text-green-400 font-mono text-xs">
+              <div className={`absolute top-4 right-4 bg-black/80 rounded px-2 py-1 border border-${styles.accent}/30`}>
+                <p className={`${styles.text} font-mono text-xs`}>
                   CH {currentVideo + 1}
                 </p>
               </div>
@@ -240,8 +296,8 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
               />
               <div className="text-center relative z-10">
                 <div className="text-6xl mb-4">📡</div>
-                <p className="text-green-400 font-mono text-lg animate-pulse">NO SIGNAL</p>
-                <p className="text-green-300 font-mono text-sm mt-2">
+                <p className={`${styles.text} font-mono text-lg animate-pulse`}>NO SIGNAL</p>
+                <p className={`${styles.subText} font-mono text-sm mt-2`}>
                   Upload videos to /tv/ folder
                 </p>
               </div>
@@ -250,35 +306,48 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Enhanced VHS-style Controls */}
-        <div className="relative z-20 p-4 bg-gradient-to-r from-gray-800 to-gray-700 border-t-2 border-gray-600">
+        <div className={`relative z-20 p-4 ${styles.header}`}>
           <div className="flex items-center justify-center space-x-6">
             <button
-              onClick={prevVideo}
+              onClick={() => {
+                if (videos.length === 0) return;
+                setCurrentVideo((prev) => (prev - 1 + videos.length) % videos.length);
+              }}
               disabled={videos.length === 0}
-              className="w-12 h-12 rounded bg-gray-700 hover:bg-gray-600 text-green-400 border border-green-500/50 flex items-center justify-center transition-all disabled:opacity-50 font-mono text-xs"
+              className={`w-12 h-12 rounded ${styles.button} flex items-center justify-center transition-all disabled:opacity-50 font-mono text-xs`}
             >
               <SkipBack className="w-5 h-5" />
             </button>
             
             <div className="flex items-center space-x-2">
-              <span className="text-green-400 font-mono text-xs">|◂◂</span>
+              <span className={`${styles.text} font-mono text-xs`}>|◂◂</span>
               <button
-                onClick={togglePlayPause}
+                onClick={() => {
+                  if (!videoRef.current || videos.length === 0) return;
+                  if (isPlaying) {
+                    videoRef.current.pause();
+                  } else {
+                    videoRef.current.play().catch(console.error);
+                  }
+                }}
                 disabled={videos.length === 0}
-                className="w-16 h-12 rounded bg-green-900 hover:bg-green-800 text-green-300 border border-green-500 flex items-center justify-center transition-all disabled:opacity-50 shadow-lg"
+                className={`w-16 h-12 rounded ${styles.activeButton} flex items-center justify-center transition-all disabled:opacity-50 shadow-lg`}
               >
                 {isPlaying ? 
                   <Pause className="w-6 h-6" /> : 
                   <Play className="w-6 h-6 ml-0.5" />
                 }
               </button>
-              <span className="text-green-400 font-mono text-xs">▸▸|</span>
+              <span className={`${styles.text} font-mono text-xs`}>▸▸|</span>
             </div>
             
             <button
-              onClick={nextVideo}
+              onClick={() => {
+                if (videos.length === 0) return;
+                setCurrentVideo((prev) => (prev + 1) % videos.length);
+              }}
               disabled={videos.length === 0}
-              className="w-12 h-12 rounded bg-gray-700 hover:bg-gray-600 text-green-400 border border-green-500/50 flex items-center justify-center transition-all disabled:opacity-50 font-mono text-xs"
+              className={`w-12 h-12 rounded ${styles.button} flex items-center justify-center transition-all disabled:opacity-50 font-mono text-xs`}
             >
               <SkipForward className="w-5 h-5" />
             </button>
@@ -286,8 +355,8 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
           
           {/* VHS time display */}
           <div className="flex justify-center mt-2">
-            <div className="bg-black/50 rounded px-3 py-1 border border-green-500/30">
-              <span className="text-green-400 font-mono text-xs">
+            <div className={`bg-black/50 rounded px-3 py-1 border border-${styles.accent}/30`}>
+              <span className={`${styles.text} font-mono text-xs`}>
                 00:{String(Math.floor(Math.random() * 60)).padStart(2, '0')}:{String(Math.floor(Math.random() * 60)).padStart(2, '0')}
               </span>
             </div>

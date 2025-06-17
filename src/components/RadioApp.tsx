@@ -27,7 +27,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
       
       if (currentTrack < musicFiles.length) {
         audio.src = musicFiles[currentTrack].url;
-        audio.load(); // Ensure the audio is properly loaded
+        audio.load();
       }
     }
   }, [musicFiles, currentTrack, volume]);
@@ -49,14 +49,28 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
         setIsPlaying(false);
       } else {
         setIsLoading(true);
-        // Ensure the audio is ready to play
+        
+        // Ensure audio is loaded and ready
         if (audio.readyState < 2) {
-          await new Promise((resolve) => {
+          await new Promise((resolve, reject) => {
             const handleCanPlay = () => {
               audio.removeEventListener('canplay', handleCanPlay);
+              audio.removeEventListener('error', handleError);
               resolve(undefined);
             };
+            const handleError = () => {
+              audio.removeEventListener('canplay', handleCanPlay);
+              audio.removeEventListener('error', handleError);
+              reject(new Error('Audio load failed'));
+            };
             audio.addEventListener('canplay', handleCanPlay);
+            audio.addEventListener('error', handleError);
+            
+            // Trigger load if needed
+            if (audio.src !== musicFiles[currentTrack]?.url) {
+              audio.src = musicFiles[currentTrack].url;
+              audio.load();
+            }
           });
         }
         
@@ -65,6 +79,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
       }
     } catch (error) {
       console.error('Audio playback error:', error);
+      setIsPlaying(false);
     } finally {
       setIsLoading(false);
     }
@@ -83,9 +98,8 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
       return nextIndex;
     });
     
-    // Auto-play if was playing
     if (wasPlaying) {
-      setTimeout(() => togglePlayPause(), 100);
+      setTimeout(() => togglePlayPause(), 200);
     }
   };
 
@@ -102,9 +116,8 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
       return prevIndex;
     });
     
-    // Auto-play if was playing
     if (wasPlaying) {
-      setTimeout(() => togglePlayPause(), 100);
+      setTimeout(() => togglePlayPause(), 200);
     }
   };
 
@@ -128,7 +141,9 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
           text: 'text-green-400 font-mono',
           subText: 'text-green-300',
           button: 'bg-gray-800 hover:bg-gray-700 text-green-400 border border-green-400/50',
-          activeButton: 'bg-green-900 text-green-300 border-green-400'
+          activeButton: 'bg-green-900 text-green-300 border-green-400',
+          accent: 'bg-green-400',
+          volumeSlider: 'accent-green-400'
         };
       case 'retro-chrome':
         return {
@@ -136,7 +151,9 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
           text: 'text-blue-900 font-mono',
           subText: 'text-blue-700',
           button: 'bg-blue-200 hover:bg-blue-300 text-blue-800 border border-blue-500',
-          activeButton: 'bg-blue-400 text-blue-800 border-blue-600'
+          activeButton: 'bg-blue-400 text-blue-800 border-blue-600',
+          accent: 'bg-blue-500',
+          volumeSlider: 'accent-blue-500'
         };
       default: // space-mood
         return {
@@ -144,7 +161,9 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
           text: 'text-cyan-400 font-mono',
           subText: 'text-cyan-300',
           button: 'bg-gray-800 hover:bg-gray-700 text-cyan-400 border border-cyan-400/50',
-          activeButton: 'bg-cyan-900 text-cyan-300 border-cyan-400'
+          activeButton: 'bg-cyan-900 text-cyan-300 border-cyan-400',
+          accent: 'bg-cyan-400',
+          volumeSlider: 'accent-cyan-400'
         };
     }
   };
@@ -174,7 +193,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
 
           {/* Radio Header with Boombox Design */}
           <div className="flex items-center justify-center mb-6">
-            <div className={`relative w-20 h-16 rounded-lg flex items-center justify-center ${isPlaying ? 'bg-red-600' : 'bg-gray-600'} shadow-lg border-2`}>
+            <div className={`relative w-20 h-16 rounded-lg flex items-center justify-center ${isPlaying ? styles.accent : 'bg-gray-600'} shadow-lg border-2`}>
               {/* Speaker grilles */}
               <div className="absolute left-1 top-2 bottom-2 w-2 bg-black/30 rounded-sm flex flex-col justify-around">
                 {[1,2,3,4,5].map(i => (
@@ -198,7 +217,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
                   {[1,2,3].map((i) => (
                     <div
                       key={i}
-                      className="w-0.5 bg-green-400 animate-pulse rounded-full"
+                      className={`w-0.5 ${styles.accent} animate-pulse rounded-full`}
                       style={{
                         height: `${4 + i * 2}px`,
                         animationDelay: `${i * 0.2}s`
@@ -215,7 +234,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
             <h2 className={`text-xl font-bold mb-2 ${styles.text}`}>
               RETRO RADIO
             </h2>
-            <div className={`bg-black/30 rounded p-3 border ${styles.text.includes('cyan') ? 'border-cyan-400/30' : styles.text.includes('green') ? 'border-green-400/30' : 'border-blue-400/30'}`}>
+            <div className={`bg-black/30 rounded p-3 border ${theme === 'retro-chrome' ? 'border-blue-400/30 bg-white/10' : 'border-current/30'}`}>
               <p className={`text-sm mb-1 ${styles.text}`}>
                 {loading ? 'TUNING...' : musicFiles.length > 0 ? '♪ NOW PLAYING ♪' : 'NO SIGNAL'}
               </p>
@@ -230,7 +249,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
                     {[1,2,3,4,5,6,7].map((i) => (
                       <div
                         key={i}
-                        className={`w-1 bg-current animate-pulse ${styles.text}`}
+                        className={`w-1 ${styles.accent} animate-pulse`}
                         style={{
                           height: `${Math.random() * 20 + 8}px`,
                           animationDelay: `${i * 0.1}s`,
@@ -287,7 +306,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
               step="0.1"
               value={volume}
               onChange={handleVolumeChange}
-              className="flex-1 h-2 rounded appearance-none cursor-pointer bg-gray-600"
+              className={`flex-1 h-2 rounded appearance-none cursor-pointer ${theme === 'retro-chrome' ? 'bg-blue-300' : 'bg-gray-600'} ${styles.volumeSlider}`}
             />
             <span className={`text-xs font-mono ${styles.subText}`}>
               {Math.round(volume * 100)}%
