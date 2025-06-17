@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useTvVideos } from '@/hooks/useTvVideos';
-import VideoUpload from './VideoUpload';
 
 interface TvAppProps {
   isOpen: boolean;
@@ -241,7 +240,6 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                       ref={videoRef}
                       className="w-full h-full object-contain rounded"
                       loop
-                      muted
                       autoPlay
                       onPlay={() => setIsPlaying(true)}
                       onPause={() => setIsPlaying(false)}
