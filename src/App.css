@@ -1,1 +1,65 @@
 
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+/* Windows 95-style folder themes for space-mood only */
+.folder-blue {
+  background: radial-gradient(ellipse at center, #87CEEB 0%, #87CEFA 50%, #4169E1 100%);
+}
+
+.folder-green {
+  background: radial-gradient(ellipse at center, #90EE90 0%, #98FB98 50%, #228B22 100%);
+}
+
+.folder-orange {
+  background: radial-gradient(ellipse at center, #FFE4B5 0%, #FFA500 50%, #FF4500 100%);
+}
+
+.folder-red {
+  background: radial-gradient(ellipse at center, #FFB6C1 0%, #FF69B4 50%, #DC143C 100%);
+}
+
+.folder-pink {
+  background: radial-gradient(ellipse at center, #FFB6C1 0%, #FF69B4 50%, #C71585 100%);
+}
+
+.folder-purple {
+  background: radial-gradient(ellipse at center, #DDA0DD 0%, #DA70D6 50%, #8B008B 100%);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* VHS scanlines animation */
+@keyframes scanlines {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes static {
+  0% { transform: translateX(0px); }
+  10% { transform: translateX(-5px); }
+  20% { transform: translateX(5px); }
+  30% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  50% { transform: translateX(-5px); }
+  60% { transform: translateX(5px); }
+  70% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+  90% { transform: translateX(-5px); }
+  100% { transform: translateX(0px); }
+}

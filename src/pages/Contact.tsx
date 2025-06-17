@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageSquare, Mail } from 'lucide-react';
@@ -9,23 +10,23 @@ const Contact = () => {
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
       return {
-        windowFrame: 'bg-gradient-to-br from-red-300 via-red-400 to-red-600',
-        titleBar: 'bg-gradient-to-r from-red-600 via-red-700 to-red-800',
-        windowContent: 'bg-gradient-to-br from-red-200 via-red-300 to-red-400',
-        text: 'text-red-900',
-        button: 'bg-gradient-to-br from-red-500 via-red-600 to-red-800 hover:from-red-400 hover:via-red-500 hover:to-red-700 text-white',
-        link: 'text-red-800 hover:text-red-900',
+        windowFrame: 'bg-gradient-to-br from-pink-300 via-pink-400 to-pink-600',
+        titleBar: 'bg-gradient-to-r from-pink-600 via-pink-700 to-pink-800',
+        windowContent: 'bg-gradient-to-br from-pink-200 via-pink-300 to-pink-400',
+        text: 'text-pink-900',
+        button: 'bg-gradient-to-br from-pink-500 via-pink-600 to-pink-800 hover:from-pink-400 hover:via-pink-500 hover:to-pink-700 text-white',
+        link: 'text-pink-800 hover:text-pink-900',
       };
     }
     
     if (theme === 'dark-vhs') {
       return {
         windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
-        titleBar: 'bg-gradient-to-r from-red-600 via-red-700 to-red-800',
+        titleBar: 'bg-gradient-to-r from-pink-600 via-pink-700 to-pink-800',
         windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
         text: 'text-white',
-        button: 'bg-gradient-to-br from-red-500 via-red-600 to-red-800 hover:from-red-400 hover:via-red-500 hover:to-red-700 text-white',
-        link: 'text-red-400 hover:text-red-300',
+        button: 'bg-gradient-to-br from-pink-500 via-pink-600 to-pink-800 hover:from-pink-400 hover:via-pink-500 hover:to-pink-700 text-white',
+        link: 'text-pink-400 hover:text-pink-300',
       };
     }
     
@@ -54,7 +55,7 @@ const Contact = () => {
   const styles = getWindowStyles();
 
   return (
-    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-red' : ''}`}>
+    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-pink' : ''}`}>
       {/* Window Frame with 3D effect */}
       <div className={`p-2 border-2 border-black/30 w-full max-w-lg shadow-2xl rounded-lg ${styles.windowFrame}`}>
         {/* Title bar */}
