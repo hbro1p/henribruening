@@ -59,7 +59,7 @@ const MiniMusicPlayer: React.FC<MiniMusicPlayerProps> = ({
 
   return (
     <div 
-      className={`fixed bottom-20 right-4 ${styles.container} border-2 rounded-lg px-4 py-3 cursor-pointer hover:scale-105 transition-all duration-300 backdrop-blur-sm z-40 max-w-80 ${styles.glow} shadow-lg`}
+      className={`fixed bottom-32 right-4 ${styles.container} border-2 rounded-lg px-4 py-3 cursor-pointer hover:scale-105 transition-all duration-300 backdrop-blur-sm z-40 max-w-80 ${styles.glow} shadow-lg`}
       onClick={(e) => {
         // Only open radio if clicking on the main area, not buttons
         if ((e.target as HTMLElement).closest('button')) return;

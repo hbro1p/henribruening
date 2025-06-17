@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Play, Pause, SkipForward, SkipBack, Volume2, Radio, X, ArrowLeft } from 'lucide-react';
+import { Play, Pause, SkipForward, SkipBack, Volume2, Radio, X } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useMusicFiles } from '@/hooks/useMusicFiles';
 
@@ -184,15 +184,53 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
       
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
         <div className={`w-96 max-w-full rounded-lg p-6 relative ${styles.container}`}>
-          {/* Header with Back and Close buttons */}
+          {/* Header with Close button only */}
           <div className="flex items-center justify-between mb-4">
-            <button
-              onClick={onClose}
-              className={`flex items-center space-x-2 px-3 py-1 rounded ${styles.button} text-sm font-mono`}
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>{t('Back to Desktop')}</span>
-            </button>
+            <div className="flex items-center space-x-3">
+              <div className={`relative w-20 h-16 rounded-lg flex items-center justify-center ${isPlaying ? styles.accent : 'bg-gray-600'} shadow-lg border-2`}>
+                {/* Speaker grilles */}
+                <div className="absolute left-1 top-2 bottom-2 w-2 bg-black/30 rounded-sm flex flex-col justify-around">
+                  {[1,2,3,4,5].map(i => (
+                    <div key={i} className="h-0.5 bg-white/20 rounded" />
+                  ))}
+                </div>
+                <div className="absolute right-1 top-2 bottom-2 w-2 bg-black/30 rounded-sm flex flex-col justify-around">
+                  {[1,2,3,4,5].map(i => (
+                    <div key={i} className="h-0.5 bg-white/20 rounded" />
+                  ))}
+                </div>
+                
+                {/* Center antenna */}
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-0.5 h-4 bg-gray-400 rounded-full" />
+                
+                <Radio className="w-8 h-8 text-white z-10" />
+                
+                {/* Signal bars animation */}
+                {isPlaying && (
+                  <div className="absolute -top-1 right-2 flex space-x-0.5">
+                    {[1,2,3].map((i) => (
+                      <div
+                        key={i}
+                        className={`w-0.5 ${styles.accent} animate-pulse rounded-full`}
+                        style={{
+                          height: `${4 + i * 2}px`,
+                          animationDelay: `${i * 0.2}s`
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              <div>
+                <h2 className={`text-xl font-bold ${styles.text}`}>
+                  RETRO RADIO
+                </h2>
+                <p className={`text-sm ${styles.subText}`}>
+                  {loading ? 'TUNING...' : musicFiles.length > 0 ? 'FM 88.5' : 'NO SIGNAL'}
+                </p>
+              </div>
+            </div>
             
             <button
               onClick={onClose}
@@ -202,49 +240,8 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
             </button>
           </div>
 
-          {/* Radio Header with Boombox Design */}
-          <div className="flex items-center justify-center mb-6">
-            <div className={`relative w-20 h-16 rounded-lg flex items-center justify-center ${isPlaying ? styles.accent : 'bg-gray-600'} shadow-lg border-2`}>
-              {/* Speaker grilles */}
-              <div className="absolute left-1 top-2 bottom-2 w-2 bg-black/30 rounded-sm flex flex-col justify-around">
-                {[1,2,3,4,5].map(i => (
-                  <div key={i} className="h-0.5 bg-white/20 rounded" />
-                ))}
-              </div>
-              <div className="absolute right-1 top-2 bottom-2 w-2 bg-black/30 rounded-sm flex flex-col justify-around">
-                {[1,2,3,4,5].map(i => (
-                  <div key={i} className="h-0.5 bg-white/20 rounded" />
-                ))}
-              </div>
-              
-              {/* Center antenna */}
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-0.5 h-4 bg-gray-400 rounded-full" />
-              
-              <Radio className="w-8 h-8 text-white z-10" />
-              
-              {/* Signal bars animation */}
-              {isPlaying && (
-                <div className="absolute -top-1 right-2 flex space-x-0.5">
-                  {[1,2,3].map((i) => (
-                    <div
-                      key={i}
-                      className={`w-0.5 ${styles.accent} animate-pulse rounded-full`}
-                      style={{
-                        height: `${4 + i * 2}px`,
-                        animationDelay: `${i * 0.2}s`
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
           {/* Station Info */}
           <div className="text-center mb-6">
-            <h2 className={`text-xl font-bold mb-2 ${styles.text}`}>
-              RETRO RADIO
-            </h2>
             <div className={`bg-black/30 rounded p-3 border ${theme === 'retro-chrome' ? 'border-blue-400/30 bg-white/10' : theme === 'space-mood' ? 'border-red-400/30 bg-red-50/10' : 'border-current/30'}`}>
               <p className={`text-sm mb-1 ${styles.text}`}>
                 {loading ? 'TUNING...' : musicFiles.length > 0 ? '♪ NOW PLAYING ♪' : 'NO SIGNAL'}

@@ -1,5 +1,6 @@
+
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
+import { X, Play, Pause, SkipForward, SkipBack, Tv } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useTvVideos } from '@/hooks/useTvVideos';
 
@@ -14,11 +15,20 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   const [passwordError, setPasswordError] = useState('');
   const [currentVideo, setCurrentVideo] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showCursor, setShowCursor] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { t, theme } = useSettings();
   const { videos, loading } = useTvVideos();
 
   const correctPassword = 'henritv#2025!';
+
+  // Blinking cursor for password screen
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowCursor(prev => !prev);
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
 
   const getThemeStyles = () => {
     switch (theme) {
@@ -33,7 +43,9 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
           subText: 'text-green-300',
           accent: 'green-400',
           passwordContainer: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-green-500 shadow-lg shadow-green-500/20',
-          passwordButton: 'bg-green-900 hover:bg-green-800 text-green-300 font-mono border border-green-500'
+          passwordButton: 'bg-green-900 hover:bg-green-800 text-green-300 font-mono border border-green-500',
+          passwordInput: 'bg-gray-800 border border-green-500/50 text-green-400 placeholder-green-400/50',
+          scanlines: 'before:bg-gradient-to-b before:from-green-400/5 before:via-transparent before:to-green-400/5'
         };
       case 'retro-chrome':
         return {
@@ -46,20 +58,24 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
           subText: 'text-blue-700',
           accent: 'blue-500',
           passwordContainer: 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 border-2 border-blue-600 shadow-lg',
-          passwordButton: 'bg-blue-400 hover:bg-blue-500 text-blue-800 font-mono border border-blue-600'
+          passwordButton: 'bg-blue-400 hover:bg-blue-500 text-blue-800 font-mono border border-blue-600',
+          passwordInput: 'bg-blue-50 border border-blue-500/50 text-blue-800 placeholder-blue-500/50',
+          scanlines: 'before:bg-gradient-to-b before:from-blue-400/5 before:via-transparent before:to-blue-400/5'
         };
       default: // space-mood - PURPLE theme to match desktop icon
         return {
-          container: 'bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300 border-4 border-purple-600',
-          header: 'bg-gradient-to-r from-purple-300 to-purple-400 border-b-2 border-purple-600',
-          button: 'bg-purple-200 hover:bg-purple-300 text-purple-800 border border-purple-500',
-          activeButton: 'bg-purple-400 hover:bg-purple-500 text-purple-800 border border-purple-600',
-          closeButton: 'bg-red-200 hover:bg-red-300 text-red-800 border border-red-500',
-          text: 'text-purple-800',
-          subText: 'text-purple-700',
-          accent: 'purple-500',
-          passwordContainer: 'bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300 border-2 border-purple-600 shadow-lg shadow-purple-600/20',
-          passwordButton: 'bg-purple-400 hover:bg-purple-500 text-purple-800 font-mono border border-purple-600'
+          container: 'bg-gradient-to-br from-purple-900/95 via-purple-800/95 to-indigo-900/95 border-4 border-purple-500',
+          header: 'bg-gradient-to-r from-purple-800/90 to-purple-700/90 border-b-2 border-purple-500',
+          button: 'bg-purple-700/80 hover:bg-purple-600/80 text-purple-100 border border-purple-400/50',
+          activeButton: 'bg-purple-600/90 hover:bg-purple-500/90 text-purple-100 border border-purple-400',
+          closeButton: 'bg-red-700/80 hover:bg-red-600/80 text-red-100 border border-red-400/50',
+          text: 'text-purple-100',
+          subText: 'text-purple-200',
+          accent: 'purple-400',
+          passwordContainer: 'bg-gradient-to-br from-purple-900/95 via-indigo-900/95 to-purple-800/95 border-2 border-purple-500 shadow-lg shadow-purple-500/20',
+          passwordButton: 'bg-purple-600 hover:bg-purple-500 text-purple-100 font-mono border border-purple-400',
+          passwordInput: 'bg-purple-900/50 border border-purple-500/50 text-purple-100 placeholder-purple-300/50',
+          scanlines: 'before:bg-gradient-to-b before:from-purple-400/5 before:via-transparent before:to-purple-400/5'
         };
     }
   };
@@ -76,7 +92,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
       setIsAuthenticated(true);
       setPasswordError('');
     } else {
-      setPasswordError('Invalid password');
+      setPasswordError('ACCESS DENIED');
       setPassword('');
     }
   };
@@ -126,45 +142,70 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
     const styles = getThemeStyles();
 
     return (
-      <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-        <div className={`${styles.passwordContainer} rounded-lg p-8 w-96 max-w-full relative`}>
+      <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
+        <div className={`${styles.passwordContainer} rounded-lg p-8 w-96 max-w-full relative ${styles.scanlines} relative before:absolute before:inset-0 before:pointer-events-none before:rounded-lg`}>
+          {/* CRT scanlines effect */}
+          <div 
+            className="absolute inset-0 pointer-events-none z-10 opacity-20 rounded-lg"
+            style={{
+              background: `repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px)`,
+              animation: 'scanlines 0.1s linear infinite'
+            }}
+          />
+          
           <button
             onClick={onClose}
-            className={`absolute top-4 right-4 w-8 h-8 rounded flex items-center justify-center ${styles.closeButton}`}
+            className={`absolute top-4 right-4 w-8 h-8 rounded flex items-center justify-center ${styles.closeButton} z-20`}
           >
             <X className="w-4 h-4" />
           </button>
           
-          <div className="text-center mb-6">
-            <div className={`w-16 h-16 mx-auto mb-4 bg-gray-800 rounded-lg flex items-center justify-center border-2 border-${styles.accent} relative`}>
+          <div className="text-center mb-6 relative z-20">
+            <div className={`w-16 h-16 mx-auto mb-4 bg-gray-900/80 rounded-lg flex items-center justify-center border-2 border-${styles.accent} relative`}>
               <Tv className={`w-8 h-8 text-${styles.accent}`} />
-              <div className={`absolute inset-0 bg-gradient-to-b from-transparent via-${styles.accent}/20 to-transparent opacity-50`} />
+              <div className={`absolute inset-0 bg-gradient-to-b from-transparent via-${styles.accent}/20 to-transparent opacity-50 rounded-lg`} />
             </div>
-            <h2 className={`text-xl font-mono ${styles.text} mb-2`}>SECURE TV ACCESS</h2>
-            <p className={`text-sm ${styles.subText} font-mono`}>PASSWORD REQUIRED</p>
+            <h2 className={`text-xl font-mono ${styles.text} mb-2 tracking-wider`}>
+              ░ SECURE TV ACCESS ░
+            </h2>
+            <p className={`text-sm ${styles.subText} font-mono tracking-wide`}>
+              █ ENTER AUTHORIZATION CODE █
+            </p>
           </div>
 
-          <form onSubmit={handlePasswordSubmit} className="space-y-4">
-            <div>
+          <form onSubmit={handlePasswordSubmit} className="space-y-4 relative z-20">
+            <div className="relative">
+              <div className={`w-full px-4 py-3 ${styles.passwordInput} rounded font-mono text-center tracking-widest placeholder-opacity-50 focus:outline-none focus:border-${styles.accent} text-lg relative`}>
+                <div className="flex justify-center items-center">
+                  <span className="text-opacity-50">{'*'.repeat(password.length)}</span>
+                  {showCursor && <span className={`text-${styles.accent} animate-pulse ml-1`}>█</span>}
+                </div>
+              </div>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password..."
-                className={`w-full px-3 py-2 bg-black/50 border border-${styles.accent}/50 rounded ${styles.subText} font-mono placeholder-${styles.accent}/50 focus:outline-none focus:border-${styles.accent}`}
+                className="absolute inset-0 opacity-0 w-full h-full"
                 autoFocus
+                placeholder=""
               />
               {passwordError && (
-                <p className={`${styles.text} text-xs font-mono mt-1`}>❌ {passwordError}</p>
+                <div className={`${styles.text} text-xs font-mono mt-2 text-center animate-pulse`}>
+                  ⚠ {passwordError} ⚠
+                </div>
               )}
             </div>
             <button
               type="submit"
-              className={`w-full py-2 ${styles.passwordButton} rounded transition-colors`}
+              className={`w-full py-3 ${styles.passwordButton} rounded transition-colors tracking-wider`}
             >
-              UNLOCK CHANNEL
+              ► DECRYPT SIGNAL ◄
             </button>
           </form>
+          
+          <div className={`text-center mt-4 ${styles.subText} font-mono text-xs opacity-60`}>
+            RETRO-TV v2.5 • SECURITY LEVEL: MAX
+          </div>
         </div>
       </div>
     );
@@ -179,22 +220,13 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/20 pointer-events-none z-10" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10 pointer-events-none z-10" />
         
-        {/* TV Header with VHS controls */}
+        {/* TV Header */}
         <div className={`relative z-20 p-4 ${styles.header}`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              {/* Back to Desktop button */}
-              <button
-                onClick={onClose}
-                className={`flex items-center space-x-2 px-3 py-1 rounded ${styles.button} text-sm font-mono`}
-              >
-                <ArrowLeft className="w-4 h-4" />
-                <span>{t('Back to Desktop')}</span>
-              </button>
-              
-              <div className={`w-12 h-12 bg-gray-900 rounded border-2 border-${styles.accent} flex items-center justify-center relative`}>
+              <div className={`w-12 h-12 bg-gray-900/80 rounded border-2 border-${styles.accent} flex items-center justify-center relative`}>
                 <Tv className={`w-6 h-6 text-${styles.accent}`} />
-                <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-${styles.accent}/10 to-transparent animate-pulse`} />
+                <div className={`absolute inset-0 bg-gradient-to-r from-transparent via-${styles.accent}/10 to-transparent animate-pulse rounded`} />
               </div>
               <div>
                 <h2 className={`text-lg font-mono ${styles.text}`}>RETRO TV</h2>
