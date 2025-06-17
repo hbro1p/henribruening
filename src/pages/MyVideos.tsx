@@ -224,7 +224,7 @@ const MyVideos = () => {
                   }
                 </p>
                 <div className="space-y-2">
-                  <a href="https://www.youtube.com/watch?v=jr0z7nFgE7Q&t=25s" target="_blank" rel="noopener noreferrer" 
+                  <a href="https://www.youtube.com/watch?v=jr0z7nFgE7Q" target="_blank" rel="noopener noreferrer" 
                      className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
                     {t('language') === 'deutsch' ? 'Ein Tag als Immobilienmakler' : 'A Day as a Real Estate Agent'} <ExternalLink className="w-4 h-4" />
                   </a>
