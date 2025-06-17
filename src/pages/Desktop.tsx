@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
 import RadioApp from '@/components/RadioApp';
 import TvApp from '@/components/TvApp';
@@ -13,6 +13,32 @@ const Desktop = () => {
   const [isTvOpen, setIsTvOpen] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState('');
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  const handleMusicStateChange = (isPlaying: boolean, track: string) => {
+    setIsMusicPlaying(isPlaying);
+    setCurrentTrack(track);
+  };
+
+  const handleMiniPlayerClose = () => {
+    // Stop music and hide mini player
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setIsMusicPlaying(false);
+  };
+
+  const handleMiniPlayerTogglePlayPause = () => {
+    if (audioRef.current) {
+      if (isMusicPlaying) {
+        audioRef.current.pause();
+        setIsMusicPlaying(false);
+      } else {
+        audioRef.current.play().catch(console.error);
+        setIsMusicPlaying(true);
+      }
+    }
+  };
 
   return (
     <>
@@ -47,10 +73,7 @@ const Desktop = () => {
       <RadioApp 
         isOpen={isRadioOpen} 
         onClose={() => setIsRadioOpen(false)}
-        onMusicStateChange={(isPlaying, track) => {
-          setIsMusicPlaying(isPlaying);
-          setCurrentTrack(track);
-        }}
+        onMusicStateChange={handleMusicStateChange}
       />
       
       {/* TV App Modal */}
@@ -61,6 +84,9 @@ const Desktop = () => {
         <MiniMusicPlayer 
           currentTrack={currentTrack}
           onOpenRadio={() => setIsRadioOpen(true)}
+          onClose={handleMiniPlayerClose}
+          onTogglePlayPause={handleMiniPlayerTogglePlayPause}
+          isPlaying={isMusicPlaying}
         />
       )}
     </>

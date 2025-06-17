@@ -1,14 +1,23 @@
 
 import React from 'react';
-import { Radio, Pause, Play } from 'lucide-react';
+import { Radio, Pause, Play, X } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 
 interface MiniMusicPlayerProps {
   currentTrack: string;
   onOpenRadio: () => void;
+  onClose: () => void;
+  onTogglePlayPause: () => void;
+  isPlaying: boolean;
 }
 
-const MiniMusicPlayer: React.FC<MiniMusicPlayerProps> = ({ currentTrack, onOpenRadio }) => {
+const MiniMusicPlayer: React.FC<MiniMusicPlayerProps> = ({ 
+  currentTrack, 
+  onOpenRadio, 
+  onClose, 
+  onTogglePlayPause, 
+  isPlaying 
+}) => {
   const { theme } = useSettings();
 
   const getThemeStyles = () => {
@@ -20,7 +29,8 @@ const MiniMusicPlayer: React.FC<MiniMusicPlayerProps> = ({ currentTrack, onOpenR
           textPrimary: 'text-green-400',
           textSecondary: 'text-green-300/80',
           glow: 'shadow-green-400/20',
-          radioContainer: 'bg-gray-800 border-green-400/50'
+          radioContainer: 'bg-gray-800 border-green-400/50',
+          button: 'hover:bg-green-400/20 text-green-400'
         };
       case 'retro-chrome':
         return {
@@ -29,16 +39,18 @@ const MiniMusicPlayer: React.FC<MiniMusicPlayerProps> = ({ currentTrack, onOpenR
           textPrimary: 'text-blue-800',
           textSecondary: 'text-blue-700/80',
           glow: 'shadow-blue-500/20',
-          radioContainer: 'bg-blue-300 border-blue-500/50'
+          radioContainer: 'bg-blue-300 border-blue-500/50',
+          button: 'hover:bg-blue-500/20 text-blue-800'
         };
-      default: // space-mood
+      default: // space-mood - RED theme to match Radio app
         return {
-          container: 'bg-gradient-to-r from-gray-900/95 via-blue-900/95 to-gray-900/95 border-cyan-400/60 text-cyan-400 shadow-cyan-400/30',
-          accent: 'bg-cyan-400',
-          textPrimary: 'text-cyan-400',
-          textSecondary: 'text-cyan-300/80',
-          glow: 'shadow-cyan-400/20',
-          radioContainer: 'bg-gray-800 border-cyan-400/50'
+          container: 'bg-gradient-to-r from-red-200/95 via-red-100/95 to-red-200/95 border-red-500/60 text-red-800 shadow-red-500/30',
+          accent: 'bg-red-500',
+          textPrimary: 'text-red-800',
+          textSecondary: 'text-red-700/80',
+          glow: 'shadow-red-500/20',
+          radioContainer: 'bg-red-300 border-red-500/50',
+          button: 'hover:bg-red-500/20 text-red-800'
         };
     }
   };
@@ -47,8 +59,12 @@ const MiniMusicPlayer: React.FC<MiniMusicPlayerProps> = ({ currentTrack, onOpenR
 
   return (
     <div 
-      className={`fixed bottom-4 right-4 ${styles.container} border-2 rounded-lg px-4 py-3 cursor-pointer hover:scale-105 transition-all duration-300 backdrop-blur-sm z-40 max-w-72 ${styles.glow} shadow-lg`}
-      onClick={onOpenRadio}
+      className={`fixed bottom-20 right-4 ${styles.container} border-2 rounded-lg px-4 py-3 cursor-pointer hover:scale-105 transition-all duration-300 backdrop-blur-sm z-40 max-w-80 ${styles.glow} shadow-lg`}
+      onClick={(e) => {
+        // Only open radio if clicking on the main area, not buttons
+        if ((e.target as HTMLElement).closest('button')) return;
+        onOpenRadio();
+      }}
     >
       <div className="flex items-center space-x-3">
         {/* Radio Icon with Signal Animation */}
@@ -61,9 +77,11 @@ const MiniMusicPlayer: React.FC<MiniMusicPlayerProps> = ({ currentTrack, onOpenR
           </div>
           
           {/* Animated signal indicator */}
-          <div className={`absolute -top-1 -right-1 w-3 h-3 ${styles.accent} rounded-full animate-pulse opacity-80`}>
-            <div className={`absolute inset-0 ${styles.accent} rounded-full animate-ping opacity-50`} />
-          </div>
+          {isPlaying && (
+            <div className={`absolute -top-1 -right-1 w-3 h-3 ${styles.accent} rounded-full animate-pulse opacity-80`}>
+              <div className={`absolute inset-0 ${styles.accent} rounded-full animate-ping opacity-50`} />
+            </div>
+          )}
         </div>
 
         {/* Track Info */}
@@ -73,28 +91,54 @@ const MiniMusicPlayer: React.FC<MiniMusicPlayerProps> = ({ currentTrack, onOpenR
               NOW PLAYING
             </div>
             {/* Mini equalizer bars */}
-            <div className="flex space-x-0.5">
-              {[1,2,3].map((i) => (
-                <div
-                  key={i}
-                  className={`w-0.5 ${styles.accent} animate-pulse rounded-full`}
-                  style={{
-                    height: `${6 + i * 2}px`,
-                    animationDelay: `${i * 0.1}s`,
-                    animationDuration: `${0.8 + Math.random() * 0.4}s`
-                  }}
-                />
-              ))}
-            </div>
+            {isPlaying && (
+              <div className="flex space-x-0.5">
+                {[1,2,3].map((i) => (
+                  <div
+                    key={i}
+                    className={`w-0.5 ${styles.accent} animate-pulse rounded-full`}
+                    style={{
+                      height: `${6 + i * 2}px`,
+                      animationDelay: `${i * 0.1}s`,
+                      animationDuration: `${0.8 + Math.random() * 0.4}s`
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <p className={`text-sm font-bold truncate ${styles.textPrimary} leading-tight`}>
             {currentTrack || 'Unknown Track'}
           </p>
         </div>
 
-        {/* Play indicator */}
-        <div className="flex-shrink-0">
-          <Play className={`w-4 h-4 ${styles.textPrimary} opacity-80`} />
+        {/* Control buttons */}
+        <div className="flex items-center space-x-1">
+          {/* Play/Pause button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onTogglePlayPause();
+            }}
+            className={`w-8 h-8 rounded flex items-center justify-center ${styles.button} transition-colors`}
+          >
+            {isPlaying ? (
+              <Pause className="w-4 h-4" />
+            ) : (
+              <Play className="w-4 h-4 ml-0.5" />
+            )}
+          </button>
+          
+          {/* Close button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            className={`w-8 h-8 rounded flex items-center justify-center ${styles.button} transition-colors`}
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
       </div>
       
