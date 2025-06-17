@@ -252,16 +252,9 @@ const MyProjects = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className={`text-sm font-pixel drop-shadow-sm ${styles.text}`}>
-                    <p className="mb-2">
-                      {t('language') === 'deutsch' ? 'Noch keine zusätzlichen Links verfügbar.' : 'No additional links available yet.'}
-                    </p>
-                    <p className="text-xs opacity-70">
-                      {t('language') === 'deutsch' 
-                        ? 'Tipp: Lade eine .docx Datei hoch - der Dateiname wird der Link-Name und der Inhalt sollte die URL enthalten.' 
-                        : 'Tip: Upload a .docx file - the filename becomes the link name and the content should contain the URL.'}
-                    </p>
-                  </div>
+                  <p className={`text-sm font-pixel drop-shadow-sm ${styles.text}`}>
+                    {t('language') === 'deutsch' ? 'Noch keine zusätzlichen Links verfügbar.' : 'No additional links available yet.'}
+                  </p>
                 )}
               </div>
             </div>

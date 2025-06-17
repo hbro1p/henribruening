@@ -1,28 +1,14 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Image, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useStorageImages } from '@/hooks/useStorageImages';
 
 const Pictures = () => {
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [password, setPassword] = useState('');
-  const [showError, setShowError] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { theme, t } = useSettings();
   const { images, loading, error } = useStorageImages();
-
-  const correctPassword = 'henribrueningpictures#2025!';
-
-  const handlePasswordSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === correctPassword) {
-      setIsUnlocked(true);
-      setShowError(false);
-    } else {
-      setShowError(true);
-    }
-  };
 
   const nextImage = () => {
     if (images.length > 0) {
@@ -98,55 +84,6 @@ const Pictures = () => {
   };
 
   const styles = getWindowStyles();
-
-  if (!isUnlocked) {
-    return (
-      <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${getFolderTheme()}`}>
-        <div className={`p-2 border-2 border-black/30 w-full max-w-md shadow-2xl rounded-lg ${styles.windowFrame}`}>
-          <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
-              <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
-              <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-              <span className="text-white font-pixel text-sm ml-2">Pictures.exe</span>
-            </div>
-          </div>
-          <div className={`p-4 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
-            <div className="flex flex-col items-center justify-center text-center">
-              <Image className={`w-16 h-16 mb-4 ${styles.text}`} />
-              <h1 className={`text-2xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('Pictures')} ]</h1>
-              <p className={`mb-6 font-pixel drop-shadow-sm ${styles.text}`}>{t('Oops... looks like this section requires a password')} 😅</p>
-              <p className={`mb-6 font-pixel drop-shadow-sm ${styles.text}`}>{t('Enter the password to continue.')}</p>
-              
-              <form onSubmit={handlePasswordSubmit} className="w-full">
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={`w-full p-2 mb-4 border-2 font-pixel ${styles.input}`}
-                  placeholder={t('Password')}
-                />
-                {showError && (
-                  <p className="text-red-600 mb-4 text-sm font-pixel">{t('Incorrect password. Try again.')}</p>
-                )}
-                <button
-                  type="submit"
-                  className={`w-full p-2 border-2 border-black/30 font-pixel transition-all active:scale-95 rounded ${styles.button}`}
-                >
-                  {t('Unlock')}
-                </button>
-              </form>
-
-              <Link to="/desktop" className={`mt-6 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
-                <ArrowLeft className="w-5 h-5" />
-                {t('Back to Desktop')}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${getFolderTheme()}`}>
