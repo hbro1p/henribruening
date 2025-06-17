@@ -30,17 +30,17 @@ const FullscreenButton: React.FC<FullscreenButtonProps> = ({ targetElement, clas
     }
   };
 
-  // Don't render if no target element
-  if (!targetElement) {
-    return null;
-  }
-
+  // Always render the button, even if no target element initially
   return (
     <button
       onClick={handleClick}
-      className={`p-2 bg-black/60 hover:bg-black/80 rounded transition-all duration-200 text-white touch-manipulation ${className}`}
+      className={`p-2 bg-black/70 hover:bg-black/90 rounded transition-all duration-200 text-white touch-manipulation select-none ${className}`}
       title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
       type="button"
+      style={{ 
+        WebkitTapHighlightColor: 'transparent',
+        userSelect: 'none'
+      }}
     >
       {isFullscreen ? <X className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}
     </button>

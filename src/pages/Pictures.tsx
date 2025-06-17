@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+
+import React, { useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { Folder, ArrowLeft, RefreshCw, X } from 'lucide-react';
@@ -87,7 +88,21 @@ const Pictures = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { images: storageImages, loading, error, refetch } = useStorageImages();
   const { theme, t } = useSettings();
-  const imageContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const imageContainerRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+
+  // Improved ref callback for better carousel compatibility
+  const setImageRef = useCallback((index: number) => (el: HTMLDivElement | null) => {
+    if (el) {
+      imageContainerRefs.current.set(index, el);
+    } else {
+      imageContainerRefs.current.delete(index);
+    }
+  }, []);
+
+  // Get ref for specific index
+  const getImageRef = useCallback((index: number) => {
+    return imageContainerRefs.current.get(index) || null;
+  }, []);
 
   // Use storage images primarily, only fall back if storage category is completely empty
   const photoCategories = {
@@ -213,12 +228,8 @@ const Pictures = () => {
                               <Card className="border-2 border-black/30 bg-gradient-to-br from-gray-800 to-black overflow-hidden shadow-2xl rounded-lg">
                                 <CardContent className="flex aspect-[4/3] items-center justify-center p-2 relative">
                                   <div 
-                                    ref={(el) => {
-                                      if (el) {
-                                        imageContainerRefs.current[index] = el;
-                                      }
-                                    }}
-                                    className="bg-gradient-to-br from-gray-600 to-gray-800 p-2 rounded border border-black/20 shadow-inner h-full w-full flex items-center justify-center relative"
+                                    ref={setImageRef(index)}
+                                    className="bg-gradient-to-br from-gray-600 to-gray-800 p-2 rounded border border-black/20 shadow-inner h-full w-full flex items-center justify-center relative group"
                                   >
                                     <img 
                                       src={src} 
@@ -231,11 +242,11 @@ const Pictures = () => {
                                         target.style.display = 'none';
                                       }}
                                     />
-                                    {/* Fullscreen button */}
-                                    <div className="absolute top-2 right-2">
+                                    {/* Fullscreen button - always visible on hover/touch */}
+                                    <div className="absolute top-2 right-2 opacity-60 hover:opacity-100 group-hover:opacity-100 transition-opacity duration-200">
                                       <FullscreenButton 
-                                        targetElement={imageContainerRefs.current[index]} 
-                                        className="opacity-70 hover:opacity-100"
+                                        targetElement={getImageRef(index)} 
+                                        className="touch-manipulation"
                                       />
                                     </div>
                                   </div>
