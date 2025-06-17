@@ -15,31 +15,33 @@ const FullscreenButton: React.FC<FullscreenButtonProps> = ({ targetElement, clas
     e.preventDefault();
     e.stopPropagation();
     
+    console.log('Fullscreen button clicked');
+    console.log('Target element:', targetElement);
+    console.log('Current fullscreen state:', isFullscreen);
+    
     if (!targetElement) {
       console.warn('No target element provided for fullscreen');
       return;
     }
 
-    console.log('Fullscreen button clicked, current state:', isFullscreen);
-    console.log('Target element:', targetElement);
-    
     try {
       await toggleFullscreen(targetElement);
+      console.log('Fullscreen toggle completed');
     } catch (error) {
       console.error('Failed to toggle fullscreen:', error);
     }
   };
 
-  // Always render the button, even if no target element initially
   return (
     <button
       onClick={handleClick}
-      className={`p-2 bg-black/70 hover:bg-black/90 rounded transition-all duration-200 text-white touch-manipulation select-none ${className}`}
+      className={`p-2 bg-black/80 hover:bg-black rounded transition-all duration-200 text-white touch-manipulation select-none ${className}`}
       title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
       type="button"
       style={{ 
         WebkitTapHighlightColor: 'transparent',
-        userSelect: 'none'
+        userSelect: 'none',
+        touchAction: 'manipulation'
       }}
     >
       {isFullscreen ? <X className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}

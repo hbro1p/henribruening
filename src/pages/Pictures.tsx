@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
@@ -86,22 +85,16 @@ const getFolderColors = (category: string) => {
 
 const Pictures = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { images: storageImages, loading, error, refetch } = useStorageImages();
   const { theme, t } = useSettings();
-  const imageContainerRefs = useRef<Map<number, HTMLDivElement>>(new Map());
-
-  // Improved ref callback for better carousel compatibility
-  const setImageRef = useCallback((index: number) => (el: HTMLDivElement | null) => {
-    if (el) {
-      imageContainerRefs.current.set(index, el);
-    } else {
-      imageContainerRefs.current.delete(index);
-    }
-  }, []);
+  
+  // Single ref for the currently visible image
+  const currentImageRef = useRef<HTMLDivElement>(null);
 
   // Get ref for specific index
   const getImageRef = useCallback((index: number) => {
-    return imageContainerRefs.current.get(index) || null;
+    return currentImageRef.current || null;
   }, []);
 
   // Use storage images primarily, only fall back if storage category is completely empty
@@ -220,6 +213,10 @@ const Pictures = () => {
                         dragFree: false,
                         containScroll: "trimSnaps"
                       }}
+                      onSelect={(index) => {
+                        console.log('Carousel selected index:', index);
+                        setCurrentImageIndex(index || 0);
+                      }}
                     >
                       <CarouselContent>
                         {photos.map((src, index) => (
@@ -228,7 +225,7 @@ const Pictures = () => {
                               <Card className="border-2 border-black/30 bg-gradient-to-br from-gray-800 to-black overflow-hidden shadow-2xl rounded-lg">
                                 <CardContent className="flex aspect-[4/3] items-center justify-center p-2 relative">
                                   <div 
-                                    ref={setImageRef(index)}
+                                    ref={index === currentImageIndex ? currentImageRef : null}
                                     className="bg-gradient-to-br from-gray-600 to-gray-800 p-2 rounded border border-black/20 shadow-inner h-full w-full flex items-center justify-center relative group"
                                   >
                                     <img 
@@ -242,13 +239,15 @@ const Pictures = () => {
                                         target.style.display = 'none';
                                       }}
                                     />
-                                    {/* Fullscreen button - always visible on hover/touch */}
-                                    <div className="absolute top-2 right-2 opacity-60 hover:opacity-100 group-hover:opacity-100 transition-opacity duration-200">
-                                      <FullscreenButton 
-                                        targetElement={getImageRef(index)} 
-                                        className="touch-manipulation"
-                                      />
-                                    </div>
+                                    {/* Fullscreen button - only show on current image */}
+                                    {index === currentImageIndex && (
+                                      <div className="absolute top-2 right-2 opacity-80 hover:opacity-100 transition-opacity duration-200 z-10">
+                                        <FullscreenButton 
+                                          targetElement={currentImageRef.current} 
+                                          className="touch-manipulation bg-black/80 hover:bg-black"
+                                        />
+                                      </div>
+                                    )}
                                   </div>
                                 </CardContent>
                               </Card>

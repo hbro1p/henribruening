@@ -10,12 +10,16 @@ export const useFullscreen = () => {
                              (document as any).webkitFullscreenElement || 
                              (document as any).mozFullScreenElement || 
                              (document as any).msFullscreenElement;
-    setIsFullscreen(!!fullscreenElement);
+    
+    const isCurrentlyFullscreen = !!fullscreenElement;
+    console.log('Fullscreen check:', isCurrentlyFullscreen, fullscreenElement);
+    setIsFullscreen(isCurrentlyFullscreen);
   }, []);
 
   // Listen for fullscreen change events
   useEffect(() => {
     const handleFullscreenChange = () => {
+      console.log('Fullscreen change event triggered');
       checkFullscreen();
     };
 
@@ -40,40 +44,78 @@ export const useFullscreen = () => {
     try {
       console.log('Attempting to enter fullscreen for element:', element);
       
-      // Check if fullscreen is supported
-      if (!document.fullscreenEnabled && 
-          !(document as any).webkitFullscreenEnabled && 
-          !(document as any).mozFullScreenEnabled &&
-          !(document as any).msFullscreenEnabled) {
-        console.warn('Fullscreen not supported on this device');
+      // Enhanced fullscreen support check
+      const isSupported = document.fullscreenEnabled || 
+                         (document as any).webkitFullscreenEnabled || 
+                         (document as any).mozFullScreenEnabled ||
+                         (document as any).msFullscreenEnabled;
+
+      if (!isSupported) {
+        console.warn('Fullscreen API not supported on this device/browser');
+        // Fallback for unsupported devices
+        element.style.cssText = `
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100vw !important;
+          height: 100vh !important;
+          z-index: 9999 !important;
+          background: black !important;
+          object-fit: contain !important;
+        `;
+        setIsFullscreen(true);
         return;
       }
 
-      // Try different fullscreen methods
+      // Try different fullscreen methods with better error handling
+      let success = false;
+      
       if (element.requestFullscreen) {
         await element.requestFullscreen();
+        success = true;
       } else if ((element as any).webkitRequestFullscreen) {
         await (element as any).webkitRequestFullscreen();
+        success = true;
       } else if ((element as any).webkitRequestFullScreen) {
         await (element as any).webkitRequestFullScreen();
+        success = true;
       } else if ((element as any).mozRequestFullScreen) {
         await (element as any).mozRequestFullScreen();
+        success = true;
       } else if ((element as any).msRequestFullscreen) {
         await (element as any).msRequestFullscreen();
-      } else {
-        console.warn('No fullscreen method available');
+        success = true;
       }
+
+      if (!success) {
+        console.warn('No fullscreen method available, using CSS fallback');
+        // CSS fallback
+        element.style.cssText = `
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100vw !important;
+          height: 100vh !important;
+          z-index: 9999 !important;
+          background: black !important;
+          object-fit: contain !important;
+        `;
+        setIsFullscreen(true);
+      }
+      
     } catch (error) {
       console.error('Error entering fullscreen:', error);
-      
-      // Fallback: try to simulate fullscreen with CSS
-      element.style.position = 'fixed';
-      element.style.top = '0';
-      element.style.left = '0';
-      element.style.width = '100vw';
-      element.style.height = '100vh';
-      element.style.zIndex = '9999';
-      element.style.backgroundColor = 'black';
+      // Always fall back to CSS method
+      element.style.cssText = `
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        z-index: 9999 !important;
+        background: black !important;
+        object-fit: contain !important;
+      `;
       setIsFullscreen(true);
     }
   }, []);
@@ -82,55 +124,77 @@ export const useFullscreen = () => {
     try {
       console.log('Attempting to exit fullscreen');
       
+      // First try native fullscreen exit
+      let success = false;
+      
       if (document.exitFullscreen) {
         await document.exitFullscreen();
+        success = true;
       } else if ((document as any).webkitExitFullscreen) {
         await (document as any).webkitExitFullscreen();
+        success = true;
       } else if ((document as any).webkitCancelFullScreen) {
         await (document as any).webkitCancelFullScreen();
+        success = true;
       } else if ((document as any).mozCancelFullScreen) {
         await (document as any).mozCancelFullScreen();
+        success = true;
       } else if ((document as any).msExitFullscreen) {
         await (document as any).msExitFullscreen();
+        success = true;
       }
-    } catch (error) {
-      console.error('Error exiting fullscreen:', error);
-      
-      // Fallback: remove CSS fullscreen simulation
-      const elements = document.querySelectorAll('[style*="position: fixed"]');
-      elements.forEach(el => {
+
+      // Always also clean up CSS fallback styles
+      const elementsWithFullscreenStyles = document.querySelectorAll('[style*="position: fixed"]');
+      elementsWithFullscreenStyles.forEach(el => {
         const element = el as HTMLElement;
         if (element.style.zIndex === '9999') {
-          element.style.position = '';
-          element.style.top = '';
-          element.style.left = '';
-          element.style.width = '';
-          element.style.height = '';
-          element.style.zIndex = '';
-          element.style.backgroundColor = '';
+          element.style.cssText = '';
+        }
+      });
+
+      if (!success) {
+        console.log('No native fullscreen exit method available, cleaned up CSS styles');
+      }
+      
+      setIsFullscreen(false);
+      
+    } catch (error) {
+      console.error('Error exiting fullscreen:', error);
+      // Force cleanup of CSS styles
+      const elementsWithFullscreenStyles = document.querySelectorAll('[style*="position: fixed"]');
+      elementsWithFullscreenStyles.forEach(el => {
+        const element = el as HTMLElement;
+        if (element.style.zIndex === '9999') {
+          element.style.cssText = '';
         }
       });
       setIsFullscreen(false);
     }
   }, []);
 
-  const toggleFullscreen = useCallback(async (element: HTMLElement) => {
+  const toggleFullscreen = useCallback(async (element: HTMLElement | null) => {
+    console.log('Toggle fullscreen called with element:', element, 'Current state:', isFullscreen);
+    
     if (!element) {
       console.warn('No element provided for fullscreen toggle');
       return;
     }
 
+    // Check current fullscreen state
     const fullscreenElement = document.fullscreenElement || 
                              (document as any).webkitFullscreenElement || 
                              (document as any).mozFullScreenElement || 
                              (document as any).msFullscreenElement;
     
-    if (fullscreenElement) {
+    const hasFullscreenStyles = element.style.zIndex === '9999';
+    
+    if (fullscreenElement || hasFullscreenStyles || isFullscreen) {
       await exitFullscreen();
     } else {
       await enterFullscreen(element);
     }
-  }, [enterFullscreen, exitFullscreen]);
+  }, [isFullscreen, enterFullscreen, exitFullscreen]);
 
   return {
     isFullscreen,
