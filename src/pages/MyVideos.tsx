@@ -1,13 +1,16 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Video, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Video, ExternalLink, Plus } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useStorageLinks } from '@/hooks/useStorageLinks';
 
 const MyVideos = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [password, setPassword] = useState('');
   const [showError, setShowError] = useState(false);
   const { theme, t } = useSettings();
+  const { links: videoLinks, loading: linksLoading } = useStorageLinks('video-links');
 
   const correctPassword = 'henribrueningvideos#2025!';
 
@@ -210,6 +213,40 @@ const MyVideos = () => {
                     YouTube <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
+              </div>
+
+              {/* More section */}
+              <div className={`p-6 border-2 ${styles.cardBg}`}>
+                <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
+                  <Plus className="w-5 h-5" />
+                  More
+                </h3>
+                <p className={`mb-4 font-pixel ${styles.text}`}>
+                  {t('language') === 'deutsch' ? 'Zusätzliche Videoprojekte und Links' : 'Additional video projects and links'}
+                </p>
+                {linksLoading ? (
+                  <p className={`text-sm font-pixel ${styles.text}`}>
+                    {t('language') === 'deutsch' ? 'Lade Links...' : 'Loading links...'}
+                  </p>
+                ) : videoLinks.length > 0 ? (
+                  <div className="space-y-2">
+                    {videoLinks.map((link, index) => (
+                      <a 
+                        key={index}
+                        href={link.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className={`flex items-center gap-2 underline font-pixel ${styles.link}`}
+                      >
+                        {link.name.replace(/\.[^/.]+$/, "")} <ExternalLink className="w-4 h-4" />
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <p className={`text-sm font-pixel ${styles.text}`}>
+                    {t('language') === 'deutsch' ? 'Noch keine zusätzlichen Links verfügbar.' : 'No additional links available yet.'}
+                  </p>
+                )}
               </div>
             </div>
 

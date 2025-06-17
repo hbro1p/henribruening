@@ -205,9 +205,10 @@ const Pictures = () => {
                         dragFree: false,
                         containScroll: "trimSnaps"
                       }}
-                      onSelect={(index) => {
-                        console.log('Carousel selected index:', index);
-                        setCurrentImageIndex(index || 0);
+                      onSelect={(emblaApi) => {
+                        if (emblaApi) {
+                          setCurrentImageIndex(emblaApi.selectedScrollSnap());
+                        }
                       }}
                     >
                       <CarouselContent>

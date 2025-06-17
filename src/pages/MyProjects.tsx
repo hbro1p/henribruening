@@ -1,14 +1,16 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Code, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Code, ExternalLink, Plus } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useStorageLinks } from '@/hooks/useStorageLinks';
 
 const MyProjects = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [password, setPassword] = useState('');
   const [showError, setShowError] = useState(false);
   const { theme, t } = useSettings();
+  const { links: projectLinks, loading: linksLoading } = useStorageLinks('project-links');
 
   const correctPassword = 'henribrueningprojects#2025!';
 
@@ -220,6 +222,41 @@ const MyProjects = () => {
                     TikTok <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
+              </div>
+
+              {/* More section */}
+              <div className="bg-gradient-to-br from-white via-gray-100 to-gray-200 p-6 border-2 border-black/30 rounded-lg shadow-lg relative">
+                <div className="absolute inset-x-2 top-2 h-2 bg-gradient-to-b from-white/40 to-transparent rounded-t"></div>
+                <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel drop-shadow-sm ${styles.text}`}>
+                  <Plus className="w-5 h-5" />
+                  More
+                </h3>
+                <p className={`mb-4 drop-shadow-sm ${styles.text}`}>
+                  {t('language') === 'deutsch' ? 'Zusätzliche Projekte und Links' : 'Additional projects and links'}
+                </p>
+                {linksLoading ? (
+                  <p className={`text-sm font-pixel drop-shadow-sm ${styles.text}`}>
+                    {t('language') === 'deutsch' ? 'Lade Links...' : 'Loading links...'}
+                  </p>
+                ) : projectLinks.length > 0 ? (
+                  <div className="space-y-2">
+                    {projectLinks.map((link, index) => (
+                      <a 
+                        key={index}
+                        href={link.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className={`flex items-center gap-2 underline font-pixel drop-shadow-sm ${styles.link}`}
+                      >
+                        {link.name.replace(/\.[^/.]+$/, "")} <ExternalLink className="w-4 h-4" />
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <p className={`text-sm font-pixel drop-shadow-sm ${styles.text}`}>
+                    {t('language') === 'deutsch' ? 'Noch keine zusätzlichen Links verfügbar.' : 'No additional links available yet.'}
+                  </p>
+                )}
               </div>
             </div>
 
