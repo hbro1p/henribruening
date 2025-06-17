@@ -87,7 +87,7 @@ const Pictures = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { images: storageImages, loading, error, refetch } = useStorageImages();
   const { theme, t } = useSettings();
-  const imageRefs = useRef<(HTMLImageElement | null)[]>([]);
+  const containerRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Use storage images primarily, only fall back if storage category is completely empty
   const photoCategories = {
@@ -212,9 +212,11 @@ const Pictures = () => {
                             <div className="p-2">
                               <Card className="border-2 border-black/30 bg-gradient-to-br from-gray-800 to-black overflow-hidden shadow-2xl rounded-lg">
                                 <CardContent className="flex aspect-[4/3] items-center justify-center p-2 relative">
-                                  <div className="bg-gradient-to-br from-gray-600 to-gray-800 p-2 rounded border border-black/20 shadow-inner h-full w-full flex items-center justify-center relative">
+                                  <div 
+                                    ref={(el) => containerRefs.current[index] = el}
+                                    className="bg-gradient-to-br from-gray-600 to-gray-800 p-2 rounded border border-black/20 shadow-inner h-full w-full flex items-center justify-center relative"
+                                  >
                                     <img 
-                                      ref={(el) => imageRefs.current[index] = el}
                                       src={src} 
                                       alt={`${selectedCategory} memory ${index + 1}`} 
                                       className="max-h-full max-w-full object-contain rounded select-none"
@@ -228,7 +230,7 @@ const Pictures = () => {
                                     {/* Fullscreen button */}
                                     <div className="absolute top-2 right-2">
                                       <FullscreenButton 
-                                        targetElement={imageRefs.current[index]} 
+                                        targetElement={containerRefs.current[index]} 
                                         className="opacity-70 hover:opacity-100"
                                       />
                                     </div>

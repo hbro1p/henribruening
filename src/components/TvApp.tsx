@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -16,6 +17,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   const [currentVideo, setCurrentVideo] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
   const { t, theme } = useSettings();
   const { videos, loading } = useTvVideos();
 
@@ -240,7 +242,10 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
             <div className={`w-full max-w-2xl ${styles.playerBg} p-6 border-2 border-black/30 rounded-lg shadow-lg mb-6`}>
               <div className="relative">
                 {videos.length > 0 ? (
-                  <div className="relative w-full aspect-video bg-black rounded border border-gray-700 overflow-hidden">
+                  <div 
+                    ref={videoContainerRef}
+                    className="relative w-full aspect-video bg-black rounded border border-gray-700 overflow-hidden"
+                  >
                     <video
                       ref={videoRef}
                       className="w-full h-full object-contain rounded"
@@ -257,7 +262,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                     {/* Fullscreen button */}
                     <div className="absolute top-4 left-4">
                       <FullscreenButton 
-                        targetElement={videoRef.current} 
+                        targetElement={videoContainerRef.current} 
                         className="opacity-70 hover:opacity-100"
                       />
                     </div>
