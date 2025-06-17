@@ -50,25 +50,35 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
       } else {
         setIsLoading(true);
         
-        // Ensure audio is loaded and ready
+        // Ensure audio is ready to play
         if (audio.readyState < 2) {
+          audio.src = musicFiles[currentTrack].url;
+          audio.load();
+          
+          // Wait for the audio to be ready
           await new Promise((resolve, reject) => {
-            const handleCanPlay = () => {
-              audio.removeEventListener('canplay', handleCanPlay);
-              audio.removeEventListener('error', handleError);
+            const timeout = setTimeout(() => {
+              audio.removeEventListener('canplaythrough', onCanPlay);
+              audio.removeEventListener('error', onError);
+              reject(new Error('Audio load timeout'));
+            }, 5000);
+
+            const onCanPlay = () => {
+              clearTimeout(timeout);
+              audio.removeEventListener('canplaythrough', onCanPlay);
+              audio.removeEventListener('error', onError);
               resolve(undefined);
             };
-            const handleError = () => {
-              audio.removeEventListener('canplay', handleCanPlay);
-              audio.removeEventListener('error', handleError);
+
+            const onError = () => {
+              clearTimeout(timeout);
+              audio.removeEventListener('canplaythrough', onCanPlay);
+              audio.removeEventListener('error', onError);
               reject(new Error('Audio load failed'));
             };
-            audio.addEventListener('canplay', handleCanPlay);
-            audio.addEventListener('error', handleError);
-            
-            // Force reload if needed
-            audio.src = musicFiles[currentTrack].url;
-            audio.load();
+
+            audio.addEventListener('canplaythrough', onCanPlay);
+            audio.addEventListener('error', onError);
           });
         }
         
@@ -129,6 +139,11 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
     if (audioRef.current) {
       audioRef.current.volume = newVolume;
     }
+  };
+
+  const handleClose = () => {
+    // Music continues playing when closing the app
+    onClose();
   };
 
   const getThemeStyles = () => {
@@ -204,22 +219,6 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-0.5 h-4 bg-gray-400 rounded-full" />
                 
                 <Radio className="w-8 h-8 text-white z-10" />
-                
-                {/* Signal bars animation */}
-                {isPlaying && (
-                  <div className="absolute -top-1 right-2 flex space-x-0.5">
-                    {[1,2,3].map((i) => (
-                      <div
-                        key={i}
-                        className={`w-0.5 ${styles.accent} animate-pulse rounded-full`}
-                        style={{
-                          height: `${4 + i * 2}px`,
-                          animationDelay: `${i * 0.2}s`
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
               </div>
               
               <div>
@@ -233,14 +232,14 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
             </div>
             
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className={`w-8 h-8 rounded flex items-center justify-center ${styles.closeButton}`}
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Station Info */}
+          {/* Station Info - NO ANIMATIONS */}
           <div className="text-center mb-6">
             <div className={`bg-black/30 rounded p-3 border ${theme === 'retro-chrome' ? 'border-blue-400/30 bg-white/10' : theme === 'space-mood' ? 'border-red-400/30 bg-red-50/10' : 'border-current/30'}`}>
               <p className={`text-sm mb-1 ${styles.text}`}>
@@ -249,25 +248,6 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
               <p className={`text-xs ${styles.subText} truncate`}>
                 {loading ? '---' : musicFiles.length > 0 ? musicFiles[currentTrack]?.title || 'Unknown Track' : 'Upload music to /music/ folder'}
               </p>
-              
-              {/* Equalizer visualization */}
-              {isPlaying && (
-                <div className="flex justify-center mt-2">
-                  <div className="flex space-x-1">
-                    {[1,2,3,4,5,6,7].map((i) => (
-                      <div
-                        key={i}
-                        className={`w-1 ${styles.accent} animate-pulse`}
-                        style={{
-                          height: `${Math.random() * 20 + 8}px`,
-                          animationDelay: `${i * 0.1}s`,
-                          animationDuration: `${0.5 + Math.random() * 0.5}s`
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 
