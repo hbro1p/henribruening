@@ -1,9 +1,8 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft, Volume2, VolumeX } from 'lucide-react';
+import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useTvVideos } from '@/hooks/useTvVideos';
-import { Slider } from '@/components/ui/slider';
+import VideoUpload from './VideoUpload';
 
 interface TvAppProps {
   isOpen: boolean;
@@ -16,8 +15,6 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   const [passwordError, setPasswordError] = useState('');
   const [currentVideo, setCurrentVideo] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(0.7);
-  const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { t, theme } = useSettings();
   const { videos, loading } = useTvVideos();
@@ -122,28 +119,6 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    
-    const newMuted = !isMuted;
-    setIsMuted(newMuted);
-    videoRef.current.muted = newMuted;
-  };
-
-  const handleVolumeChange = (newVolume: number[]) => {
-    if (!videoRef.current) return;
-    
-    const volumeValue = newVolume[0];
-    setVolume(volumeValue);
-    videoRef.current.volume = volumeValue;
-    
-    // Unmute if volume is changed from 0
-    if (volumeValue > 0 && isMuted) {
-      setIsMuted(false);
-      videoRef.current.muted = false;
-    }
-  };
-
   const handleVideoEnded = () => {
     nextVideo();
   };
@@ -156,14 +131,12 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
       }
       
       videoRef.current.src = videos[currentVideo]?.url || '';
-      videoRef.current.volume = volume;
-      videoRef.current.muted = isMuted;
       
       if (wasPlaying && videos[currentVideo]?.url) {
         videoRef.current.play().catch(console.error);
       }
     }
-  }, [currentVideo, videos, isAuthenticated, volume, isMuted]);
+  }, [currentVideo, videos, isAuthenticated]);
 
   if (!isOpen) return null;
 
@@ -268,6 +241,8 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                       ref={videoRef}
                       className="w-full h-full object-contain rounded"
                       loop
+                      muted
+                      autoPlay
                       onPlay={() => setIsPlaying(true)}
                       onPause={() => setIsPlaying(false)}
                       onEnded={handleVideoEnded}
@@ -330,36 +305,6 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                 >
                   <SkipForward className="w-5 h-5" />
                 </button>
-              </div>
-
-              {/* Volume Controls */}
-              <div className="flex items-center justify-center space-x-4 mt-4">
-                <button
-                  onClick={toggleMute}
-                  disabled={videos.length === 0}
-                  className={`w-10 h-10 rounded ${styles.button} flex items-center justify-center transition-all disabled:opacity-50 shadow-lg`}
-                >
-                  {isMuted || volume === 0 ? 
-                    <VolumeX className="w-5 h-5" /> : 
-                    <Volume2 className="w-5 h-5" />
-                  }
-                </button>
-                
-                <div className="w-32">
-                  <Slider
-                    value={[volume]}
-                    onValueChange={handleVolumeChange}
-                    max={1}
-                    min={0}
-                    step={0.1}
-                    disabled={videos.length === 0}
-                    className="w-full"
-                  />
-                </div>
-                
-                <span className={`${styles.text} font-pixel text-xs min-w-[3rem]`}>
-                  {Math.round(volume * 100)}%
-                </span>
               </div>
               
               {/* Channel info */}
