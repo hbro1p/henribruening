@@ -7,10 +7,9 @@ import { useMusicFiles } from '@/hooks/useMusicFiles';
 interface RadioAppProps {
   isOpen: boolean;
   onClose: () => void;
-  onMusicStateChange: (isPlaying: boolean, trackTitle: string) => void;
 }
 
-const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange }) => {
+const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
   const [volume, setVolume] = useState(0.7);
@@ -31,12 +30,6 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
       }
     }
   }, [musicFiles, currentTrack, volume]);
-
-  // Notify parent about music state changes
-  useEffect(() => {
-    const trackTitle = musicFiles[currentTrack]?.title || '';
-    onMusicStateChange(isPlaying, trackTitle);
-  }, [isPlaying, currentTrack, musicFiles, onMusicStateChange]);
 
   const togglePlayPause = async () => {
     if (!audioRef.current || musicFiles.length === 0) return;
@@ -142,7 +135,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
   };
 
   const handleClose = () => {
-    // Music continues playing when closing the app
+    // Music continues playing when closing the app - just close the window
     onClose();
   };
 
@@ -239,7 +232,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
             </button>
           </div>
 
-          {/* Station Info - NO ANIMATIONS */}
+          {/* Station Info - Static, no animations */}
           <div className="text-center mb-6">
             <div className={`bg-black/30 rounded p-3 border ${theme === 'retro-chrome' ? 'border-blue-400/30 bg-white/10' : theme === 'space-mood' ? 'border-red-400/30 bg-red-50/10' : 'border-current/30'}`}>
               <p className={`text-sm mb-1 ${styles.text}`}>
