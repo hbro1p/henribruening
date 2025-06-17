@@ -11,6 +11,8 @@ const Desktop = () => {
   const [isRadioOpen, setIsRadioOpen] = useState(false);
   const [isTvOpen, setIsTvOpen] = useState(false);
 
+  console.log('Desktop component rendered, isTvOpen:', isTvOpen);
+
   return (
     <>
       <div className="min-h-screen w-full flex items-start justify-start p-6">
@@ -24,14 +26,20 @@ const Desktop = () => {
           <DesktopIcon 
             icon={Radio} 
             label="Radio" 
-            onClick={() => setIsRadioOpen(true)}
+            onClick={() => {
+              console.log('Radio icon clicked');
+              setIsRadioOpen(true);
+            }}
           />
 
           {/* TV App Icon */}
           <DesktopIcon 
             icon={Tv} 
             label="TV" 
-            onClick={() => setIsTvOpen(true)}
+            onClick={() => {
+              console.log('TV icon clicked, opening TV app');
+              setIsTvOpen(true);
+            }}
           />
 
           <DesktopIcon icon={User} label={t('About Me')} to="/about" />
@@ -43,11 +51,20 @@ const Desktop = () => {
       {/* Radio App Modal */}
       <RadioApp 
         isOpen={isRadioOpen} 
-        onClose={() => setIsRadioOpen(false)}
+        onClose={() => {
+          console.log('Closing Radio app');
+          setIsRadioOpen(false);
+        }}
       />
       
       {/* TV App Modal */}
-      <TvApp isOpen={isTvOpen} onClose={() => setIsTvOpen(false)} />
+      <TvApp 
+        isOpen={isTvOpen} 
+        onClose={() => {
+          console.log('Closing TV app');
+          setIsTvOpen(false);
+        }} 
+      />
     </>
   );
 };
