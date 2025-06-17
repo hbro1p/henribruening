@@ -248,8 +248,8 @@ const MyVideos = () => {
                     </p>
                     <p className="text-xs opacity-70">
                       {t('language') === 'deutsch' 
-                        ? 'Tipp: Lade eine .txt Datei mit einer URL in den video-links Bucket hoch, um sie hier anzuzeigen.' 
-                        : 'Tip: Upload a .txt file with a URL to the video-links bucket to display it here.'}
+                        ? 'Tipp: Lade eine .docx Datei hoch - der Dateiname wird der Link-Name und der Inhalt sollte die URL enthalten.' 
+                        : 'Tip: Upload a .docx file - the filename becomes the link name and the content should contain the URL.'}
                     </p>
                   </div>
                 )}
