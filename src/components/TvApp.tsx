@@ -1,8 +1,8 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useTvVideos } from '@/hooks/useTvVideos';
+import FullscreenButton from '@/components/FullscreenButton';
 
 interface TvAppProps {
   isOpen: boolean;
@@ -249,9 +249,18 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                       onPlay={() => setIsPlaying(true)}
                       onPause={() => setIsPlaying(false)}
                       onEnded={handleVideoEnded}
+                      controls={false}
                     >
                       {videos[currentVideo] && <source src={videos[currentVideo].url} type="video/mp4" />}
                     </video>
+                    
+                    {/* Fullscreen button */}
+                    <div className="absolute top-4 left-4">
+                      <FullscreenButton 
+                        targetElement={videoRef.current} 
+                        className="opacity-70 hover:opacity-100"
+                      />
+                    </div>
                     
                     {/* Video overlay info */}
                     <div className={`absolute bottom-4 left-4 bg-black/80 rounded px-3 py-1 border border-${styles.accent}/30`}>
