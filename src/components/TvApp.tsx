@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -23,6 +24,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
       return {
+        fullBackground: 'folder-purple', // Purple theme for TV
         windowFrame: 'bg-gradient-to-br from-purple-300 via-purple-400 to-purple-600',
         titleBar: 'bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700',
         windowContent: 'bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400',
@@ -38,6 +40,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
     
     if (theme === 'dark-vhs') {
       return {
+        fullBackground: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
         windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
         titleBar: 'bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800',
         windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
@@ -53,6 +56,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
     
     if (theme === 'retro-chrome') {
       return {
+        fullBackground: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600',
         windowFrame: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600',
         titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-slate-700',
         windowContent: 'bg-gradient-to-br from-slate-600 via-blue-700 to-slate-800',
@@ -68,6 +72,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
     
     // Default fallback
     return {
+      fullBackground: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600',
       windowFrame: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600',
       titleBar: 'bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800',
       windowContent: 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400',
@@ -143,7 +148,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
 
   if (!isAuthenticated) {
     return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+      <div className={`fixed inset-0 flex items-center justify-center p-4 z-50 ${styles.fullBackground}`}>
         <div className={`p-2 border-2 border-black/30 w-full max-w-md shadow-2xl rounded-lg ${styles.windowFrame}`}>
           <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
             <div className="flex items-center space-x-2">
@@ -216,7 +221,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    <div className={`fixed inset-0 flex items-center justify-center p-4 z-50 ${styles.fullBackground}`}>
       <div className={`p-2 border-2 border-black/30 w-full max-w-4xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
         <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
           <div className="flex items-center space-x-2">

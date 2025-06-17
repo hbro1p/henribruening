@@ -37,6 +37,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
     switch (theme) {
       case 'dark-vhs':
         return {
+          fullBackground: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
           container: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-green-400 shadow-lg shadow-green-400/20',
           text: 'text-green-400 font-mono',
           subText: 'text-green-300',
@@ -48,6 +49,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
         };
       case 'retro-chrome':
         return {
+          fullBackground: 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300',
           container: 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 border-2 border-blue-600 shadow-lg',
           text: 'text-blue-900 font-mono',
           subText: 'text-blue-700',
@@ -59,6 +61,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
         };
       default: // space-mood - RED theme to match desktop icon
         return {
+          fullBackground: 'folder-red', // Red theme for Radio
           container: 'bg-gradient-to-br from-red-100 via-red-200 to-red-300 border-2 border-red-600 shadow-lg shadow-red-600/20',
           text: 'text-red-900 font-mono',
           subText: 'text-red-700',
@@ -76,7 +79,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div className={`fixed inset-0 flex items-center justify-center z-50 p-4 ${styles.fullBackground}`}>
       <div className={`w-96 max-w-full rounded-lg p-6 relative ${styles.container}`}>
         {/* Header with Close button only */}
         <div className="flex items-center justify-between mb-4">
