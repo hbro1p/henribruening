@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=VT323:wght@400&display=swap');
 @tailwind base;
 @tailwind components;
@@ -176,4 +175,15 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@keyframes scanlines {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(6px); }
+}
+
+/* Add scanlines animation for TV effect */
+@keyframes scanlines {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(4px); }
 }

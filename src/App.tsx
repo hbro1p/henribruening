@@ -14,7 +14,6 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
-import MusicPlayer from "./components/MusicPlayer";
 import Footer from "./components/Footer";
 
 const queryClient = new QueryClient();
@@ -38,7 +37,6 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-          <MusicPlayer />
           <Footer />
         </BrowserRouter>
       </TooltipProvider>
