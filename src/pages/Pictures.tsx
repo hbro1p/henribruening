@@ -7,12 +7,12 @@ import { useSettings } from '@/contexts/SettingsContext';
 
 const Pictures = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState<string>('childhood');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { images, loading, error } = useStorageImages();
   const { theme } = useSettings();
 
   // Get all images from selected category
-  const currentCategoryImages = images[selectedCategory] || [];
+  const currentCategoryImages = selectedCategory ? images[selectedCategory] || [] : [];
   
   // Create image objects with url and name for compatibility
   const imageObjects = currentCategoryImages.map((url, index) => ({
@@ -39,8 +39,77 @@ const Pictures = () => {
     setCurrentImageIndex(0);
   }, [selectedCategory]);
 
-  // Get window styles based on theme
+  // Category color schemes
+  const getCategoryColors = (category: string) => {
+    const colorSchemes = {
+      childhood: {
+        primary: 'from-pink-400 via-pink-500 to-pink-700',
+        secondary: 'from-pink-600 via-pink-700 to-pink-800',
+        content: 'from-pink-100 via-pink-200 to-pink-300',
+        text: 'text-pink-900',
+        link: 'text-pink-800 hover:text-pink-900',
+        button: 'bg-gradient-to-br from-pink-500 via-pink-600 to-pink-800 hover:from-pink-400 hover:via-pink-500 hover:to-pink-700 text-white border-pink-300/50',
+        thumb: 'border-pink-400/50 hover:border-pink-600 hover:bg-pink-100/50',
+        container: 'border-pink-400/50 bg-white/90',
+        folder: 'folder-pink'
+      },
+      nature: {
+        primary: 'from-green-400 via-green-500 to-green-700',
+        secondary: 'from-green-600 via-green-700 to-green-800',
+        content: 'from-green-100 via-green-200 to-green-300',
+        text: 'text-green-900',
+        link: 'text-green-800 hover:text-green-900',
+        button: 'bg-gradient-to-br from-green-500 via-green-600 to-green-800 hover:from-green-400 hover:via-green-500 hover:to-green-700 text-white border-green-300/50',
+        thumb: 'border-green-400/50 hover:border-green-600 hover:bg-green-100/50',
+        container: 'border-green-400/50 bg-white/90',
+        folder: 'folder-green'
+      },
+      vibe: {
+        primary: 'from-purple-400 via-purple-500 to-purple-700',
+        secondary: 'from-purple-600 via-purple-700 to-purple-800',
+        content: 'from-purple-100 via-purple-200 to-purple-300',
+        text: 'text-purple-900',
+        link: 'text-purple-800 hover:text-purple-900',
+        button: 'bg-gradient-to-br from-purple-500 via-purple-600 to-purple-800 hover:from-purple-400 hover:via-purple-500 hover:to-purple-700 text-white border-purple-300/50',
+        thumb: 'border-purple-400/50 hover:border-purple-600 hover:bg-purple-100/50',
+        container: 'border-purple-400/50 bg-white/90',
+        folder: 'folder-purple'
+      },
+      random: {
+        primary: 'from-orange-400 via-orange-500 to-orange-700',
+        secondary: 'from-orange-600 via-orange-700 to-orange-800',
+        content: 'from-orange-100 via-orange-200 to-orange-300',
+        text: 'text-orange-900',
+        link: 'text-orange-800 hover:text-orange-900',
+        button: 'bg-gradient-to-br from-orange-500 via-orange-600 to-orange-800 hover:from-orange-400 hover:via-orange-500 hover:to-orange-700 text-white border-orange-300/50',
+        thumb: 'border-orange-400/50 hover:border-orange-600 hover:bg-orange-100/50',
+        container: 'border-orange-400/50 bg-white/90',
+        folder: 'folder-orange'
+      }
+    };
+
+    return colorSchemes[category as keyof typeof colorSchemes] || colorSchemes.random;
+  };
+
+  // Get window styles based on theme and selected category
   const getWindowStyles = () => {
+    // If a category is selected, use its color scheme
+    if (selectedCategory) {
+      const categoryColors = getCategoryColors(selectedCategory);
+      return {
+        windowFrame: `bg-gradient-to-br ${categoryColors.primary}`,
+        titleBar: `bg-gradient-to-r ${categoryColors.secondary}`,
+        windowContent: `bg-gradient-to-br ${categoryColors.content}`,
+        text: categoryColors.text,
+        link: categoryColors.link,
+        controlButton: categoryColors.button,
+        thumbButton: categoryColors.thumb,
+        categoryButton: categoryColors.button,
+        imageContainer: categoryColors.container,
+      };
+    }
+
+    // Default theme-based styles when no category is selected
     if (theme === 'space-mood') {
       return {
         windowFrame: 'bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700',
@@ -98,8 +167,16 @@ const Pictures = () => {
 
   const styles = getWindowStyles();
 
+  // Get folder background class
+  const getFolderBackground = () => {
+    if (selectedCategory) {
+      return getCategoryColors(selectedCategory).folder;
+    }
+    return theme === 'space-mood' ? 'folder-blue' : '';
+  };
+
   return (
-    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
+    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${getFolderBackground()}`}>
       <div className={`p-2 border-2 border-black/30 w-full max-w-6xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
         <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
           <div className="flex items-center space-x-2">
@@ -114,22 +191,37 @@ const Pictures = () => {
           <div className="flex flex-col items-center justify-center text-center">
             <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ Pictures ]</h1>
             
-            {/* Category Selection */}
-            <div className="flex flex-wrap gap-2 mb-6">
-              {Object.keys(images).map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`
-                    px-4 py-2 border-2 rounded-lg font-pixel transition-all active:scale-95 capitalize
-                    ${selectedCategory === category ? 'ring-2 ring-orange-500 ring-offset-2' : ''}
-                    ${styles.categoryButton}
-                  `}
-                >
-                  {category} ({images[category].length})
-                </button>
-              ))}
+            {/* Category Selection - Always visible */}
+            <div className="flex flex-wrap gap-4 mb-8">
+              {Object.keys(images).map((category) => {
+                const categoryColors = getCategoryColors(category);
+                return (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`
+                      px-6 py-4 border-3 rounded-2xl font-pixel transition-all active:scale-95 capitalize text-lg shadow-xl
+                      bg-gradient-to-br ${categoryColors.primary}
+                      hover:shadow-2xl hover:scale-105 text-white border-white/30
+                      ${selectedCategory === category ? 'ring-4 ring-yellow-400 ring-offset-2 ring-offset-transparent scale-110' : ''}
+                    `}
+                  >
+                    📁 {category}
+                    <div className="text-sm opacity-90">({images[category].length} photos)</div>
+                  </button>
+                );
+              })}
             </div>
+
+            {/* Back to folder selection button when category is selected */}
+            {selectedCategory && (
+              <button
+                onClick={() => setSelectedCategory(null)}
+                className={`mb-6 px-4 py-2 border-2 rounded-lg font-pixel transition-all active:scale-95 ${styles.controlButton}`}
+              >
+                ← Back to Folders
+              </button>
+            )}
             
             {loading && (
               <div className={`p-8 ${styles.text} font-pixel`}>Loading pictures...</div>
@@ -139,11 +231,11 @@ const Pictures = () => {
               <div className="p-8 text-red-600 font-pixel">{error}</div>
             )}
             
-            {!loading && !error && imageObjects.length === 0 && (
+            {!loading && !error && selectedCategory && imageObjects.length === 0 && (
               <div className={`p-8 ${styles.text} font-pixel`}>No pictures found in {selectedCategory}</div>
             )}
             
-            {!loading && !error && imageObjects.length > 0 && (
+            {!loading && !error && selectedCategory && imageObjects.length > 0 && (
               <div className="w-full max-w-4xl">
                 <div className={`mb-6 border-4 rounded-xl overflow-hidden shadow-2xl ${styles.imageContainer}`}>
                   <img 
