@@ -14,60 +14,110 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
   const [volume, setVolume] = useState(0.7);
+  const [isLoading, setIsLoading] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const { t, theme } = useSettings();
   const { musicFiles, loading } = useMusicFiles();
 
+  // Initialize audio when component mounts or track changes
   useEffect(() => {
-    if (musicFiles.length > 0 && currentTrack >= musicFiles.length) {
-      setCurrentTrack(0);
-    }
-  }, [musicFiles, currentTrack]);
-
-  useEffect(() => {
-    if (audioRef.current && musicFiles.length > 0) {
-      const wasPlaying = isPlaying;
-      if (wasPlaying) {
-        audioRef.current.pause();
-      }
+    if (musicFiles.length > 0 && audioRef.current) {
+      const audio = audioRef.current;
+      audio.volume = volume;
       
-      audioRef.current.src = musicFiles[currentTrack]?.url || '';
-      audioRef.current.volume = volume;
-      
-      if (wasPlaying && musicFiles[currentTrack]?.url) {
-        audioRef.current.play().catch(console.error);
+      if (currentTrack < musicFiles.length) {
+        audio.src = musicFiles[currentTrack].url;
+        audio.load(); // Ensure the audio is properly loaded
       }
     }
-  }, [currentTrack, musicFiles]);
+  }, [musicFiles, currentTrack, volume]);
 
+  // Notify parent about music state changes
   useEffect(() => {
-    // Notify parent about music state changes
     const trackTitle = musicFiles[currentTrack]?.title || '';
     onMusicStateChange(isPlaying, trackTitle);
   }, [isPlaying, currentTrack, musicFiles, onMusicStateChange]);
 
-  const togglePlayPause = () => {
+  const togglePlayPause = async () => {
     if (!audioRef.current || musicFiles.length === 0) return;
 
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play().catch(console.error);
+    const audio = audioRef.current;
+    
+    try {
+      if (isPlaying) {
+        audio.pause();
+        setIsPlaying(false);
+      } else {
+        setIsLoading(true);
+        // Ensure the audio is ready to play
+        if (audio.readyState < 2) {
+          await new Promise((resolve) => {
+            const handleCanPlay = () => {
+              audio.removeEventListener('canplay', handleCanPlay);
+              resolve(undefined);
+            };
+            audio.addEventListener('canplay', handleCanPlay);
+          });
+        }
+        
+        await audio.play();
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.error('Audio playback error:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const nextTrack = () => {
     if (musicFiles.length === 0) return;
-    setCurrentTrack((prev) => (prev + 1) % musicFiles.length);
+    const wasPlaying = isPlaying;
+    if (wasPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+    }
+    
+    setCurrentTrack((prev) => {
+      const nextIndex = (prev + 1) % musicFiles.length;
+      return nextIndex;
+    });
+    
+    // Auto-play if was playing
+    if (wasPlaying) {
+      setTimeout(() => togglePlayPause(), 100);
+    }
   };
 
   const prevTrack = () => {
     if (musicFiles.length === 0) return;
-    setCurrentTrack((prev) => (prev - 1 + musicFiles.length) % musicFiles.length);
+    const wasPlaying = isPlaying;
+    if (wasPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying(false);
+    }
+    
+    setCurrentTrack((prev) => {
+      const prevIndex = (prev - 1 + musicFiles.length) % musicFiles.length;
+      return prevIndex;
+    });
+    
+    // Auto-play if was playing
+    if (wasPlaying) {
+      setTimeout(() => togglePlayPause(), 100);
+    }
   };
 
   const handleEnded = () => {
     nextTrack();
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVolume = parseFloat(e.target.value);
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
+    }
   };
 
   const getThemeStyles = () => {
@@ -107,8 +157,6 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
     <>
       <audio
         ref={audioRef}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
         onEnded={handleEnded}
         onError={(e) => console.error('Audio error:', e)}
         preload="metadata"
@@ -208,13 +256,16 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
             
             <button
               onClick={togglePlayPause}
-              disabled={musicFiles.length === 0}
+              disabled={musicFiles.length === 0 || isLoading}
               className={`w-16 h-16 rounded-full flex items-center justify-center transition-all disabled:opacity-50 ${styles.activeButton} shadow-lg`}
             >
-              {isPlaying ? 
-                <Pause className="w-8 h-8" /> : 
+              {isLoading ? (
+                <div className="w-6 h-6 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              ) : isPlaying ? (
+                <Pause className="w-8 h-8" />
+              ) : (
                 <Play className="w-8 h-8 ml-1" />
-              }
+              )}
             </button>
             
             <button
@@ -235,13 +286,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange
               max="1"
               step="0.1"
               value={volume}
-              onChange={(e) => {
-                const newVolume = parseFloat(e.target.value);
-                setVolume(newVolume);
-                if (audioRef.current) {
-                  audioRef.current.volume = newVolume;
-                }
-              }}
+              onChange={handleVolumeChange}
               className="flex-1 h-2 rounded appearance-none cursor-pointer bg-gray-600"
             />
             <span className={`text-xs font-mono ${styles.subText}`}>
