@@ -7,8 +7,18 @@ import { useSettings } from '@/contexts/SettingsContext';
 
 const Pictures = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState<string>('childhood');
   const { images, loading, error } = useStorageImages();
   const { theme } = useSettings();
+
+  // Get all images from selected category
+  const currentCategoryImages = images[selectedCategory] || [];
+  
+  // Create image objects with url and name for compatibility
+  const imageObjects = currentCategoryImages.map((url, index) => ({
+    url,
+    name: `${selectedCategory}-image-${index + 1}.jpg`
+  }));
 
   const handleImageNavigation = (direction: 'prev' | 'next' | number) => {
     if (typeof direction === 'number') {
@@ -16,13 +26,18 @@ const Pictures = () => {
     } else {
       setCurrentImageIndex(prev => {
         if (direction === 'prev') {
-          return prev > 0 ? prev - 1 : images.length - 1;
+          return prev > 0 ? prev - 1 : imageObjects.length - 1;
         } else {
-          return prev < images.length - 1 ? prev + 1 : 0;
+          return prev < imageObjects.length - 1 ? prev + 1 : 0;
         }
       });
     }
   };
+
+  // Reset image index when category changes
+  React.useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [selectedCategory]);
 
   // Get window styles based on theme
   const getWindowStyles = () => {
@@ -35,6 +50,7 @@ const Pictures = () => {
         link: 'text-yellow-800 hover:text-yellow-900',
         controlButton: 'bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-700 hover:from-yellow-300 hover:via-yellow-400 hover:to-yellow-600 text-yellow-900 border-yellow-600/50',
         thumbButton: 'border-yellow-600/30 hover:border-yellow-700 hover:bg-yellow-100/50',
+        categoryButton: 'bg-gradient-to-br from-yellow-500 via-yellow-600 to-yellow-800 hover:from-yellow-400 hover:via-yellow-500 hover:to-yellow-700 text-yellow-900 border-yellow-600/50',
       };
     }
     
@@ -47,6 +63,7 @@ const Pictures = () => {
         link: 'text-orange-400 hover:text-orange-300',
         controlButton: 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-white border-white/30',
         thumbButton: 'border-white/20 hover:border-white/40 hover:bg-white/10',
+        categoryButton: 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-white border-white/30',
       };
     }
     
@@ -59,6 +76,7 @@ const Pictures = () => {
         link: 'text-blue-300 hover:text-blue-200',
         controlButton: 'bg-gradient-to-br from-slate-500 via-blue-600 to-slate-700 hover:from-slate-400 hover:via-blue-500 hover:to-slate-600 text-white border-blue-300/30',
         thumbButton: 'border-blue-400/30 hover:border-blue-500/50 hover:bg-blue-500/20',
+        categoryButton: 'bg-gradient-to-br from-slate-500 via-blue-600 to-slate-700 hover:from-slate-400 hover:via-blue-500 hover:to-slate-600 text-white border-blue-300/30',
       };
     }
     
@@ -70,6 +88,7 @@ const Pictures = () => {
       link: 'text-blue-800 hover:text-blue-900',
       controlButton: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white border-black/30',
       thumbButton: 'border-gray-400/50 hover:border-gray-600 hover:bg-gray-100/50',
+      categoryButton: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white border-black/30',
     };
   };
 
@@ -91,6 +110,23 @@ const Pictures = () => {
           <div className="flex flex-col items-center justify-center text-center">
             <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ Pictures ]</h1>
             
+            {/* Category Selection */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              {Object.keys(images).map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`
+                    px-4 py-2 border-2 rounded-lg font-pixel transition-all active:scale-95 capitalize
+                    ${selectedCategory === category ? 'ring-2 ring-blue-500 ring-offset-2' : ''}
+                    ${styles.categoryButton}
+                  `}
+                >
+                  {category} ({images[category].length})
+                </button>
+              ))}
+            </div>
+            
             {loading && (
               <div className={`p-8 ${styles.text} font-pixel`}>Loading pictures...</div>
             )}
@@ -99,16 +135,16 @@ const Pictures = () => {
               <div className="p-8 text-red-600 font-pixel">{error}</div>
             )}
             
-            {!loading && !error && images.length === 0 && (
-              <div className={`p-8 ${styles.text} font-pixel`}>No pictures found</div>
+            {!loading && !error && imageObjects.length === 0 && (
+              <div className={`p-8 ${styles.text} font-pixel`}>No pictures found in {selectedCategory}</div>
             )}
             
-            {!loading && !error && images.length > 0 && (
+            {!loading && !error && imageObjects.length > 0 && (
               <div className="w-full max-w-4xl">
                 <div className="mb-6 border-2 border-black/30 rounded-lg overflow-hidden shadow-lg">
                   <img 
-                    src={images[currentImageIndex]?.url} 
-                    alt={images[currentImageIndex]?.name}
+                    src={imageObjects[currentImageIndex]?.url} 
+                    alt={imageObjects[currentImageIndex]?.name}
                     className="w-full h-96 object-contain bg-gray-100"
                   />
                 </div>
@@ -129,9 +165,9 @@ const Pictures = () => {
                 </div>
                 
                 <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 mb-6">
-                  {images.map((image, index) => (
+                  {imageObjects.map((image, index) => (
                     <button
-                      key={image.name}
+                      key={index}
                       onClick={() => handleImageNavigation(index)}
                       className={`
                         aspect-square border-2 rounded overflow-hidden transition-all hover:scale-105
@@ -149,7 +185,7 @@ const Pictures = () => {
                 </div>
                 
                 <div className={`text-center ${styles.text} font-pixel`}>
-                  {currentImageIndex + 1} / {images.length} - {images[currentImageIndex]?.name}
+                  {currentImageIndex + 1} / {imageObjects.length} - {imageObjects[currentImageIndex]?.name}
                 </div>
               </div>
             )}
