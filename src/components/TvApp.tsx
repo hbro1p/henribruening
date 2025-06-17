@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -147,19 +146,11 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
         <div className={`p-2 border-2 border-black/30 w-full max-w-md shadow-2xl rounded-lg ${styles.windowFrame}`}>
           <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
-                <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
-                <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-                <span className="text-white font-pixel text-sm ml-2">TV.exe - LOCKED</span>
-              </div>
-              <button
-                onClick={onClose}
-                className="text-white hover:text-red-300 transition-colors"
-              >
-                <X className="w-4 h-4" />
-              </button>
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+              <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+              <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+              <span className="text-white font-pixel text-sm ml-2">TV.exe - LOCKED</span>
             </div>
           </div>
           
@@ -209,6 +200,14 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                   </span>
                 </button>
               </form>
+
+              <button
+                onClick={onClose}
+                className={`mt-6 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}
+              >
+                <ArrowLeft className="w-5 h-5" />
+                {t('Back to Desktop')}
+              </button>
             </div>
           </div>
         </div>
@@ -220,19 +219,11 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className={`p-2 border-2 border-black/30 w-full max-w-4xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
         <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
-              <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
-              <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-              <span className="text-white font-pixel text-sm ml-2">TV.exe</span>
-            </div>
-            <button
-              onClick={onClose}
-              className="text-white hover:text-red-300 transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+            <span className="text-white font-pixel text-sm ml-2">TV.exe</span>
           </div>
         </div>
         
@@ -324,6 +315,14 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
             </div>
+
+            <button
+              onClick={onClose}
+              className={`text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}
+            >
+              <ArrowLeft className="w-5 h-5" />
+              {t('Back to Desktop')}
+            </button>
           </div>
         </div>
       </div>
