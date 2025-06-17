@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Play, Pause, SkipForward, SkipBack, Volume2, Radio, X } from 'lucide-react';
+import { Play, Pause, SkipForward, SkipBack, Radio, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useGlobalMusicPlayer } from '@/hooks/useGlobalMusicPlayer';
 
@@ -14,19 +14,12 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
   const {
     isPlaying,
     currentTrack,
-    volume,
     isLoading,
     musicFiles,
     togglePlayPause,
     nextTrack,
-    prevTrack,
-    setVolume
+    prevTrack
   } = useGlobalMusicPlayer();
-
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
-  };
 
   const handleClose = () => {
     // Music continues playing when closing the app - just close the window
@@ -43,9 +36,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
           subText: 'text-green-300',
           button: 'bg-gray-800 hover:bg-gray-700 text-green-400 border border-green-400/50',
           activeButton: 'bg-green-900 text-green-300 border-green-400',
-          accent: 'bg-green-400',
-          volumeSlider: 'accent-green-400',
-          closeButton: 'bg-gray-800 hover:bg-gray-700 text-green-400 border border-green-400/50'
+          backButton: 'bg-gray-800 hover:bg-gray-700 text-green-400 border border-green-400/50'
         };
       case 'retro-chrome':
         return {
@@ -55,9 +46,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
           subText: 'text-blue-700',
           button: 'bg-blue-200 hover:bg-blue-300 text-blue-800 border border-blue-500',
           activeButton: 'bg-blue-400 text-blue-800 border-blue-600',
-          accent: 'bg-blue-500',
-          volumeSlider: 'accent-blue-500',
-          closeButton: 'bg-blue-200 hover:bg-blue-300 text-blue-800 border border-blue-500'
+          backButton: 'bg-blue-200 hover:bg-blue-300 text-blue-800 border border-blue-500'
         };
       default: // space-mood - RED theme to match desktop icon
         return {
@@ -67,9 +56,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
           subText: 'text-red-700',
           button: 'bg-red-200 hover:bg-red-300 text-red-800 border border-red-500',
           activeButton: 'bg-red-400 text-red-800 border-red-600',
-          accent: 'bg-red-500',
-          volumeSlider: 'accent-red-500',
-          closeButton: 'bg-red-200 hover:bg-red-300 text-red-800 border border-red-500'
+          backButton: 'bg-red-200 hover:bg-red-300 text-red-800 border border-red-500'
         };
     }
   };
@@ -81,10 +68,10 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
   return (
     <div className={`fixed inset-0 flex items-center justify-center z-50 p-4 ${styles.fullBackground}`}>
       <div className={`w-96 max-w-full rounded-lg p-6 relative ${styles.container}`}>
-        {/* Header with Close button only */}
+        {/* Header with Back to Desktop button */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div className={`relative w-20 h-16 rounded-lg flex items-center justify-center ${isPlaying ? styles.accent : 'bg-gray-600'} shadow-lg border-2`}>
+            <div className={`relative w-20 h-16 rounded-lg flex items-center justify-center ${isPlaying ? 'bg-red-500' : 'bg-gray-600'} shadow-lg border-2`}>
               {/* Speaker grilles */}
               <div className="absolute left-1 top-2 bottom-2 w-2 bg-black/30 rounded-sm flex flex-col justify-around">
                 {[1,2,3,4,5].map(i => (
@@ -115,9 +102,10 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
           
           <button
             onClick={handleClose}
-            className={`w-8 h-8 rounded flex items-center justify-center ${styles.closeButton}`}
+            className={`px-3 py-2 rounded flex items-center space-x-2 ${styles.backButton}`}
           >
-            <X className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm">{t('Back to Desktop')}</span>
           </button>
         </div>
 
@@ -166,25 +154,8 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        {/* Volume Control */}
-        <div className="flex items-center space-x-3">
-          <Volume2 className={`w-4 h-4 ${styles.text}`} />
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.1"
-            value={volume}
-            onChange={handleVolumeChange}
-            className={`flex-1 h-2 rounded appearance-none cursor-pointer ${theme === 'retro-chrome' ? 'bg-blue-300' : theme === 'space-mood' ? 'bg-red-300' : 'bg-gray-600'} ${styles.volumeSlider}`}
-          />
-          <span className={`text-xs font-mono ${styles.subText}`}>
-            {Math.round(volume * 100)}%
-          </span>
-        </div>
-
         {/* Station Display */}
-        <div className={`mt-4 text-center text-xs ${styles.subText}`}>
+        <div className={`text-center text-xs ${styles.subText}`}>
           {musicFiles.length > 0 ? `Track ${currentTrack + 1}/${musicFiles.length}` : 'No tracks loaded'}
         </div>
       </div>
