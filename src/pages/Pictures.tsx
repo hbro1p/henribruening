@@ -43,14 +43,15 @@ const Pictures = () => {
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
       return {
-        windowFrame: 'bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-600',
-        titleBar: 'bg-gradient-to-r from-yellow-600 via-orange-700 to-red-700',
-        windowContent: 'bg-gradient-to-br from-yellow-200 via-yellow-300 to-yellow-400',
-        text: 'text-yellow-900',
-        link: 'text-yellow-800 hover:text-yellow-900',
-        controlButton: 'bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-700 hover:from-yellow-300 hover:via-yellow-400 hover:to-yellow-600 text-yellow-900 border-yellow-600/50',
-        thumbButton: 'border-yellow-600/30 hover:border-yellow-700 hover:bg-yellow-100/50',
-        categoryButton: 'bg-gradient-to-br from-yellow-500 via-yellow-600 to-yellow-800 hover:from-yellow-400 hover:via-yellow-500 hover:to-yellow-700 text-yellow-900 border-yellow-600/50',
+        windowFrame: 'bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700',
+        titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800',
+        windowContent: 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300',
+        text: 'text-blue-900',
+        link: 'text-blue-800 hover:text-blue-900',
+        controlButton: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white border-blue-300/50',
+        thumbButton: 'border-blue-400/50 hover:border-blue-600 hover:bg-blue-100/50',
+        categoryButton: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white border-blue-300/50',
+        imageContainer: 'border-blue-400/50 bg-white/90',
       };
     }
     
@@ -64,6 +65,7 @@ const Pictures = () => {
         controlButton: 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-white border-white/30',
         thumbButton: 'border-white/20 hover:border-white/40 hover:bg-white/10',
         categoryButton: 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-white border-white/30',
+        imageContainer: 'border-white/30 bg-gray-900/50',
       };
     }
     
@@ -77,25 +79,27 @@ const Pictures = () => {
         controlButton: 'bg-gradient-to-br from-slate-500 via-blue-600 to-slate-700 hover:from-slate-400 hover:via-blue-500 hover:to-slate-600 text-white border-blue-300/30',
         thumbButton: 'border-blue-400/30 hover:border-blue-500/50 hover:bg-blue-500/20',
         categoryButton: 'bg-gradient-to-br from-slate-500 via-blue-600 to-slate-700 hover:from-slate-400 hover:via-blue-500 hover:to-slate-600 text-white border-blue-300/30',
+        imageContainer: 'border-blue-400/30 bg-slate-900/50',
       };
     }
     
     return {
-      windowFrame: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600',
-      titleBar: 'bg-gradient-to-r from-orange-600 via-orange-700 to-red-700',
-      windowContent: 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400',
-      text: 'text-black',
+      windowFrame: 'bg-gradient-to-br from-blue-400 via-blue-500 to-blue-700',
+      titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800',
+      windowContent: 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300',
+      text: 'text-blue-900',
       link: 'text-blue-800 hover:text-blue-900',
-      controlButton: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white border-black/30',
-      thumbButton: 'border-gray-400/50 hover:border-gray-600 hover:bg-gray-100/50',
-      categoryButton: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white border-black/30',
+      controlButton: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white border-blue-300/50',
+      thumbButton: 'border-blue-400/50 hover:border-blue-600 hover:bg-blue-100/50',
+      categoryButton: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white border-blue-300/50',
+      imageContainer: 'border-blue-400/50 bg-white/90',
     };
   };
 
   const styles = getWindowStyles();
 
   return (
-    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-yellow' : ''}`}>
+    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
       <div className={`p-2 border-2 border-black/30 w-full max-w-6xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
         <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
           <div className="flex items-center space-x-2">
@@ -118,7 +122,7 @@ const Pictures = () => {
                   onClick={() => setSelectedCategory(category)}
                   className={`
                     px-4 py-2 border-2 rounded-lg font-pixel transition-all active:scale-95 capitalize
-                    ${selectedCategory === category ? 'ring-2 ring-blue-500 ring-offset-2' : ''}
+                    ${selectedCategory === category ? 'ring-2 ring-orange-500 ring-offset-2' : ''}
                     ${styles.categoryButton}
                   `}
                 >
@@ -141,24 +145,24 @@ const Pictures = () => {
             
             {!loading && !error && imageObjects.length > 0 && (
               <div className="w-full max-w-4xl">
-                <div className="mb-6 border-2 border-black/30 rounded-lg overflow-hidden shadow-lg">
+                <div className={`mb-6 border-4 rounded-xl overflow-hidden shadow-2xl ${styles.imageContainer}`}>
                   <img 
                     src={imageObjects[currentImageIndex]?.url} 
                     alt={imageObjects[currentImageIndex]?.name}
-                    className="w-full h-96 object-contain bg-gray-100"
+                    className="w-full h-96 object-contain bg-gradient-to-br from-white via-gray-50 to-gray-100"
                   />
                 </div>
                 
                 <div className="flex gap-4 justify-center mb-6">
                   <button 
                     onClick={() => handleImageNavigation('prev')}
-                    className={`px-6 py-3 border-2 rounded-lg font-pixel transition-all active:scale-95 ${styles.controlButton}`}
+                    className={`px-6 py-3 border-2 rounded-lg font-pixel transition-all active:scale-95 shadow-lg ${styles.controlButton}`}
                   >
                     Previous
                   </button>
                   <button 
                     onClick={() => handleImageNavigation('next')}
-                    className={`px-6 py-3 border-2 rounded-lg font-pixel transition-all active:scale-95 ${styles.controlButton}`}
+                    className={`px-6 py-3 border-2 rounded-lg font-pixel transition-all active:scale-95 shadow-lg ${styles.controlButton}`}
                   >
                     Next
                   </button>
@@ -170,8 +174,8 @@ const Pictures = () => {
                       key={index}
                       onClick={() => handleImageNavigation(index)}
                       className={`
-                        aspect-square border-2 rounded overflow-hidden transition-all hover:scale-105
-                        ${currentImageIndex === index ? 'ring-2 ring-blue-500 ring-offset-2' : ''}
+                        aspect-square border-2 rounded-lg overflow-hidden transition-all hover:scale-105 shadow-md
+                        ${currentImageIndex === index ? 'ring-4 ring-orange-500 ring-offset-2' : ''}
                         ${styles.thumbButton}
                       `}
                     >
@@ -184,7 +188,7 @@ const Pictures = () => {
                   ))}
                 </div>
                 
-                <div className={`text-center ${styles.text} font-pixel`}>
+                <div className={`text-center ${styles.text} font-pixel text-lg`}>
                   {currentImageIndex + 1} / {imageObjects.length} - {imageObjects[currentImageIndex]?.name}
                 </div>
               </div>
