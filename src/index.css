@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=VT323:wght@400&display=swap');
 @tailwind base;
 @tailwind components;
@@ -177,13 +178,30 @@ body {
   }
 }
 
-@keyframes scanlines {
-  0% { transform: translateY(0px); }
-  100% { transform: translateY(6px); }
-}
-
-/* Add scanlines animation for TV effect */
+/* Enhanced scanlines animation for TV effect */
 @keyframes scanlines {
   0% { transform: translateY(0px); }
   100% { transform: translateY(4px); }
+}
+
+/* Static/noise animation for CRT TV */
+@keyframes static {
+  0% { transform: translateX(0) translateY(0); }
+  10% { transform: translateX(-5%) translateY(-5%); }
+  20% { transform: translateX(-10%) translateY(5%); }
+  30% { transform: translateX(5%) translateY(-10%); }
+  40% { transform: translateX(-5%) translateY(15%); }
+  50% { transform: translateX(-10%) translateY(5%); }
+  60% { transform: translateX(15%) translateY(0); }
+  70% { transform: translateX(0) translateY(10%); }
+  80% { transform: translateX(-15%) translateY(0); }
+  90% { transform: translateX(10%) translateY(5%); }
+  100% { transform: translateX(5%) translateY(0); }
+}
+
+/* Radial gradient utility for CRT curvature */
+@layer utilities {
+  .bg-gradient-radial {
+    background-image: radial-gradient(circle, var(--tw-gradient-stops));
+  }
 }

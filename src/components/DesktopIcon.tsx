@@ -6,7 +6,8 @@ import { useSettings } from '@/contexts/SettingsContext';
 interface DesktopIconProps {
   icon: React.ElementType;
   label: string;
-  to: string;
+  to?: string;
+  onClick?: () => void;
 }
 
 const getIconStyles = (label: string, theme: string) => {
@@ -19,14 +20,14 @@ const getIconStyles = (label: string, theme: string) => {
       'Meine Videos': 'from-green-500 to-green-700',
       'My Projects': 'from-orange-500 to-orange-700',
       'Meine Projekte': 'from-orange-500 to-orange-700',
+      'Radio': 'from-red-500 to-red-700',
+      'TV': 'from-purple-500 to-purple-700',
       'About Me': 'from-teal-500 to-teal-700',
       'Über Mich': 'from-teal-500 to-teal-700',
-      'Contact': 'from-red-500 to-red-700',
-      'Kontakt': 'from-red-500 to-red-700',
+      'Contact': 'from-pink-500 to-pink-700',
+      'Kontakt': 'from-pink-500 to-pink-700',
       'Settings': 'from-gray-500 to-gray-700',
       'Einstellungen': 'from-gray-500 to-gray-700',
-      'Game.exe': 'from-purple-500 to-purple-700',
-      'Spiel.exe': 'from-purple-500 to-purple-700',
     };
     
     return {
@@ -70,15 +71,12 @@ const getIconStyles = (label: string, theme: string) => {
   };
 };
 
-const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to }) => {
+const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to, onClick }) => {
   const { theme } = useSettings();
   const styles = getIconStyles(label, theme);
   
-  return (
-    <Link
-      to={to}
-      className="group flex flex-col items-center justify-center space-y-3 text-center transition-all duration-200 hover:scale-105"
-    >
+  const content = (
+    <>
       <div className="w-20 h-20 flex items-center justify-center">
         <div className={`relative w-16 h-16 bg-gradient-to-br ${styles.gradient} rounded border-2 ${styles.border} ${styles.hoverBorder} ${styles.shadow} transition-all duration-200 flex items-center justify-center`}>
           {/* Windows XP-style highlight */}
@@ -102,6 +100,26 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to }) => {
           {label}
         </span>
       </div>
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <div
+        onClick={onClick}
+        className="group flex flex-col items-center justify-center space-y-3 text-center transition-all duration-200 hover:scale-105 cursor-pointer"
+      >
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      to={to || '/'}
+      className="group flex flex-col items-center justify-center space-y-3 text-center transition-all duration-200 hover:scale-105"
+    >
+      {content}
     </Link>
   );
 };

@@ -7,9 +7,10 @@ import { useMusicFiles } from '@/hooks/useMusicFiles';
 interface RadioAppProps {
   isOpen: boolean;
   onClose: () => void;
+  onMusicStateChange: (isPlaying: boolean, trackTitle: string) => void;
 }
 
-const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
+const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose, onMusicStateChange }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
   const [volume, setVolume] = useState(0.7);
@@ -38,6 +39,12 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
       }
     }
   }, [currentTrack, musicFiles]);
+
+  useEffect(() => {
+    // Notify parent about music state changes
+    const trackTitle = musicFiles[currentTrack]?.title || '';
+    onMusicStateChange(isPlaying, trackTitle);
+  }, [isPlaying, currentTrack, musicFiles, onMusicStateChange]);
 
   const togglePlayPause = () => {
     if (!audioRef.current || musicFiles.length === 0) return;
@@ -117,17 +124,48 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
             <X className="w-4 h-4" />
           </button>
 
-          {/* Radio Header */}
+          {/* Radio Header with Boombox Design */}
           <div className="flex items-center justify-center mb-6">
-            <div className={`w-16 h-16 rounded-lg flex items-center justify-center ${isPlaying ? 'bg-red-600' : 'bg-gray-600'} shadow-lg border-2`}>
-              <Radio className="w-8 h-8 text-white" />
+            <div className={`relative w-20 h-16 rounded-lg flex items-center justify-center ${isPlaying ? 'bg-red-600' : 'bg-gray-600'} shadow-lg border-2`}>
+              {/* Speaker grilles */}
+              <div className="absolute left-1 top-2 bottom-2 w-2 bg-black/30 rounded-sm flex flex-col justify-around">
+                {[1,2,3,4,5].map(i => (
+                  <div key={i} className="h-0.5 bg-white/20 rounded" />
+                ))}
+              </div>
+              <div className="absolute right-1 top-2 bottom-2 w-2 bg-black/30 rounded-sm flex flex-col justify-around">
+                {[1,2,3,4,5].map(i => (
+                  <div key={i} className="h-0.5 bg-white/20 rounded" />
+                ))}
+              </div>
+              
+              {/* Center antenna */}
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-0.5 h-4 bg-gray-400 rounded-full" />
+              
+              <Radio className="w-8 h-8 text-white z-10" />
+              
+              {/* Signal bars animation */}
+              {isPlaying && (
+                <div className="absolute -top-1 right-2 flex space-x-0.5">
+                  {[1,2,3].map((i) => (
+                    <div
+                      key={i}
+                      className="w-0.5 bg-green-400 animate-pulse rounded-full"
+                      style={{
+                        height: `${4 + i * 2}px`,
+                        animationDelay: `${i * 0.2}s`
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
           {/* Station Info */}
           <div className="text-center mb-6">
             <h2 className={`text-xl font-bold mb-2 ${styles.text}`}>
-              📻 RETRO RADIO
+              RETRO RADIO
             </h2>
             <div className={`bg-black/30 rounded p-3 border ${styles.text.includes('cyan') ? 'border-cyan-400/30' : styles.text.includes('green') ? 'border-green-400/30' : 'border-blue-400/30'}`}>
               <p className={`text-sm mb-1 ${styles.text}`}>
@@ -136,16 +174,19 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
               <p className={`text-xs ${styles.subText} truncate`}>
                 {loading ? '---' : musicFiles.length > 0 ? musicFiles[currentTrack]?.title || 'Unknown Track' : 'Upload music to /music/ folder'}
               </p>
+              
+              {/* Equalizer visualization */}
               {isPlaying && (
                 <div className="flex justify-center mt-2">
                   <div className="flex space-x-1">
-                    {[1,2,3,4,5].map((i) => (
+                    {[1,2,3,4,5,6,7].map((i) => (
                       <div
                         key={i}
                         className={`w-1 bg-current animate-pulse ${styles.text}`}
                         style={{
-                          height: `${Math.random() * 16 + 8}px`,
-                          animationDelay: `${i * 0.1}s`
+                          height: `${Math.random() * 20 + 8}px`,
+                          animationDelay: `${i * 0.1}s`,
+                          animationDuration: `${0.5 + Math.random() * 0.5}s`
                         }}
                       />
                     ))}
@@ -160,28 +201,28 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
             <button
               onClick={prevTrack}
               disabled={musicFiles.length === 0}
-              className={`w-10 h-10 rounded flex items-center justify-center transition-all disabled:opacity-50 ${styles.button}`}
+              className={`w-12 h-12 rounded flex items-center justify-center transition-all disabled:opacity-50 ${styles.button}`}
             >
-              <SkipBack className="w-4 h-4" />
+              <SkipBack className="w-5 h-5" />
             </button>
             
             <button
               onClick={togglePlayPause}
               disabled={musicFiles.length === 0}
-              className={`w-12 h-12 rounded flex items-center justify-center transition-all disabled:opacity-50 ${styles.activeButton}`}
+              className={`w-16 h-16 rounded-full flex items-center justify-center transition-all disabled:opacity-50 ${styles.activeButton} shadow-lg`}
             >
               {isPlaying ? 
-                <Pause className="w-5 h-5" /> : 
-                <Play className="w-5 h-5 ml-0.5" />
+                <Pause className="w-8 h-8" /> : 
+                <Play className="w-8 h-8 ml-1" />
               }
             </button>
             
             <button
               onClick={nextTrack}
               disabled={musicFiles.length === 0}
-              className={`w-10 h-10 rounded flex items-center justify-center transition-all disabled:opacity-50 ${styles.button}`}
+              className={`w-12 h-12 rounded flex items-center justify-center transition-all disabled:opacity-50 ${styles.button}`}
             >
-              <SkipForward className="w-4 h-4" />
+              <SkipForward className="w-5 h-5" />
             </button>
           </div>
 
