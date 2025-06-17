@@ -1,4 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
+
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { Folder, ArrowLeft, RefreshCw, X } from 'lucide-react';
@@ -11,7 +12,6 @@ import {
 } from "@/components/ui/carousel";
 import { useStorageImages } from '@/hooks/useStorageImages';
 import { useSettings } from '@/contexts/SettingsContext';
-import FullscreenButton from '@/components/FullscreenButton';
 
 // Fallback images for when storage is empty
 const fallbackImages = {
@@ -88,14 +88,6 @@ const Pictures = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { images: storageImages, loading, error, refetch } = useStorageImages();
   const { theme, t } = useSettings();
-  
-  // Single ref for the currently visible image
-  const currentImageRef = useRef<HTMLDivElement>(null);
-
-  // Get ref for specific index
-  const getImageRef = useCallback((index: number) => {
-    return currentImageRef.current || null;
-  }, []);
 
   // Use storage images primarily, only fall back if storage category is completely empty
   const photoCategories = {
@@ -224,10 +216,7 @@ const Pictures = () => {
                             <div className="p-2">
                               <Card className="border-2 border-black/30 bg-gradient-to-br from-gray-800 to-black overflow-hidden shadow-2xl rounded-lg">
                                 <CardContent className="flex aspect-[4/3] items-center justify-center p-2 relative">
-                                  <div 
-                                    ref={index === currentImageIndex ? currentImageRef : null}
-                                    className="bg-gradient-to-br from-gray-600 to-gray-800 p-2 rounded border border-black/20 shadow-inner h-full w-full flex items-center justify-center relative group"
-                                  >
+                                  <div className="bg-gradient-to-br from-gray-600 to-gray-800 p-2 rounded border border-black/20 shadow-inner h-full w-full flex items-center justify-center relative">
                                     <img 
                                       src={src} 
                                       alt={`${selectedCategory} memory ${index + 1}`} 
@@ -239,15 +228,6 @@ const Pictures = () => {
                                         target.style.display = 'none';
                                       }}
                                     />
-                                    {/* Fullscreen button - only show on current image */}
-                                    {index === currentImageIndex && (
-                                      <div className="absolute top-2 right-2 opacity-80 hover:opacity-100 transition-opacity duration-200 z-10">
-                                        <FullscreenButton 
-                                          targetElement={currentImageRef.current} 
-                                          className="touch-manipulation bg-black/80 hover:bg-black"
-                                        />
-                                      </div>
-                                    )}
                                   </div>
                                 </CardContent>
                               </Card>
