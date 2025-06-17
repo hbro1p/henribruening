@@ -24,74 +24,80 @@ export const useTvVideos = () => {
     return nameWithoutExt.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
-  useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+  const fetchVideos = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        console.log('=== FETCHING TV VIDEOS ===');
+      console.log('=== FETCHING TV VIDEOS ===');
 
-        const { data: files, error: listError } = await supabase.storage
-          .from('tv')
-          .list('', {
-            limit: 1000,
-            sortBy: { column: 'name', order: 'asc' }
-          });
+      const { data: files, error: listError } = await supabase.storage
+        .from('tv')
+        .list('', {
+          limit: 1000,
+          sortBy: { column: 'name', order: 'asc' }
+        });
 
-        if (listError) {
-          console.error('Error listing TV videos:', listError);
-          setError('Failed to load TV videos');
-          return;
-        }
-
-        if (!files) {
-          console.log('No files found in TV bucket');
-          setVideos([]);
-          return;
-        }
-
-        console.log(`Found ${files.length} items in TV bucket`);
-
-        const videoFiles: TvVideo[] = [];
-
-        for (const file of files) {
-          if (file.id === null) {
-            console.log(`Skipping folder: ${file.name}`);
-            continue;
-          }
-
-          if (file.name && isVideoFile(file.name)) {
-            const { data: urlData } = supabase.storage
-              .from('tv')
-              .getPublicUrl(file.name);
-
-            if (urlData?.publicUrl) {
-              videoFiles.push({
-                name: file.name,
-                url: urlData.publicUrl,
-                title: formatTitle(file.name)
-              });
-              console.log(`✅ Added video file: ${file.name}`);
-            }
-          } else {
-            console.log(`❌ Skipping non-video file: ${file.name}`);
-          }
-        }
-
-        console.log(`=== FINAL RESULT: ${videoFiles.length} video files ===`);
-        setVideos(videoFiles);
-
-      } catch (err) {
-        console.error('❌ Error fetching TV videos:', err);
-        setError(err instanceof Error ? err.message : 'Unknown error occurred');
-      } finally {
-        setLoading(false);
+      if (listError) {
+        console.error('Error listing TV videos:', listError);
+        setError('Failed to load TV videos');
+        return;
       }
-    };
 
+      if (!files) {
+        console.log('No files found in TV bucket');
+        setVideos([]);
+        return;
+      }
+
+      console.log(`Found ${files.length} items in TV bucket`);
+
+      const videoFiles: TvVideo[] = [];
+
+      for (const file of files) {
+        if (file.id === null) {
+          console.log(`Skipping folder: ${file.name}`);
+          continue;
+        }
+
+        if (file.name && isVideoFile(file.name)) {
+          const { data: urlData } = supabase.storage
+            .from('tv')
+            .getPublicUrl(file.name);
+
+          if (urlData?.publicUrl) {
+            videoFiles.push({
+              name: file.name,
+              url: urlData.publicUrl,
+              title: formatTitle(file.name)
+            });
+            console.log(`✅ Added video file: ${file.name}`);
+          }
+        } else {
+          console.log(`❌ Skipping non-video file: ${file.name}`);
+        }
+      }
+
+      console.log(`=== FINAL RESULT: ${videoFiles.length} video files ===`);
+      setVideos(videoFiles);
+
+    } catch (err) {
+      console.error('❌ Error fetching TV videos:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchVideos();
   }, []);
 
-  return { videos, loading, error };
+  // Return both the state and a refresh function
+  return { 
+    videos, 
+    loading, 
+    error, 
+    refetch: fetchVideos 
+  };
 };

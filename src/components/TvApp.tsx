@@ -1,7 +1,9 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useTvVideos } from '@/hooks/useTvVideos';
+import VideoUpload from './VideoUpload';
 
 interface TvAppProps {
   isOpen: boolean;
@@ -14,6 +16,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   const [passwordError, setPasswordError] = useState('');
   const [currentVideo, setCurrentVideo] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { t, theme } = useSettings();
   const { videos, loading } = useTvVideos();
@@ -120,6 +123,11 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
 
   const handleVideoEnded = () => {
     nextVideo();
+  };
+
+  const handleUploadComplete = () => {
+    // Trigger a refresh of the video list
+    setRefreshTrigger(prev => prev + 1);
   };
 
   useEffect(() => {
@@ -231,6 +239,11 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
           <div className="flex flex-col items-center justify-center">
             <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text} text-center`}>[ {t('Retro TV')} ]</h1>
             
+            {/* Video Upload Section */}
+            <div className="w-full max-w-2xl mb-6">
+              <VideoUpload onUploadComplete={handleUploadComplete} theme={theme} />
+            </div>
+
             {/* Video Player */}
             <div className={`w-full max-w-2xl ${styles.playerBg} p-6 border-2 border-black/30 rounded-lg shadow-lg mb-6`}>
               <div className="relative">
@@ -269,7 +282,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                       <div className="text-6xl mb-4">📡</div>
                       <p className={`${styles.text} font-pixel text-lg`}>NO SIGNAL</p>
                       <p className={`${styles.text} font-pixel text-sm mt-2 opacity-70`}>
-                        Upload videos to /tv/ folder
+                        Upload videos using the form above
                       </p>
                     </div>
                   </div>
