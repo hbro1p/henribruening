@@ -5,11 +5,26 @@ import { ArrowLeft, Code, ExternalLink } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { supabase } from '@/integrations/supabase/client';
 
+interface Project {
+  id: string;
+  title: string;
+  description: {
+    en: string;
+    de: string;
+  };
+  links: Array<{
+    url: string;
+    label: string;
+  }>;
+}
+
 const MyProjects = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [password, setPassword] = useState('');
   const [showError, setShowError] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoadingProjects, setIsLoadingProjects] = useState(false);
   const { theme, t } = useSettings();
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
@@ -26,6 +41,7 @@ const MyProjects = () => {
       if (data.valid) {
         setIsUnlocked(true);
         setShowError(false);
+        await fetchProjects(password);
       } else {
         setShowError(true);
         setPassword('');
@@ -36,6 +52,25 @@ const MyProjects = () => {
       setPassword('');
     } finally {
       setIsVerifying(false);
+    }
+  };
+
+  const fetchProjects = async (validPassword: string) => {
+    setIsLoadingProjects(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('get-projects', {
+        body: { password: validPassword }
+      });
+      
+      if (error) throw error;
+      
+      if (data.projects) {
+        setProjects(data.projects);
+      }
+    } catch (error) {
+      console.error('Failed to fetch projects:', error);
+    } finally {
+      setIsLoadingProjects(false);
     }
   };
 
@@ -197,53 +232,31 @@ const MyProjects = () => {
           <div className="flex flex-col items-center justify-center text-center">
             <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Projects')} ]</h1>
             
-            <div className="grid gap-8 text-left w-full max-w-2xl">
-              <div className="bg-gradient-to-br from-white via-gray-100 to-gray-200 p-6 border-2 border-black/30 rounded-lg shadow-lg">
-                <div className="absolute inset-x-2 top-2 h-2 bg-gradient-to-b from-white/40 to-transparent rounded-t"></div>
-                <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel drop-shadow-sm ${styles.text}`}>
-                  Internly
-                </h3>
-                <p className={`mb-4 drop-shadow-sm ${styles.text}`}>
-                  {t('language') === 'deutsch' 
-                    ? 'Entwickle derzeit eine Plattform, um Studenten mit Praktika zu verbinden'
-                    : 'Currently developing a platform to connect students with internships'
-                  }
-                </p>
-                <div className="space-y-2">
-                  <a href="https://internly.replit.app" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel drop-shadow-sm ${styles.link}`}>
-                    Website <ExternalLink className="w-4 h-4" />
-                  </a>
-                  <a href="https://www.instagram.com/internly.de/" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel drop-shadow-sm ${styles.link}`}>
-                    Instagram <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
+            {isLoadingProjects ? (
+              <div className={`${styles.text} font-pixel text-lg mb-8`}>Loading projects...</div>
+            ) : (
+              <div className="grid gap-8 text-left w-full max-w-2xl">
+                {projects.map((project) => (
+                  <div key={project.id} className="bg-gradient-to-br from-white via-gray-100 to-gray-200 p-6 border-2 border-black/30 rounded-lg shadow-lg relative">
+                    <div className="absolute inset-x-2 top-2 h-2 bg-gradient-to-b from-white/40 to-transparent rounded-t"></div>
+                    <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel drop-shadow-sm ${styles.text}`}>
+                      {project.title}
+                    </h3>
+                    <p className={`mb-4 drop-shadow-sm ${styles.text}`}>
+                      {t('language') === 'deutsch' ? project.description.de : project.description.en}
+                    </p>
+                    <div className="space-y-2">
+                      {project.links.map((link, index) => (
+                        <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" 
+                           className={`flex items-center gap-2 underline font-pixel drop-shadow-sm ${styles.link}`}>
+                          {link.label} <ExternalLink className="w-4 h-4" />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-
-              <div className="bg-gradient-to-br from-white via-gray-100 to-gray-200 p-6 border-2 border-black/30 rounded-lg shadow-lg relative">
-                <div className="absolute inset-x-2 top-2 h-2 bg-gradient-to-b from-white/40 to-transparent rounded-t"></div>
-                <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel drop-shadow-sm ${styles.text}`}>
-                  Echo Coesfeld
-                </h3>
-                <p className={`mb-4 drop-shadow-sm ${styles.text}`}>
-                  {t('language') === 'deutsch'
-                    ? 'Ein öffentliches Stimmprojekt mit QR-Codes & Interviews, um echte Meinungen von Menschen in Coesfeld zu sammeln'
-                    : 'A public voice project using QR codes & interviews to gather real opinions from people in Coesfeld'
-                  }
-                </p>
-                <div className="space-y-2">
-                  <a href="https://www.instagram.com/echo.coesfeld/" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel drop-shadow-sm ${styles.link}`}>
-                    Instagram <ExternalLink className="w-4 h-4" />
-                  </a>
-                  <a href="https://www.tiktok.com/@echo.coesfeld" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel drop-shadow-sm ${styles.link}`}>
-                    TikTok <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-            </div>
+            )}
 
             <Link to="/desktop" className={`mt-8 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
               <ArrowLeft className="w-5 h-5" />

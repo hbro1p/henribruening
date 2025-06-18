@@ -1,15 +1,29 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Video, ExternalLink } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { supabase } from '@/integrations/supabase/client';
 
+interface VideoProject {
+  id: string;
+  title: string | { en: string; de: string };
+  description: {
+    en: string;
+    de: string;
+  };
+  links: Array<{
+    url: string;
+    label: string | { en: string; de: string };
+  }>;
+}
+
 const MyVideos = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [password, setPassword] = useState('');
   const [showError, setShowError] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [videos, setVideos] = useState<VideoProject[]>([]);
+  const [isLoadingVideos, setIsLoadingVideos] = useState(false);
   const { theme, t } = useSettings();
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
@@ -26,6 +40,7 @@ const MyVideos = () => {
       if (data.valid) {
         setIsUnlocked(true);
         setShowError(false);
+        await fetchVideos(password);
       } else {
         setShowError(true);
         setPassword('');
@@ -37,6 +52,35 @@ const MyVideos = () => {
     } finally {
       setIsVerifying(false);
     }
+  };
+
+  const fetchVideos = async (validPassword: string) => {
+    setIsLoadingVideos(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('get-videos', {
+        body: { password: validPassword }
+      });
+      
+      if (error) throw error;
+      
+      if (data.videos) {
+        setVideos(data.videos);
+      }
+    } catch (error) {
+      console.error('Failed to fetch videos:', error);
+    } finally {
+      setIsLoadingVideos(false);
+    }
+  };
+
+  const getTitle = (title: string | { en: string; de: string }): string => {
+    if (typeof title === 'string') return title;
+    return t('language') === 'deutsch' ? title.de : title.en;
+  };
+
+  const getLabel = (label: string | { en: string; de: string }): string => {
+    if (typeof label === 'string') return label;
+    return t('language') === 'deutsch' ? label.de : label.en;
   };
 
   // Get folder color scheme for space mood theme
@@ -171,93 +215,30 @@ const MyVideos = () => {
           <div className="flex flex-col items-center justify-center text-center">
             <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Videos')} ]</h1>
             
-            <div className="grid gap-8 text-left w-full max-w-2xl">
-              <div className={`p-6 border-2 ${styles.cardBg}`}>
-                <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
-                  Ute Uphues
-                </h3>
-                <p className={`mb-4 font-pixel ${styles.text}`}>{t('Teen coaching videos created for Ute\'s TikTok and Instagram')}</p>
-                <div className="space-y-2">
-                  <a href="https://www.tiktok.com/@ute.uphues" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
-                    TikTok <ExternalLink className="w-4 h-4" />
-                  </a>
-                  <a href="https://ute-uphues.replit.app" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
-                    {t('Website I built')} <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
+            {isLoadingVideos ? (
+              <div className={`${styles.text} font-pixel text-lg mb-8`}>Loading videos...</div>
+            ) : (
+              <div className="grid gap-8 text-left w-full max-w-2xl">
+                {videos.map((video) => (
+                  <div key={video.id} className={`p-6 border-2 ${styles.cardBg}`}>
+                    <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
+                      {getTitle(video.title)}
+                    </h3>
+                    <p className={`mb-4 font-pixel ${styles.text}`}>
+                      {t('language') === 'deutsch' ? video.description.de : video.description.en}
+                    </p>
+                    <div className="space-y-2">
+                      {video.links.map((link, index) => (
+                        <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" 
+                           className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
+                          {getLabel(link.label)} <ExternalLink className="w-4 h-4" />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
-
-              <div className={`p-6 border-2 ${styles.cardBg}`}>
-                <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
-                  Real Estate Internship (Mallorca)
-                </h3>
-                <p className={`mb-4 font-pixel ${styles.text}`}>{t('A creative and content-focused internship at FALC Real Estate in Cala Millor')}</p>
-                <div className="space-y-2">
-                  <a href="https://www.instagram.com/p/DIjcdGZIAcr/" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
-                    Instagram <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-
-              <div className={`p-6 border-2 ${styles.cardBg}`}>
-                <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
-                  HenriAWB – Blackstories with a Hook
-                </h3>
-                <p className={`mb-4 font-pixel ${styles.text}`}>{t('Entertaining TikToks with surprising twists, hooks, and storytelling')}</p>
-                <div className="space-y-2">
-                  <a href="https://www.youtube.com/@Henriawb" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
-                    YouTube <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-
-              <div className={`p-6 border-2 ${styles.cardBg}`}>
-                <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
-                  ThisTimeFr
-                </h3>
-                <p className={`mb-4 font-pixel ${styles.text}`}>{t('My storytelling identity for vlogs, creative clips, and travel adventures')}</p>
-                <div className="space-y-2">
-                  <a href="https://www.tiktok.com/@thistimefrr" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
-                    TikTok <ExternalLink className="w-4 h-4" />
-                  </a>
-                  <a href="https://www.youtube.com/@Thistimefr" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
-                    YouTube <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-
-              <div className={`p-6 border-2 ${styles.cardBg}`}>
-                <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
-                  {t('language') === 'deutsch' ? 'Weitere Videos' : 'More Videos'}
-                </h3>
-                <p className={`mb-4 font-pixel ${styles.text}`}>
-                  {t('language') === 'deutsch' 
-                    ? 'Weitere Videos aus verschiedenen Projekten und Kollaborationen'
-                    : 'Additional videos from various projects and collaborations'
-                  }
-                </p>
-                <div className="space-y-2">
-                  <a href="https://www.youtube.com/watch?v=jr0z7nFgE7Q" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
-                    {t('language') === 'deutsch' ? 'Ein Tag als Immobilienmakler' : 'A Day as a Real Estate Agent'} <ExternalLink className="w-4 h-4" />
-                  </a>
-                  <a href="https://www.instagram.com/reel/C2Il3BRoCV5/" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
-                    Thomas Puke DEVK - {t('language') === 'deutsch' ? 'Kurzwerbung' : 'Short Advertisement'} <ExternalLink className="w-4 h-4" />
-                  </a>
-                  <a href="https://heriburg-gymnasium.de/projektwoche-2025/" target="_blank" rel="noopener noreferrer" 
-                     className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
-                    {t('language') === 'deutsch' ? 'Film zur Projektwoche' : 'Project Week Film'} <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-            </div>
+            )}
 
             <Link to="/desktop" className={`mt-8 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
               <ArrowLeft className="w-5 h-5" />
