@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { X, Play, Pause, Volume2, VolumeX, Maximize, RotateCcw } from 'lucide-react';
-import { useSecureTvVideos } from '@/hooks/useSecureTvVideos';
+import { useTvVideos } from '@/hooks/useTvVideos';
+import { useGlobalAuth } from '@/hooks/useGlobalAuth';
 
 interface TvAppProps {
   isOpen: boolean;
@@ -13,11 +15,8 @@ const TvApp = ({ isOpen, onClose }: TvAppProps) => {
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   
-  // Get authenticated session to determine if user has access
-  const isAuthenticated = sessionStorage.getItem('app_authenticated') === 'true';
-  
-  // Use TV internal access since app-level authentication is handled at entry
-  const { videos, loading, error } = useSecureTvVideos(isAuthenticated ? 'TV_INTERNAL_ACCESS' : undefined);
+  const isAuthenticated = useGlobalAuth();
+  const { videos, loading, error } = useTvVideos();
 
   const currentVideo = videos[currentVideoIndex];
 
@@ -113,8 +112,8 @@ const TvApp = ({ isOpen, onClose }: TvAppProps) => {
                 <div className="flex-1 bg-black relative">
                   {currentVideo && (
                     <video
-                      key={currentVideo.secureUrl}
-                      src={currentVideo.secureUrl}
+                      key={currentVideo.url}
+                      src={currentVideo.url}
                       className="w-full h-full object-contain"
                       controls={false}
                       autoPlay={isPlaying}

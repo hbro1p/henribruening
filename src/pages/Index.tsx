@@ -6,7 +6,6 @@ import BlinkingCursor from '@/components/BlinkingCursor';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
-import { generateSecureHash } from '@/utils/encryption';
 
 const Landing = () => {
   const [loading, setLoading] = useState(true);
@@ -20,7 +19,7 @@ const Landing = () => {
 
   useEffect(() => {
     // Check if user is already authenticated in this session
-    const sessionAuth = sessionStorage.getItem('app_authenticated');
+    const sessionAuth = sessionStorage.getItem('global_authenticated');
     if (sessionAuth === 'true') {
       setIsAuthenticated(true);
     }
@@ -56,14 +55,11 @@ const Landing = () => {
     }
 
     try {
-      const timestamp = Date.now();
-      const passwordHash = generateSecureHash(password, timestamp);
-
-      // Verify against the master password
+      // Verify the master password via secure server-side validation
       const { data, error: verifyError } = await supabase.functions.invoke('verify-password', {
         body: { 
           password,
-          section: 'master' // New section for main app access
+          section: 'master'
         }
       });
 
@@ -74,15 +70,15 @@ const Landing = () => {
         
         // Progressive lockout
         if (attempts >= 2) {
-          const lockoutTime = Math.min(60000 * Math.pow(2, attempts - 2), 300000); // Max 5 minutes
+          const lockoutTime = Math.min(60000 * Math.pow(2, attempts - 2), 300000);
           setError(`Too many failed attempts. Please wait ${Math.floor(lockoutTime / 1000)} seconds.`);
           setTimeout(() => setError(''), lockoutTime);
         }
         return;
       }
 
-      // Success - store authentication in session
-      sessionStorage.setItem('app_authenticated', 'true');
+      // Success - store global authentication in session
+      sessionStorage.setItem('global_authenticated', 'true');
       setIsAuthenticated(true);
       setAttempts(0);
       setPassword('');
