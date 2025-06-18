@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Image as ImageIcon } from 'lucide-react';
@@ -223,17 +222,20 @@ const Pictures = () => {
               </button>
             )}
             
-            {loading && (
-              <div className={`p-8 ${styles.text} font-pixel`}>Loading pictures...</div>
-            )}
-            
-            {error && (
-              <div className="p-8 text-red-600 font-pixel">{error}</div>
-            )}
-            
-            {!loading && !error && selectedCategory && imageObjects.length === 0 && (
-              <div className={`p-8 ${styles.text} font-pixel`}>No pictures found in {selectedCategory}</div>
-            )}
+            {/* Fixed height container to prevent movement */}
+            <div className="min-h-[100px] w-full flex flex-col items-center justify-center">
+              {loading && (
+                <div className={`${styles.text} font-pixel text-center`}>Loading pictures...</div>
+              )}
+              
+              {error && (
+                <div className="text-red-600 font-pixel text-center">{error}</div>
+              )}
+              
+              {!loading && !error && selectedCategory && imageObjects.length === 0 && (
+                <div className={`${styles.text} font-pixel text-center`}>No pictures found in {selectedCategory}</div>
+              )}
+            </div>
             
             {!loading && !error && selectedCategory && imageObjects.length > 0 && (
               <div className="w-full max-w-4xl">

@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect, createContext, useContext } from 'react';
 import { useMusicFiles } from './useMusicFiles';
 
@@ -32,34 +31,52 @@ export const GlobalMusicProvider: React.FC<{ children: React.ReactNode }> = ({ c
       
       // Set up event listeners
       audioRef.current.addEventListener('ended', () => {
-        // Auto-advance to next track
-        setCurrentTrack((prev) => {
-          const nextIndex = (prev + 1) % musicFiles.length;
-          return nextIndex;
-        });
+        // Continuously loop through tracks - never stop
+        if (musicFiles.length > 0) {
+          setCurrentTrack((prev) => {
+            const nextIndex = (prev + 1) % musicFiles.length;
+            return nextIndex;
+          });
+          // Keep playing state active
+          setIsPlaying(true);
+        }
       });
       
       audioRef.current.addEventListener('error', (e) => {
         console.error('Audio error:', e);
-        setIsPlaying(false);
-        setIsLoading(false);
+        // Don't stop playing on error, try next track
+        if (musicFiles.length > 1) {
+          setCurrentTrack((prev) => {
+            const nextIndex = (prev + 1) % musicFiles.length;
+            return nextIndex;
+          });
+        } else {
+          setIsPlaying(false);
+          setIsLoading(false);
+        }
       });
     }
 
     return () => {
       // Don't clean up audio on unmount - we want it to persist
     };
-  }, []);
+  }, [musicFiles.length]);
 
-  // Update audio source when track changes
+  // Update audio source when track changes and auto-play if was playing
   useEffect(() => {
     if (musicFiles.length > 0 && audioRef.current) {
       const audio = audioRef.current;
       audio.volume = volume;
       
       if (currentTrack < musicFiles.length) {
+        const wasPlaying = isPlaying;
         audio.src = musicFiles[currentTrack].url;
         audio.load();
+        
+        // If we were playing, continue playing the new track
+        if (wasPlaying) {
+          audio.play().catch(console.error);
+        }
       }
     }
   }, [musicFiles, currentTrack, volume]);
@@ -124,7 +141,6 @@ export const GlobalMusicProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const wasPlaying = isPlaying;
     if (wasPlaying && audioRef.current) {
       audioRef.current.pause();
-      setIsPlaying(false);
     }
     
     setCurrentTrack((prev) => {
@@ -132,6 +148,7 @@ export const GlobalMusicProvider: React.FC<{ children: React.ReactNode }> = ({ c
       return nextIndex;
     });
     
+    // Always continue playing when manually switching tracks
     if (wasPlaying) {
       setTimeout(() => togglePlayPause(), 300);
     }
@@ -142,7 +159,6 @@ export const GlobalMusicProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const wasPlaying = isPlaying;
     if (wasPlaying && audioRef.current) {
       audioRef.current.pause();
-      setIsPlaying(false);
     }
     
     setCurrentTrack((prev) => {
@@ -150,6 +166,7 @@ export const GlobalMusicProvider: React.FC<{ children: React.ReactNode }> = ({ c
       return prevIndex;
     });
     
+    // Always continue playing when manually switching tracks
     if (wasPlaying) {
       setTimeout(() => togglePlayPause(), 300);
     }
