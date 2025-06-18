@@ -42,7 +42,7 @@ const MyProjects = () => {
       
       if (error) throw error;
       
-      if (data.projects) {
+      if (data && data.projects) {
         setProjects(data.projects);
       }
     } catch (error) {

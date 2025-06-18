@@ -42,7 +42,7 @@ const MyVideos = () => {
       
       if (error) throw error;
       
-      if (data.videos) {
+      if (data && data.videos) {
         setVideos(data.videos);
       }
     } catch (error) {
