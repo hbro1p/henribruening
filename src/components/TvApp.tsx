@@ -1,8 +1,8 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useSecureTvVideos } from '@/hooks/useSecureTvVideos';
-import { supabase } from '@/integrations/supabase/client';
+import { useTvVideos } from '@/hooks/useTvVideos';
 import FullscreenButton from '@/components/FullscreenButton';
 
 interface TvAppProps {
@@ -11,17 +11,12 @@ interface TvAppProps {
 }
 
 const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [validatedPassword, setValidatedPassword] = useState<string>();
-  const [passwordError, setPasswordError] = useState('');
-  const [isVerifying, setIsVerifying] = useState(false);
   const [currentVideo, setCurrentVideo] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
   const { t, theme } = useSettings();
-  const { videos, loading } = useSecureTvVideos(validatedPassword);
+  const { videos, loading } = useTvVideos();
 
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
@@ -94,35 +89,6 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
     }
   }, [videos, currentVideo]);
 
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsVerifying(true);
-    setPasswordError('');
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('verify-password', {
-        body: { password, section: 'tv' }
-      });
-      
-      if (error) throw error;
-      
-      if (data.valid) {
-        setIsAuthenticated(true);
-        setValidatedPassword(password);
-        setPasswordError('');
-      } else {
-        setPasswordError('ACCESS DENIED');
-        setPassword('');
-      }
-    } catch (error) {
-      console.error('Password verification failed:', error);
-      setPasswordError('ACCESS DENIED');
-      setPassword('');
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-
   const nextVideo = () => {
     if (videos.length === 0) return;
     setCurrentVideo((prev) => (prev + 1) % videos.length);
@@ -148,102 +114,23 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   };
 
   useEffect(() => {
-    if (videoRef.current && videos.length > 0 && isAuthenticated) {
+    if (videoRef.current && videos.length > 0) {
       const wasPlaying = isPlaying;
       if (wasPlaying) {
         videoRef.current.pause();
       }
       
-      videoRef.current.src = videos[currentVideo]?.secureUrl || '';
+      videoRef.current.src = videos[currentVideo]?.url || '';
       
-      if (wasPlaying && videos[currentVideo]?.secureUrl) {
+      if (wasPlaying && videos[currentVideo]?.url) {
         videoRef.current.play().catch(console.error);
       }
     }
-  }, [currentVideo, videos, isAuthenticated]);
+  }, [currentVideo, videos]);
 
   if (!isOpen) return null;
 
   const styles = getWindowStyles();
-
-  if (!isAuthenticated) {
-    return (
-      <div className={`fixed inset-0 flex items-center justify-center p-4 z-50 ${styles.fullBackground}`}>
-        <div className={`p-2 border-2 border-black/30 w-full max-w-md shadow-2xl rounded-lg ${styles.windowFrame}`}>
-          <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
-              <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
-              <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-              <span className="text-white font-pixel text-sm ml-2">TV.exe - LOCKED</span>
-            </div>
-          </div>
-          
-          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
-            <div className="flex flex-col items-center justify-center text-center">
-              <div className={`w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg shadow-lg border-2 border-black/20 flex items-center justify-center mb-4`}>
-                <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded"></div>
-                <Tv className={`w-8 h-8 text-white drop-shadow-lg relative z-10`} />
-              </div>
-              
-              <h1 className={`text-2xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('Retro TV')} ]</h1>
-              <p className={`mb-6 font-pixel drop-shadow-sm ${styles.text}`}>
-                {t('language') === 'deutsch' ? 'Ups... dieser Bereich benötigt ein Passwort 😅' : 'Oops... looks like this section requires a password 😅'}
-              </p>
-              <p className={`mb-6 font-pixel drop-shadow-sm ${styles.text}`}>
-                {t('language') === 'deutsch' ? 'Geben Sie das Passwort ein, um fortzufahren.' : 'Enter the password to continue.'}
-              </p>
-              
-              <form onSubmit={handlePasswordSubmit} className="w-full space-y-4">
-                <div className="relative">
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
-                    disabled={isVerifying}
-                    className={`w-full p-4 border-3 border-black/40 rounded-lg shadow-inner font-pixel text-lg focus:outline-none transition-all duration-200 disabled:opacity-50 ${styles.input}`}
-                    placeholder={t('language') === 'deutsch' ? 'Passwort eingeben...' : 'Enter password...'}
-                  />
-                  <div className="absolute inset-2 bg-gradient-to-br from-white/30 to-transparent rounded pointer-events-none"></div>
-                </div>
-                
-                {passwordError && (
-                  <div className="bg-red-100 border-2 border-red-400 p-3 rounded-lg">
-                    <p className="text-red-700 text-sm font-pixel drop-shadow-sm">
-                      {passwordError}
-                    </p>
-                  </div>
-                )}
-                
-                <button
-                  type="submit"
-                  disabled={isVerifying}
-                  className={`w-full p-4 active:scale-95 font-bold font-pixel text-lg transition-all rounded-lg shadow-lg hover:shadow-xl relative disabled:opacity-50 ${styles.button}`}
-                >
-                  <div className="absolute inset-1 bg-gradient-to-br from-white/30 to-transparent rounded pointer-events-none"></div>
-                  <span className="relative z-10">
-                    {isVerifying 
-                      ? (t('language') === 'deutsch' ? 'Überprüfung...' : 'Verifying...') 
-                      : (t('language') === 'deutsch' ? 'Entsperren' : 'Unlock')
-                    }
-                  </span>
-                </button>
-              </form>
-
-              <button
-                onClick={onClose}
-                className={`mt-6 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}
-              >
-                <ArrowLeft className="w-5 h-5" />
-                {t('Back to Desktop')}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={`fixed inset-0 flex items-center justify-center p-4 z-50 ${styles.fullBackground}`}>
@@ -279,7 +166,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                       onEnded={handleVideoEnded}
                       controls={false}
                     >
-                      {videos[currentVideo] && <source src={videos[currentVideo].secureUrl} type="video/mp4" />}
+                      {videos[currentVideo] && <source src={videos[currentVideo].url} type="video/mp4" />}
                     </video>
                     
                     {/* Fullscreen button */}
@@ -295,10 +182,10 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                     <div className="text-center relative z-10">
                       <div className="text-6xl mb-4">📡</div>
                       <p className={`${styles.text} font-pixel text-lg`}>
-                        {loading ? 'LOADING SECURE CHANNELS...' : 'NO SIGNAL'}
+                        {loading ? 'LOADING CHANNELS...' : 'NO SIGNAL'}
                       </p>
                       <p className={`${styles.text} font-pixel text-sm mt-2 opacity-70`}>
-                        {loading ? 'Decrypting content...' : 'No videos uploaded yet'}
+                        {loading ? 'Searching for content...' : 'No videos uploaded yet'}
                       </p>
                     </div>
                   </div>

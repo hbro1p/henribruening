@@ -99,7 +99,7 @@ function sanitizeInput(input: string): string {
 }
 
 function validateSection(section: string): boolean {
-  const allowedSections = ['projects', 'videos', 'tv'];
+  const allowedSections = ['projects', 'videos', 'tv', 'global'];
   return allowedSections.includes(section);
 }
 
@@ -190,7 +190,7 @@ serve(async (req) => {
     if (!validateSection(sanitizedSection)) {
       updateFailureCount(rateLimitKey, false);
       return new Response(
-        JSON.stringify({ error: 'Invalid section. Must be one of: projects, videos, tv' }),
+        JSON.stringify({ error: 'Invalid section. Must be one of: projects, videos, tv, global' }),
         { 
           status: 400, 
           headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
@@ -210,6 +210,9 @@ serve(async (req) => {
         break
       case 'tv':
         correctPassword = Deno.env.get('TV_PASSWORD')
+        break
+      case 'global':
+        correctPassword = Deno.env.get('MASTER_PASSWORD')
         break
     }
 
