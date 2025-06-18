@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SettingsProvider } from "./contexts/SettingsContext";
 import { GlobalMusicProvider } from "./hooks/useGlobalMusicPlayer";
+import AuthGuard from "./components/AuthGuard";
 import Index from "./pages/Index";
 import Desktop from "./pages/Desktop";
 import Pictures from "./pages/Pictures";
@@ -26,18 +27,20 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/desktop" element={<Desktop />} />
-              <Route path="/pictures" element={<Pictures />} />
-              <Route path="/videos" element={<MyVideos />} />
-              <Route path="/projects" element={<MyProjects />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/settings" element={<Settings />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <AuthGuard>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/desktop" element={<Desktop />} />
+                <Route path="/pictures" element={<Pictures />} />
+                <Route path="/videos" element={<MyVideos />} />
+                <Route path="/projects" element={<MyProjects />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/settings" element={<Settings />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AuthGuard>
           </BrowserRouter>
         </TooltipProvider>
       </GlobalMusicProvider>

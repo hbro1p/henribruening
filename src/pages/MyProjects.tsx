@@ -1,9 +1,7 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useGlobalAuth } from '@/hooks/useGlobalAuth';
 
 interface Project {
   id: string;
@@ -20,7 +18,6 @@ interface Project {
 
 const MyProjects = () => {
   const { theme, t } = useSettings();
-  const { isAuthenticated } = useGlobalAuth();
 
   const projects: Project[] = [
     {
@@ -115,24 +112,6 @@ const MyProjects = () => {
   };
 
   const styles = getWindowStyles();
-
-  if (!isAuthenticated) {
-    return (
-      <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-orange' : ''}`}>
-        <div className={`p-2 border-2 border-black/30 w-full max-w-md shadow-2xl rounded-lg ${styles.windowFrame}`}>
-          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded ${styles.windowContent}`}>
-            <div className="flex flex-col items-center justify-center text-center">
-              <p className={`${styles.text} font-pixel text-lg`}>Please authenticate first to access projects.</p>
-              <Link to="/" className={`mt-4 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
-                <ArrowLeft className="w-5 h-5" />
-                {t('Back to Login')}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-orange' : ''}`}>
