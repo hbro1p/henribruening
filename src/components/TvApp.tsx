@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useTvVideos } from '@/hooks/useTvVideos';
+import { useSecureTvVideos } from '@/hooks/useSecureTvVideos';
 import { supabase } from '@/integrations/supabase/client';
 import FullscreenButton from '@/components/FullscreenButton';
 
@@ -13,6 +13,7 @@ interface TvAppProps {
 const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
+  const [validatedPassword, setValidatedPassword] = useState<string>();
   const [passwordError, setPasswordError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [currentVideo, setCurrentVideo] = useState(0);
@@ -20,7 +21,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const videoContainerRef = useRef<HTMLDivElement>(null);
   const { t, theme } = useSettings();
-  const { videos, loading } = useTvVideos();
+  const { videos, loading } = useSecureTvVideos(validatedPassword);
 
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
@@ -107,6 +108,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
       
       if (data.valid) {
         setIsAuthenticated(true);
+        setValidatedPassword(password);
         setPasswordError('');
       } else {
         setPasswordError('ACCESS DENIED');
@@ -152,9 +154,9 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
         videoRef.current.pause();
       }
       
-      videoRef.current.src = videos[currentVideo]?.url || '';
+      videoRef.current.src = videos[currentVideo]?.secureUrl || '';
       
-      if (wasPlaying && videos[currentVideo]?.url) {
+      if (wasPlaying && videos[currentVideo]?.secureUrl) {
         videoRef.current.play().catch(console.error);
       }
     }
@@ -277,7 +279,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                       onEnded={handleVideoEnded}
                       controls={false}
                     >
-                      {videos[currentVideo] && <source src={videos[currentVideo].url} type="video/mp4" />}
+                      {videos[currentVideo] && <source src={videos[currentVideo].secureUrl} type="video/mp4" />}
                     </video>
                     
                     {/* Fullscreen button */}
@@ -292,9 +294,11 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                   <div className="w-full aspect-video bg-black rounded border border-gray-700 flex items-center justify-center relative overflow-hidden">
                     <div className="text-center relative z-10">
                       <div className="text-6xl mb-4">📡</div>
-                      <p className={`${styles.text} font-pixel text-lg`}>NO SIGNAL</p>
+                      <p className={`${styles.text} font-pixel text-lg`}>
+                        {loading ? 'LOADING SECURE CHANNELS...' : 'NO SIGNAL'}
+                      </p>
                       <p className={`${styles.text} font-pixel text-sm mt-2 opacity-70`}>
-                        No videos uploaded yet
+                        {loading ? 'Decrypting content...' : 'No videos uploaded yet'}
                       </p>
                     </div>
                   </div>
