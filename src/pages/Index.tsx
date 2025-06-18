@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProgressBar from '@/components/ProgressBar';
@@ -43,17 +42,10 @@ const Landing = () => {
     setPasswordError('');
     
     try {
-      // Generate a timestamp for the request
-      const timestamp = Date.now();
-      
-      // Create a hash of the password with timestamp for additional security
-      const crypto = await import('crypto-js');
-      const hashedInput = crypto.SHA256(password + timestamp.toString()).toString();
-      
+      // Simple direct password verification
       const { data, error } = await supabase.functions.invoke('verify-password', {
         body: { 
-          hashedPassword: hashedInput,
-          timestamp: timestamp,
+          password: password,
           section: 'global' 
         }
       });
@@ -66,11 +58,6 @@ const Landing = () => {
         sessionStorage.setItem('globalAuth', 'authenticated');
         // Clear password from memory immediately
         setPassword('');
-        // Force garbage collection by overwriting the variable
-        let clearPassword = '';
-        for (let i = 0; i < 100; i++) {
-          clearPassword += Math.random().toString(36);
-        }
       } else {
         setPasswordError('Wrong password!');
         setPassword('');
@@ -92,15 +79,44 @@ const Landing = () => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPassword(value);
-    
-    // Clear the input field value from the DOM after a short delay
-    setTimeout(() => {
-      if (e.target.value === value) {
-        // Additional security measure to clear DOM traces
-        e.target.setAttribute('data-cleared', 'true');
-      }
-    }, 100);
   };
+
+  // Disable right-click context menu
+  const handleContextMenu = (e: MouseEvent) => e.preventDefault();
+  
+  // Disable common developer shortcuts
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (
+      e.key === 'F12' ||
+      (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J')) ||
+      (e.ctrlKey && e.key === 'U') ||
+      (e.ctrlKey && e.key === 'S')
+    ) {
+      e.preventDefault();
+      return false;
+    }
+  };
+
+  // Disable text selection
+  const handleSelectStart = (e: Event) => e.preventDefault();
+
+  // Clear console periodically
+  const clearConsole = setInterval(() => {
+    console.clear();
+  }, 1000);
+
+  useEffect(() => {
+    document.addEventListener('contextmenu', handleContextMenu);
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('selectstart', handleSelectStart);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('selectstart', handleSelectStart);
+      clearInterval(clearConsole);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 flex items-center justify-center p-4 relative overflow-hidden">

@@ -24,9 +24,9 @@ const securityHeaders = {
 
 // Enhanced rate limiting with progressive delays and IP tracking
 const rateLimitMap = new Map<string, { count: number; resetTime: number; lastAttempt: number; consecutiveFailures: number; blocked: boolean }>();
-const RATE_LIMIT_MAX_ATTEMPTS = 3;
+const RATE_LIMIT_MAX_ATTEMPTS = 5;
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
-const PROGRESSIVE_DELAY_BASE = 5000; // Start with 5 second delay
+const PROGRESSIVE_DELAY_BASE = 2000; // Start with 2 second delay
 const MAX_BLOCK_TIME = 60 * 60 * 1000; // 1 hour max block
 
 function getRateLimitKey(req: Request): string {
@@ -82,7 +82,7 @@ function updateFailureCount(key: string, success: boolean): void {
       entry.blocked = false;
     } else {
       entry.consecutiveFailures++;
-      if (entry.consecutiveFailures >= 5) {
+      if (entry.consecutiveFailures >= 3) {
         entry.blocked = true;
       }
     }
@@ -92,7 +92,7 @@ function updateFailureCount(key: string, success: boolean): void {
 // Enhanced timing-safe comparison with additional obfuscation
 async function timingSafeCompare(a: string, b: string): Promise<boolean> {
   // Add random padding to make timing analysis harder
-  const padding = Math.floor(Math.random() * 1000) + 500;
+  const padding = Math.floor(Math.random() * 500) + 200;
   await new Promise(resolve => setTimeout(resolve, padding));
   
   if (a.length !== b.length) {
@@ -124,30 +124,6 @@ function sanitizeInput(input: string): string {
 function validateSection(section: string): boolean {
   const allowedSections = ['projects', 'videos', 'tv', 'global'];
   return allowedSections.includes(section);
-}
-
-function validateTimestamp(timestamp: number): boolean {
-  const now = Date.now();
-  const fiveMinutes = 5 * 60 * 1000;
-  return timestamp > (now - fiveMinutes) && timestamp < (now + fiveMinutes);
-}
-
-// Enhanced password validation with more strict rules
-function validatePassword(hashedPassword: string): boolean {
-  if (typeof hashedPassword !== 'string') return false;
-  if (hashedPassword.length !== 64) return false; // SHA256 hex length
-  return /^[a-f0-9]{64}$/i.test(hashedPassword);
-}
-
-// Create multiple layers of password hashing for enhanced security
-function createSecureHash(password: string, timestamp: number): string {
-  const hasher1 = createHash("sha256");
-  hasher1.update(password + timestamp.toString());
-  
-  const hasher2 = createHash("sha256");
-  hasher2.update(hasher1.toString() + "additional_salt_layer");
-  
-  return hasher2.toString();
 }
 
 serve(async (req) => {
@@ -194,7 +170,7 @@ serve(async (req) => {
     let requestBody;
     try {
       const rawBody = await req.text();
-      if (rawBody.length > 2048) { // Stricter request size limit
+      if (rawBody.length > 1024) { // Stricter request size limit
         throw new Error('Request too large');
       }
       requestBody = JSON.parse(rawBody);
@@ -209,37 +185,13 @@ serve(async (req) => {
       )
     }
 
-    const { hashedPassword, timestamp, section } = requestBody;
+    const { password, section } = requestBody;
 
     // Enhanced field validation
-    if (!hashedPassword || !timestamp || !section) {
+    if (!password || !section) {
       updateFailureCount(rateLimitKey, false);
       return new Response(
         JSON.stringify({ error: 'Missing required authentication data' }),
-        { 
-          status: 400, 
-          headers: { ...response_headers, 'Content-Type': 'application/json' } 
-        }
-      )
-    }
-
-    // Validate timestamp to prevent replay attacks
-    if (!validateTimestamp(timestamp)) {
-      updateFailureCount(rateLimitKey, false);
-      return new Response(
-        JSON.stringify({ error: 'Request expired. Please try again.' }),
-        { 
-          status: 400, 
-          headers: { ...response_headers, 'Content-Type': 'application/json' } 
-        }
-      )
-    }
-
-    // Enhanced password validation
-    if (!validatePassword(hashedPassword)) {
-      updateFailureCount(rateLimitKey, false);
-      return new Response(
-        JSON.stringify({ error: 'Invalid authentication format' }),
         { 
           status: 400, 
           headers: { ...response_headers, 'Content-Type': 'application/json' } 
@@ -290,11 +242,8 @@ serve(async (req) => {
       )
     }
 
-    // Create expected hash using the same method as frontend
-    const expectedHash = createSecureHash(correctPassword, timestamp);
-
-    // Enhanced timing-safe comparison to prevent timing attacks
-    const isValid = await timingSafeCompare(hashedPassword, expectedHash);
+    // Direct password comparison with timing-safe method
+    const isValid = await timingSafeCompare(password, correctPassword);
     
     // Update failure count based on result
     updateFailureCount(rateLimitKey, isValid);
