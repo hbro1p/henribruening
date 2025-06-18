@@ -6,23 +6,35 @@ export const useGlobalAuth = () => {
 
   useEffect(() => {
     const checkAuth = () => {
+      // Only check sessionStorage, not localStorage for security
       const globalAuth = sessionStorage.getItem('globalAuth');
       setIsAuthenticated(globalAuth === 'authenticated');
     };
 
     checkAuth();
 
-    // Listen for storage changes (in case auth state changes in another tab)
+    // Listen for storage changes
     const handleStorageChange = () => {
       checkAuth();
     };
 
+    // Clear auth when page is unloaded (user leaves website)
+    const handleBeforeUnload = () => {
+      sessionStorage.removeItem('globalAuth');
+    };
+
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, []);
 
   const logout = () => {
     sessionStorage.removeItem('globalAuth');
+    localStorage.removeItem('globalAuth');
     setIsAuthenticated(false);
   };
 

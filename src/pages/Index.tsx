@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ProgressBar from '@/components/ProgressBar';
 import BlinkingCursor from '@/components/BlinkingCursor';
 import { supabase } from '@/integrations/supabase/client';
-import { Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
+import { Lock, ArrowRight, Eye, EyeOff, Monitor } from 'lucide-react';
 
 const Landing = () => {
   const [loading, setLoading] = useState(true);
@@ -16,13 +16,11 @@ const Landing = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
+  // Clear authentication on page load (forces re-login every time)
   useEffect(() => {
-    // Check if user is already authenticated in this session
-    const globalAuth = sessionStorage.getItem('globalAuth');
-    if (globalAuth === 'authenticated') {
-      setIsAuthenticated(true);
-    }
-
+    sessionStorage.removeItem('globalAuth');
+    localStorage.removeItem('globalAuth');
+    
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2500);
@@ -55,9 +53,9 @@ const Landing = () => {
         setIsAuthenticated(true);
         setPasswordError('');
         sessionStorage.setItem('globalAuth', 'authenticated');
-        setPassword(''); // Clear password from memory
+        setPassword('');
       } else {
-        setPasswordError('Access denied. Please try again.');
+        setPasswordError('Access denied. Invalid credentials.');
         setPassword('');
       }
     } catch (error) {
@@ -74,76 +72,80 @@ const Landing = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center p-4">
+      {/* Animated background pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] animate-pulse"></div>
+      </div>
+
       {loading ? (
-        <div className="text-center">
+        <div className="text-center z-10">
           <div className="mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full shadow-2xl border-4 border-white/10 flex items-center justify-center mb-6 mx-auto animate-pulse">
-              <div className="w-8 h-8 bg-white/20 rounded-full"></div>
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-500 rounded-2xl shadow-2xl border border-white/20 flex items-center justify-center mb-6 mx-auto backdrop-blur-sm">
+              <Monitor className="w-10 h-10 text-white" />
             </div>
-            <p className="text-2xl text-white/90 font-light tracking-wide">
-              System Initializing...
+            <p className="text-2xl text-white/90 font-mono tracking-wider">
+              System Initializing<BlinkingCursor />
             </p>
           </div>
           <ProgressBar />
         </div>
       ) : (
-        <div className={`transition-all duration-1000 ${showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-          <div className="text-center max-w-md mx-auto px-6">
+        <div className={`transition-all duration-1000 z-10 ${showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+          <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-3xl p-8 max-w-md mx-auto shadow-2xl">
             {/* Header */}
-            <div className="mb-12">
-              <h1 className="text-5xl text-white font-light mb-2 flex items-center justify-center">
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-500 rounded-2xl shadow-lg border border-white/20 flex items-center justify-center mb-4 mx-auto">
+                <Monitor className="w-8 h-8 text-white" />
+              </div>
+              <h1 className="text-4xl text-white font-mono mb-2 flex items-center justify-center gap-1">
                 Hi, I'm Henri
                 <BlinkingCursor />
               </h1>
-              <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto rounded-full"></div>
+              <div className="w-16 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 mx-auto rounded-full"></div>
             </div>
 
             {!isAuthenticated ? (
-              <div className="space-y-8">
-                {/* Security Icon */}
-                <div className="flex justify-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-600/20 to-blue-600/20 rounded-full border border-white/10 flex items-center justify-center backdrop-blur-sm">
-                    <Lock className="w-8 h-8 text-purple-300" />
+              <div className="space-y-6">
+                {/* Security prompt */}
+                <div className="text-center space-y-3">
+                  <div className="inline-flex items-center justify-center w-12 h-12 bg-white/10 rounded-xl border border-white/20">
+                    <Lock className="w-6 h-6 text-blue-300" />
                   </div>
+                  <p className="text-white/80 text-sm font-mono">Access Required</p>
                 </div>
 
                 {/* Password Form */}
-                <form onSubmit={handlePasswordSubmit} className="space-y-6">
-                  <div className="space-y-2">
-                    <label className="block text-white/70 text-sm font-medium">
-                      Access Required
-                    </label>
-                    <div className="relative">
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        disabled={isVerifying}
-                        className="w-full p-4 bg-white/5 border border-white/10 rounded-xl text-white text-center text-lg focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all duration-300 backdrop-blur-sm disabled:opacity-50 placeholder:text-white/30"
-                        placeholder="Enter access code..."
-                        autoComplete="current-password"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/40 hover:text-white/70 transition-colors"
-                      >
-                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                      </button>
-                    </div>
+                <form onSubmit={handlePasswordSubmit} className="space-y-4">
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      disabled={isVerifying}
+                      className="w-full p-4 bg-white/10 border border-white/20 rounded-xl text-white text-center font-mono placeholder:text-white/40 focus:outline-none focus:border-blue-400 focus:bg-white/15 transition-all duration-300 backdrop-blur-sm disabled:opacity-50"
+                      placeholder="Enter access code..."
+                      autoComplete="current-password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/50 hover:text-white/80 transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    </button>
                   </div>
                   
                   {passwordError && (
-                    <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 backdrop-blur-sm">
-                      <p className="text-red-300 text-sm">{passwordError}</p>
+                    <div className="bg-red-500/20 border border-red-400/30 rounded-xl p-3 backdrop-blur-sm">
+                      <p className="text-red-300 text-sm font-mono text-center">{passwordError}</p>
                     </div>
                   )}
                   
                   <button
                     type="submit"
                     disabled={isVerifying || !password.trim()}
-                    className="w-full p-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-xl text-white font-medium text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg hover:shadow-purple-500/20"
+                    className="w-full p-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl text-white font-mono transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg hover:shadow-blue-500/25 border border-white/10"
                   >
                     {isVerifying ? (
                       <>
@@ -160,28 +162,32 @@ const Landing = () => {
                 </form>
               </div>
             ) : (
-              <div className="space-y-8">
+              <div className="space-y-6 text-center">
                 {/* Success State */}
-                <div className="flex justify-center">
-                  <div className="w-16 h-16 bg-green-500/20 rounded-full border border-green-400/30 flex items-center justify-center backdrop-blur-sm">
-                    <div className="w-8 h-8 text-green-400 flex items-center justify-center text-xl font-bold">✓</div>
+                <div className="space-y-3">
+                  <div className="inline-flex items-center justify-center w-12 h-12 bg-green-500/20 rounded-xl border border-green-400/30">
+                    <div className="w-6 h-6 text-green-400 flex items-center justify-center text-lg font-bold">✓</div>
                   </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <p className="text-green-400 text-lg font-medium">Access Granted</p>
-                  <p className="text-white/60 text-sm">Welcome to my digital space</p>
+                  <div className="space-y-2">
+                    <p className="text-green-400 font-mono">Access Granted</p>
+                    <p className="text-white/60 text-sm font-mono">Welcome to my digital workspace</p>
+                  </div>
                 </div>
 
                 <button 
                   onClick={handleEnter}
-                  className="w-full p-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-xl text-white font-medium text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-green-500/20"
+                  className="w-full p-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 rounded-xl text-white font-mono transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-green-500/25 border border-white/10"
                 >
-                  Enter
+                  Enter Desktop
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
             )}
+          </div>
+
+          {/* Footer info */}
+          <div className="text-center mt-6">
+            <p className="text-white/40 text-xs font-mono">Secure access to Henri's digital space</p>
           </div>
         </div>
       )}
