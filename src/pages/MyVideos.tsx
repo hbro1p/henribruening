@@ -1,67 +1,111 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Video, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useGlobalAuth } from '@/hooks/useGlobalAuth';
-import { supabase } from '@/integrations/supabase/client';
 
 interface VideoProject {
   id: string;
-  title: string | { en: string; de: string };
+  title: string;
   description: {
     en: string;
     de: string;
   };
   links: Array<{
     url: string;
-    label: string | { en: string; de: string };
+    label: string;
   }>;
 }
 
 const MyVideos = () => {
-  const [videos, setVideos] = useState<VideoProject[]>([]);
-  const [isLoadingVideos, setIsLoadingVideos] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const { theme, t } = useSettings();
   const { isAuthenticated } = useGlobalAuth();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchVideos();
+  const videos: VideoProject[] = [
+    {
+      id: '1',
+      title: 'Ute Uphues',
+      description: {
+        en: 'Teen coaching videos created for Ute\'s TikTok and Instagram',
+        de: 'Teen-Coaching-Videos für Utes TikTok und Instagram erstellt'
+      },
+      links: [
+        {
+          url: 'https://www.tiktok.com/@ute.uphues',
+          label: 'TikTok'
+        }
+      ]
+    },
+    {
+      id: '2',
+      title: 'Real Estate Internship (Mallorca)',
+      description: {
+        en: 'A creative and content-focused internship at FALC Real Estate in Cala Millor',
+        de: 'Ein kreatives und inhaltsfokussiertes Praktikum bei FALC Real Estate in Cala Millor'
+      },
+      links: [
+        {
+          url: 'https://www.instagram.com/p/DIjcdGZIAcr/',
+          label: 'Instagram'
+        }
+      ]
+    },
+    {
+      id: '3',
+      title: 'HenriAWB – Blackstories with a Hook',
+      description: {
+        en: 'Entertaining TikToks with surprising twists, hooks, and storytelling',
+        de: 'Unterhaltsame TikToks mit überraschenden Wendungen, Hooks und Storytelling'
+      },
+      links: [
+        {
+          url: 'https://www.youtube.com/@Henriawb',
+          label: 'YouTube'
+        }
+      ]
+    },
+    {
+      id: '4',
+      title: 'ThisTimeFr',
+      description: {
+        en: 'My storytelling identity for vlogs, creative clips, and travel adventures',
+        de: 'Meine Storytelling-Identität für Vlogs, kreative Clips und Reiseabenteuer'
+      },
+      links: [
+        {
+          url: 'https://www.tiktok.com/@thistimefrr',
+          label: 'TikTok'
+        },
+        {
+          url: 'https://www.youtube.com/@Thistimefr',
+          label: 'YouTube'
+        }
+      ]
+    },
+    {
+      id: '5',
+      title: 'More Videos',
+      description: {
+        en: 'Additional videos from various projects and collaborations',
+        de: 'Weitere Videos aus verschiedenen Projekten und Kooperationen'
+      },
+      links: [
+        {
+          url: 'https://www.youtube.com/watch?v=jr0z7nFgE7Q',
+          label: 'YouTube Video'
+        },
+        {
+          url: 'https://www.instagram.com/reel/C2Il3BRoCV5/',
+          label: 'Instagram Reel'
+        },
+        {
+          url: 'https://heriburg-gymnasium.de/projektwoche-2025/',
+          label: 'Project Week'
+        }
+      ]
     }
-  }, [isAuthenticated]);
-
-  const fetchVideos = async () => {
-    setIsLoadingVideos(true);
-    setError(null);
-    try {
-      const { data, error } = await supabase.functions.invoke('get-videos', {
-        body: {}
-      });
-      
-      if (error) throw error;
-      
-      if (data && data.videos) {
-        setVideos(data.videos);
-      }
-    } catch (error) {
-      console.error('Failed to fetch videos:', error);
-      setError('Failed to load videos. Please try again.');
-    } finally {
-      setIsLoadingVideos(false);
-    }
-  };
-
-  const getTitle = (title: string | { en: string; de: string }): string => {
-    if (typeof title === 'string') return title;
-    return t('language') === 'deutsch' ? title.de : title.en;
-  };
-
-  const getLabel = (label: string | { en: string; de: string }): string => {
-    if (typeof label === 'string') return label;
-    return t('language') === 'deutsch' ? label.de : label.en;
-  };
+  ];
 
   // Get folder color scheme for space mood theme
   const getFolderTheme = () => {
@@ -162,32 +206,32 @@ const MyVideos = () => {
           <div className="flex flex-col items-center justify-center text-center">
             <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Videos')} ]</h1>
             
-            {isLoadingVideos ? (
-              <div className={`${styles.text} font-pixel text-lg mb-8`}>Loading videos...</div>
-            ) : error ? (
-              <div className={`text-red-600 font-pixel text-lg mb-8`}>{error}</div>
-            ) : (
-              <div className="grid gap-8 text-left w-full max-w-2xl">
-                {videos.map((video) => (
-                  <div key={video.id} className={`p-6 border-2 ${styles.cardBg}`}>
-                    <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
-                      {getTitle(video.title)}
-                    </h3>
-                    <p className={`mb-4 font-pixel ${styles.text}`}>
-                      {t('language') === 'deutsch' ? video.description.de : video.description.en}
-                    </p>
-                    <div className="space-y-2">
-                      {video.links.map((link, index) => (
-                        <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" 
-                           className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
-                          {getLabel(link.label)} <ExternalLink className="w-4 h-4" />
-                        </a>
-                      ))}
-                    </div>
+            <div className="grid gap-8 text-left w-full max-w-2xl">
+              {videos.map((video) => (
+                <div key={video.id} className={`p-6 border-2 ${styles.cardBg}`}>
+                  <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
+                    {video.title}
+                  </h3>
+                  <p className={`mb-4 font-pixel ${styles.text}`}>
+                    {t('language') === 'deutsch' ? video.description.de : video.description.en}
+                  </p>
+                  <div className="space-y-2">
+                    {video.links.map((link, index) => (
+                      <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" 
+                         className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
+                        {link.label} <ExternalLink className="w-4 h-4" />
+                      </a>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
+            </div>
+
+            <div className={`mt-8 p-4 border-2 ${styles.cardBg} rounded`}>
+              <p className={`font-pixel text-sm ${styles.text}`}>
+                More videos available on the TV app...
+              </p>
+            </div>
 
             <Link to="/desktop" className={`mt-8 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
               <ArrowLeft className="w-5 h-5" />

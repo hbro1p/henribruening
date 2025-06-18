@@ -1,10 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Code, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useGlobalAuth } from '@/hooks/useGlobalAuth';
-import { supabase } from '@/integrations/supabase/client';
 
 interface Project {
   id: string;
@@ -20,38 +19,43 @@ interface Project {
 }
 
 const MyProjects = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [isLoadingProjects, setIsLoadingProjects] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const { theme, t } = useSettings();
   const { isAuthenticated } = useGlobalAuth();
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchProjects();
+  const projects: Project[] = [
+    {
+      id: '1',
+      title: 'Internly',
+      description: {
+        en: 'Currently developing a platform to connect students with internships',
+        de: 'Entwickle derzeit eine Plattform, um Studenten mit Praktikumsplätzen zu verbinden'
+      },
+      links: [
+        {
+          url: 'https://www.instagram.com/internly.de/',
+          label: 'Instagram'
+        }
+      ]
+    },
+    {
+      id: '2',
+      title: 'Echo Coesfeld',
+      description: {
+        en: 'A public voice project using QR codes & interviews to gather real opinions from people in Coesfeld',
+        de: 'Ein öffentliches Stimme-Projekt mit QR-Codes und Interviews, um echte Meinungen von Menschen in Coesfeld zu sammeln'
+      },
+      links: [
+        {
+          url: 'https://www.instagram.com/echo.coesfeld/',
+          label: 'Instagram'
+        },
+        {
+          url: 'https://www.tiktok.com/@echo.coesfeld',
+          label: 'TikTok'
+        }
+      ]
     }
-  }, [isAuthenticated]);
-
-  const fetchProjects = async () => {
-    setIsLoadingProjects(true);
-    setError(null);
-    try {
-      const { data, error } = await supabase.functions.invoke('get-projects', {
-        body: {}
-      });
-      
-      if (error) throw error;
-      
-      if (data && data.projects) {
-        setProjects(data.projects);
-      }
-    } catch (error) {
-      console.error('Failed to fetch projects:', error);
-      setError('Failed to load projects. Please try again.');
-    } finally {
-      setIsLoadingProjects(false);
-    }
-  };
+  ];
 
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
@@ -146,33 +150,27 @@ const MyProjects = () => {
           <div className="flex flex-col items-center justify-center text-center">
             <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Projects')} ]</h1>
             
-            {isLoadingProjects ? (
-              <div className={`${styles.text} font-pixel text-lg mb-8`}>Loading projects...</div>
-            ) : error ? (
-              <div className={`text-red-600 font-pixel text-lg mb-8`}>{error}</div>
-            ) : (
-              <div className="grid gap-8 text-left w-full max-w-2xl">
-                {projects.map((project) => (
-                  <div key={project.id} className={`p-6 border-2 rounded-lg shadow-lg relative ${styles.cardBg}`}>
-                    <div className="absolute inset-x-2 top-2 h-2 bg-gradient-to-b from-white/40 to-transparent rounded-t"></div>
-                    <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel drop-shadow-sm ${styles.text}`}>
-                      {project.title}
-                    </h3>
-                    <p className={`mb-4 drop-shadow-sm ${styles.text}`}>
-                      {t('language') === 'deutsch' ? project.description.de : project.description.en}
-                    </p>
-                    <div className="space-y-2">
-                      {project.links.map((link, index) => (
-                        <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" 
-                           className={`flex items-center gap-2 underline font-pixel drop-shadow-sm ${styles.link}`}>
-                          {link.label} <ExternalLink className="w-4 h-4" />
-                        </a>
-                      ))}
-                    </div>
+            <div className="grid gap-8 text-left w-full max-w-2xl">
+              {projects.map((project) => (
+                <div key={project.id} className={`p-6 border-2 rounded-lg shadow-lg relative ${styles.cardBg}`}>
+                  <div className="absolute inset-x-2 top-2 h-2 bg-gradient-to-b from-white/40 to-transparent rounded-t"></div>
+                  <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel drop-shadow-sm ${styles.text}`}>
+                    {project.title}
+                  </h3>
+                  <p className={`mb-4 drop-shadow-sm ${styles.text}`}>
+                    {t('language') === 'deutsch' ? project.description.de : project.description.en}
+                  </p>
+                  <div className="space-y-2">
+                    {project.links.map((link, index) => (
+                      <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" 
+                         className={`flex items-center gap-2 underline font-pixel drop-shadow-sm ${styles.link}`}>
+                        {link.label} <ExternalLink className="w-4 h-4" />
+                      </a>
+                    ))}
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
+            </div>
 
             <Link to="/desktop" className={`mt-8 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
               <ArrowLeft className="w-5 h-5" />
