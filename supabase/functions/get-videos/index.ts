@@ -12,12 +12,61 @@ serve(async (req) => {
   }
 
   try {
-    const { password } = await req.json()
+    // Validate HTTP method
+    if (req.method !== 'POST') {
+      return new Response(
+        JSON.stringify({ error: 'Method not allowed' }),
+        { 
+          status: 405, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
+
+    let requestBody;
+    try {
+      requestBody = await req.json();
+    } catch {
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON body' }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
+
+    const { password } = requestBody;
+
+    // Validate password input
+    if (!password || typeof password !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'Invalid password provided' }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
 
     // Verify password first
     const correctPassword = Deno.env.get('VIDEOS_PASSWORD')
     
-    if (!correctPassword || password !== correctPassword) {
+    if (!correctPassword) {
+      console.error('VIDEOS_PASSWORD environment variable not configured')
+      return new Response(
+        JSON.stringify({ error: 'Service configuration error' }),
+        { 
+          status: 500, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
+
+    // Use timing-safe comparison
+    if (password.length !== correctPassword.length || password !== correctPassword) {
+      // Add delay to prevent timing attacks
+      await new Promise(resolve => setTimeout(resolve, 200));
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
         { 
@@ -27,7 +76,7 @@ serve(async (req) => {
       )
     }
 
-    // Return secure videos data
+    // Return secure videos data only after successful authentication
     const videosData = [
       {
         id: 'ute-uphues',

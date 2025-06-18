@@ -22,8 +22,6 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   const { t, theme } = useSettings();
   const { videos, loading } = useTvVideos();
 
-  const correctPassword = 'henritv#2025!';
-
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
       return {
