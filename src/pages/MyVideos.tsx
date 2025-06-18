@@ -3,22 +3,39 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Video, ExternalLink } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
+import { supabase } from '@/integrations/supabase/client';
 
 const MyVideos = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [password, setPassword] = useState('');
   const [showError, setShowError] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
   const { theme, t } = useSettings();
 
-  const correctPassword = '!henri25_portfolio#';
-
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === correctPassword) {
-      setIsUnlocked(true);
-      setShowError(false);
-    } else {
+    setIsVerifying(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-password', {
+        body: { password, section: 'videos' }
+      });
+      
+      if (error) throw error;
+      
+      if (data.valid) {
+        setIsUnlocked(true);
+        setShowError(false);
+      } else {
+        setShowError(true);
+        setPassword('');
+      }
+    } catch (error) {
+      console.error('Password verification failed:', error);
       setShowError(true);
+      setPassword('');
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -111,7 +128,8 @@ const MyVideos = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`w-full p-2 mb-4 border-2 font-pixel ${styles.input}`}
+                  disabled={isVerifying}
+                  className={`w-full p-2 mb-4 border-2 font-pixel disabled:opacity-50 ${styles.input}`}
                   placeholder={t('Password')}
                 />
                 {showError && (
@@ -119,9 +137,10 @@ const MyVideos = () => {
                 )}
                 <button
                   type="submit"
-                  className={`w-full p-2 border-2 border-black/30 font-pixel transition-all active:scale-95 rounded ${styles.button}`}
+                  disabled={isVerifying}
+                  className={`w-full p-2 border-2 border-black/30 font-pixel transition-all active:scale-95 rounded disabled:opacity-50 ${styles.button}`}
                 >
-                  {t('Unlock')}
+                  {isVerifying ? t('Verifying...') : t('Unlock')}
                 </button>
               </form>
 

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useTvVideos } from '@/hooks/useTvVideos';
+import { supabase } from '@/integrations/supabase/client';
 import FullscreenButton from '@/components/FullscreenButton';
 
 interface TvAppProps {
@@ -13,6 +14,7 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
   const [currentVideo, setCurrentVideo] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -93,14 +95,31 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
     }
   }, [videos, currentVideo]);
 
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === correctPassword) {
-      setIsAuthenticated(true);
-      setPasswordError('');
-    } else {
+    setIsVerifying(true);
+    setPasswordError('');
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-password', {
+        body: { password, section: 'tv' }
+      });
+      
+      if (error) throw error;
+      
+      if (data.valid) {
+        setIsAuthenticated(true);
+        setPasswordError('');
+      } else {
+        setPasswordError('ACCESS DENIED');
+        setPassword('');
+      }
+    } catch (error) {
+      console.error('Password verification failed:', error);
       setPasswordError('ACCESS DENIED');
       setPassword('');
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -182,7 +201,8 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="current-password"
-                    className={`w-full p-4 border-3 border-black/40 rounded-lg shadow-inner font-pixel text-lg focus:outline-none transition-all duration-200 ${styles.input}`}
+                    disabled={isVerifying}
+                    className={`w-full p-4 border-3 border-black/40 rounded-lg shadow-inner font-pixel text-lg focus:outline-none transition-all duration-200 disabled:opacity-50 ${styles.input}`}
                     placeholder={t('language') === 'deutsch' ? 'Passwort eingeben...' : 'Enter password...'}
                   />
                   <div className="absolute inset-2 bg-gradient-to-br from-white/30 to-transparent rounded pointer-events-none"></div>
@@ -198,11 +218,15 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
                 
                 <button
                   type="submit"
-                  className={`w-full p-4 active:scale-95 font-bold font-pixel text-lg transition-all rounded-lg shadow-lg hover:shadow-xl relative ${styles.button}`}
+                  disabled={isVerifying}
+                  className={`w-full p-4 active:scale-95 font-bold font-pixel text-lg transition-all rounded-lg shadow-lg hover:shadow-xl relative disabled:opacity-50 ${styles.button}`}
                 >
                   <div className="absolute inset-1 bg-gradient-to-br from-white/30 to-transparent rounded pointer-events-none"></div>
                   <span className="relative z-10">
-                    {t('language') === 'deutsch' ? 'Entsperren' : 'Unlock'}
+                    {isVerifying 
+                      ? (t('language') === 'deutsch' ? 'Überprüfung...' : 'Verifying...') 
+                      : (t('language') === 'deutsch' ? 'Entsperren' : 'Unlock')
+                    }
                   </span>
                 </button>
               </form>

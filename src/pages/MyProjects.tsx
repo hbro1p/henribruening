@@ -1,23 +1,41 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Code, ExternalLink } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
+import { supabase } from '@/integrations/supabase/client';
 
 const MyProjects = () => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [password, setPassword] = useState('');
   const [showError, setShowError] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
   const { theme, t } = useSettings();
 
-  const correctPassword = '!henri25_portfolio#';
-
-  const handlePasswordSubmit = (e: React.FormEvent) => {
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === correctPassword) {
-      setIsUnlocked(true);
-      setShowError(false);
-    } else {
+    setIsVerifying(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-password', {
+        body: { password, section: 'projects' }
+      });
+      
+      if (error) throw error;
+      
+      if (data.valid) {
+        setIsUnlocked(true);
+        setShowError(false);
+      } else {
+        setShowError(true);
+        setPassword('');
+      }
+    } catch (error) {
+      console.error('Password verification failed:', error);
       setShowError(true);
+      setPassword('');
+    } finally {
+      setIsVerifying(false);
     }
   };
 
@@ -114,7 +132,8 @@ const MyProjects = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="current-password"
-                    className="w-full p-4 border-3 border-black/40 bg-white text-black rounded-lg shadow-inner font-pixel text-lg focus:outline-none focus:border-blue-500 focus:bg-blue-50 focus:shadow-lg transition-all duration-200"
+                    disabled={isVerifying}
+                    className="w-full p-4 border-3 border-black/40 bg-white text-black rounded-lg shadow-inner font-pixel text-lg focus:outline-none focus:border-blue-500 focus:bg-blue-50 focus:shadow-lg transition-all duration-200 disabled:opacity-50"
                     placeholder={t('language') === 'deutsch' ? 'Passwort eingeben...' : 'Enter password...'}
                     style={{ 
                       zIndex: 10,
@@ -135,11 +154,15 @@ const MyProjects = () => {
                 
                 <button
                   type="submit"
-                  className={`w-full p-4 active:scale-95 font-bold font-pixel text-lg transition-all rounded-lg shadow-lg hover:shadow-xl relative ${styles.button}`}
+                  disabled={isVerifying}
+                  className={`w-full p-4 active:scale-95 font-bold font-pixel text-lg transition-all rounded-lg shadow-lg hover:shadow-xl relative disabled:opacity-50 ${styles.button}`}
                 >
                   <div className="absolute inset-1 bg-gradient-to-br from-white/30 to-transparent rounded pointer-events-none"></div>
                   <span className="relative z-10">
-                    {t('language') === 'deutsch' ? 'Entsperren' : 'Unlock'}
+                    {isVerifying 
+                      ? (t('language') === 'deutsch' ? 'Überprüfung...' : 'Verifying...') 
+                      : (t('language') === 'deutsch' ? 'Entsperren' : 'Unlock')
+                    }
                   </span>
                 </button>
               </form>
