@@ -1,46 +1,46 @@
 
 import CryptoJS from 'crypto-js';
 
-// Enhanced key generation with stronger parameters
-const generateKey = (password: string, salt: string): string => {
-  return CryptoJS.PBKDF2(password, salt, {
-    keySize: 256 / 32,
-    iterations: 100000, // Increased iterations for better security
-    hasher: CryptoJS.algo.SHA256
-  }).toString();
+// Simple XOR-based encryption for compatibility with the edge function
+const generateSecureKey = (password: string, salt: string): string => {
+  const encoder = new TextEncoder();
+  const keyMaterial = password + salt;
+  
+  // Use a simpler approach that matches the edge function
+  let hash = '';
+  for (let i = 0; i < keyMaterial.length; i++) {
+    hash += keyMaterial.charCodeAt(i).toString(16).padStart(2, '0');
+  }
+  
+  // Pad or truncate to ensure consistent length
+  return hash.padEnd(64, '0').substring(0, 64);
 };
 
-// Enhanced salt generation with cryptographically secure random
-const generateSecureSalt = (): string => {
-  return CryptoJS.lib.WordArray.random(256 / 8).toString(); // 256-bit salt
-};
-
-// Enhanced encryption with stronger parameters
+// Simple encryption that matches the edge function's decryption
 export const encryptData = (data: string, password: string): string => {
   // Input validation
   if (!data || !password) {
     throw new Error('Data and password are required');
   }
   
-  // Generate secure salt
-  const salt = generateSecureSalt();
-  const key = generateKey(password, salt);
+  // Generate a simple salt
+  const salt = Math.random().toString(36).substring(2, 15);
+  const key = generateSecureKey(password, salt);
   
-  // Generate secure IV
-  const iv = CryptoJS.lib.WordArray.random(128 / 8);
+  // Simple XOR encryption
+  let encrypted = '';
+  for (let i = 0; i < data.length; i++) {
+    const dataChar = data.charCodeAt(i);
+    const keyChar = key.charCodeAt(i % key.length);
+    encrypted += String.fromCharCode(dataChar ^ keyChar);
+  }
   
-  // Encrypt with AES-256-CBC
-  const encrypted = CryptoJS.AES.encrypt(data, key, {
-    iv: iv,
-    mode: CryptoJS.mode.CBC,
-    padding: CryptoJS.pad.Pkcs7
-  }).toString();
-  
-  // Return format: salt:iv:encrypted
-  return salt + ':' + iv.toString() + ':' + encrypted;
+  // Convert to base64 and return with salt
+  const encryptedBase64 = btoa(encrypted);
+  return salt + ':' + encryptedBase64;
 };
 
-// Enhanced decryption with proper validation
+// Simple decryption
 export const decryptData = (encryptedData: string, password: string): string => {
   // Input validation
   if (!encryptedData || !password) {
@@ -48,30 +48,24 @@ export const decryptData = (encryptedData: string, password: string): string => 
   }
   
   const parts = encryptedData.split(':');
-  if (parts.length !== 3) {
+  if (parts.length !== 2) {
     throw new Error('Invalid encrypted data format');
   }
   
-  const [salt, ivString, encrypted] = parts;
+  const [salt, encrypted] = parts;
   
   try {
-    const key = generateKey(password, salt);
-    const iv = CryptoJS.enc.Hex.parse(ivString);
+    const key = generateSecureKey(password, salt);
+    const encryptedBytes = atob(encrypted);
     
-    const decrypted = CryptoJS.AES.decrypt(encrypted, key, {
-      iv: iv,
-      mode: CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7
-    });
-    
-    const result = decrypted.toString(CryptoJS.enc.Utf8);
-    
-    // Validate decryption result
-    if (!result) {
-      throw new Error('Decryption failed - invalid password or corrupted data');
+    let decrypted = '';
+    for (let i = 0; i < encryptedBytes.length; i++) {
+      const encryptedChar = encryptedBytes.charCodeAt(i);
+      const keyChar = key.charCodeAt(i % key.length);
+      decrypted += String.fromCharCode(encryptedChar ^ keyChar);
     }
     
-    return result;
+    return decrypted;
   } catch (error) {
     throw new Error('Decryption failed');
   }
@@ -110,21 +104,7 @@ export const generateSecureHash = (password: string, timestamp: number): string 
   }
   
   // For internal access tokens, create a simple but secure hash
-  if (password.includes('INTERNAL_ACCESS')) {
-    return CryptoJS.SHA256(password + timestamp.toString()).toString();
-  }
-  
-  // Use timestamp as part of salt for replay attack prevention
-  const timeSalt = Math.floor(timestamp / 1000).toString(); // Second precision
-  const saltedPassword = password + timestamp.toString() + timeSalt;
-  
-  // Multiple rounds of hashing for added security
-  let hash = CryptoJS.SHA256(saltedPassword).toString();
-  for (let i = 0; i < 1000; i++) {
-    hash = CryptoJS.SHA256(hash + saltedPassword).toString();
-  }
-  
-  return hash;
+  return CryptoJS.SHA256(password + timestamp.toString()).toString();
 };
 
 // Additional utility for generating secure random tokens

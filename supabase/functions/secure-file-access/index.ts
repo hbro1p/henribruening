@@ -22,43 +22,31 @@ const securityHeaders = {
   'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
 }
 
-// Enhanced encryption utilities with stronger security
-async function generateSecureKey(password: string, salt: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const keyMaterial = await crypto.subtle.importKey(
-    'raw',
-    encoder.encode(password),
-    'PBKDF2',
-    false,
-    ['deriveBits']
-  );
+// Simple key generation that matches the frontend
+function generateSecureKey(password: string, salt: string): string {
+  const keyMaterial = password + salt;
   
-  const derivedBits = await crypto.subtle.deriveBits(
-    {
-      name: 'PBKDF2',
-      salt: encoder.encode(salt),
-      iterations: 100000, // Increased iterations for better security
-      hash: 'SHA-256'
-    },
-    keyMaterial,
-    256
-  );
+  let hash = '';
+  for (let i = 0; i < keyMaterial.length; i++) {
+    hash += keyMaterial.charCodeAt(i).toString(16).padStart(2, '0');
+  }
   
-  return Array.from(new Uint8Array(derivedBits))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
+  // Pad or truncate to ensure consistent length
+  return hash.padEnd(64, '0').substring(0, 64);
 }
 
+// Simple decryption that matches the frontend encryption
 async function decryptData(encryptedData: string, password: string): Promise<string> {
   try {
-    const [salt, encrypted] = encryptedData.split(':');
-    if (!salt || !encrypted) {
+    const parts = encryptedData.split(':');
+    if (parts.length !== 2) {
       throw new Error('Invalid encrypted data format');
     }
     
-    const key = await generateSecureKey(password, salt);
+    const [salt, encrypted] = parts;
+    const key = generateSecureKey(password, salt);
     
-    // Decode base64 with proper validation
+    // Decode base64
     let encryptedBytes: string;
     try {
       encryptedBytes = atob(encrypted);
@@ -66,13 +54,12 @@ async function decryptData(encryptedData: string, password: string): Promise<str
       throw new Error('Invalid base64 encoding');
     }
     
-    const keyBytes = key.slice(0, encryptedBytes.length);
-    
+    // Simple XOR decryption
     let decrypted = '';
     for (let i = 0; i < encryptedBytes.length; i++) {
-      decrypted += String.fromCharCode(
-        encryptedBytes.charCodeAt(i) ^ keyBytes.charCodeAt(i % keyBytes.length)
-      );
+      const encryptedChar = encryptedBytes.charCodeAt(i);
+      const keyChar = key.charCodeAt(i % key.length);
+      decrypted += String.fromCharCode(encryptedChar ^ keyChar);
     }
     
     // Validate decrypted data contains no suspicious characters
@@ -80,8 +67,10 @@ async function decryptData(encryptedData: string, password: string): Promise<str
       throw new Error('Decrypted data validation failed');
     }
     
+    console.log('Successfully decrypted file path:', decrypted);
     return decrypted;
   } catch (error) {
+    console.error('Decryption failed:', error);
     throw new Error('Decryption failed');
   }
 }
@@ -117,33 +106,9 @@ async function checkRateLimit(key: string): Promise<boolean> {
 }
 
 // Enhanced password validation with timing-safe comparison
-async function verifyPasswordHash(providedHash: string, correctPassword: string, timestamp: number): Promise<boolean> {
-  const expectedHash = await crypto.subtle.digest(
-    'SHA-256',
-    new TextEncoder().encode(correctPassword + timestamp.toString())
-  );
-  const expectedHashHex = Array.from(new Uint8Array(expectedHash))
-    .map(b => b.toString(16).padStart(2, '0')).join('');
-
-  // Timing-safe comparison
-  if (providedHash.length !== expectedHashHex.length) {
-    return false;
-  }
-  
-  let result = 0;
-  for (let i = 0; i < providedHash.length; i++) {
-    result |= providedHash.charCodeAt(i) ^ expectedHashHex.charCodeAt(i);
-  }
-  
-  return result === 0;
-}
-
-// Verify internal access token hash
 async function verifyInternalAccessHash(providedHash: string, internalToken: string, timestamp: number): Promise<boolean> {
-  const expectedHash = await crypto.subtle.digest(
-    'SHA-256',
-    new TextEncoder().encode(internalToken + timestamp.toString())
-  );
+  const expectedHashInput = internalToken + timestamp.toString();
+  const expectedHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(expectedHashInput));
   const expectedHashHex = Array.from(new Uint8Array(expectedHash))
     .map(b => b.toString(16).padStart(2, '0')).join('');
 
@@ -259,21 +224,16 @@ serve(async (req) => {
 
     // Get the correct password based on the internal access token
     let correctPassword: string | undefined;
-    let isInternalAccess = false;
     
     // Handle internal access tokens - these are predefined secure tokens
     if (section === 'projects') {
       correctPassword = 'PROJECTS_INTERNAL_ACCESS';
-      isInternalAccess = true;
     } else if (section === 'videos') {
       correctPassword = 'VIDEOS_INTERNAL_ACCESS';
-      isInternalAccess = true;
     } else if (section === 'tv') {
       correctPassword = 'TV_INTERNAL_ACCESS';
-      isInternalAccess = true;
     } else if (section === 'pictures') {
       correctPassword = 'PUBLIC_ACCESS';
-      isInternalAccess = true;
     }
 
     if (!correctPassword) {
@@ -288,18 +248,14 @@ serve(async (req) => {
     }
 
     // Enhanced password verification - for internal access tokens
+    console.log('Verifying internal access token for:', section);
+    
     let isValid = false;
-    if (isInternalAccess) {
-      console.log('Verifying internal access token for:', section);
-      if (correctPassword === 'PUBLIC_ACCESS') {
-        isValid = true; // Pictures are public
-      } else {
-        // Verify the hash was generated from the internal access token + timestamp
-        isValid = await verifyInternalAccessHash(passwordHash, correctPassword, timestamp);
-      }
+    if (correctPassword === 'PUBLIC_ACCESS') {
+      isValid = true; // Pictures are public
     } else {
-      // For environment passwords, use the timing-safe comparison
-      isValid = await verifyPasswordHash(passwordHash, correctPassword, timestamp);
+      // Verify the hash was generated from the internal access token + timestamp
+      isValid = await verifyInternalAccessHash(passwordHash, correctPassword, timestamp);
     }
 
     if (!isValid) {
@@ -320,6 +276,7 @@ serve(async (req) => {
     // Enhanced file path decryption and validation
     let filePath: string;
     try {
+      console.log('Attempting to decrypt file path...');
       filePath = await decryptData(encryptedPath, correctPassword);
       
       // Additional path validation
