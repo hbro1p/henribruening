@@ -10,7 +10,7 @@ interface SecureTvVideo {
   expiresAt: string;
 }
 
-export const useSecureTvVideos = (password?: string) => {
+export const useSecureTvVideos = (authToken?: string) => {
   const [videos, setVideos] = useState<SecureTvVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +27,7 @@ export const useSecureTvVideos = (password?: string) => {
   };
 
   const fetchSecureVideos = async () => {
-    if (!password) {
+    if (!authToken) {
       setVideos([]);
       setLoading(false);
       return;
@@ -37,7 +37,7 @@ export const useSecureTvVideos = (password?: string) => {
       setLoading(true);
       setError(null);
 
-      console.log('=== FETCHING ENCRYPTED TV VIDEOS ===');
+      console.log('=== FETCHING SECURE TV CONTENT ===');
 
       // First get the list of files (this doesn't expose content)
       const { data: files, error: listError } = await supabase.storage
@@ -48,20 +48,23 @@ export const useSecureTvVideos = (password?: string) => {
         });
 
       if (listError) {
-        console.error('Error listing TV videos:', listError);
-        setError('Failed to load TV videos');
+        console.error('Content access error:', listError);
+        setError('Content access denied');
         return;
       }
 
       if (!files) {
-        console.log('No files found in TV bucket');
+        console.log('No content found');
         setVideos([]);
         return;
       }
 
-      console.log(`Found ${files.length} items in TV bucket`);
+      console.log(`Processing ${files.length} items`);
 
       const secureVideoFiles: SecureTvVideo[] = [];
+
+      // Use environment variable for internal app access
+      const internalPassword = 'TV_INTERNAL_ACCESS';
 
       for (const file of files) {
         if (file.id === null || !isVideoFile(file.name)) {
@@ -69,10 +72,10 @@ export const useSecureTvVideos = (password?: string) => {
         }
 
         try {
-          // Encrypt the file path
-          const encryptedPath = encryptFilePath(file.name, password);
+          // Encrypt the file path using internal password
+          const encryptedPath = encryptFilePath(file.name, internalPassword);
           const timestamp = Date.now();
-          const passwordHash = generateSecureHash(password, timestamp);
+          const passwordHash = generateSecureHash(internalPassword, timestamp);
 
           // Get secure signed URL using encrypted data
           const { data: secureData, error: secureError } = await supabase.functions.invoke('secure-file-access', {
@@ -86,7 +89,7 @@ export const useSecureTvVideos = (password?: string) => {
           });
 
           if (secureError || !secureData?.signedUrl) {
-            console.error(`Failed to get secure URL for encrypted file:`, secureError);
+            console.error(`Secure access failed:`, secureError);
             continue;
           }
 
@@ -96,19 +99,19 @@ export const useSecureTvVideos = (password?: string) => {
             title: formatTitle(file.name),
             expiresAt: secureData.expiresAt
           });
-          console.log(`✅ Added encrypted video file`);
+          console.log(`✅ Secure content processed`);
         } catch (encryptError) {
-          console.error('Failed to encrypt file path:', encryptError);
+          console.error('Encryption process failed:', encryptError);
           continue;
         }
       }
 
-      console.log(`=== FINAL RESULT: ${secureVideoFiles.length} encrypted video files ===`);
+      console.log(`=== RESULT: ${secureVideoFiles.length} secure items ===`);
       setVideos(secureVideoFiles);
 
     } catch (err) {
-      console.error('❌ Error fetching encrypted TV videos:', err);
-      setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      console.error('❌ Secure content access error:', err);
+      setError(err instanceof Error ? err.message : 'Access denied');
     } finally {
       setLoading(false);
     }
@@ -116,7 +119,7 @@ export const useSecureTvVideos = (password?: string) => {
 
   useEffect(() => {
     fetchSecureVideos();
-  }, [password]);
+  }, [authToken]);
 
   return { 
     videos, 

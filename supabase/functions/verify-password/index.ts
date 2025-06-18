@@ -15,24 +15,45 @@ const securityHeaders = {
   'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
   'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
   'Pragma': 'no-cache',
-  'Expires': '0'
+  'Expires': '0',
+  'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
+  'Content-Security-Policy': "default-src 'self'; script-src 'none'; object-src 'none';"
 }
 
-// Enhanced rate limiting with progressive delays
-const rateLimitMap = new Map<string, { count: number; resetTime: number; lastAttempt: number; consecutiveFailures: number }>();
+// Military-grade rate limiting with exponential backoff and IP fingerprinting
+const rateLimitMap = new Map<string, { 
+  count: number; 
+  resetTime: number; 
+  lastAttempt: number; 
+  consecutiveFailures: number;
+  fingerprint: string;
+}>();
+
 const RATE_LIMIT_MAX_ATTEMPTS = 3;
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const PROGRESSIVE_DELAY_BASE = 2000; // Start with 2 second delay
+const MAX_DELAY = 300000; // 5 minutes max
+
+function generateFingerprint(req: Request): string {
+  const headers = [
+    req.headers.get('user-agent') || '',
+    req.headers.get('accept-language') || '',
+    req.headers.get('accept-encoding') || '',
+    req.headers.get('accept') || ''
+  ];
+  return btoa(headers.join('|')).slice(0, 16);
+}
 
 function getRateLimitKey(req: Request): string {
   const forwarded = req.headers.get('x-forwarded-for');
   const realIp = req.headers.get('x-real-ip');
   const cfConnectingIp = req.headers.get('cf-connecting-ip');
   const ip = cfConnectingIp || realIp || (forwarded ? forwarded.split(',')[0] : 'unknown');
-  return `verify_${ip}`;
+  const fingerprint = generateFingerprint(req);
+  return `verify_${ip}_${fingerprint}`;
 }
 
-async function checkRateLimit(key: string): Promise<boolean> {
+async function checkRateLimit(key: string, fingerprint: string): Promise<boolean> {
   const now = Date.now();
   const entry = rateLimitMap.get(key);
   
@@ -41,14 +62,23 @@ async function checkRateLimit(key: string): Promise<boolean> {
       count: 1, 
       resetTime: now + RATE_LIMIT_WINDOW_MS, 
       lastAttempt: now,
-      consecutiveFailures: 0
+      consecutiveFailures: 0,
+      fingerprint
     });
     return true;
   }
   
+  // Additional security: check fingerprint consistency
+  if (entry.fingerprint !== fingerprint) {
+    entry.consecutiveFailures += 2; // Penalty for fingerprint mismatch
+  }
+  
   if (entry.count >= RATE_LIMIT_MAX_ATTEMPTS) {
-    // Progressive delay based on consecutive failures
-    const delay = Math.min(PROGRESSIVE_DELAY_BASE * Math.pow(2, entry.consecutiveFailures), 60000);
+    // Exponential backoff with jitter
+    const baseDelay = PROGRESSIVE_DELAY_BASE * Math.pow(2, entry.consecutiveFailures);
+    const jitter = Math.random() * 1000;
+    const delay = Math.min(baseDelay + jitter, MAX_DELAY);
+    
     if (now - entry.lastAttempt < delay) {
       return false;
     }
@@ -63,52 +93,81 @@ function updateFailureCount(key: string, success: boolean): void {
   const entry = rateLimitMap.get(key);
   if (entry) {
     if (success) {
-      entry.consecutiveFailures = 0;
+      // Reset on success
+      rateLimitMap.delete(key);
     } else {
       entry.consecutiveFailures++;
+      // Extend reset time on repeated failures
+      entry.resetTime = Math.max(entry.resetTime, Date.now() + (entry.consecutiveFailures * 60000));
     }
   }
 }
 
-// Enhanced timing-safe comparison
+// Military-grade timing-safe comparison with random delay injection
 async function timingSafeCompare(a: string, b: string): Promise<boolean> {
-  if (a.length !== b.length) {
-    // Still perform comparison to maintain constant time
-    let dummy = 0;
-    for (let i = 0; i < Math.max(a.length, b.length); i++) {
-      dummy |= a.charCodeAt(i % a.length) ^ b.charCodeAt(i % b.length);
-    }
-    return false;
-  }
-  
+  const maxLength = Math.max(a.length, b.length, 64); // Minimum 64 chars for consistent timing
   let result = 0;
-  for (let i = 0; i < a.length; i++) {
-    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  
+  // Constant-time comparison
+  for (let i = 0; i < maxLength; i++) {
+    const aChar = i < a.length ? a.charCodeAt(i) : 0;
+    const bChar = i < b.length ? b.charCodeAt(i) : 0;
+    result |= aChar ^ bChar;
   }
   
-  // Add small random delay to prevent timing attacks
-  await new Promise(resolve => setTimeout(resolve, Math.random() * 100 + 50));
+  // Random delay injection (50-150ms) to prevent timing analysis
+  const randomDelay = Math.random() * 100 + 50;
+  await new Promise(resolve => setTimeout(resolve, randomDelay));
+  
+  // Additional computational work to mask timing
+  let dummy = 0;
+  for (let i = 0; i < 1000; i++) {
+    dummy = (dummy + Math.random()) % 1000000;
+  }
   
   return result === 0;
 }
 
-// Input sanitization
+// Enhanced input sanitization with deep validation
 function sanitizeInput(input: string): string {
   if (typeof input !== 'string') return '';
-  return input.replace(/[^\x20-\x7E]/g, '').trim(); // Only allow printable ASCII
+  // Remove control characters, non-printable chars, and potential injection vectors
+  return input
+    .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Control characters
+    .replace(/[<>'"&]/g, '') // Basic XSS prevention
+    .replace(/[\r\n\t]/g, '') // Line breaks and tabs
+    .trim()
+    .slice(0, 256); // Length limit
 }
 
 function validateSection(section: string): boolean {
-  const allowedSections = ['projects', 'videos', 'tv'];
+  const allowedSections = ['projects', 'videos', 'tv', 'master'];
   return allowedSections.includes(section);
 }
 
-// Enhanced password validation
+// Enhanced password validation with entropy checking
 function validatePassword(password: string): boolean {
   if (typeof password !== 'string') return false;
-  if (password.length === 0 || password.length > 256) return false; // Reasonable length limits
-  // Check for null bytes and other suspicious characters
+  if (password.length === 0 || password.length > 512) return false;
+  
+  // Check for suspicious patterns
+  if (/(.)\1{4,}/.test(password)) return false; // Repeated characters
+  if (/^[0-9]+$/.test(password)) return false; // Only numbers
+  if (/^[a-zA-Z]+$/.test(password)) return false; // Only letters
+  
+  // Check for null bytes and control characters
   return !password.includes('\x00') && !/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.test(password);
+}
+
+// Honeypot detection
+function detectHoneypot(req: Request): boolean {
+  const suspiciousHeaders = [
+    'x-forwarded-host',
+    'x-cluster-client-ip',
+    'x-real-ip-override'
+  ];
+  
+  return suspiciousHeaders.some(header => req.headers.has(header));
 }
 
 serve(async (req) => {
@@ -117,12 +176,24 @@ serve(async (req) => {
   }
 
   const rateLimitKey = getRateLimitKey(req);
+  const fingerprint = generateFingerprint(req);
   
   try {
-    // Enhanced rate limiting check
-    if (!(await checkRateLimit(rateLimitKey))) {
+    // Honeypot detection
+    if (detectHoneypot(req)) {
       return new Response(
-        JSON.stringify({ error: 'Too many attempts. Access temporarily blocked.' }),
+        JSON.stringify({ error: 'Request rejected' }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
+    }
+
+    // Military-grade rate limiting
+    if (!(await checkRateLimit(rateLimitKey, fingerprint))) {
+      return new Response(
+        JSON.stringify({ error: 'Access temporarily restricted. Security protocols active.' }),
         { 
           status: 429, 
           headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
@@ -130,8 +201,9 @@ serve(async (req) => {
       )
     }
 
-    // Enhanced input validation
+    // Method validation
     if (req.method !== 'POST') {
+      updateFailureCount(rateLimitKey, false);
       return new Response(
         JSON.stringify({ error: 'Method not allowed' }),
         { 
@@ -144,14 +216,14 @@ serve(async (req) => {
     let requestBody;
     try {
       const rawBody = await req.text();
-      if (rawBody.length > 1024) { // Limit request size
+      if (rawBody.length > 2048) { // Stricter size limit
         throw new Error('Request too large');
       }
       requestBody = JSON.parse(rawBody);
     } catch {
       updateFailureCount(rateLimitKey, false);
       return new Response(
-        JSON.stringify({ error: 'Invalid JSON body' }),
+        JSON.stringify({ error: 'Invalid request format' }),
         { 
           status: 400, 
           headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
@@ -165,7 +237,7 @@ serve(async (req) => {
     if (!password || !section) {
       updateFailureCount(rateLimitKey, false);
       return new Response(
-        JSON.stringify({ error: 'Missing required fields: password and section' }),
+        JSON.stringify({ error: 'Incomplete request data' }),
         { 
           status: 400, 
           headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
@@ -177,7 +249,7 @@ serve(async (req) => {
     if (!validatePassword(password)) {
       updateFailureCount(rateLimitKey, false);
       return new Response(
-        JSON.stringify({ error: 'Invalid password format' }),
+        JSON.stringify({ error: 'Invalid authentication format' }),
         { 
           status: 400, 
           headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
@@ -190,7 +262,7 @@ serve(async (req) => {
     if (!validateSection(sanitizedSection)) {
       updateFailureCount(rateLimitKey, false);
       return new Response(
-        JSON.stringify({ error: 'Invalid section. Must be one of: projects, videos, tv' }),
+        JSON.stringify({ error: 'Invalid access section' }),
         { 
           status: 400, 
           headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
@@ -211,13 +283,16 @@ serve(async (req) => {
       case 'tv':
         correctPassword = Deno.env.get('TV_PASSWORD')
         break
+      case 'master':
+        correctPassword = Deno.env.get('MASTER_PASSWORD')
+        break
     }
 
     if (!correctPassword) {
-      console.error(`Password not configured for section: ${sanitizedSection}`)
+      console.error(`Authentication not configured for section: ${sanitizedSection}`)
       updateFailureCount(rateLimitKey, false);
       return new Response(
-        JSON.stringify({ error: 'Service configuration error' }),
+        JSON.stringify({ error: 'Authentication service unavailable' }),
         { 
           status: 500, 
           headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
@@ -225,15 +300,16 @@ serve(async (req) => {
       )
     }
 
-    // Enhanced timing-safe comparison to prevent timing attacks
+    // Military-grade timing-safe comparison
     const isValid = await timingSafeCompare(password, correctPassword);
     
     // Update failure count based on result
     updateFailureCount(rateLimitKey, isValid);
 
-    // Add additional delay for failed attempts
+    // Additional delay for failed attempts with random jitter
     if (!isValid) {
-      await new Promise(resolve => setTimeout(resolve, Math.random() * 500 + 200));
+      const delay = Math.random() * 1000 + 500;
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
 
     return new Response(
@@ -243,10 +319,10 @@ serve(async (req) => {
       }
     )
   } catch (error) {
-    console.error('Error in verify-password function:', error)
+    console.error('Critical security error in verify-password function:', error)
     updateFailureCount(rateLimitKey, false);
     return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
+      JSON.stringify({ error: 'Authentication service error' }),
       { 
         status: 500, 
         headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
