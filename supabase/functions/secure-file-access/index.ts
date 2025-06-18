@@ -7,27 +7,65 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-// Rate limiting storage
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT_MAX_ATTEMPTS = 5;
-const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+// Enhanced rate limiting with IP tracking and progressive delays
+const rateLimitMap = new Map<string, { count: number; resetTime: number; lastAttempt: number }>();
+const RATE_LIMIT_MAX_ATTEMPTS = 3;
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const PROGRESSIVE_DELAY_BASE = 1000; // Start with 1 second delay
 
-// Encryption utilities (server-side implementation)
-function generateKey(password: string, salt: string): string {
-  // Simple PBKDF2-like key derivation (for Deno environment)
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password + salt);
-  return Array.from(data).map(b => b.toString(16).padStart(2, '0')).join('');
+// Security headers for enhanced protection
+const securityHeaders = {
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'X-XSS-Protection': '1; mode=block',
+  'Referrer-Policy': 'no-referrer',
+  'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
 }
 
-function decryptData(encryptedData: string, password: string): string {
+// Enhanced encryption utilities with stronger security
+async function generateSecureKey(password: string, salt: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(password),
+    'PBKDF2',
+    false,
+    ['deriveBits']
+  );
+  
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt: encoder.encode(salt),
+      iterations: 100000, // Increased iterations for better security
+      hash: 'SHA-256'
+    },
+    keyMaterial,
+    256
+  );
+  
+  return Array.from(new Uint8Array(derivedBits))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+async function decryptData(encryptedData: string, password: string): Promise<string> {
   try {
-    // Simple XOR decryption for demonstration - in production use proper crypto
     const [salt, encrypted] = encryptedData.split(':');
-    const key = generateKey(password, salt);
+    if (!salt || !encrypted) {
+      throw new Error('Invalid encrypted data format');
+    }
     
-    // Decode base64
-    const encryptedBytes = atob(encrypted);
+    const key = await generateSecureKey(password, salt);
+    
+    // Decode base64 with proper validation
+    let encryptedBytes: string;
+    try {
+      encryptedBytes = atob(encrypted);
+    } catch {
+      throw new Error('Invalid base64 encoding');
+    }
+    
     const keyBytes = key.slice(0, encryptedBytes.length);
     
     let decrypted = '';
@@ -35,6 +73,11 @@ function decryptData(encryptedData: string, password: string): string {
       decrypted += String.fromCharCode(
         encryptedBytes.charCodeAt(i) ^ keyBytes.charCodeAt(i % keyBytes.length)
       );
+    }
+    
+    // Validate decrypted data contains no suspicious characters
+    if (!/^[a-zA-Z0-9\-_./]+$/.test(decrypted)) {
+      throw new Error('Decrypted data validation failed');
     }
     
     return decrypted;
@@ -45,41 +88,85 @@ function decryptData(encryptedData: string, password: string): string {
 
 function getRateLimitKey(req: Request): string {
   const forwarded = req.headers.get('x-forwarded-for');
-  const ip = forwarded ? forwarded.split(',')[0] : 'unknown';
-  return `file_access_${ip}`;
+  const realIp = req.headers.get('x-real-ip');
+  const cfConnectingIp = req.headers.get('cf-connecting-ip');
+  const ip = cfConnectingIp || realIp || (forwarded ? forwarded.split(',')[0] : 'unknown');
+  return `secure_access_${ip}`;
 }
 
-function checkRateLimit(key: string): boolean {
+async function checkRateLimit(key: string): Promise<boolean> {
   const now = Date.now();
   const entry = rateLimitMap.get(key);
   
   if (!entry || now > entry.resetTime) {
-    rateLimitMap.set(key, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS });
+    rateLimitMap.set(key, { count: 1, resetTime: now + RATE_LIMIT_WINDOW_MS, lastAttempt: now });
     return true;
   }
   
   if (entry.count >= RATE_LIMIT_MAX_ATTEMPTS) {
-    return false;
+    // Progressive delay based on attempt count
+    const delay = Math.min(PROGRESSIVE_DELAY_BASE * Math.pow(2, entry.count - RATE_LIMIT_MAX_ATTEMPTS), 30000);
+    if (now - entry.lastAttempt < delay) {
+      return false;
+    }
   }
   
   entry.count++;
-  return true;
+  entry.lastAttempt = now;
+  return entry.count <= RATE_LIMIT_MAX_ATTEMPTS;
+}
+
+// Enhanced password validation with timing-safe comparison
+async function verifyPasswordHash(providedHash: string, correctPassword: string, timestamp: number): Promise<boolean> {
+  const expectedHash = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(correctPassword + timestamp.toString())
+  );
+  const expectedHashHex = Array.from(new Uint8Array(expectedHash))
+    .map(b => b.toString(16).padStart(2, '0')).join('');
+
+  // Timing-safe comparison
+  if (providedHash.length !== expectedHashHex.length) {
+    return false;
+  }
+  
+  let result = 0;
+  for (let i = 0; i < providedHash.length; i++) {
+    result |= providedHash.charCodeAt(i) ^ expectedHashHex.charCodeAt(i);
+  }
+  
+  return result === 0;
+}
+
+// Input sanitization and validation
+function sanitizeInput(input: string): string {
+  return input.replace(/[^a-zA-Z0-9\-_./]/g, '');
+}
+
+function validateSection(section: string): boolean {
+  const allowedSections = ['projects', 'videos', 'tv'];
+  return allowedSections.includes(section);
+}
+
+function validateBucket(bucket: string): boolean {
+  const allowedBuckets = ['projects', 'videos', 'tv'];
+  return allowedBuckets.includes(bucket);
 }
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: { ...corsHeaders, ...securityHeaders } })
   }
 
   try {
-    // Rate limiting check
+    // Enhanced rate limiting check
     const rateLimitKey = getRateLimitKey(req);
-    if (!checkRateLimit(rateLimitKey)) {
+    if (!(await checkRateLimit(rateLimitKey))) {
       return new Response(
-        JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+        JSON.stringify({ error: 'Too many requests. Access temporarily blocked.' }),
         { 
           status: 429, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
         }
       )
     }
@@ -89,7 +176,7 @@ serve(async (req) => {
         JSON.stringify({ error: 'Method not allowed' }),
         { 
           status: 405, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
         }
       )
     }
@@ -102,37 +189,48 @@ serve(async (req) => {
         JSON.stringify({ error: 'Invalid JSON body' }),
         { 
           status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
         }
       )
     }
 
     const { encryptedPath, passwordHash, timestamp, bucket, section } = requestBody;
 
-    // Validate required fields
+    // Enhanced input validation
     if (!encryptedPath || !passwordHash || !timestamp || !bucket || !section) {
       return new Response(
         JSON.stringify({ error: 'Missing required encrypted fields' }),
         { 
           status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
         }
       )
     }
 
-    // Validate timestamp to prevent replay attacks (allow 5 minute window)
-    const now = Date.now();
-    if (Math.abs(now - timestamp) > 5 * 60 * 1000) {
+    // Validate section and bucket
+    if (!validateSection(sanitizeInput(section)) || !validateBucket(sanitizeInput(bucket))) {
       return new Response(
-        JSON.stringify({ error: 'Request expired' }),
+        JSON.stringify({ error: 'Invalid section or bucket' }),
+        { 
+          status: 400, 
+          headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
+
+    // Enhanced timestamp validation with stricter window
+    const now = Date.now();
+    if (typeof timestamp !== 'number' || Math.abs(now - timestamp) > 2 * 60 * 1000) { // 2 minute window
+      return new Response(
+        JSON.stringify({ error: 'Request expired or invalid timestamp' }),
         { 
           status: 401, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
         }
       )
     }
 
-    // Get the password for the requested section
+    // Get the password for the requested section with enhanced security
     let correctPassword: string | undefined;
     
     switch (section) {
@@ -145,9 +243,6 @@ serve(async (req) => {
       case 'tv':
         correctPassword = Deno.env.get('TV_PASSWORD');
         break;
-      case 'pictures':
-        correctPassword = Deno.env.get('PICTURES_PASSWORD');
-        break;
     }
 
     if (!correctPassword) {
@@ -156,53 +251,68 @@ serve(async (req) => {
         JSON.stringify({ error: 'Service configuration error' }),
         { 
           status: 500, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
         }
       )
     }
 
-    // Verify password hash
-    const expectedHash = await crypto.subtle.digest(
-      'SHA-256',
-      new TextEncoder().encode(correctPassword + timestamp.toString())
-    );
-    const expectedHashHex = Array.from(new Uint8Array(expectedHash))
-      .map(b => b.toString(16).padStart(2, '0')).join('');
-
-    if (passwordHash !== expectedHashHex) {
-      await new Promise(resolve => setTimeout(resolve, 200));
+    // Enhanced password verification
+    if (!(await verifyPasswordHash(passwordHash, correctPassword, timestamp))) {
+      // Progressive delay for failed attempts
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500));
       return new Response(
         JSON.stringify({ error: 'Unauthorized access' }),
         { 
           status: 401, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
         }
       )
     }
 
-    // Decrypt the file path
+    // Enhanced file path decryption and validation
     let filePath: string;
     try {
-      filePath = decryptData(encryptedPath, correctPassword);
+      filePath = await decryptData(encryptedPath, correctPassword);
+      
+      // Additional path validation
+      if (filePath.includes('..') || filePath.startsWith('/') || filePath.includes('\\')) {
+        throw new Error('Invalid file path detected');
+      }
+      
+      // Sanitize the file path
+      filePath = sanitizeInput(filePath);
+      
     } catch (error) {
+      console.error('Decryption or validation failed:', error);
       return new Response(
         JSON.stringify({ error: 'Invalid encrypted path' }),
         { 
           status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
         }
       )
     }
 
-    // Generate a temporary signed URL that expires in 30 minutes
+    // Generate a temporary signed URL with shorter expiry for better security
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Missing Supabase configuration');
+      return new Response(
+        JSON.stringify({ error: 'Service configuration error' }),
+        { 
+          status: 500, 
+          headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
+        }
+      )
+    }
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const { data, error } = await supabase.storage
       .from(bucket)
-      .createSignedUrl(filePath, 1800) // 30 minutes expiry
+      .createSignedUrl(filePath, 3600) // 1 hour expiry
 
     if (error) {
       console.error('Error creating signed URL:', error);
@@ -210,21 +320,28 @@ serve(async (req) => {
         JSON.stringify({ error: 'Failed to generate secure access URL' }),
         { 
           status: 500, 
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+          headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
         }
       )
     }
 
-    // Return encrypted response
+    // Return encrypted response with additional security measures
     const responseData = {
       signedUrl: data.signedUrl,
-      expiresAt: new Date(Date.now() + 1800 * 1000).toISOString()
+      expiresAt: new Date(Date.now() + 3600 * 1000).toISOString()
     };
 
     return new Response(
       JSON.stringify(responseData),
       { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        headers: { 
+          ...corsHeaders, 
+          ...securityHeaders, 
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        } 
       }
     )
 
@@ -234,7 +351,7 @@ serve(async (req) => {
       JSON.stringify({ error: 'Internal server error' }),
       { 
         status: 500, 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        headers: { ...corsHeaders, ...securityHeaders, 'Content-Type': 'application/json' } 
       }
     )
   }

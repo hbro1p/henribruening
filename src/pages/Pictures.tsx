@@ -1,49 +1,15 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Image as ImageIcon } from 'lucide-react';
-import { useSecureImages } from '@/hooks/useSecureImages';
+import { useStorageImages } from '@/hooks/useStorageImages';
 import { useSettings } from '@/contexts/SettingsContext';
-import { supabase } from '@/integrations/supabase/client';
 
 const Pictures = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [validatedPassword, setValidatedPassword] = useState<string>();
-  const [passwordError, setPasswordError] = useState('');
-  const [isVerifying, setIsVerifying] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const { images, loading, error } = useSecureImages(validatedPassword);
+  const { images, loading, error } = useStorageImages();
   const { theme, t } = useSettings();
-
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsVerifying(true);
-    setPasswordError('');
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('verify-password', {
-        body: { password, section: 'pictures' }
-      });
-      
-      if (error) throw error;
-      
-      if (data.valid) {
-        setIsAuthenticated(true);
-        setValidatedPassword(password);
-        setPasswordError('');
-      } else {
-        setPasswordError('ACCESS DENIED');
-        setPassword('');
-      }
-    } catch (error) {
-      console.error('Password verification failed:', error);
-      setPasswordError('ACCESS DENIED');
-      setPassword('');
-    } finally {
-      setIsVerifying(false);
-    }
-  };
 
   // Get all images from selected category
   const currentCategoryImages = selectedCategory ? images[selectedCategory] || [] : [];
@@ -140,8 +106,6 @@ const Pictures = () => {
         thumbButton: categoryColors.thumb,
         categoryButton: categoryColors.button,
         imageContainer: categoryColors.container,
-        input: 'bg-white border-black text-black',
-        cardBg: 'bg-white border-black',
       };
     }
 
@@ -157,8 +121,6 @@ const Pictures = () => {
         thumbButton: 'border-blue-400/50 hover:border-blue-600 hover:bg-blue-100/50',
         categoryButton: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white border-blue-300/50',
         imageContainer: 'border-blue-400/50 bg-white/90',
-        input: 'bg-blue-50 border-blue-600 text-blue-900',
-        cardBg: 'bg-blue-50 border-blue-600',
       };
     }
     
@@ -200,8 +162,6 @@ const Pictures = () => {
       thumbButton: 'border-blue-400/50 hover:border-blue-600 hover:bg-blue-100/50',
       categoryButton: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white border-blue-300/50',
       imageContainer: 'border-blue-400/50 bg-white/90',
-      input: 'bg-white border-black text-black',
-      cardBg: 'bg-white border-black',
     };
   };
 
@@ -215,82 +175,6 @@ const Pictures = () => {
     return theme === 'space-mood' ? 'folder-blue' : '';
   };
 
-  if (!isAuthenticated) {
-    return (
-      <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${getFolderBackground()}`}>
-        <div className={`p-2 border-2 border-black/30 w-full max-w-md shadow-2xl rounded-lg ${styles.windowFrame}`}>
-          <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
-              <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
-              <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-              <span className="text-white font-pixel text-sm ml-2">Pictures.exe - LOCKED</span>
-            </div>
-          </div>
-          
-          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
-            <div className="flex flex-col items-center justify-center text-center">
-              <div className={`w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-lg shadow-lg border-2 border-black/20 flex items-center justify-center mb-4`}>
-                <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded"></div>
-                <ImageIcon className={`w-8 h-8 text-white drop-shadow-lg relative z-10`} />
-              </div>
-              
-              <h1 className={`text-2xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ ENCRYPTED PICTURES ]</h1>
-              <p className={`mb-6 font-pixel drop-shadow-sm ${styles.text}`}>
-                {t('language') === 'deutsch' ? 'Verschlüsselte Inhalte - Passwort erforderlich 🔒' : 'Encrypted Content - Password Required 🔒'}
-              </p>
-              <p className={`mb-6 font-pixel drop-shadow-sm ${styles.text}`}>
-                {t('language') === 'deutsch' ? 'Geben Sie das Passwort ein, um die verschlüsselten Bilder zu entschlüsseln.' : 'Enter password to decrypt the secured images.'}
-              </p>
-              
-              <form onSubmit={handlePasswordSubmit} className="w-full space-y-4">
-                <div className="relative">
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    autoComplete="current-password"
-                    disabled={isVerifying}
-                    className={`w-full p-4 border-3 border-black/40 rounded-lg shadow-inner font-pixel text-lg focus:outline-none transition-all duration-200 disabled:opacity-50 ${styles.input}`}
-                    placeholder={t('language') === 'deutsch' ? 'Passwort eingeben...' : 'Enter decryption key...'}
-                  />
-                  <div className="absolute inset-2 bg-gradient-to-br from-white/30 to-transparent rounded pointer-events-none"></div>
-                </div>
-                
-                {passwordError && (
-                  <div className="bg-red-100 border-2 border-red-400 p-3 rounded-lg">
-                    <p className="text-red-700 text-sm font-pixel drop-shadow-sm">
-                      {passwordError}
-                    </p>
-                  </div>
-                )}
-                
-                <button
-                  type="submit"
-                  disabled={isVerifying}
-                  className={`w-full p-4 active:scale-95 font-bold font-pixel text-lg transition-all rounded-lg shadow-lg hover:shadow-xl relative disabled:opacity-50 ${styles.controlButton}`}
-                >
-                  <div className="absolute inset-1 bg-gradient-to-br from-white/30 to-transparent rounded pointer-events-none"></div>
-                  <span className="relative z-10">
-                    🔓 {isVerifying 
-                      ? (t('language') === 'deutsch' ? 'Entschlüsselung...' : 'Decrypting...') 
-                      : (t('language') === 'deutsch' ? 'Entschlüsseln' : 'Decrypt')
-                    }
-                  </span>
-                </button>
-              </form>
-
-              <Link to="/desktop" className={`mt-6 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
-                <ArrowLeft className="w-5 h-5" />
-                {t('Back to Desktop')}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${getFolderBackground()}`}>
       <div className={`p-2 border-2 border-black/30 w-full max-w-6xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
@@ -299,13 +183,13 @@ const Pictures = () => {
             <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
             <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
             <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-            <span className="text-white font-pixel text-sm ml-2">Pictures.exe - DECRYPTED</span>
+            <span className="text-white font-pixel text-sm ml-2">Pictures.exe</span>
           </div>
         </div>
         
         <div className={`p-4 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
           <div className="flex flex-col items-center justify-center text-center">
-            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ 🔓 DECRYPTED PICTURES ]</h1>
+            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ PICTURES ]</h1>
             
             {/* Category Selection - Always visible */}
             <div className="flex flex-wrap gap-4 mb-8">
@@ -322,8 +206,8 @@ const Pictures = () => {
                       ${selectedCategory === category ? 'ring-4 ring-yellow-400 ring-offset-2 ring-offset-transparent scale-110' : ''}
                     `}
                   >
-                    🔐 {category}
-                    <div className="text-sm opacity-90">({images[category].length} encrypted)</div>
+                    📁 {category}
+                    <div className="text-sm opacity-90">({images[category].length} photos)</div>
                   </button>
                 );
               })}
