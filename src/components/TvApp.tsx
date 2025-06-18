@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { X, Play, Pause, Volume2, VolumeX, Maximize, RotateCcw } from 'lucide-react';
 import { useSecureTvVideos } from '@/hooks/useSecureTvVideos';
@@ -17,8 +16,8 @@ const TvApp = ({ isOpen, onClose }: TvAppProps) => {
   // Get authenticated session to determine if user has access
   const isAuthenticated = sessionStorage.getItem('app_authenticated') === 'true';
   
-  // Use empty password since app-level authentication is handled at entry
-  const { videos, loading, error } = useSecureTvVideos(isAuthenticated ? 'authenticated' : undefined);
+  // Use TV internal access since app-level authentication is handled at entry
+  const { videos, loading, error } = useSecureTvVideos(isAuthenticated ? 'TV_INTERNAL_ACCESS' : undefined);
 
   const currentVideo = videos[currentVideoIndex];
 

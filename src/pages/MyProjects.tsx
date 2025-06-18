@@ -9,7 +9,7 @@ const MyProjects = () => {
   // Check if user is authenticated at app level
   const isAuthenticated = sessionStorage.getItem('app_authenticated') === 'true';
   
-  // Use internal access token since app-level auth is handled at entry
+  // Use projects password for secure access
   const { images, loading, error } = useSecureImages(isAuthenticated ? 'PROJECTS_INTERNAL_ACCESS' : undefined);
 
   const allImages = [

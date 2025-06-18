@@ -63,7 +63,7 @@ export const useSecureTvVideos = (authToken?: string) => {
 
       const secureVideoFiles: SecureTvVideo[] = [];
 
-      // Use environment variable for internal app access
+      // Use TV password for internal app access
       const internalPassword = 'TV_INTERNAL_ACCESS';
 
       for (const file of files) {
