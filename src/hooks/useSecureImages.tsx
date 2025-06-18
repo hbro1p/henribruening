@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { encryptFilePath, generateSecureHash } from '@/utils/encryption';
 
 interface SecureImage {
   name: string;
@@ -43,7 +44,7 @@ export const useSecureImages = (password?: string) => {
       setLoading(true);
       setError(null);
 
-      console.log('=== FETCHING SECURE IMAGES ===');
+      console.log('=== FETCHING ENCRYPTED IMAGES ===');
 
       const folders = ['childhood', 'nature', 'vibe', 'random'];
       const secureCategories: SecureImageCategories = {
@@ -75,36 +76,47 @@ export const useSecureImages = (password?: string) => {
 
           const filePath = `${folder}/${file.name}`;
           
-          // Get secure signed URL for each image
-          const { data: secureData, error: secureError } = await supabase.functions.invoke('secure-file-access', {
-            body: { 
-              password, 
-              bucket: 'pictures', 
-              filePath, 
-              section: 'pictures' 
-            }
-          });
+          try {
+            // Encrypt the file path
+            const encryptedPath = encryptFilePath(filePath, password);
+            const timestamp = Date.now();
+            const passwordHash = generateSecureHash(password, timestamp);
 
-          if (secureError || !secureData?.signedUrl) {
-            console.error(`Failed to get secure URL for ${filePath}:`, secureError);
+            // Get secure signed URL using encrypted data
+            const { data: secureData, error: secureError } = await supabase.functions.invoke('secure-file-access', {
+              body: { 
+                encryptedPath,
+                passwordHash,
+                timestamp,
+                bucket: 'pictures',
+                section: 'pictures'
+              }
+            });
+
+            if (secureError || !secureData?.signedUrl) {
+              console.error(`Failed to get secure URL for encrypted image:`, secureError);
+              continue;
+            }
+
+            secureCategories[folder as keyof SecureImageCategories].push({
+              name: file.name,
+              secureUrl: secureData.signedUrl,
+              folder,
+              expiresAt: secureData.expiresAt
+            });
+          } catch (encryptError) {
+            console.error('Failed to encrypt file path:', encryptError);
             continue;
           }
-
-          secureCategories[folder as keyof SecureImageCategories].push({
-            name: file.name,
-            secureUrl: secureData.signedUrl,
-            folder,
-            expiresAt: secureData.expiresAt
-          });
         }
 
-        console.log(`✅ Added ${secureCategories[folder as keyof SecureImageCategories].length} secure images from ${folder}`);
+        console.log(`✅ Added ${secureCategories[folder as keyof SecureImageCategories].length} encrypted images from ${folder}`);
       }
 
       setImages(secureCategories);
 
     } catch (err) {
-      console.error('❌ Error fetching secure images:', err);
+      console.error('❌ Error fetching encrypted images:', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);

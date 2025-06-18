@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { encryptFilePath, generateSecureHash } from '@/utils/encryption';
 
 interface SecureTvVideo {
   name: string;
@@ -36,7 +37,7 @@ export const useSecureTvVideos = (password?: string) => {
       setLoading(true);
       setError(null);
 
-      console.log('=== FETCHING SECURE TV VIDEOS ===');
+      console.log('=== FETCHING ENCRYPTED TV VIDEOS ===');
 
       // First get the list of files (this doesn't expose content)
       const { data: files, error: listError } = await supabase.storage
@@ -67,35 +68,46 @@ export const useSecureTvVideos = (password?: string) => {
           continue;
         }
 
-        // Get secure signed URL for each video
-        const { data: secureData, error: secureError } = await supabase.functions.invoke('secure-file-access', {
-          body: { 
-            password, 
-            bucket: 'tv', 
-            filePath: file.name, 
-            section: 'tv' 
-          }
-        });
+        try {
+          // Encrypt the file path
+          const encryptedPath = encryptFilePath(file.name, password);
+          const timestamp = Date.now();
+          const passwordHash = generateSecureHash(password, timestamp);
 
-        if (secureError || !secureData?.signedUrl) {
-          console.error(`Failed to get secure URL for ${file.name}:`, secureError);
+          // Get secure signed URL using encrypted data
+          const { data: secureData, error: secureError } = await supabase.functions.invoke('secure-file-access', {
+            body: { 
+              encryptedPath,
+              passwordHash,
+              timestamp,
+              bucket: 'tv',
+              section: 'tv'
+            }
+          });
+
+          if (secureError || !secureData?.signedUrl) {
+            console.error(`Failed to get secure URL for encrypted file:`, secureError);
+            continue;
+          }
+
+          secureVideoFiles.push({
+            name: file.name,
+            secureUrl: secureData.signedUrl,
+            title: formatTitle(file.name),
+            expiresAt: secureData.expiresAt
+          });
+          console.log(`✅ Added encrypted video file`);
+        } catch (encryptError) {
+          console.error('Failed to encrypt file path:', encryptError);
           continue;
         }
-
-        secureVideoFiles.push({
-          name: file.name,
-          secureUrl: secureData.signedUrl,
-          title: formatTitle(file.name),
-          expiresAt: secureData.expiresAt
-        });
-        console.log(`✅ Added secure video file: ${file.name}`);
       }
 
-      console.log(`=== FINAL RESULT: ${secureVideoFiles.length} secure video files ===`);
+      console.log(`=== FINAL RESULT: ${secureVideoFiles.length} encrypted video files ===`);
       setVideos(secureVideoFiles);
 
     } catch (err) {
-      console.error('❌ Error fetching secure TV videos:', err);
+      console.error('❌ Error fetching encrypted TV videos:', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
