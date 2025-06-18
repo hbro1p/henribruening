@@ -1,13 +1,11 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { encryptFilePath, generateSecureHash } from '@/utils/encryption';
 
 interface SecureImage {
   name: string;
-  secureUrl: string;
+  url: string;
   folder: string;
-  expiresAt: string;
 }
 
 interface SecureImageCategories {
@@ -17,7 +15,7 @@ interface SecureImageCategories {
   random: SecureImage[];
 }
 
-export const useSecureImages = (password?: string) => {
+export const useSecureImages = (isAuthenticated: boolean = true) => {
   const [images, setImages] = useState<SecureImageCategories>({
     childhood: [],
     nature: [],
@@ -33,8 +31,8 @@ export const useSecureImages = (password?: string) => {
     return imageExtensions.some(ext => lowerFilename.endsWith(ext));
   };
 
-  const fetchSecureImages = async () => {
-    if (!password) {
+  const fetchImages = async () => {
+    if (!isAuthenticated) {
       setImages({ childhood: [], nature: [], vibe: [], random: [] });
       setLoading(false);
       return;
@@ -44,10 +42,10 @@ export const useSecureImages = (password?: string) => {
       setLoading(true);
       setError(null);
 
-      console.log('=== FETCHING ENCRYPTED IMAGES ===');
+      console.log('=== FETCHING IMAGES ===');
 
       const folders = ['childhood', 'nature', 'vibe', 'random'];
-      const secureCategories: SecureImageCategories = {
+      const imageCategories: SecureImageCategories = {
         childhood: [],
         nature: [],
         vibe: [],
@@ -76,47 +74,27 @@ export const useSecureImages = (password?: string) => {
 
           const filePath = `${folder}/${file.name}`;
           
-          try {
-            // Encrypt the file path
-            const encryptedPath = encryptFilePath(filePath, password);
-            const timestamp = Date.now();
-            const passwordHash = generateSecureHash(password, timestamp);
+          // Get public URL for the file
+          const { data: urlData } = supabase.storage
+            .from('pictures')
+            .getPublicUrl(filePath);
 
-            // Get secure signed URL using encrypted data
-            const { data: secureData, error: secureError } = await supabase.functions.invoke('secure-file-access', {
-              body: { 
-                encryptedPath,
-                passwordHash,
-                timestamp,
-                bucket: 'pictures',
-                section: 'pictures'
-              }
-            });
-
-            if (secureError || !secureData?.signedUrl) {
-              console.error(`Failed to get secure URL for encrypted image:`, secureError);
-              continue;
-            }
-
-            secureCategories[folder as keyof SecureImageCategories].push({
+          if (urlData?.publicUrl) {
+            imageCategories[folder as keyof SecureImageCategories].push({
               name: file.name,
-              secureUrl: secureData.signedUrl,
-              folder,
-              expiresAt: secureData.expiresAt
+              url: urlData.publicUrl,
+              folder
             });
-          } catch (encryptError) {
-            console.error('Failed to encrypt file path:', encryptError);
-            continue;
           }
         }
 
-        console.log(`✅ Added ${secureCategories[folder as keyof SecureImageCategories].length} encrypted images from ${folder}`);
+        console.log(`✅ Added ${imageCategories[folder as keyof SecureImageCategories].length} images from ${folder}`);
       }
 
-      setImages(secureCategories);
+      setImages(imageCategories);
 
     } catch (err) {
-      console.error('❌ Error fetching encrypted images:', err);
+      console.error('❌ Error fetching images:', err);
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
@@ -124,13 +102,13 @@ export const useSecureImages = (password?: string) => {
   };
 
   useEffect(() => {
-    fetchSecureImages();
-  }, [password]);
+    fetchImages();
+  }, [isAuthenticated]);
 
   return { 
     images, 
     loading, 
     error, 
-    refetch: fetchSecureImages 
+    refetch: fetchImages 
   };
 };

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { X, Play, Pause, Volume2, VolumeX, Maximize, RotateCcw } from 'lucide-react';
-import { useTvVideos } from '@/hooks/useTvVideos';
+import { useSecureTvVideos } from '@/hooks/useSecureTvVideos';
 import { useGlobalAuth } from '@/hooks/useGlobalAuth';
 
 interface TvAppProps {
@@ -16,7 +16,7 @@ const TvApp = ({ isOpen, onClose }: TvAppProps) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   
   const isAuthenticated = useGlobalAuth();
-  const { videos, loading, error } = useTvVideos();
+  const { videos, loading, error } = useSecureTvVideos(isAuthenticated);
 
   const currentVideo = videos[currentVideoIndex];
 

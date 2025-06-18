@@ -1,16 +1,14 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { encryptFilePath, generateSecureHash } from '@/utils/encryption';
 
 interface SecureTvVideo {
   name: string;
-  secureUrl: string;
+  url: string;
   title: string;
-  expiresAt: string;
 }
 
-export const useSecureTvVideos = (authToken?: string) => {
+export const useSecureTvVideos = (isAuthenticated: boolean = true) => {
   const [videos, setVideos] = useState<SecureTvVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,8 +24,8 @@ export const useSecureTvVideos = (authToken?: string) => {
     return nameWithoutExt.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
-  const fetchSecureVideos = async () => {
-    if (!authToken) {
+  const fetchVideos = async () => {
+    if (!isAuthenticated) {
       setVideos([]);
       setLoading(false);
       return;
@@ -37,9 +35,9 @@ export const useSecureTvVideos = (authToken?: string) => {
       setLoading(true);
       setError(null);
 
-      console.log('=== FETCHING SECURE TV CONTENT ===');
+      console.log('=== FETCHING TV CONTENT ===');
 
-      // First get the list of files (this doesn't expose content)
+      // Get the list of files from the bucket
       const { data: files, error: listError } = await supabase.storage
         .from('tv')
         .list('', {
@@ -61,56 +59,33 @@ export const useSecureTvVideos = (authToken?: string) => {
 
       console.log(`Processing ${files.length} items`);
 
-      const secureVideoFiles: SecureTvVideo[] = [];
-
-      // Use TV password for internal app access
-      const internalPassword = 'TV_INTERNAL_ACCESS';
+      const videoFiles: SecureTvVideo[] = [];
 
       for (const file of files) {
         if (file.id === null || !isVideoFile(file.name)) {
           continue;
         }
 
-        try {
-          // Encrypt the file path using internal password
-          const encryptedPath = encryptFilePath(file.name, internalPassword);
-          const timestamp = Date.now();
-          const passwordHash = generateSecureHash(internalPassword, timestamp);
+        // Get public URL for the file
+        const { data: urlData } = supabase.storage
+          .from('tv')
+          .getPublicUrl(file.name);
 
-          // Get secure signed URL using encrypted data
-          const { data: secureData, error: secureError } = await supabase.functions.invoke('secure-file-access', {
-            body: { 
-              encryptedPath,
-              passwordHash,
-              timestamp,
-              bucket: 'tv',
-              section: 'tv'
-            }
-          });
-
-          if (secureError || !secureData?.signedUrl) {
-            console.error(`Secure access failed:`, secureError);
-            continue;
-          }
-
-          secureVideoFiles.push({
+        if (urlData?.publicUrl) {
+          videoFiles.push({
             name: file.name,
-            secureUrl: secureData.signedUrl,
-            title: formatTitle(file.name),
-            expiresAt: secureData.expiresAt
+            url: urlData.publicUrl,
+            title: formatTitle(file.name)
           });
-          console.log(`✅ Secure content processed`);
-        } catch (encryptError) {
-          console.error('Encryption process failed:', encryptError);
-          continue;
+          console.log(`✅ Content processed`);
         }
       }
 
-      console.log(`=== RESULT: ${secureVideoFiles.length} secure items ===`);
-      setVideos(secureVideoFiles);
+      console.log(`=== RESULT: ${videoFiles.length} items ===`);
+      setVideos(videoFiles);
 
     } catch (err) {
-      console.error('❌ Secure content access error:', err);
+      console.error('❌ Content access error:', err);
       setError(err instanceof Error ? err.message : 'Access denied');
     } finally {
       setLoading(false);
@@ -118,13 +93,13 @@ export const useSecureTvVideos = (authToken?: string) => {
   };
 
   useEffect(() => {
-    fetchSecureVideos();
-  }, [authToken]);
+    fetchVideos();
+  }, [isAuthenticated]);
 
   return { 
     videos, 
     loading, 
     error, 
-    refetch: fetchSecureVideos 
+    refetch: fetchVideos 
   };
 };

@@ -1,16 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { useSecureImages } from '@/hooks/useSecureImages';
+import { useGlobalAuth } from '@/hooks/useGlobalAuth';
 import { Loader2 } from 'lucide-react';
 
 const MyProjects = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
-  // Check if user is authenticated at app level
-  const isAuthenticated = sessionStorage.getItem('app_authenticated') === 'true';
+  // Check if user is authenticated globally
+  const isAuthenticated = useGlobalAuth();
   
-  // Use projects password for secure access
-  const { images, loading, error } = useSecureImages(isAuthenticated ? 'PROJECTS_INTERNAL_ACCESS' : undefined);
+  // Use the secure images hook with global authentication
+  const { images, loading, error } = useSecureImages(isAuthenticated);
 
   const allImages = [
     ...images.childhood,
@@ -77,12 +78,12 @@ const MyProjects = () => {
     <div className="min-h-screen bg-black relative overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center">
         <img
-          key={currentImage.secureUrl}
-          src={currentImage.secureUrl}
+          key={currentImage.url}
+          src={currentImage.url}
           alt={currentImage.name}
           className="max-w-full max-h-full object-contain transition-opacity duration-1000"
           onError={(e) => {
-            console.error('Image load error for secure project content');
+            console.error('Image load error for project content');
             e.currentTarget.style.display = 'none';
           }}
         />
