@@ -138,6 +138,28 @@ async function verifyPasswordHash(providedHash: string, correctPassword: string,
   return result === 0;
 }
 
+// Verify internal access token hash
+async function verifyInternalAccessHash(providedHash: string, internalToken: string, timestamp: number): Promise<boolean> {
+  const expectedHash = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(internalToken + timestamp.toString())
+  );
+  const expectedHashHex = Array.from(new Uint8Array(expectedHash))
+    .map(b => b.toString(16).padStart(2, '0')).join('');
+
+  // Timing-safe comparison
+  if (providedHash.length !== expectedHashHex.length) {
+    return false;
+  }
+  
+  let result = 0;
+  for (let i = 0; i < providedHash.length; i++) {
+    result |= providedHash.charCodeAt(i) ^ expectedHashHex.charCodeAt(i);
+  }
+  
+  return result === 0;
+}
+
 // Input sanitization and validation
 function sanitizeInput(input: string): string {
   return input.replace(/[^a-zA-Z0-9\-_./]/g, '');
@@ -196,8 +218,11 @@ serve(async (req) => {
 
     const { encryptedPath, passwordHash, timestamp, bucket, section } = requestBody;
 
+    console.log('Request received for section:', section, 'bucket:', bucket);
+
     // Enhanced input validation
     if (!encryptedPath || !passwordHash || !timestamp || !bucket || !section) {
+      console.log('Missing required fields');
       return new Response(
         JSON.stringify({ error: 'Missing required encrypted fields' }),
         { 
@@ -209,6 +234,7 @@ serve(async (req) => {
 
     // Validate section and bucket
     if (!validateSection(sanitizeInput(section)) || !validateBucket(sanitizeInput(bucket))) {
+      console.log('Invalid section or bucket');
       return new Response(
         JSON.stringify({ error: 'Invalid section or bucket' }),
         { 
@@ -221,6 +247,7 @@ serve(async (req) => {
     // Enhanced timestamp validation with stricter window
     const now = Date.now();
     if (typeof timestamp !== 'number' || Math.abs(now - timestamp) > 2 * 60 * 1000) { // 2 minute window
+      console.log('Invalid timestamp');
       return new Response(
         JSON.stringify({ error: 'Request expired or invalid timestamp' }),
         { 
@@ -232,30 +259,21 @@ serve(async (req) => {
 
     // Get the correct password based on the internal access token
     let correctPassword: string | undefined;
+    let isInternalAccess = false;
     
     // Handle internal access tokens - these are predefined secure tokens
-    if (section === 'projects' && passwordHash.includes('PROJECTS_INTERNAL_ACCESS')) {
+    if (section === 'projects') {
       correctPassword = 'PROJECTS_INTERNAL_ACCESS';
-    } else if (section === 'videos' && passwordHash.includes('VIDEOS_INTERNAL_ACCESS')) {
+      isInternalAccess = true;
+    } else if (section === 'videos') {
       correctPassword = 'VIDEOS_INTERNAL_ACCESS';
-    } else if (section === 'tv' && passwordHash.includes('TV_INTERNAL_ACCESS')) {
+      isInternalAccess = true;
+    } else if (section === 'tv') {
       correctPassword = 'TV_INTERNAL_ACCESS';
-    } else {
-      // Fallback to environment variables for backward compatibility
-      switch (section) {
-        case 'projects':
-          correctPassword = Deno.env.get('PROJECTS_PASSWORD') || 'PROJECTS_INTERNAL_ACCESS';
-          break;
-        case 'videos':
-          correctPassword = Deno.env.get('VIDEOS_PASSWORD') || 'VIDEOS_INTERNAL_ACCESS';
-          break;
-        case 'tv':
-          correctPassword = Deno.env.get('TV_PASSWORD') || 'TV_INTERNAL_ACCESS';
-          break;
-        case 'pictures':
-          correctPassword = 'PUBLIC_ACCESS'; // Pictures are now public
-          break;
-      }
+      isInternalAccess = true;
+    } else if (section === 'pictures') {
+      correctPassword = 'PUBLIC_ACCESS';
+      isInternalAccess = true;
     }
 
     if (!correctPassword) {
@@ -269,17 +287,23 @@ serve(async (req) => {
       )
     }
 
-    // Enhanced password verification - for internal access tokens, we use a simpler verification
+    // Enhanced password verification - for internal access tokens
     let isValid = false;
-    if (correctPassword.includes('INTERNAL_ACCESS') || correctPassword === 'PUBLIC_ACCESS') {
-      // For internal access tokens, verify the hash contains the correct token
-      isValid = passwordHash.includes(correctPassword);
+    if (isInternalAccess) {
+      console.log('Verifying internal access token for:', section);
+      if (correctPassword === 'PUBLIC_ACCESS') {
+        isValid = true; // Pictures are public
+      } else {
+        // Verify the hash was generated from the internal access token + timestamp
+        isValid = await verifyInternalAccessHash(passwordHash, correctPassword, timestamp);
+      }
     } else {
       // For environment passwords, use the timing-safe comparison
       isValid = await verifyPasswordHash(passwordHash, correctPassword, timestamp);
     }
 
     if (!isValid) {
+      console.log('Authentication failed for section:', section);
       // Progressive delay for failed attempts
       await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500));
       return new Response(
@@ -290,6 +314,8 @@ serve(async (req) => {
         }
       )
     }
+
+    console.log('Authentication successful for section:', section);
 
     // Enhanced file path decryption and validation
     let filePath: string;
@@ -314,6 +340,8 @@ serve(async (req) => {
         }
       )
     }
+
+    console.log('File path decrypted successfully:', filePath);
 
     // Generate a temporary signed URL with shorter expiry for better security
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -346,6 +374,8 @@ serve(async (req) => {
         }
       )
     }
+
+    console.log('Signed URL created successfully');
 
     // Return encrypted response with additional security measures
     const responseData = {
