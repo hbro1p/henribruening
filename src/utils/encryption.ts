@@ -1,84 +1,133 @@
 
 import CryptoJS from 'crypto-js';
 
-// Simple XOR-based encryption for basic file path protection
-const generateSecureKey = (password: string, salt: string): string => {
-  const encoder = new TextEncoder();
-  const keyMaterial = password + salt;
-  
-  let hash = '';
-  for (let i = 0; i < keyMaterial.length; i++) {
-    hash += keyMaterial.charCodeAt(i).toString(16).padStart(2, '0');
-  }
-  
-  return hash.padEnd(64, '0').substring(0, 64);
+// Enhanced key generation with stronger parameters
+const generateKey = (password: string, salt: string): string => {
+  return CryptoJS.PBKDF2(password, salt, {
+    keySize: 256 / 32,
+    iterations: 100000, // Increased iterations for better security
+    hasher: CryptoJS.algo.SHA256
+  }).toString();
 };
 
-// Simple encryption
+// Enhanced salt generation with cryptographically secure random
+const generateSecureSalt = (): string => {
+  return CryptoJS.lib.WordArray.random(256 / 8).toString(); // 256-bit salt
+};
+
+// Enhanced encryption with stronger parameters
 export const encryptData = (data: string, password: string): string => {
+  // Input validation
   if (!data || !password) {
     throw new Error('Data and password are required');
   }
   
-  const salt = Math.random().toString(36).substring(2, 15);
-  const key = generateSecureKey(password, salt);
+  // Generate secure salt
+  const salt = generateSecureSalt();
+  const key = generateKey(password, salt);
   
-  let encrypted = '';
-  for (let i = 0; i < data.length; i++) {
-    const dataChar = data.charCodeAt(i);
-    const keyChar = key.charCodeAt(i % key.length);
-    encrypted += String.fromCharCode(dataChar ^ keyChar);
-  }
+  // Generate secure IV
+  const iv = CryptoJS.lib.WordArray.random(128 / 8);
   
-  const encryptedBase64 = btoa(encrypted);
-  return salt + ':' + encryptedBase64;
+  // Encrypt with AES-256-CBC
+  const encrypted = CryptoJS.AES.encrypt(data, key, {
+    iv: iv,
+    mode: CryptoJS.mode.CBC,
+    padding: CryptoJS.pad.Pkcs7
+  }).toString();
+  
+  // Return format: salt:iv:encrypted
+  return salt + ':' + iv.toString() + ':' + encrypted;
 };
 
-// Simple decryption
+// Enhanced decryption with proper validation
 export const decryptData = (encryptedData: string, password: string): string => {
+  // Input validation
   if (!encryptedData || !password) {
     throw new Error('Encrypted data and password are required');
   }
   
   const parts = encryptedData.split(':');
-  if (parts.length !== 2) {
+  if (parts.length !== 3) {
     throw new Error('Invalid encrypted data format');
   }
   
-  const [salt, encrypted] = parts;
+  const [salt, ivString, encrypted] = parts;
   
   try {
-    const key = generateSecureKey(password, salt);
-    const encryptedBytes = atob(encrypted);
+    const key = generateKey(password, salt);
+    const iv = CryptoJS.enc.Hex.parse(ivString);
     
-    let decrypted = '';
-    for (let i = 0; i < encryptedBytes.length; i++) {
-      const encryptedChar = encryptedBytes.charCodeAt(i);
-      const keyChar = key.charCodeAt(i % key.length);
-      decrypted += String.fromCharCode(encryptedChar ^ keyChar);
+    const decrypted = CryptoJS.AES.decrypt(encrypted, key, {
+      iv: iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7
+    });
+    
+    const result = decrypted.toString(CryptoJS.enc.Utf8);
+    
+    // Validate decryption result
+    if (!result) {
+      throw new Error('Decryption failed - invalid password or corrupted data');
     }
     
-    return decrypted;
+    return result;
   } catch (error) {
     throw new Error('Decryption failed');
   }
 };
 
-// Secure hash generation for server-side validation
+// Enhanced file path encryption with additional validation
+export const encryptFilePath = (filePath: string, password: string): string => {
+  // Validate file path
+  if (!filePath || filePath.includes('..') || filePath.startsWith('/')) {
+    throw new Error('Invalid file path');
+  }
+  
+  // Sanitize file path
+  const sanitizedPath = filePath.replace(/[^a-zA-Z0-9\-_./]/g, '');
+  
+  return encryptData(sanitizedPath, password);
+};
+
+// Enhanced file path decryption
+export const decryptFilePath = (encryptedPath: string, password: string): string => {
+  const decrypted = decryptData(encryptedPath, password);
+  
+  // Additional validation of decrypted path
+  if (decrypted.includes('..') || decrypted.startsWith('/') || decrypted.includes('\\')) {
+    throw new Error('Invalid decrypted file path');
+  }
+  
+  return decrypted;
+};
+
+// Enhanced secure hash generation with salt and stronger parameters
 export const generateSecureHash = (password: string, timestamp: number): string => {
+  // Input validation
   if (!password || typeof timestamp !== 'number') {
     throw new Error('Password and timestamp are required');
   }
   
-  return CryptoJS.SHA256(password + timestamp.toString()).toString();
+  // Use timestamp as part of salt for replay attack prevention
+  const timeSalt = Math.floor(timestamp / 1000).toString(); // Second precision
+  const saltedPassword = password + timestamp.toString() + timeSalt;
+  
+  // Multiple rounds of hashing for added security
+  let hash = CryptoJS.SHA256(saltedPassword).toString();
+  for (let i = 0; i < 1000; i++) {
+    hash = CryptoJS.SHA256(hash + saltedPassword).toString();
+  }
+  
+  return hash;
 };
 
-// Generate secure random tokens
+// Additional utility for generating secure random tokens
 export const generateSecureToken = (length: number = 32): string => {
   return CryptoJS.lib.WordArray.random(length).toString();
 };
 
-// Password strength validation
+// Enhanced password strength validation
 export const validatePasswordStrength = (password: string): { valid: boolean; errors: string[] } => {
   const errors: string[] = [];
   
@@ -90,6 +139,18 @@ export const validatePasswordStrength = (password: string): { valid: boolean; er
     }
     if (password.length > 128) {
       errors.push('Password must be less than 128 characters');
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push('Password must contain at least one uppercase letter');
+    }
+    if (!/[a-z]/.test(password)) {
+      errors.push('Password must contain at least one lowercase letter');
+    }
+    if (!/[0-9]/.test(password)) {
+      errors.push('Password must contain at least one number');
+    }
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+      errors.push('Password must contain at least one special character');
     }
   }
   

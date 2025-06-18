@@ -1,14 +1,16 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { encryptFilePath, generateSecureHash } from '@/utils/encryption';
 
 interface SecureTvVideo {
   name: string;
-  url: string;
+  secureUrl: string;
   title: string;
+  expiresAt: string;
 }
 
-export const useSecureTvVideos = (isAuthenticated: boolean = true) => {
+export const useSecureTvVideos = (password?: string) => {
   const [videos, setVideos] = useState<SecureTvVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,8 +26,8 @@ export const useSecureTvVideos = (isAuthenticated: boolean = true) => {
     return nameWithoutExt.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
-  const fetchVideos = async () => {
-    if (!isAuthenticated) {
+  const fetchSecureVideos = async () => {
+    if (!password) {
       setVideos([]);
       setLoading(false);
       return;
@@ -35,9 +37,9 @@ export const useSecureTvVideos = (isAuthenticated: boolean = true) => {
       setLoading(true);
       setError(null);
 
-      console.log('=== FETCHING TV CONTENT ===');
+      console.log('=== FETCHING ENCRYPTED TV VIDEOS ===');
 
-      // Get the list of files from the bucket
+      // First get the list of files (this doesn't expose content)
       const { data: files, error: listError } = await supabase.storage
         .from('tv')
         .list('', {
@@ -46,60 +48,80 @@ export const useSecureTvVideos = (isAuthenticated: boolean = true) => {
         });
 
       if (listError) {
-        console.error('Content access error:', listError);
-        setError('Content access denied');
+        console.error('Error listing TV videos:', listError);
+        setError('Failed to load TV videos');
         return;
       }
 
       if (!files) {
-        console.log('No content found');
+        console.log('No files found in TV bucket');
         setVideos([]);
         return;
       }
 
-      console.log(`Processing ${files.length} items`);
+      console.log(`Found ${files.length} items in TV bucket`);
 
-      const videoFiles: SecureTvVideo[] = [];
+      const secureVideoFiles: SecureTvVideo[] = [];
 
       for (const file of files) {
         if (file.id === null || !isVideoFile(file.name)) {
           continue;
         }
 
-        // Get public URL for the file
-        const { data: urlData } = supabase.storage
-          .from('tv')
-          .getPublicUrl(file.name);
+        try {
+          // Encrypt the file path
+          const encryptedPath = encryptFilePath(file.name, password);
+          const timestamp = Date.now();
+          const passwordHash = generateSecureHash(password, timestamp);
 
-        if (urlData?.publicUrl) {
-          videoFiles.push({
-            name: file.name,
-            url: urlData.publicUrl,
-            title: formatTitle(file.name)
+          // Get secure signed URL using encrypted data
+          const { data: secureData, error: secureError } = await supabase.functions.invoke('secure-file-access', {
+            body: { 
+              encryptedPath,
+              passwordHash,
+              timestamp,
+              bucket: 'tv',
+              section: 'tv'
+            }
           });
-          console.log(`✅ Content processed`);
+
+          if (secureError || !secureData?.signedUrl) {
+            console.error(`Failed to get secure URL for encrypted file:`, secureError);
+            continue;
+          }
+
+          secureVideoFiles.push({
+            name: file.name,
+            secureUrl: secureData.signedUrl,
+            title: formatTitle(file.name),
+            expiresAt: secureData.expiresAt
+          });
+          console.log(`✅ Added encrypted video file`);
+        } catch (encryptError) {
+          console.error('Failed to encrypt file path:', encryptError);
+          continue;
         }
       }
 
-      console.log(`=== RESULT: ${videoFiles.length} items ===`);
-      setVideos(videoFiles);
+      console.log(`=== FINAL RESULT: ${secureVideoFiles.length} encrypted video files ===`);
+      setVideos(secureVideoFiles);
 
     } catch (err) {
-      console.error('❌ Content access error:', err);
-      setError(err instanceof Error ? err.message : 'Access denied');
+      console.error('❌ Error fetching encrypted TV videos:', err);
+      setError(err instanceof Error ? err.message : 'Unknown error occurred');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchVideos();
-  }, [isAuthenticated]);
+    fetchSecureVideos();
+  }, [password]);
 
   return { 
     videos, 
     loading, 
     error, 
-    refetch: fetchVideos 
+    refetch: fetchSecureVideos 
   };
 };

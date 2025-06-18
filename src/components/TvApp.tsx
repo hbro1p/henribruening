@@ -1,221 +1,358 @@
-
-import React, { useState, useEffect } from 'react';
-import { X, Play, Pause, Volume2, VolumeX, Maximize, RotateCcw } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { X, Play, Pause, SkipForward, SkipBack, Tv, ArrowLeft } from 'lucide-react';
+import { useSettings } from '@/contexts/SettingsContext';
 import { useSecureTvVideos } from '@/hooks/useSecureTvVideos';
-import { useGlobalAuth } from '@/hooks/useGlobalAuth';
+import { supabase } from '@/integrations/supabase/client';
+import FullscreenButton from '@/components/FullscreenButton';
 
 interface TvAppProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const TvApp = ({ isOpen, onClose }: TvAppProps) => {
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [validatedPassword, setValidatedPassword] = useState<string>();
+  const [passwordError, setPasswordError] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [currentVideo, setCurrentVideo] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  
-  const isAuthenticated = useGlobalAuth();
-  const { videos, loading, error } = useSecureTvVideos(isAuthenticated);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
+  const { t, theme } = useSettings();
+  const { videos, loading } = useSecureTvVideos(validatedPassword);
 
-  const currentVideo = videos[currentVideoIndex];
+  const getWindowStyles = () => {
+    if (theme === 'space-mood') {
+      return {
+        fullBackground: 'folder-purple', // Purple theme for TV
+        windowFrame: 'bg-gradient-to-br from-purple-300 via-purple-400 to-purple-600',
+        titleBar: 'bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700',
+        windowContent: 'bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400',
+        text: 'text-purple-900',
+        button: 'bg-gradient-to-br from-purple-500 via-purple-600 to-purple-800 hover:from-purple-400 hover:via-purple-500 hover:to-purple-700 text-white',
+        input: 'bg-purple-50 border-purple-600 text-purple-900',
+        link: 'text-purple-800 hover:text-purple-900',
+        cardBg: 'bg-purple-50 border-purple-600',
+        playerBg: 'bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300',
+        accent: 'purple-600',
+      };
+    }
+    
+    if (theme === 'dark-vhs') {
+      return {
+        fullBackground: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
+        windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
+        titleBar: 'bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800',
+        windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
+        text: 'text-white',
+        button: 'bg-gradient-to-br from-purple-500 via-purple-600 to-purple-800 hover:from-purple-400 hover:via-purple-500 hover:to-purple-700 text-white',
+        input: 'bg-gray-800 border-white/30 text-white',
+        link: 'text-purple-400 hover:text-purple-300',
+        cardBg: 'bg-gray-800 border-white/20',
+        playerBg: 'bg-gradient-to-br from-gray-800 via-gray-700 to-black',
+        accent: 'purple-400',
+      };
+    }
+    
+    if (theme === 'retro-chrome') {
+      return {
+        fullBackground: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600',
+        windowFrame: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600',
+        titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-slate-700',
+        windowContent: 'bg-gradient-to-br from-slate-600 via-blue-700 to-slate-800',
+        text: 'text-blue-200',
+        button: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white',
+        input: 'bg-slate-800 border-blue-400/30 text-blue-200',
+        link: 'text-blue-300 hover:text-blue-200',
+        cardBg: 'bg-slate-800 border-blue-400/30',
+        playerBg: 'bg-gradient-to-br from-slate-700 via-blue-800 to-slate-900',
+        accent: 'blue-400',
+      };
+    }
+    
+    // Default fallback
+    return {
+      fullBackground: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600',
+      windowFrame: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600',
+      titleBar: 'bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800',
+      windowContent: 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400',
+      text: 'text-black',
+      button: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600 border-2 border-black/30 text-black hover:from-gray-200 hover:via-gray-300 hover:to-gray-500',
+      input: 'bg-white border-black text-black',
+      link: 'text-purple-800 hover:text-purple-900',
+      cardBg: 'bg-white border-black',
+      playerBg: 'bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300',
+      accent: 'purple-600',
+    };
+  };
 
   useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (!isOpen) return;
-      
-      switch (e.key) {
-        case ' ':
-          e.preventDefault();
-          setIsPlaying(!isPlaying);
-          break;
-        case 'ArrowLeft':
-          e.preventDefault();
-          setCurrentVideoIndex(prev => prev > 0 ? prev - 1 : videos.length - 1);
-          break;
-        case 'ArrowRight':
-          e.preventDefault();
-          setCurrentVideoIndex(prev => (prev + 1) % videos.length);
-          break;
-        case 'Escape':
-          if (isFullscreen) {
-            setIsFullscreen(false);
-          } else {
-            onClose();
-          }
-          break;
-      }
-    };
+    if (videos.length > 0 && currentVideo >= videos.length) {
+      setCurrentVideo(0);
+    }
+  }, [videos, currentVideo]);
 
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [isOpen, isPlaying, videos.length, isFullscreen, onClose]);
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsVerifying(true);
+    setPasswordError('');
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-password', {
+        body: { password, section: 'tv' }
+      });
+      
+      if (error) throw error;
+      
+      if (data.valid) {
+        setIsAuthenticated(true);
+        setValidatedPassword(password);
+        setPasswordError('');
+      } else {
+        setPasswordError('ACCESS DENIED');
+        setPassword('');
+      }
+    } catch (error) {
+      console.error('Password verification failed:', error);
+      setPasswordError('ACCESS DENIED');
+      setPassword('');
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  const nextVideo = () => {
+    if (videos.length === 0) return;
+    setCurrentVideo((prev) => (prev + 1) % videos.length);
+  };
+
+  const prevVideo = () => {
+    if (videos.length === 0) return;
+    setCurrentVideo((prev) => (prev - 1 + videos.length) % videos.length);
+  };
+
+  const togglePlayPause = () => {
+    if (!videoRef.current || videos.length === 0) return;
+
+    if (isPlaying) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.play().catch(console.error);
+    }
+  };
+
+  const handleVideoEnded = () => {
+    nextVideo();
+  };
+
+  useEffect(() => {
+    if (videoRef.current && videos.length > 0 && isAuthenticated) {
+      const wasPlaying = isPlaying;
+      if (wasPlaying) {
+        videoRef.current.pause();
+      }
+      
+      videoRef.current.src = videos[currentVideo]?.secureUrl || '';
+      
+      if (wasPlaying && videos[currentVideo]?.secureUrl) {
+        videoRef.current.play().catch(console.error);
+      }
+    }
+  }, [currentVideo, videos, isAuthenticated]);
 
   if (!isOpen) return null;
 
+  const styles = getWindowStyles();
+
   if (!isAuthenticated) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
-        <div className="text-white text-center">
-          <p className="text-xl">Access Denied</p>
+      <div className={`fixed inset-0 flex items-center justify-center p-4 z-50 ${styles.fullBackground}`}>
+        <div className={`p-2 border-2 border-black/30 w-full max-w-md shadow-2xl rounded-lg ${styles.windowFrame}`}>
+          <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
+            <div className="flex items-center space-x-2">
+              <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+              <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+              <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+              <span className="text-white font-pixel text-sm ml-2">TV.exe - LOCKED</span>
+            </div>
+          </div>
+          
+          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
+            <div className="flex flex-col items-center justify-center text-center">
+              <div className={`w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-lg shadow-lg border-2 border-black/20 flex items-center justify-center mb-4`}>
+                <div className="absolute inset-1 bg-gradient-to-br from-white/20 to-transparent rounded"></div>
+                <Tv className={`w-8 h-8 text-white drop-shadow-lg relative z-10`} />
+              </div>
+              
+              <h1 className={`text-2xl mb-4 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('Retro TV')} ]</h1>
+              <p className={`mb-6 font-pixel drop-shadow-sm ${styles.text}`}>
+                {t('language') === 'deutsch' ? 'Ups... dieser Bereich benötigt ein Passwort 😅' : 'Oops... looks like this section requires a password 😅'}
+              </p>
+              <p className={`mb-6 font-pixel drop-shadow-sm ${styles.text}`}>
+                {t('language') === 'deutsch' ? 'Geben Sie das Passwort ein, um fortzufahren.' : 'Enter the password to continue.'}
+              </p>
+              
+              <form onSubmit={handlePasswordSubmit} className="w-full space-y-4">
+                <div className="relative">
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
+                    disabled={isVerifying}
+                    className={`w-full p-4 border-3 border-black/40 rounded-lg shadow-inner font-pixel text-lg focus:outline-none transition-all duration-200 disabled:opacity-50 ${styles.input}`}
+                    placeholder={t('language') === 'deutsch' ? 'Passwort eingeben...' : 'Enter password...'}
+                  />
+                  <div className="absolute inset-2 bg-gradient-to-br from-white/30 to-transparent rounded pointer-events-none"></div>
+                </div>
+                
+                {passwordError && (
+                  <div className="bg-red-100 border-2 border-red-400 p-3 rounded-lg">
+                    <p className="text-red-700 text-sm font-pixel drop-shadow-sm">
+                      {passwordError}
+                    </p>
+                  </div>
+                )}
+                
+                <button
+                  type="submit"
+                  disabled={isVerifying}
+                  className={`w-full p-4 active:scale-95 font-bold font-pixel text-lg transition-all rounded-lg shadow-lg hover:shadow-xl relative disabled:opacity-50 ${styles.button}`}
+                >
+                  <div className="absolute inset-1 bg-gradient-to-br from-white/30 to-transparent rounded pointer-events-none"></div>
+                  <span className="relative z-10">
+                    {isVerifying 
+                      ? (t('language') === 'deutsch' ? 'Überprüfung...' : 'Verifying...') 
+                      : (t('language') === 'deutsch' ? 'Entsperren' : 'Unlock')
+                    }
+                  </span>
+                </button>
+              </form>
+
+              <button
+                onClick={onClose}
+                className={`mt-6 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}
+              >
+                <ArrowLeft className="w-5 h-5" />
+                {t('Back to Desktop')}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`fixed inset-0 bg-black ${isFullscreen ? 'z-[60]' : 'bg-opacity-90 z-50'} flex items-center justify-center`}>
-      <div className={`bg-gray-900 rounded-lg overflow-hidden ${isFullscreen ? 'w-full h-full' : 'w-[90vw] h-[90vh] max-w-6xl'}`}>
-        {/* Header */}
-        {!isFullscreen && (
-          <div className="flex items-center justify-between p-4 bg-gray-800 border-b border-gray-700">
-            <h2 className="text-xl font-bold text-white">TV</h2>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-white transition-colors"
-            >
-              <X size={24} />
-            </button>
+    <div className={`fixed inset-0 flex items-center justify-center p-4 z-50 ${styles.fullBackground}`}>
+      <div className={`p-2 border-2 border-black/30 w-full max-w-4xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
+        <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+            <span className="text-white font-pixel text-sm ml-2">TV.exe</span>
           </div>
-        )}
-
-        {/* Content */}
-        <div className="flex-1 flex">
-          {/* Video Player */}
-          <div className="flex-1 flex flex-col">
-            {loading ? (
-              <div className="flex-1 flex items-center justify-center text-white">
-                <div className="text-center">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-                  <p>Loading content...</p>
-                </div>
-              </div>
-            ) : error ? (
-              <div className="flex-1 flex items-center justify-center text-white">
-                <div className="text-center">
-                  <p className="text-red-400 mb-4">Content unavailable</p>
-                  <button 
-                    onClick={onClose}
-                    className="px-4 py-2 bg-gray-700 rounded hover:bg-gray-600 transition-colors"
+        </div>
+        
+        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
+          <div className="flex flex-col items-center justify-center">
+            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text} text-center`}>[ {t('Retro TV')} ]</h1>
+            
+            {/* Video Player */}
+            <div className={`w-full max-w-2xl ${styles.playerBg} p-6 border-2 border-black/30 rounded-lg shadow-lg mb-6`}>
+              <div className="relative">
+                {videos.length > 0 ? (
+                  <div 
+                    ref={videoContainerRef}
+                    className="relative w-full aspect-video bg-black rounded border border-gray-700 overflow-hidden"
                   >
-                    Close
-                  </button>
-                </div>
-              </div>
-            ) : videos.length === 0 ? (
-              <div className="flex-1 flex items-center justify-center text-white">
-                <p>No content available</p>
-              </div>
-            ) : (
-              <>
-                {/* Video Display */}
-                <div className="flex-1 bg-black relative">
-                  {currentVideo && (
                     <video
-                      key={currentVideo.url}
-                      src={currentVideo.url}
-                      className="w-full h-full object-contain"
-                      controls={false}
-                      autoPlay={isPlaying}
-                      muted={isMuted}
+                      ref={videoRef}
+                      className="w-full h-full object-contain rounded"
+                      loop
+                      autoPlay
                       onPlay={() => setIsPlaying(true)}
                       onPause={() => setIsPlaying(false)}
-                    />
-                  )}
-                  
-                  {/* Controls Overlay */}
-                  <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between bg-black bg-opacity-50 rounded-lg p-3">
-                    <div className="flex items-center space-x-3">
-                      <button
-                        onClick={() => setIsPlaying(!isPlaying)}
-                        className="text-white hover:text-gray-300 transition-colors"
-                      >
-                        {isPlaying ? <Pause size={24} /> : <Play size={24} />}
-                      </button>
-                      
-                      <button
-                        onClick={() => setIsMuted(!isMuted)}
-                        className="text-white hover:text-gray-300 transition-colors"
-                      >
-                        {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
-                      </button>
-                      
-                      <button
-                        onClick={() => {
-                          setCurrentVideoIndex(0);
-                          setIsPlaying(false);
-                        }}
-                        className="text-white hover:text-gray-300 transition-colors"
-                      >
-                        <RotateCcw size={20} />
-                      </button>
-                    </div>
+                      onEnded={handleVideoEnded}
+                      controls={false}
+                    >
+                      {videos[currentVideo] && <source src={videos[currentVideo].secureUrl} type="video/mp4" />}
+                    </video>
                     
-                    <div className="flex items-center space-x-3">
-                      <span className="text-white text-sm">
-                        {currentVideoIndex + 1} / {videos.length}
-                      </span>
-                      
-                      <button
-                        onClick={() => setIsFullscreen(!isFullscreen)}
-                        className="text-white hover:text-gray-300 transition-colors"
-                      >
-                        <Maximize size={20} />
-                      </button>
+                    {/* Fullscreen button */}
+                    <div className="absolute top-4 left-4">
+                      <FullscreenButton 
+                        targetElement={videoContainerRef.current} 
+                        className="opacity-70 hover:opacity-100"
+                      />
                     </div>
                   </div>
-                </div>
-
-                {/* Current Video Info */}
-                <div className="p-4 bg-gray-800 border-t border-gray-700">
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    {currentVideo?.title || 'Video'}
-                  </h3>
-                  <div className="flex items-center space-x-4">
-                    <button
-                      onClick={() => setCurrentVideoIndex(prev => prev > 0 ? prev - 1 : videos.length - 1)}
-                      disabled={videos.length <= 1}
-                      className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Previous
-                    </button>
-                    <button
-                      onClick={() => setCurrentVideoIndex(prev => (prev + 1) % videos.length)}
-                      disabled={videos.length <= 1}
-                      className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      Next
-                    </button>
+                ) : (
+                  <div className="w-full aspect-video bg-black rounded border border-gray-700 flex items-center justify-center relative overflow-hidden">
+                    <div className="text-center relative z-10">
+                      <div className="text-6xl mb-4">📡</div>
+                      <p className={`${styles.text} font-pixel text-lg`}>
+                        {loading ? 'LOADING SECURE CHANNELS...' : 'NO SIGNAL'}
+                      </p>
+                      <p className={`${styles.text} font-pixel text-sm mt-2 opacity-70`}>
+                        {loading ? 'Decrypting content...' : 'No videos uploaded yet'}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Playlist Sidebar */}
-          {!isFullscreen && videos.length > 0 && (
-            <div className="w-80 bg-gray-800 border-l border-gray-700 overflow-y-auto">
-              <div className="p-4 border-b border-gray-700">
-                <h3 className="text-lg font-semibold text-white">Playlist ({videos.length})</h3>
+                )}
               </div>
-              <div className="space-y-1">
-                {videos.map((video, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentVideoIndex(index)}
-                    className={`w-full p-3 text-left transition-colors ${
-                      index === currentVideoIndex
-                        ? 'bg-gray-600 text-white'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                    }`}
-                  >
-                    <div className="font-medium truncate">{video.title}</div>
-                    <div className="text-sm text-gray-400 truncate">{video.name}</div>
-                  </button>
-                ))}
+              
+              {/* Controls */}
+              <div className="flex items-center justify-center space-x-6 mt-6">
+                <button
+                  onClick={prevVideo}
+                  disabled={videos.length === 0}
+                  className={`w-12 h-12 rounded ${styles.button} flex items-center justify-center transition-all disabled:opacity-50 font-pixel text-xs shadow-lg`}
+                >
+                  <SkipBack className="w-5 h-5" />
+                </button>
+                
+                <button
+                  onClick={togglePlayPause}
+                  disabled={videos.length === 0}
+                  className={`w-16 h-12 rounded ${styles.button} flex items-center justify-center transition-all disabled:opacity-50 shadow-lg`}
+                >
+                  {isPlaying ? 
+                    <Pause className="w-6 h-6" /> : 
+                    <Play className="w-6 h-6 ml-0.5" />
+                  }
+                </button>
+                
+                <button
+                  onClick={nextVideo}
+                  disabled={videos.length === 0}
+                  className={`w-12 h-12 rounded ${styles.button} flex items-center justify-center transition-all disabled:opacity-50 font-pixel text-xs shadow-lg`}
+                >
+                  <SkipForward className="w-5 h-5" />
+                </button>
+              </div>
+              
+              {/* Channel info */}
+              <div className="flex justify-center mt-4">
+                <div className={`${styles.cardBg} rounded px-3 py-1 border-2`}>
+                  <span className={`${styles.text} font-pixel text-xs`}>
+                    {loading ? 'SEARCHING CHANNELS...' : videos.length > 0 ? `CH ${currentVideo + 1}/${videos.length}` : 'NO SIGNAL'}
+                  </span>
+                </div>
               </div>
             </div>
-          )}
+
+            <button
+              onClick={onClose}
+              className={`text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}
+            >
+              <ArrowLeft className="w-5 h-5" />
+              {t('Back to Desktop')}
+            </button>
+          </div>
         </div>
       </div>
     </div>

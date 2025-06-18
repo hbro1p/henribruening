@@ -22,31 +22,43 @@ const securityHeaders = {
   'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
 }
 
-// Simple key generation that matches the frontend
-function generateSecureKey(password: string, salt: string): string {
-  const keyMaterial = password + salt;
+// Enhanced encryption utilities with stronger security
+async function generateSecureKey(password: string, salt: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(password),
+    'PBKDF2',
+    false,
+    ['deriveBits']
+  );
   
-  let hash = '';
-  for (let i = 0; i < keyMaterial.length; i++) {
-    hash += keyMaterial.charCodeAt(i).toString(16).padStart(2, '0');
-  }
+  const derivedBits = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt: encoder.encode(salt),
+      iterations: 100000, // Increased iterations for better security
+      hash: 'SHA-256'
+    },
+    keyMaterial,
+    256
+  );
   
-  // Pad or truncate to ensure consistent length
-  return hash.padEnd(64, '0').substring(0, 64);
+  return Array.from(new Uint8Array(derivedBits))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 }
 
-// Simple decryption that matches the frontend encryption
 async function decryptData(encryptedData: string, password: string): Promise<string> {
   try {
-    const parts = encryptedData.split(':');
-    if (parts.length !== 2) {
+    const [salt, encrypted] = encryptedData.split(':');
+    if (!salt || !encrypted) {
       throw new Error('Invalid encrypted data format');
     }
     
-    const [salt, encrypted] = parts;
-    const key = generateSecureKey(password, salt);
+    const key = await generateSecureKey(password, salt);
     
-    // Decode base64
+    // Decode base64 with proper validation
     let encryptedBytes: string;
     try {
       encryptedBytes = atob(encrypted);
@@ -54,12 +66,13 @@ async function decryptData(encryptedData: string, password: string): Promise<str
       throw new Error('Invalid base64 encoding');
     }
     
-    // Simple XOR decryption
+    const keyBytes = key.slice(0, encryptedBytes.length);
+    
     let decrypted = '';
     for (let i = 0; i < encryptedBytes.length; i++) {
-      const encryptedChar = encryptedBytes.charCodeAt(i);
-      const keyChar = key.charCodeAt(i % key.length);
-      decrypted += String.fromCharCode(encryptedChar ^ keyChar);
+      decrypted += String.fromCharCode(
+        encryptedBytes.charCodeAt(i) ^ keyBytes.charCodeAt(i % keyBytes.length)
+      );
     }
     
     // Validate decrypted data contains no suspicious characters
@@ -67,10 +80,8 @@ async function decryptData(encryptedData: string, password: string): Promise<str
       throw new Error('Decrypted data validation failed');
     }
     
-    console.log('Successfully decrypted file path:', decrypted);
     return decrypted;
   } catch (error) {
-    console.error('Decryption failed:', error);
     throw new Error('Decryption failed');
   }
 }
@@ -106,9 +117,11 @@ async function checkRateLimit(key: string): Promise<boolean> {
 }
 
 // Enhanced password validation with timing-safe comparison
-async function verifyInternalAccessHash(providedHash: string, internalToken: string, timestamp: number): Promise<boolean> {
-  const expectedHashInput = internalToken + timestamp.toString();
-  const expectedHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(expectedHashInput));
+async function verifyPasswordHash(providedHash: string, correctPassword: string, timestamp: number): Promise<boolean> {
+  const expectedHash = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(correctPassword + timestamp.toString())
+  );
   const expectedHashHex = Array.from(new Uint8Array(expectedHash))
     .map(b => b.toString(16).padStart(2, '0')).join('');
 
@@ -131,12 +144,12 @@ function sanitizeInput(input: string): string {
 }
 
 function validateSection(section: string): boolean {
-  const allowedSections = ['projects', 'videos', 'tv', 'pictures'];
+  const allowedSections = ['projects', 'videos', 'tv'];
   return allowedSections.includes(section);
 }
 
 function validateBucket(bucket: string): boolean {
-  const allowedBuckets = ['projects', 'videos', 'tv', 'pictures'];
+  const allowedBuckets = ['projects', 'videos', 'tv'];
   return allowedBuckets.includes(bucket);
 }
 
@@ -183,11 +196,8 @@ serve(async (req) => {
 
     const { encryptedPath, passwordHash, timestamp, bucket, section } = requestBody;
 
-    console.log('Request received for section:', section, 'bucket:', bucket);
-
     // Enhanced input validation
     if (!encryptedPath || !passwordHash || !timestamp || !bucket || !section) {
-      console.log('Missing required fields');
       return new Response(
         JSON.stringify({ error: 'Missing required encrypted fields' }),
         { 
@@ -199,7 +209,6 @@ serve(async (req) => {
 
     // Validate section and bucket
     if (!validateSection(sanitizeInput(section)) || !validateBucket(sanitizeInput(bucket))) {
-      console.log('Invalid section or bucket');
       return new Response(
         JSON.stringify({ error: 'Invalid section or bucket' }),
         { 
@@ -212,7 +221,6 @@ serve(async (req) => {
     // Enhanced timestamp validation with stricter window
     const now = Date.now();
     if (typeof timestamp !== 'number' || Math.abs(now - timestamp) > 2 * 60 * 1000) { // 2 minute window
-      console.log('Invalid timestamp');
       return new Response(
         JSON.stringify({ error: 'Request expired or invalid timestamp' }),
         { 
@@ -222,18 +230,19 @@ serve(async (req) => {
       )
     }
 
-    // Get the correct password based on the internal access token
+    // Get the password for the requested section with enhanced security
     let correctPassword: string | undefined;
     
-    // Handle internal access tokens - these are predefined secure tokens
-    if (section === 'projects') {
-      correctPassword = 'PROJECTS_INTERNAL_ACCESS';
-    } else if (section === 'videos') {
-      correctPassword = 'VIDEOS_INTERNAL_ACCESS';
-    } else if (section === 'tv') {
-      correctPassword = 'TV_INTERNAL_ACCESS';
-    } else if (section === 'pictures') {
-      correctPassword = 'PUBLIC_ACCESS';
+    switch (section) {
+      case 'projects':
+        correctPassword = Deno.env.get('PROJECTS_PASSWORD');
+        break;
+      case 'videos':
+        correctPassword = Deno.env.get('VIDEOS_PASSWORD');
+        break;
+      case 'tv':
+        correctPassword = Deno.env.get('TV_PASSWORD');
+        break;
     }
 
     if (!correctPassword) {
@@ -247,19 +256,8 @@ serve(async (req) => {
       )
     }
 
-    // Enhanced password verification - for internal access tokens
-    console.log('Verifying internal access token for:', section);
-    
-    let isValid = false;
-    if (correctPassword === 'PUBLIC_ACCESS') {
-      isValid = true; // Pictures are public
-    } else {
-      // Verify the hash was generated from the internal access token + timestamp
-      isValid = await verifyInternalAccessHash(passwordHash, correctPassword, timestamp);
-    }
-
-    if (!isValid) {
-      console.log('Authentication failed for section:', section);
+    // Enhanced password verification
+    if (!(await verifyPasswordHash(passwordHash, correctPassword, timestamp))) {
       // Progressive delay for failed attempts
       await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500));
       return new Response(
@@ -271,12 +269,9 @@ serve(async (req) => {
       )
     }
 
-    console.log('Authentication successful for section:', section);
-
     // Enhanced file path decryption and validation
     let filePath: string;
     try {
-      console.log('Attempting to decrypt file path...');
       filePath = await decryptData(encryptedPath, correctPassword);
       
       // Additional path validation
@@ -297,8 +292,6 @@ serve(async (req) => {
         }
       )
     }
-
-    console.log('File path decrypted successfully:', filePath);
 
     // Generate a temporary signed URL with shorter expiry for better security
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -331,8 +324,6 @@ serve(async (req) => {
         }
       )
     }
-
-    console.log('Signed URL created successfully');
 
     // Return encrypted response with additional security measures
     const responseData = {
