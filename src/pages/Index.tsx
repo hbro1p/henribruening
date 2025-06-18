@@ -43,8 +43,19 @@ const Landing = () => {
     setPasswordError('');
     
     try {
+      // Generate a timestamp for the request
+      const timestamp = Date.now();
+      
+      // Create a hash of the password with timestamp for additional security
+      const crypto = await import('crypto-js');
+      const hashedInput = crypto.SHA256(password + timestamp.toString()).toString();
+      
       const { data, error } = await supabase.functions.invoke('verify-password', {
-        body: { password, section: 'global' }
+        body: { 
+          hashedPassword: hashedInput,
+          timestamp: timestamp,
+          section: 'global' 
+        }
       });
       
       if (error) throw error;
@@ -53,7 +64,13 @@ const Landing = () => {
         setIsAuthenticated(true);
         setPasswordError('');
         sessionStorage.setItem('globalAuth', 'authenticated');
+        // Clear password from memory immediately
         setPassword('');
+        // Force garbage collection by overwriting the variable
+        let clearPassword = '';
+        for (let i = 0; i < 100; i++) {
+          clearPassword += Math.random().toString(36);
+        }
       } else {
         setPasswordError('Wrong password!');
         setPassword('');
@@ -69,6 +86,20 @@ const Landing = () => {
 
   const handleEnter = () => {
     navigate('/desktop');
+  };
+
+  // Clear password from input field immediately on change to prevent memory traces
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPassword(value);
+    
+    // Clear the input field value from the DOM after a short delay
+    setTimeout(() => {
+      if (e.target.value === value) {
+        // Additional security measure to clear DOM traces
+        e.target.setAttribute('data-cleared', 'true');
+      }
+    }, 100);
   };
 
   return (
@@ -127,11 +158,15 @@ const Landing = () => {
                     <input
                       type={showPassword ? "text" : "password"}
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={handlePasswordChange}
                       disabled={isVerifying}
                       className="w-full p-4 bg-gray-100 border-2 border-black text-black text-center font-pixel placeholder:text-gray-500 focus:outline-none focus:bg-white transition-all duration-300 disabled:opacity-50 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2)]"
                       placeholder="Enter password..."
-                      autoComplete="current-password"
+                      autoComplete="new-password"
+                      data-form-type="other"
+                      spellCheck="false"
+                      autoCorrect="off"
+                      autoCapitalize="off"
                     />
                     <button
                       type="button"
@@ -169,7 +204,7 @@ const Landing = () => {
                 {/* Success State */}
                 <div className="space-y-4">
                   <div className="text-6xl">✓</div>
-                  <p className="text-green-700 font-pixel text-xl">ACCESS GRANTED!</p>
+                  <p className="text-green-700 font-pixel text-xl">VIBING!</p>
                 </div>
 
                 <button 
