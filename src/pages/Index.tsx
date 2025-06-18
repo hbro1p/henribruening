@@ -10,6 +10,7 @@ const Landing = () => {
   const [loading, setLoading] = useState(true);
   const [showContent, setShowContent] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showEnterScreen, setShowEnterScreen] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
@@ -20,6 +21,7 @@ const Landing = () => {
     const globalAuth = sessionStorage.getItem('globalAuth');
     if (globalAuth === 'authenticated') {
       setIsAuthenticated(true);
+      setShowEnterScreen(true);
     }
 
     const timer = setTimeout(() => {
@@ -54,6 +56,10 @@ const Landing = () => {
         setIsAuthenticated(true);
         setPasswordError('');
         sessionStorage.setItem('globalAuth', 'authenticated');
+        // Small delay before showing enter screen
+        setTimeout(() => {
+          setShowEnterScreen(true);
+        }, 500);
       } else {
         setPasswordError('Incorrect password. Please try again.');
         setPassword('');
@@ -129,7 +135,7 @@ const Landing = () => {
                 </button>
               </form>
             </div>
-          ) : (
+          ) : showEnterScreen ? (
             <div>
               <h1 className="text-5xl flex items-center justify-center mb-4">
                 Hi, I'm Henri.
@@ -142,6 +148,10 @@ const Landing = () => {
               >
                 Enter
               </button>
+            </div>
+          ) : (
+            <div className="text-green-400">
+              <p>Authentication successful...</p>
             </div>
           )}
         </div>

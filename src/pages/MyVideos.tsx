@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Video, ExternalLink } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useGlobalAuth } from '@/hooks/useGlobalAuth';
 import { supabase } from '@/integrations/supabase/client';
 
 interface VideoProject {
@@ -23,10 +24,13 @@ const MyVideos = () => {
   const [isLoadingVideos, setIsLoadingVideos] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { theme, t } = useSettings();
+  const { isAuthenticated } = useGlobalAuth();
 
   useEffect(() => {
-    fetchVideos();
-  }, []);
+    if (isAuthenticated) {
+      fetchVideos();
+    }
+  }, [isAuthenticated]);
 
   const fetchVideos = async () => {
     setIsLoadingVideos(true);
@@ -123,6 +127,24 @@ const MyVideos = () => {
   };
 
   const styles = getWindowStyles();
+
+  if (!isAuthenticated) {
+    return (
+      <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${getFolderTheme()}`}>
+        <div className={`p-2 border-2 border-black/30 w-full max-w-md shadow-2xl rounded-lg ${styles.windowFrame}`}>
+          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded ${styles.windowContent}`}>
+            <div className="flex flex-col items-center justify-center text-center">
+              <p className={`${styles.text} font-pixel text-lg`}>Please authenticate first to access videos.</p>
+              <Link to="/" className={`mt-4 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
+                <ArrowLeft className="w-5 h-5" />
+                {t('Back to Login')}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${getFolderTheme()}`}>
