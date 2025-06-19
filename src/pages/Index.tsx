@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGlobalAuth } from '@/hooks/useGlobalAuth';
@@ -72,10 +71,8 @@ const Landing = () => {
         sessionStorage.setItem('globalAuth', 'authenticated');
         // Clear password from memory immediately
         setPassword('');
-        // Small delay to ensure auth state updates
-        setTimeout(() => {
-          navigate('/desktop', { replace: true });
-        }, 100);
+        // Navigate immediately without delay
+        navigate('/desktop', { replace: true });
       } else {
         console.log('Invalid password');
         setPasswordError('Wrong password!');

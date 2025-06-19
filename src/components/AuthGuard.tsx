@@ -1,6 +1,5 @@
 
-import React, { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React from 'react';
 import { useGlobalAuth } from '@/hooks/useGlobalAuth';
 
 interface AuthGuardProps {
@@ -8,20 +7,7 @@ interface AuthGuardProps {
 }
 
 const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useGlobalAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    // Don't do anything while loading
-    if (isLoading) return;
-    
-    // If not authenticated and trying to access protected routes, redirect to login
-    if (!isAuthenticated && location.pathname !== '/') {
-      console.log('User not authenticated, redirecting to login...');
-      navigate('/', { replace: true });
-    }
-  }, [isAuthenticated, isLoading, location.pathname, navigate]);
+  const { isLoading } = useGlobalAuth();
 
   // Show loading state while checking authentication
   if (isLoading) {
@@ -35,11 +21,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     );
   }
 
-  // If not authenticated and trying to access protected routes, show nothing (will redirect)
-  if (!isAuthenticated && location.pathname !== '/') {
-    return null;
-  }
-
+  // Let each page handle its own authentication logic
   return <>{children}</>;
 };
 

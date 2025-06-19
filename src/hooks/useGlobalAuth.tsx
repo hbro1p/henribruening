@@ -23,18 +23,10 @@ export const useGlobalAuth = () => {
       }
     };
 
-    // Clear auth when page is unloaded (user leaves website)
-    const handleBeforeUnload = () => {
-      sessionStorage.removeItem('globalAuth');
-      localStorage.removeItem('globalAuth');
-    };
-
     window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('beforeunload', handleBeforeUnload);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);
 
