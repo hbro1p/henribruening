@@ -13,11 +13,12 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const location = useLocation();
 
   useEffect(() => {
-    // If not authenticated and not on the landing page, redirect to login
+    // Only redirect if not authenticated and not already on the landing page
     if (!isAuthenticated && location.pathname !== '/') {
+      console.log('AuthGuard: Redirecting unauthenticated user from', location.pathname, 'to /');
       navigate('/', { replace: true });
     }
-  }, [isAuthenticated, location.pathname, navigate]);
+  }, [isAuthenticated, location.pathname]); // Removed navigate from dependencies to prevent infinite loop
 
   // If not authenticated and trying to access protected routes, show nothing
   if (!isAuthenticated && location.pathname !== '/') {
