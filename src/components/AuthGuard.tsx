@@ -1,13 +1,34 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useGlobalAuth } from '@/hooks/useGlobalAuth';
+import { secureLogger } from '@/utils/secureLogger';
 
 interface AuthGuardProps {
   children: React.ReactNode;
 }
 
 const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
-  const { isLoading } = useGlobalAuth();
+  const { isAuthenticated, isLoading } = useGlobalAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Don't do anything while loading
+    if (isLoading) return;
+    
+    // Protected routes that require authentication
+    const protectedRoutes = ['/desktop', '/pictures', '/videos', '/projects', '/about', '/contact', '/settings'];
+    const isProtectedRoute = protectedRoutes.includes(location.pathname);
+    
+    // If not authenticated and trying to access protected routes, redirect to login
+    if (!isAuthenticated && isProtectedRoute) {
+      secureLogger.info('Unauthorized access attempt to protected route', { 
+        route: location.pathname 
+      });
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, isLoading, location.pathname, navigate]);
 
   // Show loading state while checking authentication
   if (isLoading) {
@@ -21,7 +42,14 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     );
   }
 
-  // Let each page handle its own authentication logic
+  // If not authenticated and trying to access protected routes, show nothing (will redirect)
+  const protectedRoutes = ['/desktop', '/pictures', '/videos', '/projects', '/about', '/contact', '/settings'];
+  const isProtectedRoute = protectedRoutes.includes(location.pathname);
+  
+  if (!isAuthenticated && isProtectedRoute) {
+    return null;
+  }
+
   return <>{children}</>;
 };
 

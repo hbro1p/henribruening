@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGlobalAuth } from '@/hooks/useGlobalAuth';
@@ -16,13 +17,7 @@ const Landing = () => {
   const { isAuthenticated, isLoading: authLoading } = useGlobalAuth();
   const navigate = useNavigate();
 
-  // Only clear auth on initial page load, not on every render
   useEffect(() => {
-    // Only clear if we're definitely not authenticated
-    if (!sessionStorage.getItem('globalAuth')) {
-      localStorage.removeItem('globalAuth');
-    }
-    
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2500);
@@ -42,7 +37,6 @@ const Landing = () => {
   // Redirect authenticated users immediately
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
-      console.log('User is authenticated, redirecting to desktop...');
       navigate('/desktop', { replace: true });
     }
   }, [isAuthenticated, authLoading, navigate]);
@@ -53,8 +47,6 @@ const Landing = () => {
     setPasswordError('');
     
     try {
-      console.log('Attempting password verification...');
-      
       const { data, error } = await supabase.functions.invoke('verify-password', {
         body: { 
           password: password,
@@ -65,21 +57,26 @@ const Landing = () => {
       if (error) throw error;
       
       if (data.valid) {
-        console.log('Password verified successfully');
         setPasswordError('');
-        // Set auth in session storage
-        sessionStorage.setItem('globalAuth', 'authenticated');
-        // Clear password from memory immediately
+        // Generate secure session token with expiration
+        const sessionToken = crypto.randomUUID() + '-' + Date.now();
+        const expiresAt = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
+        
+        const sessionData = {
+          token: sessionToken,
+          authenticated: true,
+          expiresAt: expiresAt,
+          lastActivity: Date.now()
+        };
+        
+        sessionStorage.setItem('globalAuth', JSON.stringify(sessionData));
         setPassword('');
-        // Navigate immediately without delay
         navigate('/desktop', { replace: true });
       } else {
-        console.log('Invalid password');
         setPasswordError('Wrong password!');
         setPassword('');
       }
     } catch (error) {
-      console.error('Authentication failed:', error);
       setPasswordError('Try again!');
       setPassword('');
     } finally {
@@ -90,45 +87,10 @@ const Landing = () => {
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPassword(value);
-    // Clear any existing error when user starts typing
     if (passwordError) {
       setPasswordError('');
     }
   };
-
-  // Security measures
-  const handleContextMenu = (e: MouseEvent) => e.preventDefault();
-  
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (
-      e.key === 'F12' ||
-      (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J')) ||
-      (e.ctrlKey && e.key === 'U') ||
-      (e.ctrlKey && e.key === 'S')
-    ) {
-      e.preventDefault();
-      return false;
-    }
-  };
-
-  const handleSelectStart = (e: Event) => e.preventDefault();
-
-  const clearConsole = setInterval(() => {
-    console.clear();
-  }, 1000);
-
-  useEffect(() => {
-    document.addEventListener('contextmenu', handleContextMenu);
-    document.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('selectstart', handleSelectStart);
-
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-      document.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('selectstart', handleSelectStart);
-      clearInterval(clearConsole);
-    };
-  }, []);
 
   // Don't render anything if user is authenticated (will redirect)
   if (!authLoading && isAuthenticated) {
