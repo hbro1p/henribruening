@@ -5,7 +5,7 @@ import { useGlobalAuth } from '@/hooks/useGlobalAuth';
 import ProgressBar from '@/components/ProgressBar';
 import BlinkingCursor from '@/components/BlinkingCursor';
 import { supabase } from '@/integrations/supabase/client';
-import { Monitor, Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Landing = () => {
   const [loading, setLoading] = useState(true);
@@ -133,9 +133,6 @@ const Landing = () => {
       {loading ? (
         <div className="text-center z-10">
           <div className="mb-8">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-blue-800 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.3)] flex items-center justify-center mb-6 mx-auto">
-              <Monitor className="w-12 h-12 text-white" />
-            </div>
             <p className="text-3xl text-blue-900 font-pixel tracking-wider">
               BOOTING UP<BlinkingCursor />
             </p>
@@ -146,9 +143,6 @@ const Landing = () => {
         <div className={`transition-all duration-1000 z-10 ${showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
           <div className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,0.3)] p-8 max-w-md mx-auto">
             <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] flex items-center justify-center mb-4 mx-auto">
-                <Monitor className="w-8 h-8 text-white" />
-              </div>
               <h1 className="text-4xl text-black font-pixel mb-4 flex items-center justify-center gap-2">
                 Hi, I'm Henri
                 <BlinkingCursor />
