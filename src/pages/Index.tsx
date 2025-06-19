@@ -17,10 +17,12 @@ const Landing = () => {
   const { isAuthenticated, isLoading: authLoading } = useGlobalAuth();
   const navigate = useNavigate();
 
-  // Clear authentication on page load (forces re-login every time)
+  // Only clear auth on initial page load, not on every render
   useEffect(() => {
-    sessionStorage.removeItem('globalAuth');
-    localStorage.removeItem('globalAuth');
+    // Only clear if we're definitely not authenticated
+    if (!sessionStorage.getItem('globalAuth')) {
+      localStorage.removeItem('globalAuth');
+    }
     
     const timer = setTimeout(() => {
       setLoading(false);
@@ -41,6 +43,7 @@ const Landing = () => {
   // Redirect authenticated users immediately
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
+      console.log('User is authenticated, redirecting to desktop...');
       navigate('/desktop', { replace: true });
     }
   }, [isAuthenticated, authLoading, navigate]);
@@ -51,7 +54,8 @@ const Landing = () => {
     setPasswordError('');
     
     try {
-      // Simple direct password verification
+      console.log('Attempting password verification...');
+      
       const { data, error } = await supabase.functions.invoke('verify-password', {
         body: { 
           password: password,
@@ -62,13 +66,18 @@ const Landing = () => {
       if (error) throw error;
       
       if (data.valid) {
+        console.log('Password verified successfully');
         setPasswordError('');
+        // Set auth in session storage
         sessionStorage.setItem('globalAuth', 'authenticated');
         // Clear password from memory immediately
         setPassword('');
-        // Navigate immediately after setting auth
-        navigate('/desktop', { replace: true });
+        // Small delay to ensure auth state updates
+        setTimeout(() => {
+          navigate('/desktop', { replace: true });
+        }, 100);
       } else {
+        console.log('Invalid password');
         setPasswordError('Wrong password!');
         setPassword('');
       }
@@ -81,16 +90,18 @@ const Landing = () => {
     }
   };
 
-  // Clear password from input field immediately on change to prevent memory traces
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setPassword(value);
+    // Clear any existing error when user starts typing
+    if (passwordError) {
+      setPasswordError('');
+    }
   };
 
-  // Disable right-click context menu
+  // Security measures
   const handleContextMenu = (e: MouseEvent) => e.preventDefault();
   
-  // Disable common developer shortcuts
   const handleKeyDown = (e: KeyboardEvent) => {
     if (
       e.key === 'F12' ||
@@ -103,10 +114,8 @@ const Landing = () => {
     }
   };
 
-  // Disable text selection
   const handleSelectStart = (e: Event) => e.preventDefault();
 
-  // Clear console periodically
   const clearConsole = setInterval(() => {
     console.clear();
   }, 1000);
@@ -143,7 +152,6 @@ const Landing = () => {
         }}
       />
 
-      {/* Floating pixels */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-3 h-3 bg-blue-600 animate-bounce delay-100"></div>
         <div className="absolute top-40 right-32 w-2 h-2 bg-blue-800 animate-bounce delay-300"></div>
@@ -166,7 +174,6 @@ const Landing = () => {
       ) : (
         <div className={`transition-all duration-1000 z-10 ${showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
           <div className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,0.3)] p-8 max-w-md mx-auto">
-            {/* Header */}
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] flex items-center justify-center mb-4 mx-auto">
                 <Monitor className="w-8 h-8 text-white" />
@@ -178,7 +185,6 @@ const Landing = () => {
             </div>
 
             <div className="space-y-6">
-              {/* Password Form */}
               <form onSubmit={handlePasswordSubmit} className="space-y-4">
                 <div className="relative">
                   <input
