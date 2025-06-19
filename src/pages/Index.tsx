@@ -15,26 +15,17 @@ const Landing = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // Check existing authentication first, only clear if explicitly needed
+  // Clear authentication on page load (forces re-login every time)
   useEffect(() => {
-    const checkExistingAuth = () => {
-      const globalAuth = sessionStorage.getItem('globalAuth');
-      if (globalAuth === 'authenticated') {
-        setIsAuthenticated(true);
-        // If already authenticated, navigate immediately
-        navigate('/desktop', { replace: true });
-        return;
-      }
-    };
-
-    checkExistingAuth();
+    sessionStorage.removeItem('globalAuth');
+    localStorage.removeItem('globalAuth');
     
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, [navigate]);
+  }, []);
 
   useEffect(() => {
     if (!loading) {
@@ -45,22 +36,8 @@ const Landing = () => {
     }
   }, [loading]);
 
-  // Handle navigation when authenticated
-  useEffect(() => {
-    if (isAuthenticated) {
-      // Small delay to ensure state is properly set
-      const timer = setTimeout(() => {
-        navigate('/desktop');
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [isAuthenticated, navigate]);
-
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (isVerifying || !password.trim()) return;
-    
     setIsVerifying(true);
     setPasswordError('');
     
@@ -76,13 +53,11 @@ const Landing = () => {
       if (error) throw error;
       
       if (data.valid) {
-        // Set auth in storage first
-        sessionStorage.setItem('globalAuth', 'authenticated');
-        // Clear password immediately
-        setPassword('');
+        setIsAuthenticated(true);
         setPasswordError('');
-        // Navigate directly without setting local state to avoid conflicts
-        navigate('/desktop', { replace: true });
+        sessionStorage.setItem('globalAuth', 'authenticated');
+        // Clear password from memory immediately
+        setPassword('');
       } else {
         setPasswordError('Wrong password!');
         setPassword('');
