@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGlobalAuth } from '@/hooks/useGlobalAuth';
 import ProgressBar from '@/components/ProgressBar';
@@ -14,8 +14,17 @@ const Landing = () => {
   const [passwordError, setPasswordError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [hasRedirected, setHasRedirected] = useState(false);
   const { isAuthenticated, isLoading: authLoading } = useGlobalAuth();
   const navigate = useNavigate();
+
+  // Memoize the navigation function to prevent unnecessary re-renders
+  const handleAuthenticatedRedirect = useCallback(() => {
+    if (!authLoading && isAuthenticated && !hasRedirected) {
+      setHasRedirected(true);
+      navigate('/desktop', { replace: true });
+    }
+  }, [isAuthenticated, authLoading, hasRedirected, navigate]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -34,12 +43,10 @@ const Landing = () => {
     }
   }, [loading]);
 
-  // Redirect authenticated users immediately
+  // Handle authenticated user redirect with proper guards
   useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      navigate('/desktop', { replace: true });
-    }
-  }, [isAuthenticated, authLoading, navigate]);
+    handleAuthenticatedRedirect();
+  }, [handleAuthenticatedRedirect]);
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,6 +78,7 @@ const Landing = () => {
         
         sessionStorage.setItem('globalAuth', JSON.stringify(sessionData));
         setPassword('');
+        setHasRedirected(true);
         navigate('/desktop', { replace: true });
       } else {
         setPasswordError('Wrong password!');
@@ -92,8 +100,8 @@ const Landing = () => {
     }
   };
 
-  // Don't render anything if user is authenticated (will redirect)
-  if (!authLoading && isAuthenticated) {
+  // Don't render anything if user is authenticated and has been redirected
+  if (!authLoading && isAuthenticated && hasRedirected) {
     return null;
   }
 
