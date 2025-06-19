@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProgressBar from '@/components/ProgressBar';
@@ -36,8 +37,22 @@ const Landing = () => {
     }
   }, [loading]);
 
+  // Handle navigation when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      // Small delay to ensure state is properly set
+      const timer = setTimeout(() => {
+        navigate('/desktop');
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, navigate]);
+
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isVerifying || !password.trim()) return;
+    
     setIsVerifying(true);
     setPasswordError('');
     
@@ -53,11 +68,13 @@ const Landing = () => {
       if (error) throw error;
       
       if (data.valid) {
-        setIsAuthenticated(true);
-        setPasswordError('');
+        // Set auth in storage first
         sessionStorage.setItem('globalAuth', 'authenticated');
-        // Clear password from memory immediately
+        // Clear password immediately
         setPassword('');
+        setPasswordError('');
+        // Set authenticated state - this will trigger navigation
+        setIsAuthenticated(true);
       } else {
         setPasswordError('Wrong password!');
         setPassword('');
