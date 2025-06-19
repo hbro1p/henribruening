@@ -11,26 +11,25 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   const { isAuthenticated, isLoading } = useGlobalAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [hasRedirected, setHasRedirected] = useState(false);
+  const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
 
   useEffect(() => {
     // Don't do anything while loading
     if (isLoading) return;
     
-    // If not authenticated and not on the landing page, redirect to login
-    if (!isAuthenticated && location.pathname !== '/' && !hasRedirected) {
-      setHasRedirected(true);
-      navigate('/', { replace: true });
+    // Mark that we've checked auth at least once
+    if (!hasCheckedAuth) {
+      setHasCheckedAuth(true);
     }
     
-    // Reset redirect flag when we're back on the landing page
-    if (location.pathname === '/') {
-      setHasRedirected(false);
+    // If not authenticated and not on the landing page, redirect to login
+    if (!isAuthenticated && location.pathname !== '/' && hasCheckedAuth) {
+      navigate('/', { replace: true });
     }
-  }, [isAuthenticated, isLoading, location.pathname, navigate, hasRedirected]);
+  }, [isAuthenticated, isLoading, location.pathname, navigate, hasCheckedAuth]);
 
   // Show loading state while checking authentication
-  if (isLoading) {
+  if (isLoading || !hasCheckedAuth) {
     return null;
   }
 
