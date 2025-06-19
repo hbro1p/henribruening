@@ -68,6 +68,12 @@ export const useGlobalAuth = () => {
       }
     };
 
+    // Listen for custom globalAuthChange event (for same-tab changes)
+    const handleGlobalAuthChange = (e: CustomEvent) => {
+      console.log('Global auth change event received:', e.detail);
+      checkAuth();
+    };
+
     // Check session validity periodically
     const sessionCheckInterval = setInterval(checkAuth, 60000); // Check every minute
 
@@ -93,9 +99,11 @@ export const useGlobalAuth = () => {
     });
 
     window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('globalAuthChange', handleGlobalAuthChange as EventListener);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('globalAuthChange', handleGlobalAuthChange as EventListener);
       clearInterval(sessionCheckInterval);
       activityEvents.forEach(event => {
         document.removeEventListener(event, updateActivity, true);

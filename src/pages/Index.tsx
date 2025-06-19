@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGlobalAuth } from '@/hooks/useGlobalAuth';
 import ProgressBar from '@/components/ProgressBar';
@@ -71,10 +71,12 @@ const Landing = () => {
         };
         
         sessionStorage.setItem('globalAuth', JSON.stringify(sessionData));
-        setPassword('');
         
-        // The useEffect above will handle the redirect when isAuthenticated becomes true
-        console.log('Login successful, auth state will update and trigger redirect');
+        // Dispatch custom event to notify auth hook of the change
+        window.dispatchEvent(new CustomEvent('globalAuthChange', { detail: sessionData }));
+        
+        setPassword('');
+        console.log('Login successful, session stored and event dispatched');
       } else {
         setPasswordError('Wrong password!');
         setPassword('');
