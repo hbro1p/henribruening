@@ -23,29 +23,18 @@ export const useGlobalAuth = () => {
       }
     };
 
-    // Listen for focus events to recheck auth when user returns to tab
-    const handleFocus = () => {
-      checkAuth();
-    };
-
     // Clear auth when page is unloaded (user leaves website)
     const handleBeforeUnload = () => {
       sessionStorage.removeItem('globalAuth');
       localStorage.removeItem('globalAuth');
     };
 
-    // Set up interval to periodically check auth status
-    const authCheckInterval = setInterval(checkAuth, 5000); // Check every 5 seconds
-
     window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('focus', handleFocus);
     window.addEventListener('beforeunload', handleBeforeUnload);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('focus', handleFocus);
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      clearInterval(authCheckInterval);
     };
   }, []);
 

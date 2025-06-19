@@ -1,25 +1,31 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProgressBar from '@/components/ProgressBar';
 import BlinkingCursor from '@/components/BlinkingCursor';
 import { supabase } from '@/integrations/supabase/client';
 import { Monitor, Eye, EyeOff } from 'lucide-react';
+import { useGlobalAuth } from '@/hooks/useGlobalAuth';
 
 const Landing = () => {
   const [loading, setLoading] = useState(true);
   const [showContent, setShowContent] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated } = useGlobalAuth();
 
-  // Clear authentication on page load (forces re-login every time)
+  // Check if already authenticated and redirect
   useEffect(() => {
-    sessionStorage.removeItem('globalAuth');
-    localStorage.removeItem('globalAuth');
-    
+    if (isAuthenticated) {
+      navigate('/desktop');
+      return;
+    }
+  }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2500);
@@ -53,11 +59,11 @@ const Landing = () => {
       if (error) throw error;
       
       if (data.valid) {
-        setIsAuthenticated(true);
-        setPasswordError('');
         sessionStorage.setItem('globalAuth', 'authenticated');
         // Clear password from memory immediately
         setPassword('');
+        // Navigate to desktop
+        navigate('/desktop');
       } else {
         setPasswordError('Wrong password!');
         setPassword('');
@@ -69,10 +75,6 @@ const Landing = () => {
     } finally {
       setIsVerifying(false);
     }
-  };
-
-  const handleEnter = () => {
-    navigate('/desktop');
   };
 
   // Clear password from input field immediately on change to prevent memory traces
@@ -117,6 +119,11 @@ const Landing = () => {
       clearInterval(clearConsole);
     };
   }, []);
+
+  // Don't render login form if already authenticated
+  if (isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 flex items-center justify-center p-4 relative overflow-hidden">
@@ -166,71 +173,54 @@ const Landing = () => {
               </h1>
             </div>
 
-            {!isAuthenticated ? (
-              <div className="space-y-6">
-                {/* Password Form */}
-                <form onSubmit={handlePasswordSubmit} className="space-y-4">
-                  <div className="relative">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={handlePasswordChange}
-                      disabled={isVerifying}
-                      className="w-full p-4 bg-gray-100 border-2 border-black text-black text-center font-pixel placeholder:text-gray-500 focus:outline-none focus:bg-white transition-all duration-300 disabled:opacity-50 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2)]"
-                      placeholder="Enter password..."
-                      autoComplete="new-password"
-                      data-form-type="other"
-                      spellCheck="false"
-                      autoCorrect="off"
-                      autoCapitalize="off"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-black transition-colors"
-                    >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                    </button>
-                  </div>
-                  
-                  {passwordError && (
-                    <div className="bg-red-200 border-2 border-red-600 p-3 shadow-[4px_4px_0px_0px_rgba(220,38,38,0.3)]">
-                      <p className="text-red-800 font-pixel text-center">{passwordError}</p>
-                    </div>
-                  )}
-                  
+            <div className="space-y-6">
+              {/* Password Form */}
+              <form onSubmit={handlePasswordSubmit} className="space-y-4">
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={handlePasswordChange}
+                    disabled={isVerifying}
+                    className="w-full p-4 bg-gray-100 border-2 border-black text-black text-center font-pixel placeholder:text-gray-500 focus:outline-none focus:bg-white transition-all duration-300 disabled:opacity-50 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2)]"
+                    placeholder="Enter password..."
+                    autoComplete="new-password"
+                    data-form-type="other"
+                    spellCheck="false"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                  />
                   <button
-                    type="submit"
-                    disabled={isVerifying || !password.trim()}
-                    className="w-full p-4 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 border-2 border-black text-white font-pixel transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] active:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)] active:transform active:translate-x-1 active:translate-y-1"
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-black transition-colors"
                   >
-                    {isVerifying ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent animate-spin"></div>
-                        CHECKING...
-                      </span>
-                    ) : (
-                      'LOGIN'
-                    )}
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
-                </form>
-              </div>
-            ) : (
-              <div className="space-y-6 text-center">
-                {/* Success State */}
-                <div className="space-y-4">
-                  <div className="text-6xl">✓</div>
-                  <p className="text-green-700 font-pixel text-xl">VIBING!</p>
                 </div>
-
-                <button 
-                  onClick={handleEnter}
-                  className="w-full p-4 bg-green-500 hover:bg-green-600 active:bg-green-700 border-2 border-black text-white font-pixel transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] active:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)] active:transform active:translate-x-1 active:translate-y-1"
+                
+                {passwordError && (
+                  <div className="bg-red-200 border-2 border-red-600 p-3 shadow-[4px_4px_0px_0px_rgba(220,38,38,0.3)]">
+                    <p className="text-red-800 font-pixel text-center">{passwordError}</p>
+                  </div>
+                )}
+                
+                <button
+                  type="submit"
+                  disabled={isVerifying || !password.trim()}
+                  className="w-full p-4 bg-blue-500 hover:bg-blue-600 active:bg-blue-700 border-2 border-black text-white font-pixel transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] active:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)] active:transform active:translate-x-1 active:translate-y-1"
                 >
-                  ENTER
+                  {isVerifying ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent animate-spin"></div>
+                      CHECKING...
+                    </span>
+                  ) : (
+                    'LOGIN'
+                  )}
                 </button>
-              </div>
-            )}
+              </form>
+            </div>
           </div>
         </div>
       )}
