@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { encryptFilePath, generateSecureHash } from '@/utils/encryption';
+import { secureLogger } from '@/utils/secureLogger';
 
 interface SecureImage {
   name: string;
@@ -44,7 +45,7 @@ export const useSecureImages = (password?: string) => {
       setLoading(true);
       setError(null);
 
-      console.log('=== FETCHING ENCRYPTED IMAGES ===');
+      secureLogger.info('Fetching encrypted images');
 
       const folders = ['childhood', 'nature', 'vibe', 'random'];
       const secureCategories: SecureImageCategories = {
@@ -63,7 +64,7 @@ export const useSecureImages = (password?: string) => {
           });
 
         if (listError) {
-          console.error(`Error listing ${folder} images:`, listError);
+          secureLogger.error(`Error listing ${folder} images`, { error: listError.message });
           continue;
         }
 
@@ -77,12 +78,10 @@ export const useSecureImages = (password?: string) => {
           const filePath = `${folder}/${file.name}`;
           
           try {
-            // Encrypt the file path
             const encryptedPath = encryptFilePath(filePath, password);
             const timestamp = Date.now();
             const passwordHash = generateSecureHash(password, timestamp);
 
-            // Get secure signed URL using encrypted data
             const { data: secureData, error: secureError } = await supabase.functions.invoke('secure-file-access', {
               body: { 
                 encryptedPath,
@@ -94,7 +93,7 @@ export const useSecureImages = (password?: string) => {
             });
 
             if (secureError || !secureData?.signedUrl) {
-              console.error(`Failed to get secure URL for encrypted image:`, secureError);
+              secureLogger.error('Failed to get secure URL for encrypted image', { error: secureError?.message });
               continue;
             }
 
@@ -105,19 +104,20 @@ export const useSecureImages = (password?: string) => {
               expiresAt: secureData.expiresAt
             });
           } catch (encryptError) {
-            console.error('Failed to encrypt file path:', encryptError);
+            secureLogger.error('Failed to encrypt file path', { error: encryptError instanceof Error ? encryptError.message : 'Unknown error' });
             continue;
           }
         }
 
-        console.log(`✅ Added ${secureCategories[folder as keyof SecureImageCategories].length} encrypted images from ${folder}`);
+        secureLogger.info(`Added ${secureCategories[folder as keyof SecureImageCategories].length} encrypted images from ${folder}`);
       }
 
       setImages(secureCategories);
 
     } catch (err) {
-      console.error('❌ Error fetching encrypted images:', err);
-      setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      secureLogger.error('Error fetching encrypted images', { error: errorMessage });
+      setError('Failed to load encrypted images. Please try again.');
     } finally {
       setLoading(false);
     }

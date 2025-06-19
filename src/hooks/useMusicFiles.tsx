@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { secureLogger } from '@/utils/secureLogger';
 
 interface MusicFile {
   name: string;
@@ -20,7 +21,6 @@ export const useMusicFiles = () => {
   };
 
   const formatTitle = (filename: string): string => {
-    // Remove file extension and format as title
     const nameWithoutExt = filename.replace(/\.[^/.]+$/, '');
     return nameWithoutExt.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
@@ -31,7 +31,7 @@ export const useMusicFiles = () => {
         setLoading(true);
         setError(null);
 
-        console.log('=== FETCHING MUSIC FILES ===');
+        secureLogger.info('Fetching music files');
 
         const { data: files, error: listError } = await supabase.storage
           .from('music')
@@ -41,25 +41,24 @@ export const useMusicFiles = () => {
           });
 
         if (listError) {
-          console.error('Error listing music files:', listError);
+          secureLogger.error('Error listing music files', { error: listError.message });
           setError('Failed to load music files');
           return;
         }
 
         if (!files) {
-          console.log('No files found in music bucket');
+          secureLogger.info('No files found in music bucket');
           setMusicFiles([]);
           return;
         }
 
-        console.log(`Found ${files.length} items in music bucket`);
+        secureLogger.info(`Found ${files.length} items in music bucket`);
 
         const audioFiles: MusicFile[] = [];
 
         for (const file of files) {
-          // Skip folders (they have id === null)
           if (file.id === null) {
-            console.log(`Skipping folder: ${file.name}`);
+            secureLogger.debug(`Skipping folder: ${file.name}`);
             continue;
           }
 
@@ -74,19 +73,20 @@ export const useMusicFiles = () => {
                 url: urlData.publicUrl,
                 title: formatTitle(file.name)
               });
-              console.log(`✅ Added audio file: ${file.name}`);
+              secureLogger.debug(`Added audio file: ${file.name}`);
             }
           } else {
-            console.log(`❌ Skipping non-audio file: ${file.name}`);
+            secureLogger.debug(`Skipping non-audio file: ${file.name}`);
           }
         }
 
-        console.log(`=== FINAL RESULT: ${audioFiles.length} audio files ===`);
+        secureLogger.info(`Successfully loaded ${audioFiles.length} audio files`);
         setMusicFiles(audioFiles);
 
       } catch (err) {
-        console.error('❌ Error fetching music files:', err);
-        setError(err instanceof Error ? err.message : 'Unknown error occurred');
+        const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+        secureLogger.error('Error fetching music files', { error: errorMessage });
+        setError('Failed to load music files. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -98,7 +98,6 @@ export const useMusicFiles = () => {
   const refetch = () => {
     setLoading(true);
     setError(null);
-    // The useEffect will handle the rest
   };
 
   return { musicFiles, loading, error, refetch };

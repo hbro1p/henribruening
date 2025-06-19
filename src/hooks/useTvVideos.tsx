@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { secureLogger } from '@/utils/secureLogger';
 
 interface TvVideo {
   name: string;
@@ -29,7 +30,7 @@ export const useTvVideos = () => {
       setLoading(true);
       setError(null);
 
-      console.log('=== FETCHING TV VIDEOS ===');
+      secureLogger.info('Fetching TV videos');
 
       const { data: files, error: listError } = await supabase.storage
         .from('tv')
@@ -39,24 +40,24 @@ export const useTvVideos = () => {
         });
 
       if (listError) {
-        console.error('Error listing TV videos:', listError);
+        secureLogger.error('Error listing TV videos', { error: listError.message });
         setError('Failed to load TV videos');
         return;
       }
 
       if (!files) {
-        console.log('No files found in TV bucket');
+        secureLogger.info('No files found in TV bucket');
         setVideos([]);
         return;
       }
 
-      console.log(`Found ${files.length} items in TV bucket`);
+      secureLogger.info(`Found ${files.length} items in TV bucket`);
 
       const videoFiles: TvVideo[] = [];
 
       for (const file of files) {
         if (file.id === null) {
-          console.log(`Skipping folder: ${file.name}`);
+          secureLogger.debug(`Skipping folder: ${file.name}`);
           continue;
         }
 
@@ -71,19 +72,20 @@ export const useTvVideos = () => {
               url: urlData.publicUrl,
               title: formatTitle(file.name)
             });
-            console.log(`✅ Added video file: ${file.name}`);
+            secureLogger.debug(`Added video file: ${file.name}`);
           }
         } else {
-          console.log(`❌ Skipping non-video file: ${file.name}`);
+          secureLogger.debug(`Skipping non-video file: ${file.name}`);
         }
       }
 
-      console.log(`=== FINAL RESULT: ${videoFiles.length} video files ===`);
+      secureLogger.info(`Successfully loaded ${videoFiles.length} video files`);
       setVideos(videoFiles);
 
     } catch (err) {
-      console.error('❌ Error fetching TV videos:', err);
-      setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      secureLogger.error('Error fetching TV videos', { error: errorMessage });
+      setError('Failed to load videos. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -93,7 +95,6 @@ export const useTvVideos = () => {
     fetchVideos();
   }, []);
 
-  // Return both the state and a refresh function
   return { 
     videos, 
     loading, 
