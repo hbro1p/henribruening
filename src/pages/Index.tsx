@@ -14,17 +14,16 @@ const Landing = () => {
   const [passwordError, setPasswordError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [redirecting, setRedirecting] = useState(false);
   const { isAuthenticated, isLoading: authLoading } = useGlobalAuth();
   const navigate = useNavigate();
 
-  // Memoize the navigation function to prevent unnecessary re-renders
-  const handleAuthenticatedRedirect = useCallback(() => {
-    if (!authLoading && isAuthenticated && !redirecting) {
-      setRedirecting(true);
+  // Handle authenticated user redirect - only redirect if authenticated and not loading
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      console.log('User is authenticated, redirecting to desktop');
       navigate('/desktop', { replace: true });
     }
-  }, [isAuthenticated, authLoading, redirecting, navigate]);
+  }, [isAuthenticated, authLoading, navigate]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -42,11 +41,6 @@ const Landing = () => {
       return () => clearTimeout(timer);
     }
   }, [loading]);
-
-  // Handle authenticated user redirect with proper guards
-  useEffect(() => {
-    handleAuthenticatedRedirect();
-  }, [handleAuthenticatedRedirect]);
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,8 +72,9 @@ const Landing = () => {
         
         sessionStorage.setItem('globalAuth', JSON.stringify(sessionData));
         setPassword('');
-        setRedirecting(true);
-        navigate('/desktop', { replace: true });
+        
+        // The useEffect above will handle the redirect when isAuthenticated becomes true
+        console.log('Login successful, auth state will update and trigger redirect');
       } else {
         setPasswordError('Wrong password!');
         setPassword('');
@@ -100,13 +95,13 @@ const Landing = () => {
     }
   };
 
-  // Show loading state while redirecting
-  if (redirecting) {
+  // Show loading while auth is being determined
+  if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent animate-spin rounded-full"></div>
-          <p className="mt-4 text-blue-900 font-pixel">Redirecting...</p>
+          <p className="mt-4 text-blue-900 font-pixel">Loading...</p>
         </div>
       </div>
     );
