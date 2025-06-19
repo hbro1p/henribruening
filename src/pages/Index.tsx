@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProgressBar from '@/components/ProgressBar';
@@ -16,17 +15,26 @@ const Landing = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // Clear authentication on page load (forces re-login every time)
+  // Check existing authentication first, only clear if explicitly needed
   useEffect(() => {
-    sessionStorage.removeItem('globalAuth');
-    localStorage.removeItem('globalAuth');
+    const checkExistingAuth = () => {
+      const globalAuth = sessionStorage.getItem('globalAuth');
+      if (globalAuth === 'authenticated') {
+        setIsAuthenticated(true);
+        // If already authenticated, navigate immediately
+        navigate('/desktop', { replace: true });
+        return;
+      }
+    };
+
+    checkExistingAuth();
     
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (!loading) {
@@ -73,8 +81,8 @@ const Landing = () => {
         // Clear password immediately
         setPassword('');
         setPasswordError('');
-        // Set authenticated state - this will trigger navigation
-        setIsAuthenticated(true);
+        // Navigate directly without setting local state to avoid conflicts
+        navigate('/desktop', { replace: true });
       } else {
         setPasswordError('Wrong password!');
         setPassword('');
