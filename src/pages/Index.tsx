@@ -14,17 +14,17 @@ const Landing = () => {
   const [passwordError, setPasswordError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [hasRedirected, setHasRedirected] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
   const { isAuthenticated, isLoading: authLoading } = useGlobalAuth();
   const navigate = useNavigate();
 
   // Memoize the navigation function to prevent unnecessary re-renders
   const handleAuthenticatedRedirect = useCallback(() => {
-    if (!authLoading && isAuthenticated && !hasRedirected) {
-      setHasRedirected(true);
+    if (!authLoading && isAuthenticated && !redirecting) {
+      setRedirecting(true);
       navigate('/desktop', { replace: true });
     }
-  }, [isAuthenticated, authLoading, hasRedirected, navigate]);
+  }, [isAuthenticated, authLoading, redirecting, navigate]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -78,7 +78,7 @@ const Landing = () => {
         
         sessionStorage.setItem('globalAuth', JSON.stringify(sessionData));
         setPassword('');
-        setHasRedirected(true);
+        setRedirecting(true);
         navigate('/desktop', { replace: true });
       } else {
         setPasswordError('Wrong password!');
@@ -100,9 +100,16 @@ const Landing = () => {
     }
   };
 
-  // Don't render anything if user is authenticated and has been redirected
-  if (!authLoading && isAuthenticated && hasRedirected) {
-    return null;
+  // Show loading state while redirecting
+  if (redirecting) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent animate-spin rounded-full"></div>
+          <p className="mt-4 text-blue-900 font-pixel">Redirecting...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
