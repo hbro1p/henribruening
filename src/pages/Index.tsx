@@ -47,6 +47,8 @@ const Landing = () => {
     setIsVerifying(true);
     setPasswordError('');
     
+    console.log('Attempting login with password:', password);
+    
     try {
       const { data, error } = await supabase.functions.invoke('verify-password', {
         body: { 
@@ -54,6 +56,8 @@ const Landing = () => {
           section: 'global' 
         }
       });
+      
+      console.log('Function response:', { data, error });
       
       if (error) throw error;
       
