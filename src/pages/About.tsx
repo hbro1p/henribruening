@@ -55,7 +55,7 @@ const About = () => {
       return {
         title: 'Ein Spaziergang durch mein Gehirn',
         paragraphs: [
-          'Ich bin Henri – ein 17-jähriger Kreativer mit einer Leidenschaft dafür, Ideen in echte, visuelle Erfahrungen zu verwandeln. Ob durch Videobearbeitung, Fotografie, das Gestalten digitaler Räume oder die Planung ganzer Content-Flows – ich liebe es, Dinge zu schaffen, die intentional, emotional und ein wenig anders sind.',
+          'Ich bin Henri – ein Kreativer mit einer Leidenschaft dafür, Ideen in echte, visuelle Erfahrungen zu verwandeln. Ob durch Videobearbeitung, Fotografie, das Gestalten digitaler Räume oder die Planung ganzer Content-Flows – ich liebe es, Dinge zu schaffen, die intentional, emotional und ein wenig anders sind.',
           'Ich bin nicht jemand, der in einer Spur bleibt. Ich bewege mich zwischen Visuellem und Strategie, zwischen Intuition und Struktur. Ich genieße es, Projekte von Anfang bis Ende zu bearbeiten – nicht nur den kreativen Funken, sondern auch die Bearbeitung, die Planung und den finalen Schliff.',
           'Meine Fähigkeiten sind breit gefächert, aber sie laufen alle auf eines hinaus: Dinge zu schaffen, die verbinden. Ich weiß, wie man eine Geschichte erzählt, wie man Atmosphäre durch Ton und Visuals aufbaut und wie man die Details hinter den Kulissen verwaltet. Ich arbeite gerne selbstständig, wenn nötig, aber ich liebe auch die Zusammenarbeit – Ideen austauschen, gemeinsam aufbauen und von anderen lernen.',
           'Ich bin inspiriert von Kontrasten – zwischen digital und analog, alter Schule und modernen Tools. Ich jage keine Trends. Ich schaffe Räume, die widerspiegeln, was sich für mich wahr anfühlt, und ich lerne gerne durch Handeln, nicht durch Warten auf Erlaubnis.',
@@ -74,7 +74,7 @@ const About = () => {
     return {
       title: 'A Walk Through My Brain',
       paragraphs: [
-        'I\'m Henri – a 17-year-old creative with a passion for turning ideas into real, visual experiences. Whether it\'s through editing videos, taking photos, designing digital spaces, or planning entire content flows, I love making things that feel intentional, emotional, and a little different.',
+        'I\'m Henri – a creative with a passion for turning ideas into real, visual experiences. Whether it\'s through editing videos, taking photos, designing digital spaces, or planning entire content flows, I love making things that feel intentional, emotional, and a little different.',
         'I\'m not someone who sticks to one lane. I move between visuals and strategy, between intuition and structure. I enjoy working on projects from start to finish – not just the creative spark, but also the editing, the planning, and the final polish.',
         'My skills are broad, but they all come down to one thing: creating things that connect. I know how to tell a story, how to build atmosphere through sound and visuals, and how to manage the details behind the scenes. I enjoy working independently when needed, but I also love collaborating – bouncing ideas, building together, and learning from others.',
         'I\'m inspired by contrast – between digital and analog, old-school energy and modern tools. I don\'t chase trends. I create spaces that reflect what feels true to me, and I enjoy learning by doing, not waiting for permission.',
@@ -109,12 +109,25 @@ const About = () => {
         <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
           <div className="flex flex-col items-start">
             <h1 className={`text-4xl mb-6 font-pixel drop-shadow-lg self-start ${styles.text}`}>[ {aboutContent.title} ]</h1>
-            <div className={`space-y-4 text-lg text-left ${styles.text}`}>
-              {aboutContent.paragraphs.map((paragraph, index) => (
-                <p key={index} className="drop-shadow-sm">
-                  {paragraph}
-                </p>
-              ))}
+            
+            {/* Content with image */}
+            <div className="flex flex-col lg:flex-row gap-6 items-start">
+              <div className={`space-y-4 text-lg text-left flex-1 ${styles.text}`}>
+                {aboutContent.paragraphs.map((paragraph, index) => (
+                  <p key={index} className="drop-shadow-sm">
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+              
+              {/* Image */}
+              <div className="flex-shrink-0 lg:w-80">
+                <img 
+                  src="/lovable-uploads/b3a7242d-f61a-4825-8f49-a55299aecc3e.png" 
+                  alt="Henri as a child with his bike" 
+                  className="w-full h-auto rounded-lg shadow-lg border-2 border-white/20"
+                />
+              </div>
             </div>
             
             {/* Free Time Section */}
