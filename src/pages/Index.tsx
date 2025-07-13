@@ -5,7 +5,7 @@ import { useGlobalAuth } from '@/hooks/useGlobalAuth';
 import ProgressBar from '@/components/ProgressBar';
 import BlinkingCursor from '@/components/BlinkingCursor';
 import { supabase } from '@/integrations/supabase/client';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Camera, Video, Edit3, Compass, Mountain, Zap, Sparkles, Aperture, Film, Play } from 'lucide-react';
 
 const Landing = () => {
   const [loading, setLoading] = useState(true);
@@ -104,40 +104,113 @@ const Landing = () => {
   // Show loading while auth is being determined
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent animate-spin rounded-full"></div>
-          <p className="mt-4 text-blue-900 font-pixel">Loading...</p>
+      <div className="min-h-screen relative overflow-hidden flex items-center justify-center">
+        {/* Creative layered backgrounds */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 via-transparent to-pink-500/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-bl from-yellow-400/10 via-transparent to-green-400/10"></div>
+        
+        {/* Dynamic pixel grid */}
+        <div 
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '25px 25px',
+            animation: 'pulse 4s ease-in-out infinite'
+          }}
+        />
+        
+        {/* Subtle floating elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <Sparkles className="absolute top-32 left-32 w-6 h-6 text-purple-300/40 animate-pulse" />
+          <Camera className="absolute bottom-32 right-32 w-6 h-6 text-blue-300/40 animate-bounce" style={{ animationDuration: '3s' }} />
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl animate-pulse delay-500"></div>
+        </div>
+        
+        <div className="text-center z-10">
+          <div className="w-16 h-16 border-4 border-white/60 border-t-transparent animate-spin rounded-full"></div>
+          <p className="mt-4 text-white/80 font-pixel">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Retro pixel grid background */}
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-4">
+      {/* Creative layered backgrounds */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900"></div>
+      <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 via-transparent to-pink-500/20"></div>
+      <div className="absolute inset-0 bg-gradient-to-bl from-yellow-400/10 via-transparent to-green-400/10"></div>
+      
+      {/* Dynamic pixel grid with creative twist */}
       <div 
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-30"
         style={{
           backgroundImage: `
             linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
             linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
           `,
-          backgroundSize: '20px 20px'
+          backgroundSize: '25px 25px',
+          animation: 'pulse 4s ease-in-out infinite'
         }}
       />
-
+      
+      {/* Floating creative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-3 h-3 bg-blue-600 animate-bounce delay-100"></div>
-        <div className="absolute top-40 right-32 w-2 h-2 bg-blue-800 animate-bounce delay-300"></div>
-        <div className="absolute bottom-32 left-40 w-3 h-3 bg-blue-700 animate-bounce delay-500"></div>
-        <div className="absolute bottom-20 right-20 w-2 h-2 bg-blue-900 animate-bounce delay-700"></div>
+        {/* Content Creation Icons */}
+        <Camera className="absolute top-20 left-16 w-8 h-8 text-blue-300/60 animate-bounce delay-100" style={{ animationDuration: '3s' }} />
+        <Video className="absolute top-32 right-20 w-6 h-6 text-purple-300/60 animate-bounce delay-200" style={{ animationDuration: '4s' }} />
+        <Aperture className="absolute bottom-40 left-32 w-7 h-7 text-cyan-300/60 animate-spin" style={{ animationDuration: '8s' }} />
+        <Film className="absolute bottom-32 right-40 w-6 h-6 text-pink-300/60 animate-pulse delay-300" />
+        <Edit3 className="absolute top-48 left-24 w-5 h-5 text-yellow-300/60 animate-bounce delay-400" style={{ animationDuration: '3.5s' }} />
+        <Play className="absolute top-60 right-32 w-6 h-6 text-green-300/60 animate-pulse delay-500" />
+        
+        {/* Adventure Elements */}
+        <Compass className="absolute top-36 right-16 w-8 h-8 text-orange-300/60 animate-spin delay-100" style={{ animationDuration: '6s' }} />
+        <Mountain className="absolute bottom-48 right-24 w-7 h-7 text-blue-200/60 animate-pulse delay-200" />
+        <Zap className="absolute top-56 left-40 w-6 h-6 text-yellow-400/60 animate-bounce delay-300" style={{ animationDuration: '2.5s' }} />
+        <Sparkles className="absolute bottom-56 left-16 w-6 h-6 text-purple-200/60 animate-pulse delay-400" />
+        
+        {/* Abstract Creative Shapes */}
+        <div className="absolute top-24 left-48 w-4 h-4 bg-gradient-to-br from-pink-400 to-purple-600 rounded-full animate-bounce delay-500 opacity-60" style={{ animationDuration: '4s' }}></div>
+        <div className="absolute bottom-36 right-48 w-3 h-8 bg-gradient-to-t from-cyan-400 to-blue-600 animate-pulse delay-600 opacity-50"></div>
+        <div className="absolute top-40 left-64 w-6 h-6 bg-gradient-to-tr from-yellow-400 to-orange-600 rotate-45 animate-spin opacity-40" style={{ animationDuration: '10s' }}></div>
+        <div className="absolute bottom-24 left-56 w-5 h-2 bg-gradient-to-r from-green-400 to-teal-600 animate-bounce delay-700 opacity-60" style={{ animationDuration: '3s' }}></div>
+        
+        {/* Floating orbs of creativity */}
+        <div className="absolute top-16 right-56 w-12 h-12 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full animate-pulse blur-sm"></div>
+        <div className="absolute bottom-16 left-48 w-16 h-16 bg-gradient-to-tr from-pink-400/15 to-yellow-500/15 rounded-full animate-bounce blur-md delay-800" style={{ animationDuration: '5s' }}></div>
+        <div className="absolute top-52 right-64 w-8 h-8 bg-gradient-to-bl from-cyan-400/25 to-green-500/25 rounded-full animate-pulse delay-900 blur-sm"></div>
+        
+        {/* Exploration trails */}
+        <div className="absolute top-28 left-36 w-24 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse delay-1000"></div>
+        <div className="absolute bottom-44 right-36 w-32 h-px bg-gradient-to-l from-transparent via-blue-300/40 to-transparent animate-pulse delay-1100"></div>
+        
+        {/* Pixelated adventure elements */}
+        <div className="absolute top-44 right-44 grid grid-cols-3 gap-1 opacity-40">
+          <div className="w-2 h-2 bg-cyan-400 animate-pulse delay-1200"></div>
+          <div className="w-2 h-2 bg-purple-400 animate-pulse delay-1300"></div>
+          <div className="w-2 h-2 bg-pink-400 animate-pulse delay-1400"></div>
+        </div>
+        <div className="absolute bottom-52 left-44 grid grid-cols-2 gap-1 opacity-50">
+          <div className="w-3 h-3 bg-yellow-400 animate-bounce delay-1500" style={{ animationDuration: '2s' }}></div>
+          <div className="w-3 h-3 bg-orange-400 animate-bounce delay-1600" style={{ animationDuration: '2.2s' }}></div>
+        </div>
       </div>
+      
+      {/* Ambient light effects */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-400/5 rounded-full blur-2xl animate-pulse delay-1000"></div>
 
       {loading ? (
         <div className="text-center z-10">
           <div className="mb-8">
-            <p className="text-3xl text-blue-900 font-pixel tracking-wider">
+            <p className="text-3xl text-white/90 font-pixel tracking-wider">
               BOOTING UP<BlinkingCursor />
             </p>
           </div>
