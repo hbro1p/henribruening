@@ -1,4 +1,5 @@
 
+import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,33 +20,43 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <SettingsProvider>
-      <GlobalMusicProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <AuthGuard>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/desktop" element={<Desktop />} />
-                <Route path="/pictures" element={<Pictures />} />
-                <Route path="/videos" element={<MyVideos />} />
-                <Route path="/projects" element={<MyProjects />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/settings" element={<Settings />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </AuthGuard>
-          </BrowserRouter>
-        </TooltipProvider>
-      </GlobalMusicProvider>
-    </SettingsProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  // Apply theme class to body
+  React.useEffect(() => {
+    document.body.className = 'theme-space-mood';
+    return () => {
+      document.body.className = '';
+    };
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <SettingsProvider>
+        <GlobalMusicProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <AuthGuard>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/desktop" element={<Desktop />} />
+                  <Route path="/pictures" element={<Pictures />} />
+                  <Route path="/videos" element={<MyVideos />} />
+                  <Route path="/projects" element={<MyProjects />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/settings" element={<Settings />} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </AuthGuard>
+            </BrowserRouter>
+          </TooltipProvider>
+        </GlobalMusicProvider>
+      </SettingsProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
