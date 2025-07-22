@@ -3,6 +3,7 @@ import { X, Play, RotateCcw, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { useSettings } from '@/contexts/SettingsContext';
 
 interface ChallengeAppProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ const challenges = [
 ];
 
 const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
+  const { t } = useSettings();
   const [currentChallenge, setCurrentChallenge] = useState('');
   const [isActive, setIsActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
@@ -46,7 +48,7 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
     setTimeLeft(60);
     setIsCompleted(false);
     toast({
-      title: "Challenge Started! 🚀",
+      title: t('Challenge Started!'),
       description: challenge,
     });
   };
@@ -62,8 +64,8 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
     setIsActive(false);
     setIsCompleted(true);
     toast({
-      title: "Challenge Complete! 🎉",
-      description: "Great job! You're building amazing habits!",
+      title: t('Challenge Complete!'),
+      description: t('Great job! You\'re building amazing habits!'),
     });
   };
 
@@ -87,7 +89,7 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <Clock className="w-6 h-6 text-orange-600" />
-            <h2 className="text-xl font-bold text-orange-800">1-Minute Challenge</h2>
+            <h2 className="text-xl font-bold text-orange-800">{t('1-Minute Challenge')}</h2>
           </div>
           <Button 
             onClick={onClose} 
@@ -104,10 +106,10 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
             <div className="text-center space-y-4">
               <div className="text-6xl">⏱️</div>
               <h3 className="text-lg font-medium text-gray-700">
-                Bereit für deine tägliche Mini-Challenge?
+                {t('Ready for your daily mini-challenge?')}
               </h3>
               <p className="text-sm text-gray-500">
-                Kurze Aufgaben für mehr Fokus und Abwechslung im Alltag
+                {t('Short tasks for more focus and variety in everyday life')}
               </p>
             </div>
           )}
@@ -128,7 +130,7 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
               
               <div className="p-4 bg-white rounded-lg border border-orange-200">
                 <h3 className="text-lg font-medium text-gray-800 mb-2">
-                  Deine Challenge:
+                  {t('Your Challenge:')}
                 </h3>
                 <p className="text-gray-600">{currentChallenge}</p>
               </div>
@@ -139,10 +141,10 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
             <div className="text-center space-y-4">
               <div className="text-6xl">🎉</div>
               <h3 className="text-lg font-medium text-green-700">
-                Challenge abgeschlossen!
+                {t('Challenge completed!')}
               </h3>
               <p className="text-sm text-gray-600">
-                Du baust großartige Gewohnheiten auf! 💪
+                {t('You\'re building great habits!')} 💪
               </p>
             </div>
           )}
@@ -154,7 +156,7 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
                 className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white"
               >
                 <Play className="w-4 h-4" />
-                Challenge starten
+                {t('Start Challenge')}
               </Button>
             )}
 
@@ -164,7 +166,7 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
                   onClick={completeChallenge}
                   className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white"
                 >
-                  Erledigt! ✅
+                  {t('Done!')} ✅
                 </Button>
                 <Button 
                   onClick={resetChallenge}
@@ -172,7 +174,7 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
                   className="flex items-center gap-2"
                 >
                   <RotateCcw className="w-4 h-4" />
-                  Reset
+                  {t('Reset')}
                 </Button>
               </>
             )}
@@ -183,7 +185,7 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
                 className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white"
               >
                 <Play className="w-4 h-4" />
-                Neue Challenge
+                {t('New Challenge')}
               </Button>
             )}
           </div>

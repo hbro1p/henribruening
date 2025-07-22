@@ -27,7 +27,7 @@ const Desktop = () => {
           {/* Radio App Icon */}
           <DesktopIcon 
             icon={Radio} 
-            label="Radio" 
+            label={t('Radio')}
             onClick={() => {
               console.log('Radio icon clicked');
               setIsRadioOpen(true);
@@ -37,7 +37,7 @@ const Desktop = () => {
           {/* TV App Icon */}
           <DesktopIcon 
             icon={Tv} 
-            label="TV" 
+            label={t('TV')}
             onClick={() => {
               console.log('TV icon clicked, opening TV app');
               setIsTvOpen(true);
@@ -47,7 +47,7 @@ const Desktop = () => {
           {/* Challenge App Icon */}
           <DesktopIcon 
             icon={Clock} 
-            label="Challenge" 
+            label={t('Challenge')}
             onClick={() => {
               console.log('Challenge icon clicked, opening Challenge app');
               setIsChallengeOpen(true);

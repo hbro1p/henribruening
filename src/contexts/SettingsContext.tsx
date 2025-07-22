@@ -76,6 +76,24 @@ const translations = {
     // Contact page
     'Get In Touch': 'Get In Touch',
     'Let\'s connect via Instagram or Email.': 'Let\'s connect via Instagram or Email.',
+    // Desktop apps
+    'Radio': 'Radio',
+    'TV': 'TV',
+    'Challenge': 'Challenge',
+    // Challenge app
+    '1-Minute Challenge': '1-Minute Challenge',
+    'Ready for your daily mini-challenge?': 'Ready for your daily mini-challenge?',
+    'Short tasks for more focus and variety in everyday life': 'Short tasks for more focus and variety in everyday life',
+    'Your Challenge:': 'Your Challenge:',
+    'Challenge Started!': 'Challenge Started!',
+    'Challenge Complete!': 'Challenge Complete!',
+    'Great job! You\'re building amazing habits!': 'Great job! You\'re building amazing habits!',
+    'Challenge completed!': 'Challenge completed!',
+    'You\'re building great habits!': 'You\'re building great habits!',
+    'Start Challenge': 'Start Challenge',
+    'Done!': 'Done!',
+    'Reset': 'Reset',
+    'New Challenge': 'New Challenge',
   },
   deutsch: {
     'My Pictures': 'Meine Bilder',
@@ -138,6 +156,24 @@ const translations = {
     // Contact page
     'Get In Touch': 'Kontakt Aufnehmen',
     'Let\'s connect via Instagram or Email.': 'Lass uns über Instagram oder E-Mail in Kontakt treten.',
+    // Desktop apps
+    'Radio': 'Radio',
+    'TV': 'TV',
+    'Challenge': 'Challenge',
+    // Challenge app
+    '1-Minute Challenge': '1-Minuten Challenge',
+    'Ready for your daily mini-challenge?': 'Bereit für deine tägliche Mini-Challenge?',
+    'Short tasks for more focus and variety in everyday life': 'Kurze Aufgaben für mehr Fokus und Abwechslung im Alltag',
+    'Your Challenge:': 'Deine Challenge:',
+    'Challenge Started!': 'Challenge gestartet!',
+    'Challenge Complete!': 'Challenge abgeschlossen!',
+    'Great job! You\'re building amazing habits!': 'Großartig! Du baust tolle Gewohnheiten auf!',
+    'Challenge completed!': 'Challenge abgeschlossen!',
+    'You\'re building great habits!': 'Du baust großartige Gewohnheiten auf!',
+    'Start Challenge': 'Challenge starten',
+    'Done!': 'Erledigt!',
+    'Reset': 'Zurücksetzen',
+    'New Challenge': 'Neue Challenge',
   }
 };
 
