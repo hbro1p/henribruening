@@ -106,15 +106,15 @@ const MusicPlayer = () => {
           activeButton: 'bg-red-800 text-red-300 border-red-500',
           slider: 'accent-red-500'
         };
-      case 'retro-chrome':
+      case 'adventure-canyon':
         return {
-          container: 'bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-300 shadow-lg',
-          text: 'text-blue-900',
-          subText: 'text-blue-700',
-          button: 'bg-blue-100 hover:bg-blue-200 text-blue-800 border border-blue-400',
-          playButton: 'bg-blue-600 hover:bg-blue-700 text-white',
-          activeButton: 'bg-blue-200 text-blue-700 border-blue-500',
-          slider: 'accent-blue-600'
+          container: 'bg-gradient-to-br from-amber-50 to-orange-100 border-2 border-orange-300 shadow-lg',
+          text: 'text-orange-900',
+          subText: 'text-orange-700',
+          button: 'bg-amber-100 hover:bg-amber-200 text-orange-800 border border-orange-400',
+          playButton: 'bg-orange-600 hover:bg-orange-700 text-white',
+          activeButton: 'bg-orange-200 text-orange-700 border-orange-500',
+          slider: 'accent-orange-600'
         };
       default:
         return baseStyles;

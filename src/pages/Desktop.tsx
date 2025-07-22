@@ -5,8 +5,12 @@ import RadioApp from '@/components/RadioApp';
 import TvApp from '@/components/TvApp';
 import ChallengeApp from '@/components/ChallengeApp';
 import RatingApp from '@/components/RatingApp';
+import MiniMusicPlayer from '@/components/MiniMusicPlayer';
 import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock, Star } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useThemeMusic } from '@/hooks/useThemeMusic';
+import { useTvMusicControl } from '@/hooks/useTvMusicControl';
+import { useGlobalMusicPlayer } from '@/hooks/useGlobalMusicPlayer';
 
 const Desktop = () => {
   const { t, language } = useSettings();
@@ -14,6 +18,12 @@ const Desktop = () => {
   const [isTvOpen, setIsTvOpen] = useState(false);
   const [isChallengeOpen, setIsChallengeOpen] = useState(false);
   const [isRatingOpen, setIsRatingOpen] = useState(false);
+  
+  // Initialize theme music and TV music control
+  useThemeMusic();
+  useTvMusicControl(isTvOpen);
+  
+  const { isPlaying, musicFiles } = useGlobalMusicPlayer();
 
   console.log('Desktop component rendered, isTvOpen:', isTvOpen);
 
@@ -107,6 +117,9 @@ const Desktop = () => {
           setIsRatingOpen(false);
         }} 
       />
+      
+      {/* Mini Music Player */}
+      <MiniMusicPlayer />
     </>
   );
 };

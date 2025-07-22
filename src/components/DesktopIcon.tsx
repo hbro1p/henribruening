@@ -70,13 +70,13 @@ const getIconStyles = (label: string, theme: string) => {
     };
   }
   
-  // Retro Chrome theme
-  if (theme === 'retro-chrome') {
+  // Adventure Canyon theme
+  if (theme === 'adventure-canyon') {
     return {
-      gradient: 'from-slate-400 via-blue-500 to-slate-600',
-      border: 'border-blue-300/30',
-      hoverBorder: 'group-hover:border-blue-200/50',
-      shadow: 'shadow-lg shadow-blue-500/20 group-hover:shadow-blue-400/30',
+      gradient: 'from-amber-600 via-orange-500 to-yellow-600',
+      border: 'border-orange-400/40',
+      hoverBorder: 'group-hover:border-orange-300/60',
+      shadow: 'shadow-lg shadow-orange-500/30 group-hover:shadow-orange-400/40',
       highlight: 'bg-gradient-to-br from-white/40 to-transparent',
     };
   }
@@ -113,8 +113,8 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to, onClic
             ? 'text-black bg-gray-200/90 border border-gray-400 group-hover:bg-gray-100/90'
             : theme === 'dark-vhs'
             ? 'text-white bg-black/70 border border-white/20 group-hover:border-white/40'
-            : theme === 'retro-chrome'
-            ? 'text-blue-100 bg-slate-800/70 border border-blue-400/30 group-hover:border-blue-300/50'
+            : theme === 'adventure-canyon'
+            ? 'text-amber-100 bg-orange-900/70 border border-orange-400/30 group-hover:border-orange-300/50'
             : 'text-white bg-black/60 border border-white/20'
         }`}>
           {label}

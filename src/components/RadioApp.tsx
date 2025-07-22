@@ -38,15 +38,15 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
           activeButton: 'bg-green-900 text-green-300 border-green-400',
           backButton: 'bg-gray-800 hover:bg-gray-700 text-green-400 border border-green-400/50'
         };
-      case 'retro-chrome':
+      case 'adventure-canyon':
         return {
-          fullBackground: 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300',
-          container: 'bg-gradient-to-br from-blue-100 via-blue-200 to-blue-300 border-2 border-blue-600 shadow-lg',
-          text: 'text-blue-900 font-mono',
-          subText: 'text-blue-700',
-          button: 'bg-blue-200 hover:bg-blue-300 text-blue-800 border border-blue-500',
-          activeButton: 'bg-blue-400 text-blue-800 border-blue-600',
-          backButton: 'bg-blue-200 hover:bg-blue-300 text-blue-800 border border-blue-500'
+          fullBackground: 'bg-gradient-to-br from-amber-100 via-orange-200 to-yellow-300',
+          container: 'bg-gradient-to-br from-amber-100 via-orange-200 to-yellow-300 border-2 border-orange-600 shadow-lg',
+          text: 'text-orange-900 font-mono',
+          subText: 'text-orange-700',
+          button: 'bg-orange-200 hover:bg-orange-300 text-orange-800 border border-orange-500',
+          activeButton: 'bg-orange-400 text-orange-800 border-orange-600',
+          backButton: 'bg-orange-200 hover:bg-orange-300 text-orange-800 border border-orange-500'
         };
       default: // space-mood - RED theme to match desktop icon
         return {
@@ -103,7 +103,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
 
         {/* Station Info Display */}
         <div className="text-center mb-6">
-          <div className={`bg-black/20 rounded-lg p-4 border-2 ${theme === 'retro-chrome' ? 'border-blue-400/50 bg-white/20' : theme === 'space-mood' ? 'border-red-400/50 bg-red-50/20' : 'border-green-400/50'}`}>
+          <div className={`bg-black/20 rounded-lg p-4 border-2 ${theme === 'adventure-canyon' ? 'border-orange-400/50 bg-white/20' : theme === 'space-mood' ? 'border-red-400/50 bg-red-50/20' : 'border-green-400/50'}`}>
             <p className={`text-lg font-bold mb-2 ${styles.text}`}>
               {musicFiles.length > 0 ? '♪ NOW PLAYING ♪' : 'NO SIGNAL'}
             </p>

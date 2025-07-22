@@ -51,13 +51,13 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
       };
     }
     
-    if (theme === 'retro-chrome') {
+    if (theme === 'adventure-canyon') {
       return {
-        fullBackground: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600',
-        windowFrame: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600',
-        titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-slate-700',
-        windowContent: 'bg-gradient-to-br from-slate-600 via-blue-700 to-slate-800',
-        text: 'text-blue-200',
+        fullBackground: 'bg-gradient-to-br from-amber-600 via-orange-500 to-yellow-600',
+        windowFrame: 'bg-gradient-to-br from-amber-600 via-orange-500 to-yellow-600',
+        titleBar: 'bg-gradient-to-r from-orange-700 via-amber-800 to-yellow-700',
+        windowContent: 'bg-gradient-to-br from-orange-800 via-amber-900 to-yellow-800',
+        text: 'text-amber-200',
         button: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white',
         input: 'bg-slate-800 border-blue-400/30 text-blue-200',
         link: 'text-blue-300 hover:text-blue-200',

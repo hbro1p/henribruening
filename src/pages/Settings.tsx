@@ -20,9 +20,9 @@ const Settings = () => {
       preview: 'bg-gradient-to-br from-black via-gray-800 to-gray-900'
     },
     {
-      id: 'retro-chrome' as const,
-      name: t('Retro Chrome'),
-      preview: 'bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400'
+      id: 'adventure-canyon' as const,
+      name: t('Adventure Canyon'),
+      preview: 'bg-gradient-to-br from-orange-300 via-amber-400 to-yellow-300'
     }
   ];
 
