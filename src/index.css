@@ -112,10 +112,40 @@ body {
     background: linear-gradient(135deg, #ffffcc 0%, #ffffaa 25%, #ffff77 75%, #ffff44 100%);
   }
 
-  /* Rating App Yellow Theme */
-  .rating-app-yellow {
-    background: linear-gradient(135deg, #ffffcc 0%, #ffffaa 25%, #ffff77 75%, #ffff44 100%);
-    color: #5a4d00;
+  /* Ideas Lab Clean Theme */
+  .ideas-lab-clean {
+    background: linear-gradient(135deg, #fefefe 0%, #f8f9fa 50%, #f1f3f4 100%);
+    color: #1a1a1a;
+    border: 1px solid #e8eaed;
+  }
+
+  .ideas-lab-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+    border: 1px solid #dadce0;
+    box-shadow: 0 1px 3px rgba(60, 64, 67, 0.1), 0 1px 2px rgba(60, 64, 67, 0.2);
+  }
+
+  .ideas-lab-card:hover {
+    box-shadow: 0 2px 8px rgba(60, 64, 67, 0.15), 0 1px 4px rgba(60, 64, 67, 0.3);
+  }
+
+  .ideas-primary {
+    background: linear-gradient(135deg, #1a73e8 0%, #174ea6 100%);
+    color: white;
+  }
+
+  .ideas-primary:hover {
+    background: linear-gradient(135deg, #174ea6 0%, #1557b0 100%);
+  }
+
+  .ideas-secondary {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e8eaed 100%);
+    color: #1a73e8;
+    border: 1px solid #dadce0;
+  }
+
+  .ideas-secondary:hover {
+    background: linear-gradient(135deg, #e8eaed 0%, #dadce0 100%);
   }
 
 @layer base {

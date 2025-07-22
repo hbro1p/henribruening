@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Star, ArrowLeft, Play } from 'lucide-react';
+import { X, Star, ArrowLeft, Play, Lightbulb } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Textarea } from './ui/textarea';
@@ -91,15 +91,15 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
 
   const renderStars = (rating: number, interactive = false, onRate?: (rating: number) => void) => {
     return (
-      <div className="flex gap-1">
+      <div className="flex gap-1 justify-center sm:justify-start">
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
-            className={`h-5 w-5 ${
+            className={`h-5 w-5 transition-colors duration-200 ${
               star <= rating
-                ? 'fill-yellow-500 text-yellow-500'
-                : 'text-yellow-300'
-            } ${interactive ? 'cursor-pointer hover:fill-yellow-400 hover:text-yellow-400' : ''}`}
+                ? 'fill-amber-400 text-amber-400'
+                : 'text-gray-300'
+            } ${interactive ? 'cursor-pointer hover:fill-amber-300 hover:text-amber-300 hover:scale-110' : ''}`}
             onClick={interactive && onRate ? () => onRate(star) : undefined}
           />
         ))}
@@ -141,57 +141,61 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
-      <div className="rating-app-yellow border rounded-lg max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden">
-        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-yellow-300">
-          <div className="flex items-center gap-2">
-            <Star className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-700" />
-            <h2 className="text-lg sm:text-xl font-semibold text-yellow-900">
+      <div className="ideas-lab-clean rounded-xl max-w-5xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-blue-50">
+              <Lightbulb className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+            </div>
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
               {language === 'deutsch' ? 'Ideen-Labor' : 'Idea Laboratory'}
             </h2>
           </div>
-          {(currentView !== 'welcome') && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                if (currentView === 'prototype') {
-                  setCurrentView('detail');
-                } else if (currentView === 'detail') {
-                  setCurrentView('list');
-                  setSelectedIdea(null);
-                  setShowPrototype(false);
-                } else {
-                  setCurrentView('welcome');
-                }
-              }}
-              className="text-yellow-800 hover:bg-yellow-200"
+          <div className="flex items-center gap-2">
+            {(currentView !== 'welcome') && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  if (currentView === 'prototype') {
+                    setCurrentView('detail');
+                  } else if (currentView === 'detail') {
+                    setCurrentView('list');
+                    setSelectedIdea(null);
+                    setShowPrototype(false);
+                  } else {
+                    setCurrentView('welcome');
+                  }
+                }}
+                className="text-gray-600 hover:bg-gray-100 rounded-lg"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            )}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={onClose}
+              className="text-gray-600 hover:bg-gray-100 rounded-lg"
             >
-              <ArrowLeft className="h-4 w-4" />
+              <X className="h-4 w-4" />
             </Button>
-          )}
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={onClose}
-            className="text-yellow-800 hover:bg-yellow-200"
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          </div>
         </div>
 
-        <div className="p-3 sm:p-6 overflow-y-auto max-h-[calc(95vh-80px)] sm:max-h-[calc(90vh-80px)]">
+        <div className="p-4 sm:p-6 overflow-y-auto max-h-[calc(95vh-100px)] sm:max-h-[calc(90vh-100px)]">
           {currentView === 'welcome' && (
-            <div className="text-center space-y-4 sm:space-y-6 max-w-2xl mx-auto">
-              <div className="space-y-3 sm:space-y-4">
+            <div className="text-center space-y-6 sm:space-y-8 max-w-3xl mx-auto">
+              <div className="space-y-4 sm:space-y-6">
                 {welcomeText.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className="text-yellow-800 leading-relaxed text-base sm:text-lg">
+                  <p key={index} className="text-gray-700 leading-relaxed text-base sm:text-lg">
                     {paragraph}
                   </p>
                 ))}
               </div>
               <Button 
                 onClick={() => setCurrentView('list')}
-                className="mt-8 bg-yellow-600 hover:bg-yellow-700 text-white border-none"
+                className="ideas-primary px-8 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105"
               >
                 {language === 'deutsch' ? 'Ideen entdecken' : 'Discover Ideas'}
               </Button>
@@ -199,49 +203,56 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
           )}
 
           {currentView === 'list' && (
-            <div className="space-y-4">
-              <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-yellow-900">
-                {language === 'deutsch' ? 'Meine Ideen' : 'My Ideas'}
-              </h3>
-              <div className="grid gap-3 sm:gap-4">
+            <div className="space-y-6">
+              <div className="text-center space-y-2">
+                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                  {language === 'deutsch' ? 'Meine Ideen' : 'My Ideas'}
+                </h3>
+                <p className="text-gray-600">
+                  {language === 'deutsch' 
+                    ? 'Entdecke innovative Konzepte und teste funktionsfähige Prototypen'
+                    : 'Discover innovative concepts and test functional prototypes'
+                  }
+                </p>
+              </div>
+              <div className="grid gap-4 sm:gap-6">
                 {ideas.map((idea) => {
                   const avgRating = getAverageRating(idea);
                   return (
-                    <Card key={idea.id} className="bg-yellow-50 border-yellow-200 hover:bg-yellow-100 transition-colors">
-                      <CardHeader className="p-3 sm:p-6">
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
-                          <div className="space-y-1 sm:space-y-2 flex-1">
-                            <CardTitle className="text-base sm:text-lg text-yellow-900">{idea.title}</CardTitle>
-                            <CardDescription className="text-sm sm:text-base text-yellow-700">{idea.shortDescription}</CardDescription>
+                    <Card key={idea.id} className="ideas-lab-card transition-all duration-200 hover:scale-[1.02]">
+                      <CardHeader className="p-4 sm:p-6">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                          <div className="space-y-2 flex-1">
+                            <CardTitle className="text-lg sm:text-xl text-gray-900 font-semibold">{idea.title}</CardTitle>
+                            <CardDescription className="text-sm sm:text-base text-gray-600 leading-relaxed">{idea.shortDescription}</CardDescription>
                           </div>
                           {avgRating !== null && (
-                            <div className="text-left sm:text-right space-y-1 sm:ml-4">
+                            <div className="text-left sm:text-right space-y-2 sm:ml-6">
                               {renderStars(avgRating)}
-                              <p className="text-xs sm:text-sm text-yellow-700">
+                              <p className="text-xs sm:text-sm text-gray-500">
                                 {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
                               </p>
                             </div>
                           )}
                         </div>
                       </CardHeader>
-                      <CardContent className="p-3 sm:p-6 pt-0 space-y-3">
-                        <div className="flex flex-col sm:flex-row gap-2">
+                      <CardContent className="p-4 sm:p-6 pt-0">
+                        <div className="flex flex-col sm:flex-row gap-3">
                           <Button 
                             onClick={() => {
                               setSelectedIdea(idea);
                               setCurrentView('detail');
                             }}
-                            variant="outline"
-                            className="flex-1 border-yellow-300 text-yellow-800 hover:bg-yellow-200 text-sm sm:text-base"
+                            className="ideas-secondary flex-1 text-sm sm:text-base font-medium rounded-lg transition-all duration-200"
                           >
                             {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
                           </Button>
                           <Button 
                             onClick={() => openPrototype(idea)}
-                            className="bg-yellow-600 hover:bg-yellow-700 text-white border-none text-sm sm:text-base"
+                            className="ideas-primary text-sm sm:text-base font-medium rounded-lg transition-all duration-200 transform hover:scale-105"
                           >
-                            <Play className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                            Try
+                            <Play className="h-4 w-4 mr-2" />
+                            {language === 'deutsch' ? 'Testen' : 'Try'}
                           </Button>
                         </div>
                       </CardContent>
@@ -253,15 +264,20 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
           )}
 
           {currentView === 'prototype' && selectedIdea && (
-            <div className="space-y-3 sm:space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg sm:text-xl font-bold text-yellow-900">
-                  {selectedIdea.title} - {language === 'deutsch' ? 'Prototyp' : 'Prototype'}
+            <div className="space-y-4 sm:space-y-6">
+              <div className="text-center space-y-2">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
+                  {selectedIdea.title}
                 </h3>
+                <p className="text-sm sm:text-base text-gray-600">
+                  {language === 'deutsch' ? 'Interaktiver Prototyp' : 'Interactive Prototype'}
+                </p>
               </div>
-              <div className="bg-white rounded-lg border border-yellow-200 min-h-[400px] sm:min-h-[600px] overflow-auto">
-                {selectedIdea.prototypeComponent === 'ViralVideoPromptGenerator' && <ViralVideoPromptGenerator />}
-                {selectedIdea.prototypeComponent === 'CoesfelderQuest' && <CoesfelderQuest />}
+              <div className="bg-white rounded-xl border border-gray-200 min-h-[400px] sm:min-h-[600px] overflow-auto shadow-lg">
+                {selectedIdea.prototypeComponent === 'ViralVideoPromptGenerator' && 
+                  <ViralVideoPromptGenerator language={language} />}
+                {selectedIdea.prototypeComponent === 'CoesfelderQuest' && 
+                  <CoesfelderQuest language={language} />}
               </div>
             </div>
           )}
@@ -289,47 +305,46 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                 </div>
               ) : (
                 <>
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
-                    <h3 className="text-xl sm:text-2xl font-bold text-yellow-900 flex-1">{selectedIdea.title}</h3>
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        onClick={() => setCurrentView('prototype')}
-                        className="border-yellow-300 text-yellow-800 hover:bg-yellow-200 text-sm sm:text-base"
-                      >
-                        <Play className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                        {language === 'deutsch' ? 'Prototyp testen' : 'Test Prototype'}
-                      </Button>
-                    </div>
+                  <div className="text-center space-y-4">
+                    <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">{selectedIdea.title}</h3>
+                    <Button 
+                      onClick={() => setCurrentView('prototype')}
+                      className="ideas-primary px-6 py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105"
+                    >
+                      <Play className="h-4 w-4 mr-2" />
+                      {language === 'deutsch' ? 'Prototyp testen' : 'Test Prototype'}
+                    </Button>
                   </div>
                   
-                  <Card className="bg-yellow-50 border-yellow-200">
+                  <Card className="ideas-lab-card">
                     <CardHeader>
-                      <CardTitle className="text-yellow-900">
+                      <CardTitle className="text-gray-900 text-lg">
                         {language === 'deutsch' ? 'Beschreibung' : 'Description'}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-yellow-800 leading-relaxed">{selectedIdea.fullDescription}</p>
+                      <p className="text-gray-700 leading-relaxed">{selectedIdea.fullDescription}</p>
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-yellow-50 border-yellow-200">
+                  <Card className="ideas-lab-card">
                     <CardHeader>
-                      <CardTitle className="text-yellow-900">
+                      <CardTitle className="text-gray-900 text-lg">
                         {language === 'deutsch' ? 'Deine Bewertung' : 'Your Rating'}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-yellow-800">
+                    <CardContent className="space-y-6">
+                      <div className="space-y-3">
+                        <label className="text-sm font-medium text-gray-700">
                           {language === 'deutsch' ? 'Bewertung (1-5 Sterne)' : 'Rating (1-5 stars)'}
                         </label>
-                        {renderStars(userRating, true, setUserRating)}
+                        <div className="flex justify-center">
+                          {renderStars(userRating, true, setUserRating)}
+                        </div>
                       </div>
                       
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-yellow-800">
+                      <div className="space-y-3">
+                        <label className="text-sm font-medium text-gray-700">
                           {language === 'deutsch' ? 'Feedback (optional)' : 'Feedback (optional)'}
                         </label>
                         <Textarea
@@ -340,14 +355,14 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                           value={feedback}
                           onChange={(e) => setFeedback(e.target.value)}
                           rows={4}
-                          className="bg-white border-yellow-300 text-yellow-900 placeholder:text-yellow-600"
+                          className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 rounded-lg focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
                       
                       <Button 
                         onClick={handleSubmitRating}
                         disabled={userRating === 0}
-                        className="w-full bg-yellow-600 hover:bg-yellow-700 text-white border-none disabled:bg-yellow-300"
+                        className="w-full ideas-primary py-3 rounded-lg font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         {language === 'deutsch' ? 'Bewertung abgeben' : 'Submit Rating'}
                       </Button>
