@@ -12,143 +12,147 @@ interface ChallengeAppProps {
 const getChallenges = (language: string) => {
   if (language === 'deutsch') {
     return [
-      // Kreativität & Ideen
+      // Kreativität & Ideen (1 Minute)
       "Schreib 3 neue Ideen auf 💡",
       "Zeichne 1 Minute lang etwas Abstraktes ✏️",
       "Erfinde eine Geschichte in 3 Sätzen 📖",
-      "Mach ein Foto aus einer ungewöhnlichen Perspektive 📷",
+      "Mach 3 Fotos aus verschiedenen Winkeln 📷",
       "Schreibe ein Haiku über deine Stimmung 🌸",
-      "Komponiere eine 30-Sekunden-Melodie 🎼",
-      "Gestalte ein Logo für ein erfundenes Unternehmen 🎨",
+      "Summe eine Melodie für 1 Minute 🎼",
+      "Skizziere ein einfaches Logo-Konzept 🎨",
       
-      // Körper & Gesundheit
+      // Körper & Gesundheit (1 Minute)
       "Mach 10 Liegestütze 💪",
       "Trinke ein großes Glas Wasser 💧",
-      "Atme 5 mal tief ein und aus 🫁",
+      "Atme 10 mal tief ein und aus 🫁",
       "Strecke dich für 1 Minute 🤸‍♂️",
-      "Mach eine Minute lang Jumping Jacks 🏃‍♂️",
-      "Geh 2 Minuten an der frischen Luft spazieren 🚶‍♂️",
+      "Mach Jumping Jacks für 1 Minute 🏃‍♂️",
+      "Geh auf der Stelle für 1 Minute 🚶‍♂️",
       "Mach 15 Kniebeugen 🦵",
-      "Massiere deine Schultern 30 Sekunden lang 👐",
+      "Massiere deine Schultern für 1 Minute 👐",
+      "Rolle deine Handgelenke 10 mal in jede Richtung 🔄",
       
-      // Sozial & Beziehungen
-      "Sag einem Freund etwas Nettes 💝",
-      "Schreibe eine Dankesnachricht an jemanden 🙏",
-      "Rufe ein Familienmitglied für 2 Minuten an 📞",
-      "Komplimentiere einen Fremden 😊",
-      "Teile einen motivierenden Spruch mit jemandem ✨",
+      // Sozial & Beziehungen (1 Minute)
+      "Schreibe eine kurze Dankesnachricht 💝",
+      "Denke an 3 Menschen, die dir wichtig sind 🙏",
+      "Schreibe ein Kompliment auf einen Zettel 😊",
+      "Plane, wem du heute etwas Nettes sagen willst ✨",
       
-      // Achtsamkeit & Reflexion
+      // Achtsamkeit & Reflexion (1 Minute)
       "Schau 1 Minute aus dem Fenster 🪟",
-      "Lächle bewusst für 30 Sekunden 😊",
-      "Denke an 3 Dinge, für die du dankbar bist 🙏",
+      "Lächle bewusst für 1 Minute 😊",
+      "Denke an 5 Dinge, für die du dankbar bist 🙏",
       "Schreibe eine positive Affirmation auf ✨",
-      "Meditiere 1 Minute lang 🧘‍♀️",
-      "Beobachte deine Gedanken ohne zu urteilen 🤔",
+      "Schließe die Augen und höre bewusst zu 👂",
+      "Beobachte deinen Atem für 1 Minute 🧘‍♀️",
+      "Zähle 10 Dinge, die du gerade siehst 👀",
       
-      // Produktivität & Organisation
-      "Sortiere deinen Arbeitsplatz 📋",
+      // Produktivität & Organisation (1 Minute)
+      "Räume deinen Schreibtisch auf 📋",
       "Lösche 5 alte Dateien vom Desktop 🗑️",
-      "Plane deine nächsten 3 Stunden 📅",
-      "Schreibe 5 Dinge auf, die du heute erledigen willst ✅",
-      "Organisiere einen Ordner auf deinem Computer 📁",
+      "Schreibe 3 Ziele für heute auf 📅",
+      "Sortiere deine letzten 10 Fotos 📁",
+      "Organisiere deinen Browser-Tab 🌐",
       
-      // Abenteuer & Exploration
-      "Plane eine kleine Abenteuer-Aktivität 🗺️",
-      "Recherchiere einen Ort, den du besuchen möchtest 🌍",
-      "Lerne 5 Wörter in einer neuen Sprache 🗣️",
-      "Schaue dir ein 1-minütiges Tutorial an 🎓",
-      "Entdecke einen neuen Musikstil 🎵",
+      // Bewegung & Koordination (1 Minute)
+      "Jongliere mit 2 Bällen (oder versuche es) 🤹‍♂️",
+      "Schreibe deinen Namen mit der schwächeren Hand ✍️",
+      "Balanciere auf einem Bein für 30 Sekunden pro Bein 🦶",
+      "Mach 20 schnelle Hampelmänner 🏃‍♀️",
+      "Zeichne Kreise in die Luft mit beiden Armen 🔄",
       
-      // Unterhaltung & Spaß
-      "Höre deinen Lieblingssong 🎵",
-      "Tanze 30 Sekunden zu deiner Lieblingsmusik 💃",
-      "Mach ein lustiges Selfie 🤳",
-      "Erfinde einen neuen Handschlag 🤝",
-      "Sing 30 Sekunden unter der Dusche 🚿",
+      // Kreativität & Ausdruck (1 Minute)
+      "Höre einen Song und bewege dich dazu 🎵",
+      "Mach 5 verschiedene Gesichtsausdrücke im Spiegel 😮",
+      "Erfinde einen lustigen neuen Tanz-Move 💃",
+      "Singe laut für 1 Minute 🎤",
+      "Zeichne deine Stimmung als Form oder Farbe 🎨",
       
-      // Herausforderungen & Skills
-      "Jongliere mit 3 Gegenständen (oder versuche es) 🤹‍♂️",
-      "Schreibe 1 Minute lang mit der schwächeren Hand ✍️",
-      "Stehe 1 Minute auf einem Bein 🦶",
-      "Zähle rückwärts von 100 in 7er-Schritten 🔢",
-      "Mach 10 verschiedene Gesichtsausdrücke 😮",
+      // Mental & Logik (1 Minute)
+      "Zähle rückwärts von 50 in 3er-Schritten 🔢",
+      "Nenne 10 Tiere mit dem Buchstaben 'S' 🐍",
+      "Denke an 5 Verwendungen für einen Löffel 🥄",
+      "Buchstabiere deinen Namen rückwärts 🔤",
+      "Zähle alle blauen Gegenstände in deiner Nähe 🔵",
       
-      // Wissen & Lernen
-      "Lerne einen interessanten Fakt und teile ihn 🧠",
-      "Schaue ein 1-minütiges Erklärvideo 📺",
-      "Lese einen kurzen Wikipedia-Artikel 📚",
-      "Schreibe 5 Synonyme für das Wort 'schön' auf 📝"
+      // Sinnliche Erfahrungen (1 Minute)
+      "Rieche bewusst 3 verschiedene Düfte 👃",
+      "Taste verschiedene Oberflächen ab 👋",
+      "Höre genau hin: Was hörst du alles? 👂",
+      "Schaue dir deine Hände genau an 🖐️",
+      "Schmecke bewusst etwas, was du gerade isst/trinkst 👅"
     ];
   } else {
     return [
-      // Creativity & Ideas
+      // Creativity & Ideas (1 Minute)
       "Write down 3 new ideas 💡",
       "Draw something abstract for 1 minute ✏️",
       "Invent a story in 3 sentences 📖",
-      "Take a photo from an unusual perspective 📷",
+      "Take 3 photos from different angles 📷",
       "Write a haiku about your mood 🌸",
-      "Compose a 30-second melody 🎼",
-      "Design a logo for an imaginary company 🎨",
+      "Hum a melody for 1 minute 🎼",
+      "Sketch a simple logo concept 🎨",
       
-      // Body & Health
+      // Body & Health (1 Minute)
       "Do 10 push-ups 💪",
       "Drink a large glass of water 💧",
-      "Take 5 deep breaths 🫁",
+      "Take 10 deep breaths 🫁",
       "Stretch for 1 minute 🤸‍♂️",
-      "Do jumping jacks for one minute 🏃‍♂️",
-      "Take a 2-minute walk outside 🚶‍♂️",
+      "Do jumping jacks for 1 minute 🏃‍♂️",
+      "March in place for 1 minute 🚶‍♂️",
       "Do 15 squats 🦵",
-      "Massage your shoulders for 30 seconds 👐",
+      "Massage your shoulders for 1 minute 👐",
+      "Roll your wrists 10 times each direction 🔄",
       
-      // Social & Relationships
-      "Say something nice to a friend 💝",
-      "Write a thank you message to someone 🙏",
-      "Call a family member for 2 minutes 📞",
-      "Compliment a stranger 😊",
-      "Share a motivational quote with someone ✨",
+      // Social & Relationships (1 Minute)
+      "Write a short thank you message 💝",
+      "Think of 3 people who are important to you 🙏",
+      "Write a compliment on a piece of paper 😊",
+      "Plan who you want to say something nice to today ✨",
       
-      // Mindfulness & Reflection
+      // Mindfulness & Reflection (1 Minute)
       "Look out the window for 1 minute 🪟",
-      "Smile consciously for 30 seconds 😊",
-      "Think of 3 things you're grateful for 🙏",
+      "Smile consciously for 1 minute 😊",
+      "Think of 5 things you're grateful for 🙏",
       "Write down a positive affirmation ✨",
-      "Meditate for 1 minute 🧘‍♀️",
-      "Observe your thoughts without judging 🤔",
+      "Close your eyes and listen consciously 👂",
+      "Observe your breath for 1 minute 🧘‍♀️",
+      "Count 10 things you can see right now 👀",
       
-      // Productivity & Organization
-      "Organize your workspace 📋",
+      // Productivity & Organization (1 Minute)
+      "Clean up your desk 📋",
       "Delete 5 old files from your desktop 🗑️",
-      "Plan your next 3 hours 📅",
-      "Write down 5 things you want to accomplish today ✅",
-      "Organize a folder on your computer 📁",
+      "Write down 3 goals for today 📅",
+      "Organize your last 10 photos 📁",
+      "Close unnecessary browser tabs 🌐",
       
-      // Adventure & Exploration
-      "Plan a small adventure activity 🗺️",
-      "Research a place you'd like to visit 🌍",
-      "Learn 5 words in a new language 🗣️",
-      "Watch a 1-minute tutorial 🎓",
-      "Discover a new music genre 🎵",
+      // Movement & Coordination (1 Minute)
+      "Juggle with 2 balls (or try to) 🤹‍♂️",
+      "Write your name with your weaker hand ✍️",
+      "Balance on one leg for 30 seconds each 🦶",
+      "Do 20 quick jumping jacks 🏃‍♀️",
+      "Draw circles in the air with both arms 🔄",
       
-      // Entertainment & Fun
-      "Listen to your favorite song 🎵",
-      "Dance for 30 seconds to your favorite music 💃",
-      "Take a funny selfie 🤳",
-      "Invent a new handshake 🤝",
-      "Sing for 30 seconds in the shower 🚿",
+      // Creativity & Expression (1 Minute)
+      "Listen to a song and move to it 🎵",
+      "Make 5 different facial expressions in the mirror 😮",
+      "Invent a funny new dance move 💃",
+      "Sing out loud for 1 minute 🎤",
+      "Draw your mood as a shape or color 🎨",
       
-      // Challenges & Skills
-      "Juggle with 3 objects (or try to) 🤹‍♂️",
-      "Write for 1 minute with your weaker hand ✍️",
-      "Stand on one leg for 1 minute 🦶",
-      "Count backwards from 100 in steps of 7 🔢",
-      "Make 10 different facial expressions 😮",
+      // Mental & Logic (1 Minute)
+      "Count backwards from 50 in steps of 3 🔢",
+      "Name 10 animals starting with 'S' 🐍",
+      "Think of 5 uses for a spoon 🥄",
+      "Spell your name backwards 🔤",
+      "Count all blue objects near you 🔵",
       
-      // Knowledge & Learning
-      "Learn an interesting fact and share it 🧠",
-      "Watch a 1-minute educational video 📺",
-      "Read a short Wikipedia article 📚",
-      "Write down 5 synonyms for the word 'beautiful' 📝"
+      // Sensory Experiences (1 Minute)
+      "Consciously smell 3 different scents 👃",
+      "Feel different textures around you 👋",
+      "Listen carefully: What can you hear? 👂",
+      "Look closely at your hands 🖐️",
+      "Taste something you're eating/drinking mindfully 👅"
     ];
   }
 };
