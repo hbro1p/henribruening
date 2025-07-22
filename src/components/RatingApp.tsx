@@ -47,7 +47,7 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
         fullDescription: language === 'deutsch'
           ? 'Diese Idee beschreibt ein Tool, bei dem man ein Thema eingibt (z. B. Vertrauen, Sommerferien, Freundschaft), und daraufhin einen komplett vorbereiteten Social-Media-Prompt bekommt. Der Prompt enthält eine Hook, eine passende Dramaturgie und Vorschläge für Erzählstil und Videolänge.'
           : 'This idea describes a tool where you input a topic (e.g., trust, summer vacation, friendship) and receive a complete social media prompt. The prompt includes a hook, appropriate dramaturgy, and suggestions for narrative style and video length.',
-        prototypeUrl: 'https://www.figma.com/proto/sample-prompt-generator',
+        prototypeUrl: 'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2Fsample-prompt-generator',
         ratings: []
       },
       {
@@ -59,7 +59,7 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
         fullDescription: language === 'deutsch'
           ? 'Diese Idee beschreibt eine digitale Schnitzeljagd durch die Stadt Coesfeld. Nutzerinnen und Nutzer müssen Orte finden, Hinweise lösen und erhalten Belohnungen in teilnehmenden Geschäften, Museen oder Cafés.'
           : 'This idea describes a digital scavenger hunt through the city of Coesfeld. Users find locations, solve clues, and receive rewards at participating businesses, museums, or cafes.',
-        prototypeUrl: 'https://www.figma.com/proto/sample-coesfeld-quest',
+        prototypeUrl: 'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2Fsample-coesfeld-quest',
         ratings: []
       }
     ];
@@ -80,7 +80,7 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
   const getAverageRating = (idea: Idea): number | null => {
     if (idea.ratings.length === 0) return null;
     const sum = idea.ratings.reduce((acc, rating) => acc + rating, 0);
-    return sum / idea.ratings.length;
+    return Math.round((sum / idea.ratings.length) * 10) / 10;
   };
 
   const welcomeText = language === 'deutsch' 
@@ -95,9 +95,9 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
             key={star}
             className={`h-5 w-5 ${
               star <= rating
-                ? 'fill-amber-500 text-amber-500'
-                : 'text-amber-300'
-            } ${interactive ? 'cursor-pointer hover:fill-amber-400 hover:text-amber-400' : ''}`}
+                ? 'fill-yellow-500 text-yellow-500'
+                : 'text-yellow-300'
+            } ${interactive ? 'cursor-pointer hover:fill-yellow-400 hover:text-yellow-400' : ''}`}
             onClick={interactive && onRate ? () => onRate(star) : undefined}
           />
         ))}
@@ -139,10 +139,10 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="rating-app-yellow border rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
-        <div className="flex items-center justify-between p-4 border-b border-amber-300">
+        <div className="flex items-center justify-between p-4 border-b border-yellow-300">
           <div className="flex items-center gap-2">
-            <Star className="h-6 w-6 text-amber-700" />
-            <h2 className="text-xl font-semibold text-amber-900">
+            <Star className="h-6 w-6 text-yellow-700" />
+            <h2 className="text-xl font-semibold text-yellow-900">
               {language === 'deutsch' ? 'Ideen-Labor' : 'Idea Laboratory'}
             </h2>
           </div>
@@ -159,7 +159,7 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                   setCurrentView('welcome');
                 }
               }}
-              className="text-amber-800 hover:bg-amber-200"
+              className="text-yellow-800 hover:bg-yellow-200"
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
@@ -168,7 +168,7 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
             variant="ghost" 
             size="icon" 
             onClick={onClose}
-            className="text-amber-800 hover:bg-amber-200"
+            className="text-yellow-800 hover:bg-yellow-200"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -179,14 +179,14 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
             <div className="text-center space-y-6 max-w-2xl mx-auto">
               <div className="space-y-4">
                 {welcomeText.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className="text-amber-800 leading-relaxed text-lg">
+                  <p key={index} className="text-yellow-800 leading-relaxed text-lg">
                     {paragraph}
                   </p>
                 ))}
               </div>
               <Button 
                 onClick={() => setCurrentView('list')}
-                className="mt-8 bg-amber-600 hover:bg-amber-700 text-white border-none"
+                className="mt-8 bg-yellow-600 hover:bg-yellow-700 text-white border-none"
               >
                 {language === 'deutsch' ? 'Ideen entdecken' : 'Discover Ideas'}
               </Button>
@@ -195,34 +195,28 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
 
           {currentView === 'list' && (
             <div className="space-y-4">
-              <h3 className="text-2xl font-bold mb-6 text-amber-900">
+              <h3 className="text-2xl font-bold mb-6 text-yellow-900">
                 {language === 'deutsch' ? 'Meine Ideen' : 'My Ideas'}
               </h3>
               <div className="grid gap-4">
                 {ideas.map((idea) => {
                   const avgRating = getAverageRating(idea);
                   return (
-                    <Card key={idea.id} className="bg-amber-50 border-amber-200 hover:bg-amber-100 transition-colors">
+                    <Card key={idea.id} className="bg-yellow-50 border-yellow-200 hover:bg-yellow-100 transition-colors">
                       <CardHeader>
                         <div className="flex justify-between items-start">
                           <div className="space-y-2 flex-1">
-                            <CardTitle className="text-lg text-amber-900">{idea.title}</CardTitle>
-                            <CardDescription className="text-amber-700">{idea.shortDescription}</CardDescription>
+                            <CardTitle className="text-lg text-yellow-900">{idea.title}</CardTitle>
+                            <CardDescription className="text-yellow-700">{idea.shortDescription}</CardDescription>
                           </div>
-                          <div className="text-right space-y-1 ml-4">
-                            {avgRating !== null ? (
-                              <>
-                                {renderStars(avgRating)}
-                                <p className="text-sm text-amber-600">
-                                  {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
-                                </p>
-                              </>
-                            ) : (
-                              <p className="text-sm text-amber-600">
-                                {language === 'deutsch' ? 'Noch keine Bewertungen' : 'No ratings yet'}
+                          {avgRating !== null && (
+                            <div className="text-right space-y-1 ml-4">
+                              {renderStars(avgRating)}
+                              <p className="text-sm text-yellow-700">
+                                {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
                               </p>
-                            )}
-                          </div>
+                            </div>
+                          )}
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-3">
@@ -233,13 +227,13 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                               setCurrentView('detail');
                             }}
                             variant="outline"
-                            className="flex-1 border-amber-300 text-amber-800 hover:bg-amber-200"
+                            className="flex-1 border-yellow-300 text-yellow-800 hover:bg-yellow-200"
                           >
                             {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
                           </Button>
                           <Button 
                             onClick={() => openPrototype(idea.prototypeUrl)}
-                            className="bg-amber-600 hover:bg-amber-700 text-white border-none"
+                            className="bg-yellow-600 hover:bg-yellow-700 text-white border-none"
                           >
                             <Play className="h-4 w-4 mr-2" />
                             Try
@@ -258,74 +252,76 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
               {showPrototype ? (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold text-amber-900">
+                    <h3 className="text-xl font-bold text-yellow-900">
                       Prototype - {selectedIdea.title}
                     </h3>
                     <Button 
                       variant="outline" 
                       onClick={() => setShowPrototype(false)}
-                      className="border-amber-300 text-amber-800 hover:bg-amber-200"
+                      className="border-yellow-300 text-yellow-800 hover:bg-yellow-200"
                     >
                       {language === 'deutsch' ? 'Zurück zur Beschreibung' : 'Back to Description'}
                     </Button>
                   </div>
-                  <div className="bg-amber-100 border border-amber-200 rounded-lg p-8 text-center">
+                  <div className="bg-yellow-100 border border-yellow-200 rounded-lg p-4">
                     <iframe 
                       src={selectedIdea.prototypeUrl}
-                      className="w-full h-[600px] rounded-lg"
+                      className="w-full h-[600px] rounded-lg border-0"
                       title={`${selectedIdea.title} Prototype`}
+                      frameBorder="0"
+                      allowFullScreen
                     />
                   </div>
                 </div>
               ) : (
                 <>
                   <div className="flex items-center justify-between gap-4">
-                    <h3 className="text-2xl font-bold text-amber-900 flex-1">{selectedIdea.title}</h3>
+                    <h3 className="text-2xl font-bold text-yellow-900 flex-1">{selectedIdea.title}</h3>
                     <div className="flex gap-2">
                       <Button 
                         variant="outline" 
                         onClick={() => setShowPrototype(true)}
-                        className="border-amber-300 text-amber-800 hover:bg-amber-200"
+                        className="border-yellow-300 text-yellow-800 hover:bg-yellow-200"
                       >
                         <Play className="h-4 w-4 mr-2" />
                         {language === 'deutsch' ? 'Prototyp ansehen' : 'View Prototype'}
                       </Button>
                       <Button 
                         onClick={() => openPrototype(selectedIdea.prototypeUrl)}
-                        className="bg-amber-600 hover:bg-amber-700 text-white border-none"
+                        className="bg-yellow-600 hover:bg-yellow-700 text-white border-none"
                       >
                         Try
                       </Button>
                     </div>
                   </div>
                   
-                  <Card className="bg-amber-50 border-amber-200">
+                  <Card className="bg-yellow-50 border-yellow-200">
                     <CardHeader>
-                      <CardTitle className="text-amber-900">
+                      <CardTitle className="text-yellow-900">
                         {language === 'deutsch' ? 'Beschreibung' : 'Description'}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-amber-800 leading-relaxed">{selectedIdea.fullDescription}</p>
+                      <p className="text-yellow-800 leading-relaxed">{selectedIdea.fullDescription}</p>
                     </CardContent>
                   </Card>
 
-                  <Card className="bg-amber-50 border-amber-200">
+                  <Card className="bg-yellow-50 border-yellow-200">
                     <CardHeader>
-                      <CardTitle className="text-amber-900">
+                      <CardTitle className="text-yellow-900">
                         {language === 'deutsch' ? 'Deine Bewertung' : 'Your Rating'}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium text-amber-800">
+                        <label className="text-sm font-medium text-yellow-800">
                           {language === 'deutsch' ? 'Bewertung (1-5 Sterne)' : 'Rating (1-5 stars)'}
                         </label>
                         {renderStars(userRating, true, setUserRating)}
                       </div>
                       
                       <div className="space-y-2">
-                        <label className="text-sm font-medium text-amber-800">
+                        <label className="text-sm font-medium text-yellow-800">
                           {language === 'deutsch' ? 'Feedback (optional)' : 'Feedback (optional)'}
                         </label>
                         <Textarea
@@ -336,14 +332,14 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                           value={feedback}
                           onChange={(e) => setFeedback(e.target.value)}
                           rows={4}
-                          className="bg-white border-amber-300 text-amber-900 placeholder:text-amber-600"
+                          className="bg-white border-yellow-300 text-yellow-900 placeholder:text-yellow-600"
                         />
                       </div>
                       
                       <Button 
                         onClick={handleSubmitRating}
                         disabled={userRating === 0}
-                        className="w-full bg-amber-600 hover:bg-amber-700 text-white border-none disabled:bg-amber-300"
+                        className="w-full bg-yellow-600 hover:bg-yellow-700 text-white border-none disabled:bg-yellow-300"
                       >
                         {language === 'deutsch' ? 'Bewertung abgeben' : 'Submit Rating'}
                       </Button>
