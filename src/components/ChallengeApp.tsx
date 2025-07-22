@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { X, Play, RotateCcw, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { useToast } from '@/hooks/use-toast';
 import { useSettings } from '@/contexts/SettingsContext';
 
 interface ChallengeAppProps {
@@ -10,33 +9,55 @@ interface ChallengeAppProps {
   onClose: () => void;
 }
 
-const challenges = [
-  "Schreib 3 neue Ideen auf 💡",
-  "Mach 10 Liegestütze 💪",
-  "Sag einem Freund etwas Nettes 💝",
-  "Trinke ein großes Glas Wasser 💧",
-  "Atme 5 mal tief ein und aus 🫁",
-  "Schau 1 Minute aus dem Fenster 🪟",
-  "Strecke dich für 1 Minute 🤸‍♂️",
-  "Schreibe eine positive Affirmation auf ✨",
-  "Mach ein Foto von etwas Schönem 📸",
-  "Höre deinen Lieblingssong 🎵",
-  "Sortiere deinen Arbeitsplatz 📋",
-  "Lächle bewusst für 30 Sekunden 😊",
-  "Plane eine kleine Abenteuer-Aktivität 🗺️",
-  "Denke an 3 Dinge, für die du dankbar bist 🙏",
-  "Mach eine Minute lang Jumping Jacks 🏃‍♂️",
-];
+const getChallenges = (language: string) => {
+  if (language === 'deutsch') {
+    return [
+      "Schreib 3 neue Ideen auf 💡",
+      "Mach 10 Liegestütze 💪",
+      "Sag einem Freund etwas Nettes 💝",
+      "Trinke ein großes Glas Wasser 💧",
+      "Atme 5 mal tief ein und aus 🫁",
+      "Schau 1 Minute aus dem Fenster 🪟",
+      "Strecke dich für 1 Minute 🤸‍♂️",
+      "Schreibe eine positive Affirmation auf ✨",
+      "Mach ein Foto von etwas Schönem 📸",
+      "Höre deinen Lieblingssong 🎵",
+      "Sortiere deinen Arbeitsplatz 📋",
+      "Lächle bewusst für 30 Sekunden 😊",
+      "Plane eine kleine Abenteuer-Aktivität 🗺️",
+      "Denke an 3 Dinge, für die du dankbar bist 🙏",
+      "Mach eine Minute lang Jumping Jacks 🏃‍♂️",
+    ];
+  } else {
+    return [
+      "Write down 3 new ideas 💡",
+      "Do 10 push-ups 💪",
+      "Say something nice to a friend 💝",
+      "Drink a large glass of water 💧",
+      "Take 5 deep breaths 🫁",
+      "Look out the window for 1 minute 🪟",
+      "Stretch for 1 minute 🤸‍♂️",
+      "Write down a positive affirmation ✨",
+      "Take a photo of something beautiful 📸",
+      "Listen to your favorite song 🎵",
+      "Organize your workspace 📋",
+      "Smile consciously for 30 seconds 😊",
+      "Plan a small adventure activity 🗺️",
+      "Think of 3 things you're grateful for 🙏",
+      "Do jumping jacks for one minute 🏃‍♂️",
+    ];
+  }
+};
 
 const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
-  const { t } = useSettings();
+  const { t, language } = useSettings();
   const [currentChallenge, setCurrentChallenge] = useState('');
   const [isActive, setIsActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [isCompleted, setIsCompleted] = useState(false);
-  const { toast } = useToast();
 
   const getRandomChallenge = () => {
+    const challenges = getChallenges(language);
     const randomIndex = Math.floor(Math.random() * challenges.length);
     return challenges[randomIndex];
   };
@@ -47,10 +68,6 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
     setIsActive(true);
     setTimeLeft(60);
     setIsCompleted(false);
-    toast({
-      title: t('Challenge Started!'),
-      description: challenge,
-    });
   };
 
   const resetChallenge = () => {
@@ -63,10 +80,6 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
   const completeChallenge = () => {
     setIsActive(false);
     setIsCompleted(true);
-    toast({
-      title: t('Challenge Complete!'),
-      description: t('Great job! You\'re building amazing habits!'),
-    });
   };
 
   useEffect(() => {
