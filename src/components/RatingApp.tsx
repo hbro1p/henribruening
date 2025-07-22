@@ -4,13 +4,15 @@ import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Textarea } from './ui/textarea';
 import { useSettings } from '@/contexts/SettingsContext';
+import ViralVideoPromptGenerator from './prototypes/ViralVideoPromptGenerator';
+import CoesfelderQuest from './prototypes/CoesfelderQuest';
 
 interface Idea {
   id: string;
   title: string;
   shortDescription: string;
   fullDescription: string;
-  prototypeUrl: string;
+  prototypeComponent: string;
   ratings: number[];
 }
 
@@ -27,7 +29,7 @@ interface RatingAppProps {
 
 export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
   const { t, language } = useSettings();
-  const [currentView, setCurrentView] = useState<'welcome' | 'list' | 'detail'>('welcome');
+  const [currentView, setCurrentView] = useState<'welcome' | 'list' | 'detail' | 'prototype'>('welcome');
   const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
   const [userRating, setUserRating] = useState(0);
   const [feedback, setFeedback] = useState('');
@@ -47,7 +49,7 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
         fullDescription: language === 'deutsch'
           ? 'Diese Idee beschreibt ein Tool, bei dem man ein Thema eingibt (z. B. Vertrauen, Sommerferien, Freundschaft), und daraufhin einen komplett vorbereiteten Social-Media-Prompt bekommt. Der Prompt enthält eine Hook, eine passende Dramaturgie und Vorschläge für Erzählstil und Videolänge.'
           : 'This idea describes a tool where you input a topic (e.g., trust, summer vacation, friendship) and receive a complete social media prompt. The prompt includes a hook, appropriate dramaturgy, and suggestions for narrative style and video length.',
-        prototypeUrl: 'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2Fsample-prompt-generator',
+        prototypeComponent: 'ViralVideoPromptGenerator',
         ratings: []
       },
       {
@@ -59,7 +61,7 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
         fullDescription: language === 'deutsch'
           ? 'Diese Idee beschreibt eine digitale Schnitzeljagd durch die Stadt Coesfeld. Nutzerinnen und Nutzer müssen Orte finden, Hinweise lösen und erhalten Belohnungen in teilnehmenden Geschäften, Museen oder Cafés.'
           : 'This idea describes a digital scavenger hunt through the city of Coesfeld. Users find locations, solve clues, and receive rewards at participating businesses, museums, or cafes.',
-        prototypeUrl: 'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2Fsample-coesfeld-quest',
+        prototypeComponent: 'CoesfelderQuest',
         ratings: []
       }
     ];
@@ -130,8 +132,9 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
     setCurrentView('list');
   };
 
-  const openPrototype = (url: string) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
+  const openPrototype = (idea: Idea) => {
+    setSelectedIdea(idea);
+    setCurrentView('prototype');
   };
 
   if (!isOpen) return null;
@@ -146,12 +149,14 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
               {language === 'deutsch' ? 'Ideen-Labor' : 'Idea Laboratory'}
             </h2>
           </div>
-          {currentView !== 'welcome' && (
+          {(currentView !== 'welcome') && (
             <Button
               variant="ghost"
               size="icon"
               onClick={() => {
-                if (currentView === 'detail') {
+                if (currentView === 'prototype') {
+                  setCurrentView('detail');
+                } else if (currentView === 'detail') {
                   setCurrentView('list');
                   setSelectedIdea(null);
                   setShowPrototype(false);
@@ -232,7 +237,7 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                             {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
                           </Button>
                           <Button 
-                            onClick={() => openPrototype(idea.prototypeUrl)}
+                            onClick={() => openPrototype(idea)}
                             className="bg-yellow-600 hover:bg-yellow-700 text-white border-none"
                           >
                             <Play className="h-4 w-4 mr-2" />
@@ -243,6 +248,20 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                     </Card>
                   );
                 })}
+              </div>
+            </div>
+          )}
+
+          {currentView === 'prototype' && selectedIdea && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-yellow-900">
+                  {selectedIdea.title} - Prototype
+                </h3>
+              </div>
+              <div className="bg-white rounded-lg border border-yellow-200 min-h-[600px]">
+                {selectedIdea.prototypeComponent === 'ViralVideoPromptGenerator' && <ViralVideoPromptGenerator />}
+                {selectedIdea.prototypeComponent === 'CoesfelderQuest' && <CoesfelderQuest />}
               </div>
             </div>
           )}
@@ -264,13 +283,8 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                     </Button>
                   </div>
                   <div className="bg-yellow-100 border border-yellow-200 rounded-lg p-4">
-                    <iframe 
-                      src={selectedIdea.prototypeUrl}
-                      className="w-full h-[600px] rounded-lg border-0"
-                      title={`${selectedIdea.title} Prototype`}
-                      frameBorder="0"
-                      allowFullScreen
-                    />
+                    {selectedIdea.prototypeComponent === 'ViralVideoPromptGenerator' && <ViralVideoPromptGenerator />}
+                    {selectedIdea.prototypeComponent === 'CoesfelderQuest' && <CoesfelderQuest />}
                   </div>
                 </div>
               ) : (
@@ -280,17 +294,11 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                     <div className="flex gap-2">
                       <Button 
                         variant="outline" 
-                        onClick={() => setShowPrototype(true)}
+                        onClick={() => setCurrentView('prototype')}
                         className="border-yellow-300 text-yellow-800 hover:bg-yellow-200"
                       >
                         <Play className="h-4 w-4 mr-2" />
-                        {language === 'deutsch' ? 'Prototyp ansehen' : 'View Prototype'}
-                      </Button>
-                      <Button 
-                        onClick={() => openPrototype(selectedIdea.prototypeUrl)}
-                        className="bg-yellow-600 hover:bg-yellow-700 text-white border-none"
-                      >
-                        Try
+                        {language === 'deutsch' ? 'Prototyp testen' : 'Test Prototype'}
                       </Button>
                     </div>
                   </div>
