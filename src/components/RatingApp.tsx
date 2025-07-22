@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Star, Eye, ArrowLeft } from 'lucide-react';
+import { X, Star, ArrowLeft, Play } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Textarea } from './ui/textarea';
@@ -10,9 +10,14 @@ interface Idea {
   title: string;
   shortDescription: string;
   fullDescription: string;
-  mockupImage?: string;
-  averageRating: number;
-  totalRatings: number;
+  prototypeUrl: string;
+  ratings: number[];
+}
+
+interface UserRating {
+  ideaId: string;
+  rating: number;
+  feedback: string;
 }
 
 interface RatingAppProps {
@@ -26,34 +31,40 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
   const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
   const [userRating, setUserRating] = useState(0);
   const [feedback, setFeedback] = useState('');
-  const [showMockup, setShowMockup] = useState(false);
+  const [showPrototype, setShowPrototype] = useState(false);
+  const [userRatings, setUserRatings] = useState<UserRating[]>([]);
+  const [ideas, setIdeas] = useState<Idea[]>([]);
 
-  const ideas: Idea[] = [
-    {
-      id: '1',
-      title: 'Viral Video Prompt Generator',
-      shortDescription: language === 'deutsch' 
-        ? 'Ein Tool für vollständige Social-Media-Prompts basierend auf Themen'
-        : 'A tool for complete social media prompts based on topics',
-      fullDescription: language === 'deutsch'
-        ? 'Diese Idee beschreibt ein Tool, bei dem man ein Thema eingibt (z. B. Vertrauen, Sommerferien, Freundschaft), und daraufhin einen komplett vorbereiteten Social-Media-Prompt bekommt. Der Prompt enthält eine Hook, eine passende Dramaturgie und Vorschläge für Erzählstil und Videolänge.'
-        : 'This idea describes a tool where you input a topic (e.g., trust, summer vacation, friendship) and receive a complete social media prompt. The prompt includes a hook, appropriate dramaturgy, and suggestions for narrative style and video length.',
-      averageRating: 4.2,
-      totalRatings: 15
-    },
-    {
-      id: '2',
-      title: 'Coesfeld Quest',
-      shortDescription: language === 'deutsch'
-        ? 'Eine digitale Schnitzeljagd durch die Stadt Coesfeld'
-        : 'A digital scavenger hunt through the city of Coesfeld',
-      fullDescription: language === 'deutsch'
-        ? 'Diese Idee beschreibt eine digitale Schnitzeljagd durch die Stadt Coesfeld. Nutzerinnen und Nutzer müssen Orte finden, Hinweise lösen und erhalten Belohnungen in teilnehmenden Geschäften, Museen oder Cafés.'
-        : 'This idea describes a digital scavenger hunt through the city of Coesfeld. Users find locations, solve clues, and receive rewards at participating businesses, museums, or cafes.',
-      averageRating: 3.8,
-      totalRatings: 12
-    }
-  ];
+  // Initialize ideas data
+  useEffect(() => {
+    const initialIdeas: Idea[] = [
+      {
+        id: '1',
+        title: 'Viral Video Prompt Generator',
+        shortDescription: language === 'deutsch' 
+          ? 'Ein Tool für vollständige Social-Media-Prompts basierend auf Themen'
+          : 'A tool for complete social media prompts based on topics',
+        fullDescription: language === 'deutsch'
+          ? 'Diese Idee beschreibt ein Tool, bei dem man ein Thema eingibt (z. B. Vertrauen, Sommerferien, Freundschaft), und daraufhin einen komplett vorbereiteten Social-Media-Prompt bekommt. Der Prompt enthält eine Hook, eine passende Dramaturgie und Vorschläge für Erzählstil und Videolänge.'
+          : 'This idea describes a tool where you input a topic (e.g., trust, summer vacation, friendship) and receive a complete social media prompt. The prompt includes a hook, appropriate dramaturgy, and suggestions for narrative style and video length.',
+        prototypeUrl: 'https://www.figma.com/proto/sample-prompt-generator',
+        ratings: []
+      },
+      {
+        id: '2',
+        title: 'Coesfeld Quest',
+        shortDescription: language === 'deutsch'
+          ? 'Eine digitale Schnitzeljagd durch die Stadt Coesfeld'
+          : 'A digital scavenger hunt through the city of Coesfeld',
+        fullDescription: language === 'deutsch'
+          ? 'Diese Idee beschreibt eine digitale Schnitzeljagd durch die Stadt Coesfeld. Nutzerinnen und Nutzer müssen Orte finden, Hinweise lösen und erhalten Belohnungen in teilnehmenden Geschäften, Museen oder Cafés.'
+          : 'This idea describes a digital scavenger hunt through the city of Coesfeld. Users find locations, solve clues, and receive rewards at participating businesses, museums, or cafes.',
+        prototypeUrl: 'https://www.figma.com/proto/sample-coesfeld-quest',
+        ratings: []
+      }
+    ];
+    setIdeas(initialIdeas);
+  }, [language]);
 
   useEffect(() => {
     if (isOpen) {
@@ -61,9 +72,16 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
       setSelectedIdea(null);
       setUserRating(0);
       setFeedback('');
-      setShowMockup(false);
+      setShowPrototype(false);
     }
   }, [isOpen]);
+
+  // Calculate average rating for an idea
+  const getAverageRating = (idea: Idea): number | null => {
+    if (idea.ratings.length === 0) return null;
+    const sum = idea.ratings.reduce((acc, rating) => acc + rating, 0);
+    return sum / idea.ratings.length;
+  };
 
   const welcomeText = language === 'deutsch' 
     ? 'Willkommen in meinem Ideen-Labor.\n\nHier findest du Konzepte, die ich noch nicht umgesetzt habe – manchmal roh, manchmal fast fertig, aber immer offen für Feedback.\n\nDu kannst jede Idee bewerten und mir mit einem Kommentar weiterhelfen.\n\nWelche Idee findest du gut? Was würdest du anders machen? Sag\'s mir. Deine Meinung zählt.'
@@ -77,9 +95,9 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
             key={star}
             className={`h-5 w-5 ${
               star <= rating
-                ? 'fill-primary text-primary'
-                : 'text-muted-foreground'
-            } ${interactive ? 'cursor-pointer hover:text-primary' : ''}`}
+                ? 'fill-amber-500 text-amber-500'
+                : 'text-amber-300'
+            } ${interactive ? 'cursor-pointer hover:fill-amber-400 hover:text-amber-400' : ''}`}
             onClick={interactive && onRate ? () => onRate(star) : undefined}
           />
         ))}
@@ -88,22 +106,43 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
   };
 
   const handleSubmitRating = () => {
-    // Here you would typically save to a database
-    console.log('Rating submitted:', { ideaId: selectedIdea?.id, rating: userRating, feedback });
+    if (!selectedIdea || userRating === 0) return;
+
+    // Update the idea's ratings
+    const updatedIdeas = ideas.map(idea => {
+      if (idea.id === selectedIdea.id) {
+        return { ...idea, ratings: [...idea.ratings, userRating] };
+      }
+      return idea;
+    });
+    setIdeas(updatedIdeas);
+
+    // Save user rating
+    const newUserRating: UserRating = {
+      ideaId: selectedIdea.id,
+      rating: userRating,
+      feedback
+    };
+    setUserRatings([...userRatings, newUserRating]);
+
     setUserRating(0);
     setFeedback('');
     setCurrentView('list');
   };
 
+  const openPrototype = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-background border rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
-        <div className="flex items-center justify-between p-4 border-b">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="rating-app-yellow border rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+        <div className="flex items-center justify-between p-4 border-b border-amber-300">
           <div className="flex items-center gap-2">
-            <Star className="h-6 w-6 text-muted-foreground" />
-            <h2 className="text-xl font-semibold">
+            <Star className="h-6 w-6 text-amber-700" />
+            <h2 className="text-xl font-semibold text-amber-900">
               {language === 'deutsch' ? 'Ideen-Labor' : 'Idea Laboratory'}
             </h2>
           </div>
@@ -115,16 +154,22 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                 if (currentView === 'detail') {
                   setCurrentView('list');
                   setSelectedIdea(null);
-                  setShowMockup(false);
+                  setShowPrototype(false);
                 } else {
                   setCurrentView('welcome');
                 }
               }}
+              className="text-amber-800 hover:bg-amber-200"
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
           )}
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onClose}
+            className="text-amber-800 hover:bg-amber-200"
+          >
             <X className="h-4 w-4" />
           </Button>
         </div>
@@ -134,14 +179,14 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
             <div className="text-center space-y-6 max-w-2xl mx-auto">
               <div className="space-y-4">
                 {welcomeText.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className="text-muted-foreground leading-relaxed">
+                  <p key={index} className="text-amber-800 leading-relaxed text-lg">
                     {paragraph}
                   </p>
                 ))}
               </div>
               <Button 
                 onClick={() => setCurrentView('list')}
-                className="mt-8"
+                className="mt-8 bg-amber-600 hover:bg-amber-700 text-white border-none"
               >
                 {language === 'deutsch' ? 'Ideen entdecken' : 'Discover Ideas'}
               </Button>
@@ -150,97 +195,137 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
 
           {currentView === 'list' && (
             <div className="space-y-4">
-              <h3 className="text-2xl font-bold mb-6">
+              <h3 className="text-2xl font-bold mb-6 text-amber-900">
                 {language === 'deutsch' ? 'Meine Ideen' : 'My Ideas'}
               </h3>
               <div className="grid gap-4">
-                {ideas.map((idea) => (
-                  <Card key={idea.id} className="hover:shadow-md transition-shadow">
-                    <CardHeader>
-                      <div className="flex justify-between items-start">
-                        <div className="space-y-2">
-                          <CardTitle className="text-lg">{idea.title}</CardTitle>
-                          <CardDescription>{idea.shortDescription}</CardDescription>
+                {ideas.map((idea) => {
+                  const avgRating = getAverageRating(idea);
+                  return (
+                    <Card key={idea.id} className="bg-amber-50 border-amber-200 hover:bg-amber-100 transition-colors">
+                      <CardHeader>
+                        <div className="flex justify-between items-start">
+                          <div className="space-y-2 flex-1">
+                            <CardTitle className="text-lg text-amber-900">{idea.title}</CardTitle>
+                            <CardDescription className="text-amber-700">{idea.shortDescription}</CardDescription>
+                          </div>
+                          <div className="text-right space-y-1 ml-4">
+                            {avgRating !== null ? (
+                              <>
+                                {renderStars(avgRating)}
+                                <p className="text-sm text-amber-600">
+                                  {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
+                                </p>
+                              </>
+                            ) : (
+                              <p className="text-sm text-amber-600">
+                                {language === 'deutsch' ? 'Noch keine Bewertungen' : 'No ratings yet'}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                        <div className="text-right space-y-1">
-                          {renderStars(idea.averageRating)}
-                          <p className="text-sm text-muted-foreground">
-                            {idea.averageRating.toFixed(1)} ({idea.totalRatings} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
-                          </p>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        <div className="flex gap-2">
+                          <Button 
+                            onClick={() => {
+                              setSelectedIdea(idea);
+                              setCurrentView('detail');
+                            }}
+                            variant="outline"
+                            className="flex-1 border-amber-300 text-amber-800 hover:bg-amber-200"
+                          >
+                            {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
+                          </Button>
+                          <Button 
+                            onClick={() => openPrototype(idea.prototypeUrl)}
+                            className="bg-amber-600 hover:bg-amber-700 text-white border-none"
+                          >
+                            <Play className="h-4 w-4 mr-2" />
+                            Try
+                          </Button>
                         </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <Button 
-                        onClick={() => {
-                          setSelectedIdea(idea);
-                          setCurrentView('detail');
-                        }}
-                        variant="outline"
-                        className="w-full"
-                      >
-                        {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             </div>
           )}
 
           {currentView === 'detail' && selectedIdea && (
             <div className="space-y-6">
-              {showMockup ? (
+              {showPrototype ? (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-bold">
-                      Mockup - {selectedIdea.title}
+                    <h3 className="text-xl font-bold text-amber-900">
+                      Prototype - {selectedIdea.title}
                     </h3>
-                    <Button variant="outline" onClick={() => setShowMockup(false)}>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setShowPrototype(false)}
+                      className="border-amber-300 text-amber-800 hover:bg-amber-200"
+                    >
                       {language === 'deutsch' ? 'Zurück zur Beschreibung' : 'Back to Description'}
                     </Button>
                   </div>
-                  <div className="bg-muted rounded-lg p-8 text-center">
-                    <p className="text-muted-foreground">
-                      {language === 'deutsch' 
-                        ? 'Mockup-Bild würde hier angezeigt werden'
-                        : 'Mockup image would be displayed here'}
-                    </p>
+                  <div className="bg-amber-100 border border-amber-200 rounded-lg p-8 text-center">
+                    <iframe 
+                      src={selectedIdea.prototypeUrl}
+                      className="w-full h-[600px] rounded-lg"
+                      title={`${selectedIdea.title} Prototype`}
+                    />
                   </div>
                 </div>
               ) : (
                 <>
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-2xl font-bold">{selectedIdea.title}</h3>
-                    <Button variant="outline" onClick={() => setShowMockup(true)}>
-                      <Eye className="h-4 w-4 mr-2" />
-                      {language === 'deutsch' ? 'Mockup ansehen' : 'View Mockup'}
-                    </Button>
+                  <div className="flex items-center justify-between gap-4">
+                    <h3 className="text-2xl font-bold text-amber-900 flex-1">{selectedIdea.title}</h3>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowPrototype(true)}
+                        className="border-amber-300 text-amber-800 hover:bg-amber-200"
+                      >
+                        <Play className="h-4 w-4 mr-2" />
+                        {language === 'deutsch' ? 'Prototyp ansehen' : 'View Prototype'}
+                      </Button>
+                      <Button 
+                        onClick={() => openPrototype(selectedIdea.prototypeUrl)}
+                        className="bg-amber-600 hover:bg-amber-700 text-white border-none"
+                      >
+                        Try
+                      </Button>
+                    </div>
                   </div>
                   
-                  <Card>
+                  <Card className="bg-amber-50 border-amber-200">
                     <CardHeader>
-                      <CardTitle>{language === 'deutsch' ? 'Beschreibung' : 'Description'}</CardTitle>
+                      <CardTitle className="text-amber-900">
+                        {language === 'deutsch' ? 'Beschreibung' : 'Description'}
+                      </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground leading-relaxed">{selectedIdea.fullDescription}</p>
+                      <p className="text-amber-800 leading-relaxed">{selectedIdea.fullDescription}</p>
                     </CardContent>
                   </Card>
 
-                  <Card>
+                  <Card className="bg-amber-50 border-amber-200">
                     <CardHeader>
-                      <CardTitle>{language === 'deutsch' ? 'Deine Bewertung' : 'Your Rating'}</CardTitle>
+                      <CardTitle className="text-amber-900">
+                        {language === 'deutsch' ? 'Deine Bewertung' : 'Your Rating'}
+                      </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">
+                        <label className="text-sm font-medium text-amber-800">
                           {language === 'deutsch' ? 'Bewertung (1-5 Sterne)' : 'Rating (1-5 stars)'}
                         </label>
                         {renderStars(userRating, true, setUserRating)}
                       </div>
                       
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">
+                        <label className="text-sm font-medium text-amber-800">
                           {language === 'deutsch' ? 'Feedback (optional)' : 'Feedback (optional)'}
                         </label>
                         <Textarea
@@ -251,13 +336,14 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                           value={feedback}
                           onChange={(e) => setFeedback(e.target.value)}
                           rows={4}
+                          className="bg-white border-amber-300 text-amber-900 placeholder:text-amber-600"
                         />
                       </div>
                       
                       <Button 
                         onClick={handleSubmitRating}
                         disabled={userRating === 0}
-                        className="w-full"
+                        className="w-full bg-amber-600 hover:bg-amber-700 text-white border-none disabled:bg-amber-300"
                       >
                         {language === 'deutsch' ? 'Bewertung abgeben' : 'Submit Rating'}
                       </Button>

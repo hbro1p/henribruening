@@ -108,9 +108,15 @@ body {
   background: linear-gradient(135deg, #eeddff 0%, #ddaaff 25%, #cc77ff 75%, #bb44ff 100%);
 }
 
-.folder-yellow {
-  background: linear-gradient(135deg, #ffffcc 0%, #ffffaa 25%, #ffff77 75%, #ffff44 100%);
-}
+  .folder-yellow {
+    background: linear-gradient(135deg, #ffffcc 0%, #ffffaa 25%, #ffff77 75%, #ffff44 100%);
+  }
+
+  /* Rating App Yellow Theme */
+  .rating-app-yellow {
+    background: linear-gradient(135deg, #fff9e6 0%, #fff3cc 25%, #ffec99 75%, #ffe066 100%);
+    color: #5a4d00;
+  }
 
 @layer base {
   :root {
