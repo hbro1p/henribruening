@@ -11,7 +11,7 @@ interface DesktopIconProps {
 }
 
 const getIconStyles = (label: string, theme: string) => {
-  // Space Mood theme - Professional Windows XP-style
+  // Space Mood theme - Professional Windows XP-style with creative hover effects
   if (theme === 'space-mood') {
     const colors = {
       'My Pictures': 'from-blue-500 to-blue-700',
@@ -22,6 +22,7 @@ const getIconStyles = (label: string, theme: string) => {
       'Meine Projekte': 'from-orange-500 to-orange-700',
       'Radio': 'from-red-500 to-red-700',
       'TV': 'from-purple-500 to-purple-700',
+      'Challenge': 'from-yellow-500 to-orange-600',
       'About Me': 'from-teal-500 to-teal-700',
       'Über Mich': 'from-teal-500 to-teal-700',
       'Contact': 'from-pink-500 to-pink-700',
@@ -29,13 +30,32 @@ const getIconStyles = (label: string, theme: string) => {
       'Settings': 'from-gray-500 to-gray-700',
       'Einstellungen': 'from-gray-500 to-gray-700',
     };
+
+    const glowColors = {
+      'My Pictures': 'group-hover:shadow-blue-400/60',
+      'Meine Bilder': 'group-hover:shadow-blue-400/60',
+      'My Videos': 'group-hover:shadow-green-400/60',
+      'Meine Videos': 'group-hover:shadow-green-400/60',
+      'My Projects': 'group-hover:shadow-orange-400/60',
+      'Meine Projekte': 'group-hover:shadow-orange-400/60',
+      'Radio': 'group-hover:shadow-red-400/60',
+      'TV': 'group-hover:shadow-purple-400/60',
+      'Challenge': 'group-hover:shadow-yellow-400/60',
+      'About Me': 'group-hover:shadow-teal-400/60',
+      'Über Mich': 'group-hover:shadow-teal-400/60',
+      'Contact': 'group-hover:shadow-pink-400/60',
+      'Kontakt': 'group-hover:shadow-pink-400/60',
+      'Settings': 'group-hover:shadow-gray-400/60',
+      'Einstellungen': 'group-hover:shadow-gray-400/60',
+    };
     
     return {
       gradient: colors[label as keyof typeof colors] || 'from-blue-500 to-blue-700',
       border: 'border-gray-400',
       hoverBorder: 'group-hover:border-gray-500',
-      shadow: 'shadow-lg group-hover:shadow-xl',
+      shadow: `shadow-lg group-hover:shadow-2xl transition-all duration-300 ${glowColors[label as keyof typeof glowColors] || 'group-hover:shadow-blue-400/60'}`,
       highlight: 'bg-gradient-to-br from-white/50 to-transparent',
+      iconGlow: 'group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] transition-all duration-300',
     };
   }
   
@@ -83,7 +103,7 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to, onClic
           <div className={`absolute top-1 left-1 w-8 h-4 ${styles.highlight} rounded blur-sm`}></div>
           
           {/* Icon */}
-          <Icon className="w-8 h-8 text-white drop-shadow-sm relative z-10" />
+          <Icon className={`w-8 h-8 text-white drop-shadow-sm relative z-10 ${styles.iconGlow || ''}`} />
         </div>
       </div>
       

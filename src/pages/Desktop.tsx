@@ -3,13 +3,15 @@ import React, { useState } from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
 import RadioApp from '@/components/RadioApp';
 import TvApp from '@/components/TvApp';
-import { Folder, User, Mail, Video, Code, Settings, Radio, Tv } from 'lucide-react';
+import ChallengeApp from '@/components/ChallengeApp';
+import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 
 const Desktop = () => {
   const { t } = useSettings();
   const [isRadioOpen, setIsRadioOpen] = useState(false);
   const [isTvOpen, setIsTvOpen] = useState(false);
+  const [isChallengeOpen, setIsChallengeOpen] = useState(false);
 
   console.log('Desktop component rendered, isTvOpen:', isTvOpen);
 
@@ -42,6 +44,16 @@ const Desktop = () => {
             }}
           />
 
+          {/* Challenge App Icon */}
+          <DesktopIcon 
+            icon={Clock} 
+            label="Challenge" 
+            onClick={() => {
+              console.log('Challenge icon clicked, opening Challenge app');
+              setIsChallengeOpen(true);
+            }}
+          />
+
           <DesktopIcon icon={User} label={t('About Me')} to="/about" />
           <DesktopIcon icon={Mail} label={t('Contact')} to="/contact" />
           <DesktopIcon icon={Settings} label={t('Settings')} to="/settings" />
@@ -63,6 +75,15 @@ const Desktop = () => {
         onClose={() => {
           console.log('Closing TV app');
           setIsTvOpen(false);
+        }} 
+      />
+      
+      {/* Challenge App Modal */}
+      <ChallengeApp 
+        isOpen={isChallengeOpen} 
+        onClose={() => {
+          console.log('Closing Challenge app');
+          setIsChallengeOpen(false);
         }} 
       />
     </>
