@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { secureLogger } from '@/utils/secureLogger';
 
@@ -10,9 +10,11 @@ interface MusicFile {
 }
 
 export const useMusicFiles = () => {
+  console.log('useMusicFiles hook called');
   const [musicFiles, setMusicFiles] = useState<MusicFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  console.log('useMusicFiles useState calls completed');
 
   const isAudioFile = (filename: string): boolean => {
     const audioExtensions = ['.mp3', '.wav', '.m4a', '.ogg', '.flac'];

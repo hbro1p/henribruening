@@ -8,7 +8,6 @@ import RatingApp from '@/components/RatingApp';
 import MiniMusicPlayer from '@/components/MiniMusicPlayer';
 import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock, Star } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
-import { useThemeMusic } from '@/hooks/useThemeMusic';
 import { useTvMusicControl } from '@/hooks/useTvMusicControl';
 import { useGlobalMusicPlayer } from '@/hooks/useGlobalMusicPlayer';
 
@@ -19,8 +18,7 @@ const Desktop = () => {
   const [isChallengeOpen, setIsChallengeOpen] = useState(false);
   const [isRatingOpen, setIsRatingOpen] = useState(false);
   
-  // Initialize theme music and TV music control
-  useThemeMusic();
+  // Initialize TV music control
   useTvMusicControl(isTvOpen);
   
   const { isPlaying, musicFiles } = useGlobalMusicPlayer();

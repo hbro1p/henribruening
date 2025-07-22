@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect, createContext, useContext } from 'react';
-import { useMusicFiles } from './useMusicFiles';
+import React, { useState, useRef, useEffect, createContext, useContext } from 'react';
 
 interface GlobalMusicContextType {
   isPlaying: boolean;
@@ -16,15 +15,28 @@ interface GlobalMusicContextType {
 const GlobalMusicContext = createContext<GlobalMusicContextType | null>(null);
 
 export const GlobalMusicProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  console.log('GlobalMusicProvider rendering...');
+  
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTrack, setCurrentTrack] = useState(0);
   const [volume, setVolumeState] = useState(0.7);
   const [isLoading, setIsLoading] = useState(false);
+  const [musicFiles, setMusicFiles] = useState<Array<{ name: string; url: string; title: string }>>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const { musicFiles } = useMusicFiles();
+
+  // Load some default music files for testing
+  useEffect(() => {
+    console.log('Loading default music files...');
+    setMusicFiles([
+      { name: 'Adventure Theme', url: '', title: 'Adventure Canyon Main Theme' },
+      { name: 'Desert Winds', url: '', title: 'Desert Winds' },
+      { name: 'Ancient Mysteries', url: '', title: 'Ancient Mysteries' }
+    ]);
+  }, []);
 
   // Initialize audio element once
   useEffect(() => {
+    console.log('GlobalMusicProvider useEffect running...');
     if (!audioRef.current) {
       audioRef.current = new Audio();
       audioRef.current.volume = volume;
