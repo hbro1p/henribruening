@@ -4,14 +4,16 @@ import DesktopIcon from '@/components/DesktopIcon';
 import RadioApp from '@/components/RadioApp';
 import TvApp from '@/components/TvApp';
 import ChallengeApp from '@/components/ChallengeApp';
-import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock } from 'lucide-react';
+import RatingApp from '@/components/RatingApp';
+import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock, Star } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 
 const Desktop = () => {
-  const { t } = useSettings();
+  const { t, language } = useSettings();
   const [isRadioOpen, setIsRadioOpen] = useState(false);
   const [isTvOpen, setIsTvOpen] = useState(false);
   const [isChallengeOpen, setIsChallengeOpen] = useState(false);
+  const [isRatingOpen, setIsRatingOpen] = useState(false);
 
   console.log('Desktop component rendered, isTvOpen:', isTvOpen);
 
@@ -54,6 +56,16 @@ const Desktop = () => {
             }}
           />
 
+          {/* Rating/Idea App Icon */}
+          <DesktopIcon 
+            icon={Star} 
+            label={language === 'deutsch' ? 'Ideen-Labor' : 'Idea Lab'}
+            onClick={() => {
+              console.log('Rating/Idea icon clicked, opening Rating app');
+              setIsRatingOpen(true);
+            }}
+          />
+
           <DesktopIcon icon={User} label={t('About Me')} to="/about" />
           <DesktopIcon icon={Mail} label={t('Contact')} to="/contact" />
           <DesktopIcon icon={Settings} label={t('Settings')} to="/settings" />
@@ -84,6 +96,15 @@ const Desktop = () => {
         onClose={() => {
           console.log('Closing Challenge app');
           setIsChallengeOpen(false);
+        }} 
+      />
+
+      {/* Rating/Idea App Modal */}
+      <RatingApp 
+        isOpen={isRatingOpen} 
+        onClose={() => {
+          console.log('Closing Rating app');
+          setIsRatingOpen(false);
         }} 
       />
     </>
