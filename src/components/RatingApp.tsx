@@ -140,12 +140,12 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="rating-app-yellow border rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
-        <div className="flex items-center justify-between p-4 border-b border-yellow-300">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4">
+      <div className="rating-app-yellow border rounded-lg max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden">
+        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-yellow-300">
           <div className="flex items-center gap-2">
-            <Star className="h-6 w-6 text-yellow-700" />
-            <h2 className="text-xl font-semibold text-yellow-900">
+            <Star className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-700" />
+            <h2 className="text-lg sm:text-xl font-semibold text-yellow-900">
               {language === 'deutsch' ? 'Ideen-Labor' : 'Idea Laboratory'}
             </h2>
           </div>
@@ -179,12 +179,12 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
           </Button>
         </div>
 
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+        <div className="p-3 sm:p-6 overflow-y-auto max-h-[calc(95vh-80px)] sm:max-h-[calc(90vh-80px)]">
           {currentView === 'welcome' && (
-            <div className="text-center space-y-6 max-w-2xl mx-auto">
-              <div className="space-y-4">
+            <div className="text-center space-y-4 sm:space-y-6 max-w-2xl mx-auto">
+              <div className="space-y-3 sm:space-y-4">
                 {welcomeText.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className="text-yellow-800 leading-relaxed text-lg">
+                  <p key={index} className="text-yellow-800 leading-relaxed text-base sm:text-lg">
                     {paragraph}
                   </p>
                 ))}
@@ -200,47 +200,47 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
 
           {currentView === 'list' && (
             <div className="space-y-4">
-              <h3 className="text-2xl font-bold mb-6 text-yellow-900">
+              <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-yellow-900">
                 {language === 'deutsch' ? 'Meine Ideen' : 'My Ideas'}
               </h3>
-              <div className="grid gap-4">
+              <div className="grid gap-3 sm:gap-4">
                 {ideas.map((idea) => {
                   const avgRating = getAverageRating(idea);
                   return (
                     <Card key={idea.id} className="bg-yellow-50 border-yellow-200 hover:bg-yellow-100 transition-colors">
-                      <CardHeader>
-                        <div className="flex justify-between items-start">
-                          <div className="space-y-2 flex-1">
-                            <CardTitle className="text-lg text-yellow-900">{idea.title}</CardTitle>
-                            <CardDescription className="text-yellow-700">{idea.shortDescription}</CardDescription>
+                      <CardHeader className="p-3 sm:p-6">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+                          <div className="space-y-1 sm:space-y-2 flex-1">
+                            <CardTitle className="text-base sm:text-lg text-yellow-900">{idea.title}</CardTitle>
+                            <CardDescription className="text-sm sm:text-base text-yellow-700">{idea.shortDescription}</CardDescription>
                           </div>
                           {avgRating !== null && (
-                            <div className="text-right space-y-1 ml-4">
+                            <div className="text-left sm:text-right space-y-1 sm:ml-4">
                               {renderStars(avgRating)}
-                              <p className="text-sm text-yellow-700">
+                              <p className="text-xs sm:text-sm text-yellow-700">
                                 {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
                               </p>
                             </div>
                           )}
                         </div>
                       </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div className="flex gap-2">
+                      <CardContent className="p-3 sm:p-6 pt-0 space-y-3">
+                        <div className="flex flex-col sm:flex-row gap-2">
                           <Button 
                             onClick={() => {
                               setSelectedIdea(idea);
                               setCurrentView('detail');
                             }}
                             variant="outline"
-                            className="flex-1 border-yellow-300 text-yellow-800 hover:bg-yellow-200"
+                            className="flex-1 border-yellow-300 text-yellow-800 hover:bg-yellow-200 text-sm sm:text-base"
                           >
                             {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
                           </Button>
                           <Button 
                             onClick={() => openPrototype(idea)}
-                            className="bg-yellow-600 hover:bg-yellow-700 text-white border-none"
+                            className="bg-yellow-600 hover:bg-yellow-700 text-white border-none text-sm sm:text-base"
                           >
-                            <Play className="h-4 w-4 mr-2" />
+                            <Play className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                             Try
                           </Button>
                         </div>
@@ -253,13 +253,13 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
           )}
 
           {currentView === 'prototype' && selectedIdea && (
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-bold text-yellow-900">
-                  {selectedIdea.title} - Prototype
+                <h3 className="text-lg sm:text-xl font-bold text-yellow-900">
+                  {selectedIdea.title} - {language === 'deutsch' ? 'Prototyp' : 'Prototype'}
                 </h3>
               </div>
-              <div className="bg-white rounded-lg border border-yellow-200 min-h-[600px]">
+              <div className="bg-white rounded-lg border border-yellow-200 min-h-[400px] sm:min-h-[600px] overflow-auto">
                 {selectedIdea.prototypeComponent === 'ViralVideoPromptGenerator' && <ViralVideoPromptGenerator />}
                 {selectedIdea.prototypeComponent === 'CoesfelderQuest' && <CoesfelderQuest />}
               </div>
@@ -289,15 +289,15 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                 </div>
               ) : (
                 <>
-                  <div className="flex items-center justify-between gap-4">
-                    <h3 className="text-2xl font-bold text-yellow-900 flex-1">{selectedIdea.title}</h3>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+                    <h3 className="text-xl sm:text-2xl font-bold text-yellow-900 flex-1">{selectedIdea.title}</h3>
                     <div className="flex gap-2">
                       <Button 
                         variant="outline" 
                         onClick={() => setCurrentView('prototype')}
-                        className="border-yellow-300 text-yellow-800 hover:bg-yellow-200"
+                        className="border-yellow-300 text-yellow-800 hover:bg-yellow-200 text-sm sm:text-base"
                       >
-                        <Play className="h-4 w-4 mr-2" />
+                        <Play className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
                         {language === 'deutsch' ? 'Prototyp testen' : 'Test Prototype'}
                       </Button>
                     </div>
