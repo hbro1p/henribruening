@@ -12,39 +12,143 @@ interface ChallengeAppProps {
 const getChallenges = (language: string) => {
   if (language === 'deutsch') {
     return [
+      // Kreativität & Ideen
       "Schreib 3 neue Ideen auf 💡",
+      "Zeichne 1 Minute lang etwas Abstraktes ✏️",
+      "Erfinde eine Geschichte in 3 Sätzen 📖",
+      "Mach ein Foto aus einer ungewöhnlichen Perspektive 📷",
+      "Schreibe ein Haiku über deine Stimmung 🌸",
+      "Komponiere eine 30-Sekunden-Melodie 🎼",
+      "Gestalte ein Logo für ein erfundenes Unternehmen 🎨",
+      
+      // Körper & Gesundheit
       "Mach 10 Liegestütze 💪",
-      "Sag einem Freund etwas Nettes 💝",
       "Trinke ein großes Glas Wasser 💧",
       "Atme 5 mal tief ein und aus 🫁",
-      "Schau 1 Minute aus dem Fenster 🪟",
       "Strecke dich für 1 Minute 🤸‍♂️",
-      "Schreibe eine positive Affirmation auf ✨",
-      "Mach ein Foto von etwas Schönem 📸",
-      "Höre deinen Lieblingssong 🎵",
-      "Sortiere deinen Arbeitsplatz 📋",
-      "Lächle bewusst für 30 Sekunden 😊",
-      "Plane eine kleine Abenteuer-Aktivität 🗺️",
-      "Denke an 3 Dinge, für die du dankbar bist 🙏",
       "Mach eine Minute lang Jumping Jacks 🏃‍♂️",
+      "Geh 2 Minuten an der frischen Luft spazieren 🚶‍♂️",
+      "Mach 15 Kniebeugen 🦵",
+      "Massiere deine Schultern 30 Sekunden lang 👐",
+      
+      // Sozial & Beziehungen
+      "Sag einem Freund etwas Nettes 💝",
+      "Schreibe eine Dankesnachricht an jemanden 🙏",
+      "Rufe ein Familienmitglied für 2 Minuten an 📞",
+      "Komplimentiere einen Fremden 😊",
+      "Teile einen motivierenden Spruch mit jemandem ✨",
+      
+      // Achtsamkeit & Reflexion
+      "Schau 1 Minute aus dem Fenster 🪟",
+      "Lächle bewusst für 30 Sekunden 😊",
+      "Denke an 3 Dinge, für die du dankbar bist 🙏",
+      "Schreibe eine positive Affirmation auf ✨",
+      "Meditiere 1 Minute lang 🧘‍♀️",
+      "Beobachte deine Gedanken ohne zu urteilen 🤔",
+      
+      // Produktivität & Organisation
+      "Sortiere deinen Arbeitsplatz 📋",
+      "Lösche 5 alte Dateien vom Desktop 🗑️",
+      "Plane deine nächsten 3 Stunden 📅",
+      "Schreibe 5 Dinge auf, die du heute erledigen willst ✅",
+      "Organisiere einen Ordner auf deinem Computer 📁",
+      
+      // Abenteuer & Exploration
+      "Plane eine kleine Abenteuer-Aktivität 🗺️",
+      "Recherchiere einen Ort, den du besuchen möchtest 🌍",
+      "Lerne 5 Wörter in einer neuen Sprache 🗣️",
+      "Schaue dir ein 1-minütiges Tutorial an 🎓",
+      "Entdecke einen neuen Musikstil 🎵",
+      
+      // Unterhaltung & Spaß
+      "Höre deinen Lieblingssong 🎵",
+      "Tanze 30 Sekunden zu deiner Lieblingsmusik 💃",
+      "Mach ein lustiges Selfie 🤳",
+      "Erfinde einen neuen Handschlag 🤝",
+      "Sing 30 Sekunden unter der Dusche 🚿",
+      
+      // Herausforderungen & Skills
+      "Jongliere mit 3 Gegenständen (oder versuche es) 🤹‍♂️",
+      "Schreibe 1 Minute lang mit der schwächeren Hand ✍️",
+      "Stehe 1 Minute auf einem Bein 🦶",
+      "Zähle rückwärts von 100 in 7er-Schritten 🔢",
+      "Mach 10 verschiedene Gesichtsausdrücke 😮",
+      
+      // Wissen & Lernen
+      "Lerne einen interessanten Fakt und teile ihn 🧠",
+      "Schaue ein 1-minütiges Erklärvideo 📺",
+      "Lese einen kurzen Wikipedia-Artikel 📚",
+      "Schreibe 5 Synonyme für das Wort 'schön' auf 📝"
     ];
   } else {
     return [
+      // Creativity & Ideas
       "Write down 3 new ideas 💡",
+      "Draw something abstract for 1 minute ✏️",
+      "Invent a story in 3 sentences 📖",
+      "Take a photo from an unusual perspective 📷",
+      "Write a haiku about your mood 🌸",
+      "Compose a 30-second melody 🎼",
+      "Design a logo for an imaginary company 🎨",
+      
+      // Body & Health
       "Do 10 push-ups 💪",
-      "Say something nice to a friend 💝",
       "Drink a large glass of water 💧",
       "Take 5 deep breaths 🫁",
-      "Look out the window for 1 minute 🪟",
       "Stretch for 1 minute 🤸‍♂️",
-      "Write down a positive affirmation ✨",
-      "Take a photo of something beautiful 📸",
-      "Listen to your favorite song 🎵",
-      "Organize your workspace 📋",
-      "Smile consciously for 30 seconds 😊",
-      "Plan a small adventure activity 🗺️",
-      "Think of 3 things you're grateful for 🙏",
       "Do jumping jacks for one minute 🏃‍♂️",
+      "Take a 2-minute walk outside 🚶‍♂️",
+      "Do 15 squats 🦵",
+      "Massage your shoulders for 30 seconds 👐",
+      
+      // Social & Relationships
+      "Say something nice to a friend 💝",
+      "Write a thank you message to someone 🙏",
+      "Call a family member for 2 minutes 📞",
+      "Compliment a stranger 😊",
+      "Share a motivational quote with someone ✨",
+      
+      // Mindfulness & Reflection
+      "Look out the window for 1 minute 🪟",
+      "Smile consciously for 30 seconds 😊",
+      "Think of 3 things you're grateful for 🙏",
+      "Write down a positive affirmation ✨",
+      "Meditate for 1 minute 🧘‍♀️",
+      "Observe your thoughts without judging 🤔",
+      
+      // Productivity & Organization
+      "Organize your workspace 📋",
+      "Delete 5 old files from your desktop 🗑️",
+      "Plan your next 3 hours 📅",
+      "Write down 5 things you want to accomplish today ✅",
+      "Organize a folder on your computer 📁",
+      
+      // Adventure & Exploration
+      "Plan a small adventure activity 🗺️",
+      "Research a place you'd like to visit 🌍",
+      "Learn 5 words in a new language 🗣️",
+      "Watch a 1-minute tutorial 🎓",
+      "Discover a new music genre 🎵",
+      
+      // Entertainment & Fun
+      "Listen to your favorite song 🎵",
+      "Dance for 30 seconds to your favorite music 💃",
+      "Take a funny selfie 🤳",
+      "Invent a new handshake 🤝",
+      "Sing for 30 seconds in the shower 🚿",
+      
+      // Challenges & Skills
+      "Juggle with 3 objects (or try to) 🤹‍♂️",
+      "Write for 1 minute with your weaker hand ✍️",
+      "Stand on one leg for 1 minute 🦶",
+      "Count backwards from 100 in steps of 7 🔢",
+      "Make 10 different facial expressions 😮",
+      
+      // Knowledge & Learning
+      "Learn an interesting fact and share it 🧠",
+      "Watch a 1-minute educational video 📺",
+      "Read a short Wikipedia article 📚",
+      "Write down 5 synonyms for the word 'beautiful' 📝"
     ];
   }
 };
