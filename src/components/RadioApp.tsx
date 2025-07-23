@@ -35,7 +35,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
   const currentSong = musicFiles[currentTrack] || { title: t('No Music'), artist: t('Unknown') };
 
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm ${styles.background}`}>
+    <div className={`fixed inset-0 z-50 flex items-center justify-center ${styles.background}`}>
       <div className={`relative w-full max-w-md mx-4 ${styles.container} rounded-2xl overflow-hidden`}>
         {/* Window controls */}
         <div className="absolute top-4 right-4 z-10">

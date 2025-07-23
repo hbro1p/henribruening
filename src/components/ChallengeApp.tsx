@@ -210,7 +210,7 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm ${styles.background}`}>
+    <div className={`fixed inset-0 z-50 flex items-center justify-center ${styles.background}`}>
       <Card className={`w-full max-w-md mx-4 p-6 ${styles.container}`}>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
