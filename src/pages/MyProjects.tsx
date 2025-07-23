@@ -19,7 +19,7 @@ interface Project {
 
 const MyProjects = () => {
   const { theme, t } = useSettings();
-  const styles = useAppTheme('orange'); // Orange for projects
+  const styles = useAppTheme('orange'); // Will auto-adapt to theme color
 
   const projects: Project[] = [
     {

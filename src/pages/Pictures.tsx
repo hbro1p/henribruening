@@ -126,15 +126,15 @@ const Pictures = () => {
     
     if (theme === 'adventure-canyon') {
       return {
-        windowFrame: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600',
-        titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-slate-700',
-        windowContent: 'bg-gradient-to-br from-slate-600 via-blue-700 to-slate-800',
-        text: 'text-blue-200',
-        link: 'text-blue-300 hover:text-blue-200',
-        controlButton: 'bg-gradient-to-br from-slate-500 via-blue-600 to-slate-700 hover:from-slate-400 hover:via-blue-500 hover:to-slate-600 text-white border-blue-300/30',
-        thumbButton: 'border-blue-400/30 hover:border-blue-500/50 hover:bg-blue-500/20',
-        categoryButton: 'bg-gradient-to-br from-slate-500 via-blue-600 to-slate-700 hover:from-slate-400 hover:via-blue-500 hover:to-slate-600 text-white border-blue-300/30',
-        imageContainer: 'border-blue-400/30 bg-slate-900/50',
+        windowFrame: 'bg-gradient-to-br from-orange-400 via-orange-500 to-orange-700',
+        titleBar: 'bg-gradient-to-r from-orange-600 via-orange-700 to-orange-800',
+        windowContent: 'bg-gradient-to-br from-orange-100 via-orange-200 to-orange-300',
+        text: 'text-orange-900',
+        link: 'text-orange-800 hover:text-orange-900',
+        controlButton: 'bg-gradient-to-br from-orange-500 via-orange-600 to-orange-800 hover:from-orange-400 hover:via-orange-500 hover:to-orange-700 text-white border-orange-300/50',
+        thumbButton: 'border-orange-400/50 hover:border-orange-500/50 hover:bg-orange-100/50',
+        categoryButton: 'bg-gradient-to-br from-orange-500 via-orange-600 to-orange-800 hover:from-orange-400 hover:via-orange-500 hover:to-orange-700 text-white border-orange-300/50',
+        imageContainer: 'border-orange-400/50 bg-white/90',
       };
     }
     
@@ -158,24 +158,18 @@ const Pictures = () => {
     if (selectedCategory) {
       return getCategoryColors(selectedCategory).folder;
     }
-    return theme === 'space-mood' ? 'folder-blue' : '';
+    return theme === 'adventure-canyon' ? 'folder-orange' : (theme === 'space-mood' ? 'folder-blue' : '');
   };
 
   return (
-    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${getFolderBackground()}`}>
-      <div className={`p-2 border-2 border-black/30 w-full max-w-6xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
-        <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
-            <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
-            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-            <span className="text-white font-pixel text-sm ml-2">Pictures.exe</span>
-          </div>
-        </div>
-        
-        <div className={`p-4 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
-          <div className="flex flex-col items-center justify-center text-center">
-            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ PICTURES ]</h1>
+    <div className={`min-h-screen p-4 ${getFolderBackground()}`}>
+      <div className={`max-w-6xl mx-auto ${styles.windowFrame} rounded-2xl shadow-2xl flex flex-col max-h-[95vh] overflow-hidden`}>
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-8">
+          <div className="text-center space-y-8">
+            <h1 className={`text-3xl font-bold ${styles.text}`}>
+              {t('My Pictures')}
+            </h1>
             
             {/* Category Selection - Always visible */}
             <div className="flex flex-wrap gap-4 mb-8">
@@ -274,10 +268,11 @@ const Pictures = () => {
                 </div>
               </div>
             )}
-
-            <Link to="/desktop" className={`mt-8 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
-              <ArrowLeft className="w-5 h-5" />
-              Back to Desktop
+            
+            {/* Back Button */}
+            <Link to="/desktop" className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105 ${styles.controlButton}`}>
+              <ArrowLeft className="w-4 h-4" />
+              {t('Back to Desktop')}
             </Link>
           </div>
         </div>

@@ -22,7 +22,7 @@ interface VideoProject {
 const MyVideos = () => {
   const { theme, t } = useSettings();
   const { isAuthenticated } = useGlobalAuth();
-  const styles = useAppTheme('green'); // Green for videos
+  const styles = useAppTheme('green'); // Will auto-adapt to theme color
 
   const videos: VideoProject[] = [
     {
