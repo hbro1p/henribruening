@@ -211,8 +211,8 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center ${styles.background}`}>
-      <Card className={`w-full max-w-md mx-4 max-h-[90vh] p-6 ${styles.container}`}>
-        <div className="h-full overflow-y-auto space-y-6">
+      <Card className={`w-full max-w-md mx-4 max-h-[90vh] ${styles.container} flex flex-col overflow-hidden`}>
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <Clock className={`w-6 h-6 ${styles.accent}`} />
@@ -317,7 +317,7 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
             )}
           </div>
         </div>
-        </div> {/* End scrollable content */}
+        </div>
       </Card>
     </div>
   );

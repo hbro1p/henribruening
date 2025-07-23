@@ -36,10 +36,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center ${styles.background}`}>
-      <div className={`relative w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto ${styles.container} rounded-2xl`}>
-        
-        {/* Scrollable Content */}
-        <div className="h-full overflow-y-auto">
+      <div className={`relative w-full max-w-md mx-4 max-h-[90vh] ${styles.container} rounded-2xl flex flex-col overflow-hidden`}>
         {/* Window controls */}
         <div className="absolute top-4 right-4 z-10">
           <button
@@ -50,6 +47,8 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
           </button>
         </div>
 
+        {/* Scrollable Content Container */}
+        <div className="flex-1 overflow-y-auto">
         {/* Radio Design */}
         <div className="p-8">
           {/* Speaker grille */}
@@ -118,9 +117,10 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
             <div className={`w-3 h-3 rounded-full ${isPlaying ? 'bg-green-400 shadow-lg shadow-green-400/50' : 'bg-gray-400'} transition-all duration-300`} />
           </div>
         </div>
+        </div>
 
         {/* Back to Desktop */}
-        <div className="p-4 border-t border-red-400/30">
+        <div className="p-4 border-t border-red-400/30 shrink-0">
           <button
             onClick={handleClose}
             className={`w-full ${styles.button} rounded-lg py-3 transition-all duration-200 hover:scale-[1.02]`}
@@ -128,8 +128,6 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
             {t('Back to Desktop')}
           </button>
         </div>
-        
-        </div> {/* End scrollable content */}
       </div>
     </div>
   );

@@ -19,8 +19,8 @@ const Settings = () => {
 
   return (
     <div className={`min-h-screen p-4 ${styles.background}`}>
-      <div className={`max-w-2xl mx-auto ${styles.container} rounded-2xl p-8 shadow-2xl`}>
-        <div className="h-full max-h-[90vh] overflow-y-auto space-y-8">
+      <div className={`max-w-2xl mx-auto ${styles.container} rounded-2xl shadow-2xl flex flex-col max-h-[95vh] overflow-hidden`}>
+        <div className="flex-1 overflow-y-auto p-8 space-y-8">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className={`text-3xl sm:text-4xl font-bold mb-4 ${styles.text}`}>
@@ -90,7 +90,7 @@ const Settings = () => {
         </div>
 
         {/* Back Button */}
-        <div className="mt-8 text-center">
+        <div className="text-center">
           <Link 
             to="/desktop" 
             className={`${styles.button} inline-flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105`}
@@ -99,7 +99,7 @@ const Settings = () => {
             {t('Back to Desktop')}
           </Link>
         </div>
-        </div> {/* End scrollable content */}
+        </div>
       </div>
     </div>
   );
