@@ -143,7 +143,8 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
 
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 ${styles.background}`}>
-      <div className={`rounded-xl max-w-5xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl ${styles.container}`}>
+      <div className={`rounded-xl max-w-5xl w-full max-h-[90vh] shadow-2xl ${styles.container}`}>
+        <div className="h-full overflow-y-auto">
         <div className={`flex items-center justify-between p-4 sm:p-6 border-b ${styles.border}`}>
           <div className="flex items-center gap-3">
             <div className={`p-2 rounded-lg bg-blue-400/20`}>
@@ -218,52 +219,52 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                 </p>
               </div>
               <div className="grid gap-4 sm:gap-6">
-                {ideas.map((idea) => {
-                  const avgRating = getAverageRating(idea);
-                  return (
-                    <Card key={idea.id} className={`transition-all duration-200 hover:scale-[1.02] border-2 ${styles.card}`}>
-                      <CardHeader className="p-4 sm:p-6">
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-                          <div className="space-y-2 flex-1">
-                            <CardTitle className={`text-lg sm:text-xl ${styles.text} font-semibold`}>{idea.title}</CardTitle>
-                            <CardDescription className={`text-sm sm:text-base ${styles.subText} leading-relaxed`}>{idea.shortDescription}</CardDescription>
-                          </div>
-                          {avgRating !== null && (
-                            <div className="text-left sm:text-right space-y-2 sm:ml-6">
-                              {renderStars(avgRating)}
-                              <p className={`text-xs sm:text-sm ${styles.subText}`}>
-                                {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      </CardHeader>
-                      <CardContent className="p-4 sm:p-6 pt-0">
-                        <div className="flex flex-col sm:flex-row gap-3">
-                          <Button 
-                            onClick={() => {
-                              setSelectedIdea(idea);
-                              setCurrentView('detail');
-                            }}
-                            variant="outline"
-                            className={`flex-1 text-sm sm:text-base font-medium rounded-lg transition-all duration-200 border-2 ${styles.border} ${styles.text} hover:bg-blue-400/10`}
-                          >
-                            {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
-                          </Button>
-                          <Button 
-                            onClick={() => openPrototype(idea)}
-                            className={`${styles.button} text-sm sm:text-base font-medium rounded-lg transition-all duration-200 transform hover:scale-105`}
-                          >
-                            <Play className="h-4 w-4 mr-2" />
-                            {language === 'deutsch' ? 'Testen' : 'Try'}
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-            </div>
+                 {ideas.map((idea) => {
+                   const avgRating = getAverageRating(idea);
+                   return (
+                     <Card key={idea.id} className={`transition-all duration-200 hover:scale-[1.02] border-2 ${styles.card}`}>
+                       <CardHeader className="p-4 sm:p-6">
+                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                           <div className="space-y-2 flex-1">
+                             <CardTitle className={`text-lg sm:text-xl ${styles.text} font-semibold`}>{idea.title}</CardTitle>
+                             <CardDescription className={`text-sm sm:text-base ${styles.subText} leading-relaxed`}>{idea.shortDescription}</CardDescription>
+                           </div>
+                           {avgRating !== null && (
+                             <div className="text-left sm:text-right space-y-2 sm:ml-6">
+                               {renderStars(avgRating)}
+                               <p className={`text-xs sm:text-sm ${styles.subText}`}>
+                                 {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
+                               </p>
+                             </div>
+                           )}
+                         </div>
+                       </CardHeader>
+                       <CardContent className="p-4 sm:p-6 pt-0">
+                         <div className="flex flex-col sm:flex-row gap-3">
+                           <Button 
+                             onClick={() => {
+                               setSelectedIdea(idea);
+                               setCurrentView('detail');
+                             }}
+                             variant="outline"
+                             className={`flex-1 text-sm sm:text-base font-medium rounded-lg transition-all duration-200 border-2 ${styles.border} ${styles.text} hover:bg-blue-400/10`}
+                           >
+                             {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
+                           </Button>
+                           <Button 
+                             onClick={() => openPrototype(idea)}
+                             className={`${styles.button} text-sm sm:text-base font-medium rounded-lg transition-all duration-200 transform hover:scale-105`}
+                           >
+                             <Play className="h-4 w-4 mr-2" />
+                             {language === 'deutsch' ? 'Testen' : 'Try'}
+                           </Button>
+                         </div>
+                       </CardContent>
+                     </Card>
+                   );
+                 })}
+               </div>
+             </div>
           )}
 
           {currentView === 'prototype' && selectedIdea && (
@@ -376,6 +377,7 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
             </div>
           )}
         </div>
+        </div> {/* End scrollable content */}
       </div>
     </div>
   );

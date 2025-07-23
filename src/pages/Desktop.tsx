@@ -6,7 +6,6 @@ import ChallengeApp from '@/components/ChallengeApp';
 import RatingApp from '@/components/RatingApp';
 import MiniMusicPlayer from '@/components/MiniMusicPlayer';
 import AdventureCanyonAnimals from '@/components/AdventureCanyonAnimals';
-import AdventureCanyonAmbient from '@/components/AdventureCanyonAmbient';
 import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock, Star } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useThemeMusic } from '@/hooks/useThemeMusic';
@@ -122,7 +121,6 @@ const Desktop = () => {
       
       {/* Adventure Canyon Features */}
       <AdventureCanyonAnimals />
-      <AdventureCanyonAmbient />
     </>
   );
 };

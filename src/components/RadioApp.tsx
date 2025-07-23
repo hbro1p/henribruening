@@ -36,7 +36,10 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center ${styles.background}`}>
-      <div className={`relative w-full max-w-md mx-4 max-h-[95vh] overflow-y-auto ${styles.container} rounded-2xl`}>
+      <div className={`relative w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto ${styles.container} rounded-2xl`}>
+        
+        {/* Scrollable Content */}
+        <div className="h-full overflow-y-auto">
         {/* Window controls */}
         <div className="absolute top-4 right-4 z-10">
           <button
@@ -125,6 +128,8 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
             {t('Back to Desktop')}
           </button>
         </div>
+        
+        </div> {/* End scrollable content */}
       </div>
     </div>
   );
