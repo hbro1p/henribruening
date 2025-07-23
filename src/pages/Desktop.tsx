@@ -119,8 +119,6 @@ const Desktop = () => {
         }} 
       />
       
-      {/* Mini Music Player */}
-      <MiniMusicPlayer />
       
       {/* Adventure Canyon Features */}
       <AdventureCanyonAnimals />

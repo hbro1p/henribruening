@@ -4,6 +4,7 @@ import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Textarea } from './ui/textarea';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useAppTheme } from '@/components/shared/AppColorSystem';
 import ViralVideoPromptGenerator from './prototypes/ViralVideoPromptGenerator';
 import CoesfelderQuest from './prototypes/CoesfelderQuest';
 
@@ -28,7 +29,8 @@ interface RatingAppProps {
 }
 
 export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
-  const { t, language, theme } = useSettings();
+  const { t, language } = useSettings();
+  const styles = useAppTheme('blue'); // Ideas/Rating app is blue
   const [currentView, setCurrentView] = useState<'welcome' | 'list' | 'detail' | 'prototype'>('welcome');
   const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
   const [userRating, setUserRating] = useState(0);
@@ -139,57 +141,12 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
 
   if (!isOpen) return null;
 
-  const getThemeStyles = () => {
-    switch (theme) {
-      case 'dark-vhs':
-        return {
-          background: 'bg-gradient-to-br from-gray-900 via-purple-900 to-black',
-          container: 'bg-gradient-to-br from-gray-800/95 to-gray-900/95 border-2 border-green-400 shadow-2xl shadow-green-400/20',
-          text: 'text-green-400',
-          subText: 'text-green-300',
-          accent: 'text-green-400',
-          card: 'bg-gray-800/50 border-green-400/30 hover:border-green-400/50',
-          button: 'bg-green-900/80 hover:bg-green-800/80 text-green-300 border border-green-400/50'
-        };
-      case 'adventure-canyon':
-        return {
-          background: 'bg-gradient-to-br from-amber-100 via-orange-200 to-red-300',
-          container: 'bg-gradient-to-br from-amber-50/95 to-orange-100/95 border-2 border-orange-600 shadow-2xl shadow-orange-400/20',
-          text: 'text-orange-900',
-          subText: 'text-orange-700',
-          accent: 'text-orange-600',
-          card: 'bg-orange-50/50 border-orange-300 hover:border-orange-400',
-          button: 'bg-orange-500/80 hover:bg-orange-600/80 text-white border border-orange-600/50'
-        };
-      default: // space-mood
-        return {
-          background: 'bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900',
-          container: 'bg-gradient-to-br from-indigo-800/95 to-purple-800/95 border-2 border-cyan-400 shadow-2xl shadow-cyan-400/20',
-          text: 'text-cyan-400',
-          subText: 'text-cyan-300',
-          accent: 'text-cyan-400',
-          card: 'bg-indigo-900/50 border-cyan-400/30 hover:border-cyan-400/50',
-          button: 'bg-cyan-900/80 hover:bg-cyan-800/80 text-cyan-300 border border-cyan-400/50'
-        };
-    }
-  };
-
-  const styles = getThemeStyles();
-
   return (
     <div className={`fixed inset-0 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4 ${styles.background}`}>
       <div className={`rounded-xl max-w-5xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden shadow-2xl ${styles.container}`}>
-        <div className={`flex items-center justify-between p-4 sm:p-6 border-b ${
-          theme === 'dark-vhs' ? 'border-green-400/30' :
-          theme === 'adventure-canyon' ? 'border-orange-400/30' :
-          'border-cyan-400/30'
-        }`}>
+        <div className={`flex items-center justify-between p-4 sm:p-6 border-b ${styles.border}`}>
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${
-              theme === 'dark-vhs' ? 'bg-green-400/20' :
-              theme === 'adventure-canyon' ? 'bg-orange-400/20' :
-              'bg-cyan-400/20'
-            }`}>
+            <div className={`p-2 rounded-lg bg-blue-400/20`}>
               <Lightbulb className={`h-5 w-5 sm:h-6 sm:w-6 ${styles.accent}`} />
             </div>
             <h2 className={`text-lg sm:text-xl font-semibold ${styles.text}`}>
@@ -289,11 +246,7 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                               setCurrentView('detail');
                             }}
                             variant="outline"
-                            className={`flex-1 text-sm sm:text-base font-medium rounded-lg transition-all duration-200 border-2 ${
-                              theme === 'dark-vhs' ? 'border-green-400/50 text-green-400 hover:bg-green-400/10' :
-                              theme === 'adventure-canyon' ? 'border-orange-400/50 text-orange-600 hover:bg-orange-400/10' :
-                              'border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10'
-                            }`}
+                            className={`flex-1 text-sm sm:text-base font-medium rounded-lg transition-all duration-200 border-2 ${styles.border} ${styles.text} hover:bg-blue-400/10`}
                           >
                             {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
                           </Button>

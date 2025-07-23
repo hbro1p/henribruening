@@ -13,10 +13,6 @@ const THEME_MUSIC: Record<string, string[]> = {
     'Cosmic Journey',
     'Stellar Dreams'
   ],
-  'dark-vhs': [
-    'Neon Nights',
-    'Retro Vibes'
-  ]
 };
 
 export const useThemeMusic = () => {

@@ -3,6 +3,8 @@ import { X, Play, RotateCcw, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useSettings } from '@/contexts/SettingsContext';
+import { toast } from '@/hooks/use-toast';
+import { useAppTheme } from '@/components/shared/AppColorSystem';
 
 interface ChallengeAppProps {
   isOpen: boolean;
@@ -158,11 +160,14 @@ const getChallenges = (language: string) => {
 };
 
 const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
-  const { t, language, theme } = useSettings();
+  const { t, language } = useSettings();
   const [currentChallenge, setCurrentChallenge] = useState('');
   const [isActive, setIsActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [isCompleted, setIsCompleted] = useState(false);
+
+  // Use yellow color for Challenge app
+  const styles = useAppTheme('yellow');
 
   const getRandomChallenge = () => {
     const challenges = getChallenges(language);
@@ -204,43 +209,9 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const getThemeStyles = () => {
-    switch (theme) {
-      case 'dark-vhs':
-        return {
-          background: 'bg-gradient-to-br from-gray-900 via-purple-900 to-black',
-          card: 'bg-gradient-to-br from-gray-800/90 to-gray-900/90 border-2 border-green-400 shadow-2xl shadow-green-400/20',
-          text: 'text-green-400',
-          subText: 'text-green-300',
-          accent: 'text-green-400',
-          button: 'bg-green-900/80 hover:bg-green-800/80 text-green-300 border border-green-400/50'
-        };
-      case 'adventure-canyon':
-        return {
-          background: 'bg-gradient-to-br from-amber-100 via-orange-200 to-red-300',
-          card: 'bg-gradient-to-br from-amber-50/90 to-orange-100/90 border-2 border-orange-600 shadow-2xl shadow-orange-400/20',
-          text: 'text-orange-900',
-          subText: 'text-orange-700',
-          accent: 'text-orange-600',
-          button: 'bg-orange-500/80 hover:bg-orange-600/80 text-white border border-orange-600/50'
-        };
-      default: // space-mood
-        return {
-          background: 'bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900',
-          card: 'bg-gradient-to-br from-indigo-800/90 to-purple-800/90 border-2 border-cyan-400 shadow-2xl shadow-cyan-400/20',
-          text: 'text-cyan-400',
-          subText: 'text-cyan-300',
-          accent: 'text-cyan-400',
-          button: 'bg-cyan-900/80 hover:bg-cyan-800/80 text-cyan-300 border border-cyan-400/50'
-        };
-    }
-  };
-
-  const styles = getThemeStyles();
-
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm ${styles.background}`}>
-      <Card className={`w-full max-w-md mx-4 p-6 ${styles.card}`}>
+      <Card className={`w-full max-w-md mx-4 p-6 ${styles.container}`}>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <Clock className={`w-6 h-6 ${styles.accent}`} />
@@ -277,21 +248,13 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="w-full bg-gray-700/30 rounded-full h-2">
                   <div 
-                    className={`h-2 rounded-full transition-all duration-1000 ${
-                      theme === 'dark-vhs' ? 'bg-gradient-to-r from-green-400 to-green-600' :
-                      theme === 'adventure-canyon' ? 'bg-gradient-to-r from-orange-400 to-yellow-400' :
-                      'bg-gradient-to-r from-cyan-400 to-blue-400'
-                    }`}
+                    className="h-2 rounded-full transition-all duration-1000 bg-gradient-to-r from-yellow-400 to-amber-500"
                     style={{ width: `${((60 - timeLeft) / 60) * 100}%` }}
                   ></div>
                 </div>
               </div>
               
-              <div className={`p-4 rounded-lg border ${
-                theme === 'dark-vhs' ? 'bg-gray-800/50 border-green-400/30' :
-                theme === 'adventure-canyon' ? 'bg-orange-50/50 border-orange-300' :
-                'bg-indigo-900/50 border-cyan-400/30'
-              }`}>
+              <div className={`p-4 rounded-lg border ${styles.card}`}>
                 <h3 className={`text-lg font-medium ${styles.text} mb-2`}>
                   {t('Your Challenge:')}
                 </h3>
@@ -334,11 +297,7 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
                 <Button 
                   onClick={resetChallenge}
                   variant="outline"
-                  className={`flex items-center gap-2 border-2 ${
-                    theme === 'dark-vhs' ? 'border-green-400/50 text-green-400 hover:bg-green-400/10' :
-                    theme === 'adventure-canyon' ? 'border-orange-400/50 text-orange-600 hover:bg-orange-400/10' :
-                    'border-cyan-400/50 text-cyan-400 hover:bg-cyan-400/10'
-                  } transition-all duration-300`}
+                  className={`flex items-center gap-2 border-2 ${styles.border} ${styles.text} hover:bg-yellow-400/10 transition-all duration-300`}
                 >
                   <RotateCcw className="w-4 h-4" />
                   {t('Reset')}

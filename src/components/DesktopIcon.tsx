@@ -111,8 +111,6 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to, onClic
         <span className={`text-sm font-pixel select-none px-2 py-1 rounded transition-all duration-200 ${
           theme === 'space-mood' 
             ? 'text-black bg-gray-200/90 border border-gray-400 group-hover:bg-gray-100/90'
-            : theme === 'dark-vhs'
-            ? 'text-white bg-black/70 border border-white/20 group-hover:border-white/40'
             : theme === 'adventure-canyon'
             ? 'text-amber-100 bg-orange-900/70 border border-orange-400/30 group-hover:border-orange-300/50'
             : 'text-white bg-black/60 border border-white/20'
