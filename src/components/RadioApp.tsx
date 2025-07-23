@@ -36,7 +36,7 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
 
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center ${styles.background}`}>
-      <div className={`relative w-full max-w-md mx-4 ${styles.container} rounded-2xl overflow-hidden`}>
+      <div className={`relative w-full max-w-md mx-4 max-h-[95vh] overflow-y-auto ${styles.container} rounded-2xl`}>
         {/* Window controls */}
         <div className="absolute top-4 right-4 z-10">
           <button

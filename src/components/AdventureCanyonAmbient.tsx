@@ -1,12 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSettings } from '@/contexts/SettingsContext';
 
 const AdventureCanyonAmbient: React.FC = () => {
   const { theme } = useSettings();
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isAmbientEnabled, setIsAmbientEnabled] = useState(false);
 
   useEffect(() => {
-    if (theme === 'adventure-canyon') {
+    if (theme === 'adventure-canyon' && isAmbientEnabled) {
       // Create audio context for ambient sounds
       if (!audioRef.current) {
         audioRef.current = new Audio();
@@ -106,7 +107,21 @@ const AdventureCanyonAmbient: React.FC = () => {
     };
   }, [theme]);
 
-  return null; // This component only manages audio
+  // Render toggle button for Canyon theme
+  if (theme === 'adventure-canyon') {
+    return (
+      <div className="fixed bottom-4 left-4 z-40">
+        <button
+          onClick={() => setIsAmbientEnabled(!isAmbientEnabled)}
+          className="bg-orange-600/80 hover:bg-orange-700/80 text-orange-50 px-4 py-2 rounded-full text-sm font-medium shadow-lg transition-all duration-200"
+        >
+          🌊 {isAmbientEnabled ? 'Ambient Off' : 'Ambient On'}
+        </button>
+      </div>
+    );
+  }
+  
+  return null;
 };
 
 export default AdventureCanyonAmbient;

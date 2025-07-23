@@ -143,7 +143,7 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
 
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 ${styles.background}`}>
-      <div className={`rounded-xl max-w-5xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-hidden shadow-2xl ${styles.container}`}>
+      <div className={`rounded-xl max-w-5xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl ${styles.container}`}>
         <div className={`flex items-center justify-between p-4 sm:p-6 border-b ${styles.border}`}>
           <div className="flex items-center gap-3">
             <div className={`p-2 rounded-lg bg-blue-400/20`}>

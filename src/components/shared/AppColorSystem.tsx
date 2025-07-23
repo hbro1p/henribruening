@@ -100,7 +100,9 @@ const getAppColorStyles = (appColor: AppColor) => {
         accent: 'text-orange-600',
         button: 'bg-orange-500/80 hover:bg-orange-600/80 text-orange-50 border border-orange-400/50',
         border: 'border-orange-400/30',
-        card: 'bg-orange-50/50 border-orange-300'
+        card: 'bg-orange-50/50 border-orange-300',
+        playButton: 'bg-orange-600/90 hover:bg-orange-700/90 text-orange-50',
+        slider: 'accent-orange-500'
       };
     default:
       return getAppColorStyles('blue');
@@ -114,9 +116,21 @@ export const useAppTheme = (appColor: AppColor) => {
     'space-mood': 'bg-gradient-to-br from-indigo-900 via-blue-900 to-black',
     'adventure-canyon': 'bg-gradient-to-br from-amber-100 via-orange-200 to-red-300'
   };
+
+  // Auto-map theme to app color for consistency
+  const getThemeColor = (): AppColor => {
+    switch (theme) {
+      case 'adventure-canyon':
+        return 'orange';
+      case 'space-mood':
+        return 'blue';
+      default:
+        return appColor;
+    }
+  };
   
   return getAppThemeStyles({
-    appColor,
+    appColor: getThemeColor(),
     themeBackground: themeBackgrounds[theme]
   });
 };
