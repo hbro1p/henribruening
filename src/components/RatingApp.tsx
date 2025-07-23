@@ -5,8 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Textarea } from './ui/textarea';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useAppTheme } from '@/components/shared/AppColorSystem';
-import ViralVideoPromptGenerator from './prototypes/ViralVideoPromptGenerator';
-import CoesfelderQuest from './prototypes/CoesfelderQuest';
+import CoesfelderQuest from '@/components/prototypes/CoesfelderQuest';
+import ViralVideoPromptGenerator from '@/components/prototypes/ViralVideoPromptGenerator';
 
 interface Idea {
   id: string;
@@ -44,18 +44,6 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
     const initialIdeas: Idea[] = [
       {
         id: '1',
-        title: 'Viral Video Prompt Generator',
-        shortDescription: language === 'deutsch' 
-          ? 'Ein Tool für vollständige Social-Media-Prompts basierend auf Themen'
-          : 'A tool for complete social media prompts based on topics',
-        fullDescription: language === 'deutsch'
-          ? 'Diese Idee beschreibt ein Tool, bei dem man ein Thema eingibt (z. B. Vertrauen, Sommerferien, Freundschaft), und daraufhin einen komplett vorbereiteten Social-Media-Prompt bekommt. Der Prompt enthält eine Hook, eine passende Dramaturgie und Vorschläge für Erzählstil und Videolänge.'
-          : 'This idea describes a tool where you input a topic (e.g., trust, summer vacation, friendship) and receive a complete social media prompt. The prompt includes a hook, appropriate dramaturgy, and suggestions for narrative style and video length.',
-        prototypeComponent: 'ViralVideoPromptGenerator',
-        ratings: []
-      },
-      {
-        id: '2',
         title: 'Coesfeld Quest',
         shortDescription: language === 'deutsch'
           ? 'Eine digitale Schnitzeljagd durch die Stadt Coesfeld'
@@ -64,6 +52,18 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
           ? 'Diese Idee beschreibt eine digitale Schnitzeljagd durch die Stadt Coesfeld. Nutzerinnen und Nutzer müssen Orte finden, Hinweise lösen und erhalten Belohnungen in teilnehmenden Geschäften, Museen oder Cafés.'
           : 'This idea describes a digital scavenger hunt through the city of Coesfeld. Users find locations, solve clues, and receive rewards at participating businesses, museums, or cafes.',
         prototypeComponent: 'CoesfelderQuest',
+        ratings: []
+      },
+      {
+        id: '2',
+        title: 'Viral Video Prompt Generator',
+        shortDescription: language === 'deutsch' 
+          ? 'Ein Tool für vollständige Social-Media-Prompts basierend auf Themen'
+          : 'A tool for complete social media prompts based on topics',
+        fullDescription: language === 'deutsch'
+          ? 'Diese Idee beschreibt ein Tool, bei dem man ein Thema eingibt (z. B. Vertrauen, Sommerferien, Freundschaft), und daraufhin einen komplett vorbereiteten Social-Media-Prompt bekommt. Der Prompt enthält eine Hook, eine passende Dramaturgie und Vorschläge für Erzählstil und Videolänge.'
+          : 'This idea describes a tool where you input a topic (e.g., trust, summer vacation, friendship) and receive a complete social media prompt. The prompt includes a hook, appropriate dramaturgy, and suggestions for narrative style and video length.',
+        prototypeComponent: 'ViralVideoPromptGenerator',
         ratings: []
       }
     ];
@@ -277,10 +277,10 @@ export default function RatingApp({ isOpen, onClose }: RatingAppProps) {
                 </p>
               </div>
               <div className="bg-white rounded-xl border border-gray-200 min-h-[400px] sm:min-h-[600px] overflow-auto shadow-lg">
-                {selectedIdea.prototypeComponent === 'ViralVideoPromptGenerator' && 
-                  <ViralVideoPromptGenerator language={language} />}
                 {selectedIdea.prototypeComponent === 'CoesfelderQuest' && 
                   <CoesfelderQuest language={language} />}
+                {selectedIdea.prototypeComponent === 'ViralVideoPromptGenerator' && 
+                  <ViralVideoPromptGenerator language={language} />}
               </div>
             </div>
           )}

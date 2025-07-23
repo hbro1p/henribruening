@@ -123,19 +123,6 @@ const Pictures = () => {
       };
     }
     
-    if (theme === 'dark-vhs') {
-      return {
-        windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
-        titleBar: 'bg-gradient-to-r from-orange-600 via-orange-700 to-red-700',
-        windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
-        text: 'text-white',
-        link: 'text-orange-400 hover:text-orange-300',
-        controlButton: 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-white border-white/30',
-        thumbButton: 'border-white/20 hover:border-white/40 hover:bg-white/10',
-        categoryButton: 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 hover:from-gray-500 hover:via-gray-600 hover:to-gray-700 text-white border-white/30',
-        imageContainer: 'border-white/30 bg-gray-900/50',
-      };
-    }
     
     if (theme === 'adventure-canyon') {
       return {

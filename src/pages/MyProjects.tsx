@@ -69,19 +69,6 @@ const MyProjects = () => {
       };
     }
     
-    if (theme === 'dark-vhs') {
-      return {
-        windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
-        titleBar: 'bg-gradient-to-r from-orange-600 via-orange-700 to-red-700',
-        windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
-        text: 'text-white',
-        link: 'text-orange-400 hover:text-orange-300',
-        button: 'bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 border-2 border-white/30 text-white hover:from-gray-500 hover:via-gray-600 hover:to-gray-700',
-        icon: 'text-white',
-        iconBg: 'bg-gradient-to-br from-orange-500 to-orange-700',
-        cardBg: 'bg-gray-800 border-white/20',
-      };
-    }
     
     if (theme === 'adventure-canyon') {
       return {
