@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Music, SkipForward, SkipBack, Volume2, RotateCcw } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useSettings } from '@/contexts/SettingsContext';
+import { useAppTheme } from '@/components/shared/AppColorSystem';
 import { useMusicFiles } from '@/hooks/useMusicFiles';
 
 const MusicPlayer = () => {
@@ -12,7 +13,7 @@ const MusicPlayer = () => {
   const [isLooping, setIsLooping] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const location = useLocation();
-  const { t, theme } = useSettings();
+  const { t } = useSettings();
   const { musicFiles, loading, error } = useMusicFiles();
 
   // Reset current track if it's out of bounds when files change
@@ -84,44 +85,10 @@ const MusicPlayer = () => {
     }
   }, [currentTrack, musicFiles]);
 
-  const getThemeStyles = () => {
-    const baseStyles = {
-      container: 'bg-gradient-to-br from-blue-100 to-blue-200 border-2 border-blue-300 shadow-lg',
-      text: 'text-blue-900',
-      subText: 'text-blue-700',
-      button: 'bg-blue-200 hover:bg-blue-300 text-blue-800 border border-blue-400',
-      playButton: 'bg-blue-500 hover:bg-blue-600 text-white',
-      activeButton: 'bg-blue-300 text-blue-800 border-blue-500',
-      slider: 'accent-blue-500'
-    };
+  // Use green color for Music Player app
+  const styles = useAppTheme('green');
 
-    switch (theme) {
-      case 'dark-vhs':
-        return {
-          container: 'bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-gray-600 shadow-lg',
-          text: 'text-white',
-          subText: 'text-gray-300',
-          button: 'bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-500',
-          playButton: 'bg-red-600 hover:bg-red-500 text-white',
-          activeButton: 'bg-red-800 text-red-300 border-red-500',
-          slider: 'accent-red-500'
-        };
-      case 'adventure-canyon':
-        return {
-          container: 'bg-gradient-to-br from-amber-50 to-orange-100 border-2 border-orange-300 shadow-lg',
-          text: 'text-orange-900',
-          subText: 'text-orange-700',
-          button: 'bg-amber-100 hover:bg-amber-200 text-orange-800 border border-orange-400',
-          playButton: 'bg-orange-600 hover:bg-orange-700 text-white',
-          activeButton: 'bg-orange-200 text-orange-700 border-orange-500',
-          slider: 'accent-orange-600'
-        };
-      default:
-        return baseStyles;
-    }
-  };
-
-  const styles = getThemeStyles();
+  
 
   // Don't render if no music files and not loading
   if (!loading && musicFiles.length === 0) {

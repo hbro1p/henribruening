@@ -18,7 +18,9 @@ export const getAppThemeStyles = ({ appColor, themeBackground }: AppThemeConfig)
     accent: appStyles.accent,
     button: appStyles.button,
     border: appStyles.border,
-    card: appStyles.card
+    card: appStyles.card,
+    playButton: appStyles.playButton || appStyles.button,
+    slider: appStyles.slider || appStyles.accent
   };
 };
 
@@ -32,7 +34,9 @@ const getAppColorStyles = (appColor: AppColor) => {
         accent: 'text-yellow-600',
         button: 'bg-yellow-500/80 hover:bg-yellow-600/80 text-yellow-50 border border-yellow-400/50',
         border: 'border-yellow-400/30',
-        card: 'bg-yellow-50/50 border-yellow-300'
+        card: 'bg-yellow-50/50 border-yellow-300',
+        playButton: 'bg-yellow-600/90 hover:bg-yellow-700/90 text-yellow-50',
+        slider: 'accent-yellow-500'
       };
     case 'blue':
       return {
@@ -42,7 +46,9 @@ const getAppColorStyles = (appColor: AppColor) => {
         accent: 'text-blue-600',
         button: 'bg-blue-500/80 hover:bg-blue-600/80 text-blue-50 border border-blue-400/50',
         border: 'border-blue-400/30',
-        card: 'bg-blue-50/50 border-blue-300'
+        card: 'bg-blue-50/50 border-blue-300',
+        playButton: 'bg-blue-600/90 hover:bg-blue-700/90 text-blue-50',
+        slider: 'accent-blue-500'
       };
     case 'teal':
       return {
@@ -72,7 +78,9 @@ const getAppColorStyles = (appColor: AppColor) => {
         accent: 'text-green-600',
         button: 'bg-green-500/80 hover:bg-green-600/80 text-green-50 border border-green-400/50',
         border: 'border-green-400/30',
-        card: 'bg-green-50/50 border-green-300'
+        card: 'bg-green-50/50 border-green-300',
+        playButton: 'bg-green-600/90 hover:bg-green-700/90 text-green-50',
+        slider: 'accent-green-500'
       };
     case 'purple':
       return {

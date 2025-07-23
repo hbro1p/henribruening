@@ -19,16 +19,6 @@ const Contact = () => {
       };
     }
     
-    if (theme === 'dark-vhs') {
-      return {
-        windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
-        titleBar: 'bg-gradient-to-r from-pink-600 via-pink-700 to-pink-800',
-        windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
-        text: 'text-white',
-        button: 'bg-gradient-to-br from-pink-500 via-pink-600 to-pink-800 hover:from-pink-400 hover:via-pink-500 hover:to-pink-700 text-white',
-        link: 'text-pink-400 hover:text-pink-300',
-      };
-    }
     
     if (theme === 'adventure-canyon') {
       return {
