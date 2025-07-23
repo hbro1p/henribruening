@@ -53,17 +53,17 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
     
     if (theme === 'adventure-canyon') {
       return {
-        fullBackground: 'bg-gradient-to-br from-amber-600 via-orange-500 to-yellow-600',
-        windowFrame: 'bg-gradient-to-br from-amber-600 via-orange-500 to-yellow-600',
-        titleBar: 'bg-gradient-to-r from-orange-700 via-amber-800 to-yellow-700',
-        windowContent: 'bg-gradient-to-br from-orange-800 via-amber-900 to-yellow-800',
-        text: 'text-amber-200',
-        button: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white',
-        input: 'bg-slate-800 border-blue-400/30 text-blue-200',
-        link: 'text-blue-300 hover:text-blue-200',
-        cardBg: 'bg-slate-800 border-blue-400/30',
-        playerBg: 'bg-gradient-to-br from-slate-700 via-blue-800 to-slate-900',
-        accent: 'blue-400',
+        fullBackground: 'bg-gradient-to-br from-amber-100 via-orange-200 to-red-300',
+        windowFrame: 'bg-gradient-to-br from-amber-50/90 via-orange-100/95 to-yellow-200/90 border-orange-600',
+        titleBar: 'bg-gradient-to-r from-orange-500/80 via-amber-600/90 to-yellow-500/80 border-orange-400/30',
+        windowContent: 'bg-gradient-to-br from-amber-50/95 via-orange-100/10 to-yellow-100/10 border-orange-400/30',
+        text: 'text-orange-900',
+        button: 'bg-orange-500/80 hover:bg-orange-600/80 text-white border border-orange-600/50',
+        input: 'bg-orange-50/50 border-orange-300 text-orange-900',
+        link: 'text-orange-600 hover:text-orange-700',
+        cardBg: 'bg-orange-50/50 border-orange-300',
+        playerBg: 'bg-gradient-to-br from-amber-100/90 via-orange-200/90 to-yellow-300/90',
+        accent: 'orange-600',
       };
     }
     
