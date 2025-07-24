@@ -55,10 +55,10 @@ const About = () => {
       return {
         title: 'Ein Spaziergang durch mein Gehirn',
         paragraphs: [
-          'Ich bin Henri – ein Kreativer mit einer Leidenschaft dafür, Ideen in echte, visuelle Erfahrungen zu verwandeln. Ob durch Videobearbeitung, Fotografie, das Gestalten digitaler Räume oder die Planung ganzer Content-Flows – ich liebe es, Dinge zu schaffen, die intentional, emotional und ein wenig anders sind.',
-          'Ich bin nicht jemand, der in einer Spur bleibt. Ich bewege mich zwischen Visuellem und Strategie, zwischen Intuition und Struktur. Ich genieße es, Projekte von Anfang bis Ende zu bearbeiten – nicht nur den kreativen Funken, sondern auch die Bearbeitung, die Planung und den finalen Schliff.',
-          'Meine Fähigkeiten sind breit gefächert, aber sie laufen alle auf eines hinaus: Dinge zu schaffen, die verbinden. Ich weiß, wie man eine Geschichte erzählt, wie man Atmosphäre durch Ton und Visuals aufbaut und wie man die Details hinter den Kulissen verwaltet. Ich arbeite gerne selbstständig, wenn nötig, aber ich liebe auch die Zusammenarbeit – Ideen austauschen, gemeinsam aufbauen und von anderen lernen.',
-          'Ich bin inspiriert von Kontrasten – zwischen digital und analog, alter Schule und modernen Tools. Ich jage keine Trends. Ich schaffe Räume, die widerspiegeln, was sich für mich wahr anfühlt, und ich lerne gerne durch Handeln, nicht durch Warten auf Erlaubnis.',
+          'Hi, ich bin Henri – ein kreativer Kopf mit einem Faible dafür, Ideen lebendig werden zu lassen.',
+          'Ob Videoschnitt, Fotografie, digitales Design oder die Planung ganzer Content-Strategien – ich liebe es, Erlebnisse zu schaffen, die berühren, Sinn ergeben und ein bisschen aus der Reihe tanzen.',
+          'Ich passe in keine feste Schublade. Mal bin ich voll im kreativen Flow, mal tief in strategischem Denken. Ich mag es, Projekte von Anfang bis Ende zu begleiten – von der ersten Idee bis zum Feinschliff. Dabei geht es mir nicht nur ums schöne Bild, sondern auch um Wirkung, Atmosphäre und Emotion.',
+          'Was mich ausmacht? Ich kann vieles – aber vor allem kann ich verbinden: Menschen, Themen, Bilder und Geschichten. Ich erzähle gerne visuell, denke in Stimmungen und Details, und arbeite genauso gern eigenständig wie im Team. Ich bin inspiriert von Kontrasten – zwischen digital und analog, alter Schule und modernen Tools. Ich jage keine Trends. Ich schaffe Räume, die widerspiegeln, was sich für mich wahr anfühlt, und ich lerne gerne durch Handeln, nicht durch Warten auf Erlaubnis.',
           'Diese Seite ist ein Spiegelbild davon, wie ich denke: neugierig, praktisch und immer in Entwicklung.'
         ],
         freeTimeTitle: 'Was ich in meiner Freizeit mache',
@@ -74,11 +74,12 @@ const About = () => {
     return {
       title: 'A Walk Through My Brain',
       paragraphs: [
-        'I\'m Henri – a creative with a passion for turning ideas into real, visual experiences. Whether it\'s through editing videos, taking photos, designing digital spaces, or planning entire content flows, I love making things that feel intentional, emotional, and a little different.',
-        'I\'m not someone who sticks to one lane. I move between visuals and strategy, between intuition and structure. I enjoy working on projects from start to finish – not just the creative spark, but also the editing, the planning, and the final polish.',
-        'My skills are broad, but they all come down to one thing: creating things that connect. I know how to tell a story, how to build atmosphere through sound and visuals, and how to manage the details behind the scenes. I enjoy working independently when needed, but I also love collaborating – bouncing ideas, building together, and learning from others.',
-        'I\'m inspired by contrast – between digital and analog, old-school energy and modern tools. I don\'t chase trends. I create spaces that reflect what feels true to me, and I enjoy learning by doing, not waiting for permission.',
-        'This site is a reflection of how I think: curious, hands-on, and always evolving.'
+        "Hey, I'm Henri – a creative mind with a passion for bringing ideas to life.",
+        "Whether it's editing videos, capturing moments through photography, designing digital spaces or mapping out full content strategies – I love creating experiences that resonate, make sense, and stand out in their own way.",
+        "I don't fit neatly into one box. Sometimes I'm deep in creative flow, other times I'm fully focused on strategy. I enjoy working on projects from the very first spark to the final polish – not just the visuals, but also the impact, the mood, and the emotion behind them.",
+        "What defines me? I connect things – people, ideas, images, and stories. I think visually, I feel in atmospheres and details, and I work just as well on my own as I do in a team. Collaboration energizes me, and I love learning from others.",
+        "I'm inspired by contrasts – between analog and digital, old-school methods and modern tools. I don't chase trends. I build spaces that feel true to me. And I believe in learning by doing, not by waiting for permission.",
+        "This page reflects how I think: curious, hands-on, and always evolving."
       ],
       freeTimeTitle: 'What I Do in My Free Time',
       freeTimeParagraphs: [
@@ -108,7 +109,7 @@ const About = () => {
         {/* Window content */}
         <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
           <div className="flex flex-col items-start">
-            <h1 className={`text-4xl mb-6 font-pixel drop-shadow-lg self-start ${styles.text}`}>[ {aboutContent.title} ]</h1>
+            <h1 className={`text-2xl sm:text-4xl mb-6 font-pixel drop-shadow-lg self-start ${styles.text}`}>[ {aboutContent.title} ]</h1>
             
             {/* Content with image */}
             <div className="flex flex-col lg:flex-row gap-6 items-start">
@@ -131,7 +132,7 @@ const About = () => {
             </div>
             
             {/* Free Time Section */}
-            <h2 className={`text-3xl mt-8 mb-6 font-pixel drop-shadow-lg self-start ${styles.text}`}>[ {aboutContent.freeTimeTitle} ]</h2>
+            <h2 className={`text-xl sm:text-3xl mt-8 mb-6 font-pixel drop-shadow-lg self-start ${styles.text}`}>[ {aboutContent.freeTimeTitle} ]</h2>
             <div className={`space-y-4 text-lg text-left ${styles.text}`}>
               {aboutContent.freeTimeParagraphs.map((paragraph, index) => (
                 <p key={index} className="drop-shadow-sm">

@@ -37,7 +37,7 @@ export const GlobalMusicProvider: React.FC<{ children: React.ReactNode }> = ({ c
             const nextIndex = (prev + 1) % musicFiles.length;
             return nextIndex;
           });
-          // Keep playing state active
+          // Keep playing state active - ensure continuous playback
           setIsPlaying(true);
         }
       });
