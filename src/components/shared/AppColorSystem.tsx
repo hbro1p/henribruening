@@ -18,9 +18,7 @@ export const getAppThemeStyles = ({ appColor, themeBackground }: AppThemeConfig)
     accent: appStyles.accent,
     button: appStyles.button,
     border: appStyles.border,
-    card: appStyles.card,
-    playButton: appStyles.playButton || appStyles.button,
-    slider: appStyles.slider || appStyles.accent
+    card: appStyles.card
   };
 };
 
@@ -34,9 +32,7 @@ const getAppColorStyles = (appColor: AppColor) => {
         accent: 'text-yellow-600',
         button: 'bg-yellow-500/80 hover:bg-yellow-600/80 text-yellow-50 border border-yellow-400/50',
         border: 'border-yellow-400/30',
-        card: 'bg-yellow-50/50 border-yellow-300',
-        playButton: 'bg-yellow-600/90 hover:bg-yellow-700/90 text-yellow-50',
-        slider: 'accent-yellow-500'
+        card: 'bg-yellow-50/50 border-yellow-300'
       };
     case 'blue':
       return {
@@ -46,9 +42,7 @@ const getAppColorStyles = (appColor: AppColor) => {
         accent: 'text-blue-600',
         button: 'bg-blue-500/80 hover:bg-blue-600/80 text-blue-50 border border-blue-400/50',
         border: 'border-blue-400/30',
-        card: 'bg-blue-50/50 border-blue-300',
-        playButton: 'bg-blue-600/90 hover:bg-blue-700/90 text-blue-50',
-        slider: 'accent-blue-500'
+        card: 'bg-blue-50/50 border-blue-300'
       };
     case 'teal':
       return {
@@ -78,9 +72,7 @@ const getAppColorStyles = (appColor: AppColor) => {
         accent: 'text-green-600',
         button: 'bg-green-500/80 hover:bg-green-600/80 text-green-50 border border-green-400/50',
         border: 'border-green-400/30',
-        card: 'bg-green-50/50 border-green-300',
-        playButton: 'bg-green-600/90 hover:bg-green-700/90 text-green-50',
-        slider: 'accent-green-500'
+        card: 'bg-green-50/50 border-green-300'
       };
     case 'purple':
       return {
@@ -100,9 +92,7 @@ const getAppColorStyles = (appColor: AppColor) => {
         accent: 'text-orange-600',
         button: 'bg-orange-500/80 hover:bg-orange-600/80 text-orange-50 border border-orange-400/50',
         border: 'border-orange-400/30',
-        card: 'bg-orange-50/50 border-orange-300',
-        playButton: 'bg-orange-600/90 hover:bg-orange-700/90 text-orange-50',
-        slider: 'accent-orange-500'
+        card: 'bg-orange-50/50 border-orange-300'
       };
     default:
       return getAppColorStyles('blue');
@@ -116,21 +106,9 @@ export const useAppTheme = (appColor: AppColor) => {
     'space-mood': 'bg-gradient-to-br from-indigo-900 via-blue-900 to-black',
     'adventure-canyon': 'bg-gradient-to-br from-amber-100 via-orange-200 to-red-300'
   };
-
-  // Auto-map theme to app color for consistency
-  const getThemeColor = (): AppColor => {
-    switch (theme) {
-      case 'adventure-canyon':
-        return 'orange';
-      case 'space-mood':
-        return 'blue';
-      default:
-        return appColor;
-    }
-  };
   
   return getAppThemeStyles({
-    appColor: getThemeColor(),
+    appColor,
     themeBackground: themeBackgrounds[theme]
   });
 };

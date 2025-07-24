@@ -35,22 +35,37 @@ const TvApp: React.FC<TvAppProps> = ({ isOpen, onClose }) => {
       };
     }
     
-    if (theme === 'adventure-canyon') {
+    if (theme === 'dark-vhs') {
       return {
-        fullBackground: 'bg-gradient-to-br from-amber-100 via-orange-200 to-red-300',
-        windowFrame: 'bg-gradient-to-br from-orange-300 via-orange-400 to-orange-600',
-        titleBar: 'bg-gradient-to-r from-orange-600 via-orange-700 to-red-700',
-        windowContent: 'bg-gradient-to-br from-orange-200 via-orange-300 to-orange-400',
-        text: 'text-orange-900',
-        button: 'bg-gradient-to-br from-orange-500 via-orange-600 to-orange-800 hover:from-orange-400 hover:via-orange-500 hover:to-orange-700 text-white',
-        input: 'bg-orange-50 border-orange-600 text-orange-900',
-        link: 'text-orange-800 hover:text-orange-900',
-        cardBg: 'bg-orange-50 border-orange-600',
-        playerBg: 'bg-gradient-to-br from-orange-100 via-orange-200 to-orange-300',
-        accent: 'orange-600',
+        fullBackground: 'bg-gradient-to-br from-gray-900 via-gray-800 to-black',
+        windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
+        titleBar: 'bg-gradient-to-r from-purple-600 via-purple-700 to-purple-800',
+        windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
+        text: 'text-white',
+        button: 'bg-gradient-to-br from-purple-500 via-purple-600 to-purple-800 hover:from-purple-400 hover:via-purple-500 hover:to-purple-700 text-white',
+        input: 'bg-gray-800 border-white/30 text-white',
+        link: 'text-purple-400 hover:text-purple-300',
+        cardBg: 'bg-gray-800 border-white/20',
+        playerBg: 'bg-gradient-to-br from-gray-800 via-gray-700 to-black',
+        accent: 'purple-400',
       };
     }
     
+    if (theme === 'adventure-canyon') {
+      return {
+        fullBackground: 'bg-gradient-to-br from-amber-100 via-orange-200 to-red-300',
+        windowFrame: 'bg-gradient-to-br from-amber-50/90 via-orange-100/95 to-yellow-200/90 border-orange-600',
+        titleBar: 'bg-gradient-to-r from-orange-500/80 via-amber-600/90 to-yellow-500/80 border-orange-400/30',
+        windowContent: 'bg-gradient-to-br from-amber-50/95 via-orange-100/10 to-yellow-100/10 border-orange-400/30',
+        text: 'text-orange-900',
+        button: 'bg-orange-500/80 hover:bg-orange-600/80 text-white border border-orange-600/50',
+        input: 'bg-orange-50/50 border-orange-300 text-orange-900',
+        link: 'text-orange-600 hover:text-orange-700',
+        cardBg: 'bg-orange-50/50 border-orange-300',
+        playerBg: 'bg-gradient-to-br from-amber-100/90 via-orange-200/90 to-yellow-300/90',
+        accent: 'orange-600',
+      };
+    }
     
     // Default fallback
     return {

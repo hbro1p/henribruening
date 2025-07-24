@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useGlobalAuth } from '@/hooks/useGlobalAuth';
-import { useAppTheme } from '@/components/shared/AppColorSystem';
 
 interface VideoProject {
   id: string;
@@ -22,7 +21,6 @@ interface VideoProject {
 const MyVideos = () => {
   const { theme, t } = useSettings();
   const { isAuthenticated } = useGlobalAuth();
-  const styles = useAppTheme('green'); // Will auto-adapt to theme color
 
   const videos: VideoProject[] = [
     {
@@ -109,17 +107,83 @@ const MyVideos = () => {
     }
   ];
 
+  // Get folder color scheme for space mood theme
+  const getFolderTheme = () => {
+    if (theme === 'space-mood') {
+      return 'folder-green'; // Green theme for videos folder
+    }
+    return '';
+  };
+
+  const getWindowStyles = () => {
+    const folderTheme = getFolderTheme();
+    
+    if (theme === 'space-mood' && folderTheme) {
+      return {
+        windowFrame: 'bg-gradient-to-br from-green-300 via-green-400 to-green-600',
+        titleBar: 'bg-gradient-to-r from-green-600 via-green-700 to-emerald-700',
+        windowContent: 'bg-gradient-to-br from-green-200 via-green-300 to-green-400',
+        text: 'text-green-900',
+        button: 'bg-gradient-to-br from-green-500 via-green-600 to-green-800 hover:from-green-400 hover:via-green-500 hover:to-green-700 text-white',
+        input: 'bg-green-50 border-green-600 text-green-900',
+        link: 'text-green-800 hover:text-green-900',
+        cardBg: 'bg-green-50 border-green-600',
+      };
+    }
+    
+    if (theme === 'dark-vhs') {
+      return {
+        windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
+        titleBar: 'bg-gradient-to-r from-red-600 via-red-700 to-red-800',
+        windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
+        text: 'text-white',
+        button: 'bg-gradient-to-br from-red-500 via-red-600 to-red-800 hover:from-red-400 hover:via-red-500 hover:to-red-700 text-white',
+        input: 'bg-gray-800 border-white/30 text-white',
+        link: 'text-red-400 hover:text-red-300',
+        cardBg: 'bg-gray-800 border-white/20',
+      };
+    }
+    
+    if (theme === 'adventure-canyon') {
+      return {
+        windowFrame: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600',
+        titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-slate-700',
+        windowContent: 'bg-gradient-to-br from-slate-600 via-blue-700 to-slate-800',
+        text: 'text-blue-200',
+        button: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white',
+        input: 'bg-slate-800 border-blue-400/30 text-blue-200',
+        link: 'text-blue-300 hover:text-blue-200',
+        cardBg: 'bg-slate-800 border-blue-400/30',
+      };
+    }
+    
+    // Default fallback
+    return {
+      windowFrame: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600',
+      titleBar: 'bg-gradient-to-r from-orange-600 via-orange-700 to-red-700',
+      windowContent: 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400',
+      text: 'text-black',
+      button: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white',
+      input: 'bg-white border-black text-black',
+      link: 'text-blue-800 hover:text-blue-900',
+      cardBg: 'bg-white border-black',
+    };
+  };
+
+  const styles = getWindowStyles();
 
   if (!isAuthenticated) {
     return (
-      <div className={`min-h-screen p-4 ${styles.background}`}>
-        <div className={`max-w-md mx-auto ${styles.container} rounded-2xl shadow-2xl p-8`}>
-          <div className="text-center">
-            <p className={`${styles.text} text-lg mb-4`}>Please authenticate first to access videos.</p>
-            <Link to="/" className={`${styles.button} inline-flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-200`}>
-              <ArrowLeft className="w-4 h-4" />
-              {t('Back to Login')}
-            </Link>
+      <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${getFolderTheme()}`}>
+        <div className={`p-2 border-2 border-black/30 w-full max-w-md shadow-2xl rounded-lg ${styles.windowFrame}`}>
+          <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded ${styles.windowContent}`}>
+            <div className="flex flex-col items-center justify-center text-center">
+              <p className={`${styles.text} font-pixel text-lg`}>Please authenticate first to access videos.</p>
+              <Link to="/" className={`mt-4 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
+                <ArrowLeft className="w-5 h-5" />
+                {t('Back to Login')}
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -127,51 +191,53 @@ const MyVideos = () => {
   }
 
   return (
-    <div className={`min-h-screen p-4 ${styles.background}`}>
-      <div className={`max-w-4xl mx-auto ${styles.container} rounded-2xl shadow-2xl flex flex-col max-h-[95vh] overflow-hidden`}>
-        {/* Header */}
-        <div className="p-8 shrink-0">
-          <h1 className={`text-3xl font-bold text-center ${styles.text}`}>
-            {t('My Videos')}
-          </h1>
+    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${getFolderTheme()}`}>
+      <div className={`p-2 border-2 border-black/30 w-full max-w-4xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
+        <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+            <span className="text-white font-pixel text-sm ml-2">MyVideos.exe</span>
+          </div>
         </div>
         
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-8 pb-8 space-y-6">
-          <div className="space-y-6">
-            {videos.map((video) => (
-              <div key={video.id} className={`p-6 rounded-lg border ${styles.card}`}>
-                <h3 className={`text-xl font-semibold mb-3 ${styles.text}`}>
-                  {video.title}
-                </h3>
-                <p className={`mb-4 ${styles.subText}`}>
-                  {t('language') === 'deutsch' ? video.description.de : video.description.en}
-                </p>
-                <div className="space-y-2">
-                  {video.links.map((link, index) => (
-                    <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" 
-                       className={`inline-flex items-center gap-2 ${styles.accent} hover:underline`}>
-                      {link.label} <ExternalLink className="w-4 h-4" />
-                    </a>
-                  ))}
+        <div className={`p-4 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
+          <div className="flex flex-col items-center justify-center text-center">
+            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('My Videos')} ]</h1>
+            
+            <div className="grid gap-8 text-left w-full max-w-2xl">
+              {videos.map((video) => (
+                <div key={video.id} className={`p-6 border-2 ${styles.cardBg}`}>
+                  <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel ${styles.text}`}>
+                    {video.title}
+                  </h3>
+                  <p className={`mb-4 font-pixel ${styles.text}`}>
+                    {t('language') === 'deutsch' ? video.description.de : video.description.en}
+                  </p>
+                  <div className="space-y-2">
+                    {video.links.map((link, index) => (
+                      <a key={index} href={link.url} target="_blank" rel="noopener noreferrer" 
+                         className={`flex items-center gap-2 underline font-pixel ${styles.link}`}>
+                        {link.label} <ExternalLink className="w-4 h-4" />
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          
-            <div className={`p-4 rounded-lg border ${styles.card} text-center`}>
-              <p className={`text-sm ${styles.subText}`}>
+              ))}
+            </div>
+
+            <div className={`mt-8 p-4 border-2 ${styles.cardBg} rounded`}>
+              <p className={`font-pixel text-sm ${styles.text}`}>
                 More videos available on the TV app...
               </p>
             </div>
-          </div>
-        </div>
 
-        {/* Footer */}
-        <div className="p-6 text-center shrink-0">
-          <Link to="/desktop" className={`${styles.button} inline-flex items-center gap-2 px-6 py-3 rounded-lg transition-all duration-200 hover:scale-105`}>
-            <ArrowLeft className="w-4 h-4" />
-            {t('Back to Desktop')}
-          </Link>
+            <Link to="/desktop" className={`mt-8 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
+              <ArrowLeft className="w-5 h-5" />
+              {t('Back to Desktop')}
+            </Link>
+          </div>
         </div>
       </div>
     </div>

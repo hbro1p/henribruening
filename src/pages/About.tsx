@@ -18,6 +18,15 @@ const About = () => {
       };
     }
     
+    if (theme === 'dark-vhs') {
+      return {
+        windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
+        titleBar: 'bg-gradient-to-r from-green-600 via-green-700 to-green-800',
+        windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
+        text: 'text-white',
+        link: 'text-green-400 hover:text-green-300',
+      };
+    }
     
     if (theme === 'adventure-canyon') {
       return {

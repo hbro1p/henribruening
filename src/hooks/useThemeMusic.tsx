@@ -2,6 +2,19 @@ import { useEffect, useRef } from 'react';
 import { useSettings } from '../contexts/SettingsContext';
 import { useGlobalMusicPlayer } from './useGlobalMusicPlayer';
 
+// Theme-specific music mapping
+const THEME_MUSIC: Record<string, string[]> = {
+  'adventure-canyon': [
+    'Adventure Canyon Main Theme',
+    'Desert Winds',
+    'Ancient Mysteries'
+  ],
+  'space-mood': [
+    'Cosmic Journey',
+    'Stellar Dreams'
+  ],
+};
+
 export const useThemeMusic = () => {
   const { theme } = useSettings();
   const { isPlaying, togglePlayPause, musicFiles } = useGlobalMusicPlayer();
@@ -9,21 +22,16 @@ export const useThemeMusic = () => {
   const wasPlayingRef = useRef<boolean>(false);
 
   useEffect(() => {
-    // Always enable music for adventure-canyon theme, disable ambient sounds
+    // Store current playing state when theme changes
     if (previousThemeRef.current !== theme) {
       wasPlayingRef.current = isPlaying;
       previousThemeRef.current = theme;
       
-      // For adventure-canyon, start normal music instead of ambient sounds
-      if (theme === 'adventure-canyon') {
-        if (!isPlaying && musicFiles.length > 0) {
-          setTimeout(() => {
-            togglePlayPause();
-          }, 500);
-        }
-      } else if (theme === 'space-mood') {
-        // Auto-start music for space-mood theme too
-        if (!isPlaying && musicFiles.length > 0) {
+      // Auto-start theme music if we have theme-specific tracks
+      const themeMusic = THEME_MUSIC[theme];
+      if (themeMusic && themeMusic.length > 0 && musicFiles.length > 0) {
+        // Start playing if not already playing
+        if (!isPlaying) {
           setTimeout(() => {
             togglePlayPause();
           }, 500);
@@ -33,7 +41,7 @@ export const useThemeMusic = () => {
   }, [theme, isPlaying, togglePlayPause, musicFiles.length]);
 
   return {
-    themeMusic: [],
-    isThemeMusicAvailable: true
+    themeMusic: THEME_MUSIC[theme] || [],
+    isThemeMusicAvailable: !!(THEME_MUSIC[theme] && THEME_MUSIC[theme].length > 0)
   };
 };
