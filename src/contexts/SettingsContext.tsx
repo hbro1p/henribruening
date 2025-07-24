@@ -184,14 +184,19 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
   // Load settings from localStorage on mount
   useEffect(() => {
     const savedLanguage = localStorage.getItem('henri-os-language') as Language;
-    const savedTheme = localStorage.getItem('henri-os-theme') as Theme;
+    const savedTheme = localStorage.getItem('henri-os-theme');
     
     if (savedLanguage && ['english', 'deutsch'].includes(savedLanguage)) {
       setLanguageState(savedLanguage);
     }
     
-    if (savedTheme && savedTheme === 'space-mood') {
-      setThemeState(savedTheme);
+    // Only set space-mood or default to space-mood, clearing any old theme values
+    if (savedTheme === 'space-mood') {
+      setThemeState('space-mood');
+    } else {
+      // Clear any invalid theme from localStorage
+      localStorage.setItem('henri-os-theme', 'space-mood');
+      setThemeState('space-mood');
     }
   }, []);
 
