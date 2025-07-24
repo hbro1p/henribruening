@@ -162,15 +162,15 @@ const Challenges = () => {
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
       return {
-        windowFrame: 'bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-600',
-        titleBar: 'bg-gradient-to-r from-yellow-600 via-yellow-700 to-orange-700',
-        windowContent: 'bg-gradient-to-br from-yellow-200 via-yellow-300 to-yellow-400',
-        text: 'text-yellow-900',
-        link: 'text-yellow-800 hover:text-yellow-900',
-        button: 'bg-gradient-to-br from-yellow-500 via-yellow-600 to-yellow-800 hover:from-yellow-400 hover:via-yellow-500 hover:to-yellow-700 text-white',
-        cardBg: 'bg-yellow-50 border-yellow-600',
-        progressBg: 'bg-yellow-900/20',
-        progressBar: 'bg-gradient-to-r from-yellow-400 to-amber-500'
+        windowFrame: 'bg-gradient-to-br from-yellow-300 via-orange-400 to-orange-600',
+        titleBar: 'bg-gradient-to-r from-yellow-600 via-orange-700 to-orange-700',
+        windowContent: 'bg-gradient-to-br from-yellow-200 via-orange-300 to-orange-400',
+        text: 'text-orange-900',
+        link: 'text-orange-800 hover:text-orange-900',
+        button: 'bg-gradient-to-br from-yellow-500 via-orange-600 to-orange-800 hover:from-yellow-400 hover:via-orange-500 hover:to-orange-700 text-white',
+        cardBg: 'bg-yellow-50 border-orange-600',
+        progressBg: 'bg-orange-900/20',
+        progressBar: 'bg-gradient-to-r from-yellow-400 to-orange-500'
       };
     }
     
@@ -233,7 +233,7 @@ const Challenges = () => {
   }, [isActive, timeLeft]);
 
   return (
-    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-yellow' : ''}`}>
+    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-orange' : ''}`}>
       <div className={`p-2 border-2 border-black/30 w-full max-w-4xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
         <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
           <div className="flex items-center space-x-2">
@@ -317,7 +317,7 @@ const Challenges = () => {
                     </button>
                     <button 
                       onClick={resetChallenge}
-                      className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 ${styles.cardBg} ${styles.text} hover:bg-yellow-400/10 transition-all duration-300 font-pixel`}
+                      className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 ${styles.cardBg} ${styles.text} hover:bg-orange-400/10 transition-all duration-300 font-pixel`}
                     >
                       <RotateCcw className="w-4 h-4" />
                       {t('Reset')}

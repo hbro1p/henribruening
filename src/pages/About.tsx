@@ -10,11 +10,11 @@ const About = () => {
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
       return {
-        windowFrame: 'bg-gradient-to-br from-green-300 via-green-400 to-green-600',
-        titleBar: 'bg-gradient-to-r from-green-600 via-green-700 to-green-800',
-        windowContent: 'bg-gradient-to-br from-green-200 via-green-300 to-green-400',
-        text: 'text-green-900',
-        link: 'text-green-800 hover:text-green-900',
+        windowFrame: 'bg-gradient-to-br from-teal-300 via-teal-400 to-teal-600',
+        titleBar: 'bg-gradient-to-r from-teal-600 via-teal-700 to-teal-800',
+        windowContent: 'bg-gradient-to-br from-teal-200 via-teal-300 to-teal-400',
+        text: 'text-teal-900',
+        link: 'text-teal-800 hover:text-teal-900',
       };
     }
     
@@ -93,7 +93,7 @@ const About = () => {
   const aboutContent = getAboutText();
 
   return (
-    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-green' : ''}`}>
+    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-teal' : ''}`}>
       <div className={`p-2 border-2 border-black/30 w-full max-w-4xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
         {/* Title bar */}
         <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
