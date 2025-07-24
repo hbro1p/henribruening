@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { X, Play, RotateCcw, Clock } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
+import { ArrowLeft, Play, RotateCcw, Clock } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { toast } from '@/hooks/use-toast';
-import { useAppTheme } from '@/components/shared/AppColorSystem';
-
-interface ChallengeAppProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
 
 const getChallenges = (language: string) => {
   if (language === 'deutsch') {
@@ -159,15 +152,43 @@ const getChallenges = (language: string) => {
   }
 };
 
-const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
-  const { t, language } = useSettings();
+const Challenges = () => {
+  const { t, language, theme } = useSettings();
   const [currentChallenge, setCurrentChallenge] = useState('');
   const [isActive, setIsActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  // Use yellow color for Challenge app
-  const styles = useAppTheme('yellow');
+  const getWindowStyles = () => {
+    if (theme === 'space-mood') {
+      return {
+        windowFrame: 'bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-600',
+        titleBar: 'bg-gradient-to-r from-yellow-600 via-yellow-700 to-orange-700',
+        windowContent: 'bg-gradient-to-br from-yellow-200 via-yellow-300 to-yellow-400',
+        text: 'text-yellow-900',
+        link: 'text-yellow-800 hover:text-yellow-900',
+        button: 'bg-gradient-to-br from-yellow-500 via-yellow-600 to-yellow-800 hover:from-yellow-400 hover:via-yellow-500 hover:to-yellow-700 text-white',
+        cardBg: 'bg-yellow-50 border-yellow-600',
+        progressBg: 'bg-yellow-900/20',
+        progressBar: 'bg-gradient-to-r from-yellow-400 to-amber-500'
+      };
+    }
+    
+    // Default fallback
+    return {
+      windowFrame: 'bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600',
+      titleBar: 'bg-gradient-to-r from-orange-600 via-orange-700 to-red-700',
+      windowContent: 'bg-gradient-to-br from-gray-200 via-gray-300 to-gray-400',
+      text: 'text-black',
+      link: 'text-blue-800 hover:text-blue-900',
+      button: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white',
+      cardBg: 'bg-white border-black',
+      progressBg: 'bg-gray-700/30',
+      progressBar: 'bg-gradient-to-r from-blue-400 to-blue-500'
+    };
+  };
+
+  const styles = getWindowStyles();
 
   const getRandomChallenge = () => {
     const challenges = getChallenges(language);
@@ -193,6 +214,10 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
   const completeChallenge = () => {
     setIsActive(false);
     setIsCompleted(true);
+    toast({
+      title: t('Challenge completed!'),
+      description: t('You\'re building great habits!') + ' 💪',
+    });
   };
 
   useEffect(() => {
@@ -207,118 +232,120 @@ const ChallengeApp: React.FC<ChallengeAppProps> = ({ isOpen, onClose }) => {
     return () => clearInterval(interval);
   }, [isActive, timeLeft]);
 
-  if (!isOpen) return null;
-
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm ${styles.background}`}>
-      <Card className={`w-full max-w-md mx-4 p-6 ${styles.container}`}>
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Clock className={`w-6 h-6 ${styles.accent}`} />
-            <h2 className={`text-xl font-bold ${styles.text}`}>{t('1-Minute Challenge')}</h2>
-          </div>
-          <Button 
-            onClick={onClose} 
-            variant="ghost" 
-            size="icon"
-            className={`${styles.subText} hover:bg-gray-100/10`}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-
-        <div className="space-y-6">
-          {!currentChallenge && !isCompleted && (
-            <div className="text-center space-y-4">
-              <div className="text-6xl">⏱️</div>
-              <h3 className={`text-lg font-medium ${styles.text}`}>
-                {t('Ready for your daily mini-challenge?')}
-              </h3>
-              <p className={`text-sm ${styles.subText}`}>
-                {t('Short tasks for more focus and variety in everyday life')}
-              </p>
-            </div>
-          )}
-
-          {currentChallenge && !isCompleted && (
-            <div className="text-center space-y-4">
-              <div className="relative">
-                <div className={`text-4xl font-bold ${styles.accent} mb-2`}>
-                  {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
-                </div>
-                <div className="w-full bg-gray-700/30 rounded-full h-2">
-                  <div 
-                    className="h-2 rounded-full transition-all duration-1000 bg-gradient-to-r from-yellow-400 to-amber-500"
-                    style={{ width: `${((60 - timeLeft) / 60) * 100}%` }}
-                  ></div>
-                </div>
-              </div>
-              
-              <div className={`p-4 rounded-lg border ${styles.card}`}>
-                <h3 className={`text-lg font-medium ${styles.text} mb-2`}>
-                  {t('Your Challenge:')}
-                </h3>
-                <p className={styles.subText}>{currentChallenge}</p>
-              </div>
-            </div>
-          )}
-
-          {isCompleted && (
-            <div className="text-center space-y-4">
-              <div className="text-6xl">🎉</div>
-              <h3 className={`text-lg font-medium ${styles.text}`}>
-                {t('Challenge completed!')}
-              </h3>
-              <p className={`text-sm ${styles.subText}`}>
-                {t('You\'re building great habits!')} 💪
-              </p>
-            </div>
-          )}
-
-          <div className="flex gap-2 justify-center">
-            {!currentChallenge && !isCompleted && (
-              <Button 
-                onClick={startChallenge}
-                className={`flex items-center gap-2 ${styles.button} transition-all duration-300 hover:scale-105`}
-              >
-                <Play className="w-4 h-4" />
-                {t('Start Challenge')}
-              </Button>
-            )}
-
-            {currentChallenge && !isCompleted && (
-              <>
-                <Button 
-                  onClick={completeChallenge}
-                  className={`flex items-center gap-2 ${styles.button} transition-all duration-300 hover:scale-105`}
-                >
-                  {t('Done!')} ✅
-                </Button>
-                <Button 
-                  onClick={resetChallenge}
-                  variant="outline"
-                  className={`flex items-center gap-2 border-2 ${styles.border} ${styles.text} hover:bg-yellow-400/10 transition-all duration-300`}
-                >
-                  <RotateCcw className="w-4 h-4" />
-                  {t('Reset')}
-                </Button>
-              </>
-            )}
-
-            {isCompleted && (
-              <Button 
-                onClick={startChallenge}
-                className={`flex items-center gap-2 ${styles.button} transition-all duration-300 hover:scale-105`}
-              >
-                <Play className="w-4 h-4" />
-                {t('New Challenge')}
-              </Button>
-            )}
+    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-yellow' : ''}`}>
+      <div className={`p-2 border-2 border-black/30 w-full max-w-4xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
+        <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
+          <div className="flex items-center space-x-2">
+            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
+            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
+            <span className="text-white font-pixel text-sm ml-2">Challenges.exe</span>
           </div>
         </div>
-      </Card>
+        
+        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
+          <div className="flex flex-col items-center justify-center text-center">
+            <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ {t('1-Minute Challenge')} ]</h1>
+            
+            <div className="w-full max-w-2xl space-y-6">
+              {!currentChallenge && !isCompleted && (
+                <div className="space-y-4">
+                  <div className="text-6xl">⏱️</div>
+                  <h3 className={`text-lg font-medium font-pixel ${styles.text}`}>
+                    {t('Ready for your daily mini-challenge?')}
+                  </h3>
+                  <p className={`text-sm font-pixel ${styles.text}`}>
+                    {t('Short tasks for more focus and variety in everyday life')}
+                  </p>
+                </div>
+              )}
+
+              {currentChallenge && !isCompleted && (
+                <div className="space-y-4">
+                  <div className="relative">
+                    <div className={`text-4xl font-bold ${styles.text} mb-2 font-pixel`}>
+                      {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                    </div>
+                    <div className={`w-full ${styles.progressBg} rounded-full h-2`}>
+                      <div 
+                        className={`h-2 rounded-full transition-all duration-1000 ${styles.progressBar}`}
+                        style={{ width: `${((60 - timeLeft) / 60) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                  
+                  <div className={`p-4 rounded-lg border-2 ${styles.cardBg}`}>
+                    <h3 className={`text-lg font-medium ${styles.text} mb-2 font-pixel`}>
+                      {t('Your Challenge:')}
+                    </h3>
+                    <p className={`${styles.text} font-pixel`}>{currentChallenge}</p>
+                  </div>
+                </div>
+              )}
+
+              {isCompleted && (
+                <div className="space-y-4">
+                  <div className="text-6xl">🎉</div>
+                  <h3 className={`text-lg font-medium ${styles.text} font-pixel`}>
+                    {t('Challenge completed!')}
+                  </h3>
+                  <p className={`text-sm ${styles.text} font-pixel`}>
+                    {t('You\'re building great habits!')} 💪
+                  </p>
+                </div>
+              )}
+
+              <div className="flex gap-2 justify-center">
+                {!currentChallenge && !isCompleted && (
+                  <button 
+                    onClick={startChallenge}
+                    className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-black/30 transition-all duration-300 hover:scale-105 font-pixel ${styles.button}`}
+                  >
+                    <Play className="w-4 h-4" />
+                    {t('Start Challenge')}
+                  </button>
+                )}
+
+                {currentChallenge && !isCompleted && (
+                  <>
+                    <button 
+                      onClick={completeChallenge}
+                      className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-black/30 transition-all duration-300 hover:scale-105 font-pixel ${styles.button}`}
+                    >
+                      {t('Done!')} ✅
+                    </button>
+                    <button 
+                      onClick={resetChallenge}
+                      className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 ${styles.cardBg} ${styles.text} hover:bg-yellow-400/10 transition-all duration-300 font-pixel`}
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                      {t('Reset')}
+                    </button>
+                  </>
+                )}
+
+                {isCompleted && (
+                  <button 
+                    onClick={startChallenge}
+                    className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-black/30 transition-all duration-300 hover:scale-105 font-pixel ${styles.button}`}
+                  >
+                    <Play className="w-4 h-4" />
+                    {t('New Challenge')}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <Link to="/desktop" className={`mt-8 text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
+              <ArrowLeft className="w-5 h-5" />
+              {t('Back to Desktop')}
+            </Link>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default ChallengeApp;
+export default Challenges;

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
-import RadioApp from '@/components/RadioApp';
 import TvApp from '@/components/TvApp';
-import ChallengeApp from '@/components/ChallengeApp';
 import RatingApp from '@/components/RatingApp';
 import MiniMusicPlayer from '@/components/MiniMusicPlayer';
 import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock, Star } from 'lucide-react';
@@ -13,9 +11,7 @@ import { useGlobalMusicPlayer } from '@/hooks/useGlobalMusicPlayer';
 
 const Desktop = () => {
   const { t, language } = useSettings();
-  const [isRadioOpen, setIsRadioOpen] = useState(false);
   const [isTvOpen, setIsTvOpen] = useState(false);
-  const [isChallengeOpen, setIsChallengeOpen] = useState(false);
   const [isRatingOpen, setIsRatingOpen] = useState(false);
   
   // Initialize theme music and TV music control
@@ -39,10 +35,7 @@ const Desktop = () => {
           <DesktopIcon 
             icon={Radio} 
             label={t('Radio')}
-            onClick={() => {
-              console.log('Radio icon clicked');
-              setIsRadioOpen(true);
-            }}
+            to="/radio"
           />
 
           {/* TV App Icon */}
@@ -59,10 +52,7 @@ const Desktop = () => {
           <DesktopIcon 
             icon={Clock} 
             label={t('Challenge')}
-            onClick={() => {
-              console.log('Challenge icon clicked, opening Challenge app');
-              setIsChallengeOpen(true);
-            }}
+            to="/challenges"
           />
 
           {/* Rating/Idea App Icon */}
@@ -81,30 +71,12 @@ const Desktop = () => {
         </div>
       </div>
 
-      {/* Radio App Modal */}
-      <RadioApp 
-        isOpen={isRadioOpen} 
-        onClose={() => {
-          console.log('Closing Radio app');
-          setIsRadioOpen(false);
-        }}
-      />
-      
       {/* TV App Modal */}
       <TvApp 
         isOpen={isTvOpen} 
         onClose={() => {
           console.log('Closing TV app');
           setIsTvOpen(false);
-        }} 
-      />
-      
-      {/* Challenge App Modal */}
-      <ChallengeApp 
-        isOpen={isChallengeOpen} 
-        onClose={() => {
-          console.log('Closing Challenge app');
-          setIsChallengeOpen(false);
         }} 
       />
 
