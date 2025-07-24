@@ -4,11 +4,6 @@ import { useGlobalMusicPlayer } from './useGlobalMusicPlayer';
 
 // Theme-specific music mapping
 const THEME_MUSIC: Record<string, string[]> = {
-  'adventure-canyon': [
-    'Adventure Canyon Main Theme',
-    'Desert Winds',
-    'Ancient Mysteries'
-  ],
   'space-mood': [
     'Cosmic Journey',
     'Stellar Dreams'

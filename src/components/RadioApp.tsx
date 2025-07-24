@@ -27,44 +27,18 @@ const RadioApp: React.FC<RadioAppProps> = ({ isOpen, onClose }) => {
   };
 
 const getThemeStyles = () => {
-    switch (theme) {
-      case 'dark-vhs':
-        return {
-          fullBackground: 'bg-gradient-to-br from-gray-900 via-purple-900 to-black',
-          container: 'bg-gradient-to-br from-gray-800/90 via-gray-900/95 to-black/90 border-2 border-green-400 shadow-2xl shadow-green-400/30 backdrop-blur-lg',
-          text: 'text-green-400 font-mono',
-          subText: 'text-green-300',
-          button: 'bg-gray-800/80 hover:bg-gray-700/80 text-green-400 border border-green-400/50 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-green-400/20',
-          activeButton: 'bg-green-900/80 text-green-300 border-green-400 shadow-lg shadow-green-400/30 backdrop-blur-sm',
-          backButton: 'bg-gray-800/80 hover:bg-gray-700/80 text-green-400 border border-green-400/50 backdrop-blur-sm',
-          radioBody: 'bg-gray-800 border-green-400',
-          display: 'bg-black/80 border-green-400/70'
-        };
-      case 'adventure-canyon':
-        return {
-          fullBackground: 'bg-gradient-to-br from-amber-100 via-orange-200 to-red-300',
-          container: 'bg-gradient-to-br from-amber-50/90 via-orange-100/95 to-yellow-200/90 border-2 border-orange-600 shadow-2xl shadow-orange-600/30 backdrop-blur-lg',
-          text: 'text-orange-900 font-mono',
-          subText: 'text-orange-700',
-          button: 'bg-orange-200/80 hover:bg-orange-300/80 text-orange-800 border border-orange-500 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-orange-400/20',
-          activeButton: 'bg-orange-400/80 text-orange-900 border-orange-600 shadow-lg shadow-orange-400/30 backdrop-blur-sm',
-          backButton: 'bg-orange-200/80 hover:bg-orange-300/80 text-orange-800 border border-orange-500 backdrop-blur-sm',
-          radioBody: 'bg-orange-700 border-amber-500',
-          display: 'bg-amber-50/90 border-orange-400/70'
-        };
-      default: // space-mood - Modern cosmic design
-        return {
-          fullBackground: 'bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900',
-          container: 'bg-gradient-to-br from-indigo-800/90 via-purple-800/95 to-blue-800/90 border-2 border-cyan-400 shadow-2xl shadow-cyan-400/30 backdrop-blur-lg',
-          text: 'text-cyan-400 font-mono',
-          subText: 'text-cyan-300',
-          button: 'bg-indigo-800/80 hover:bg-indigo-700/80 text-cyan-400 border border-cyan-400/50 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/20',
-          activeButton: 'bg-cyan-900/80 text-cyan-300 border-cyan-400 shadow-lg shadow-cyan-400/30 backdrop-blur-sm',
-          backButton: 'bg-indigo-800/80 hover:bg-indigo-700/80 text-cyan-400 border border-cyan-400/50 backdrop-blur-sm',
-          radioBody: 'bg-indigo-800 border-cyan-400',
-          display: 'bg-indigo-950/90 border-cyan-400/70'
-        };
-    }
+    // Only space-mood theme supported
+    return {
+      fullBackground: 'bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900',
+      container: 'bg-gradient-to-br from-indigo-800/90 via-purple-800/95 to-blue-800/90 border-2 border-cyan-400 shadow-2xl shadow-cyan-400/30 backdrop-blur-lg',
+      text: 'text-cyan-400 font-mono',
+      subText: 'text-cyan-300',
+      button: 'bg-indigo-800/80 hover:bg-indigo-700/80 text-cyan-400 border border-cyan-400/50 backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:shadow-cyan-400/20',
+      activeButton: 'bg-cyan-900/80 text-cyan-300 border-cyan-400 shadow-lg shadow-cyan-400/30 backdrop-blur-sm',
+      backButton: 'bg-indigo-800/80 hover:bg-indigo-700/80 text-cyan-400 border border-cyan-400/50 backdrop-blur-sm',
+      radioBody: 'bg-indigo-800 border-cyan-400',
+      display: 'bg-indigo-950/90 border-cyan-400/70'
+    };
   };
 
   const styles = getThemeStyles();

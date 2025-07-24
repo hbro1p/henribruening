@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 export type Language = 'english' | 'deutsch';
-export type Theme = 'space-mood' | 'adventure-canyon';
+export type Theme = 'space-mood';
 
 interface SettingsContextType {
   language: Language;
@@ -190,7 +190,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
       setLanguageState(savedLanguage);
     }
     
-    if (savedTheme && ['space-mood', 'adventure-canyon'].includes(savedTheme)) {
+    if (savedTheme && savedTheme === 'space-mood') {
       setThemeState(savedTheme);
     }
   }, []);

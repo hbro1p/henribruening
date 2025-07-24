@@ -103,8 +103,7 @@ export const useAppTheme = (appColor: AppColor) => {
   const { theme } = useSettings();
   
   const themeBackgrounds = {
-    'space-mood': 'bg-gradient-to-br from-indigo-900 via-blue-900 to-black',
-    'adventure-canyon': 'bg-gradient-to-br from-amber-100 via-orange-200 to-red-300'
+    'space-mood': 'bg-gradient-to-br from-indigo-900 via-blue-900 to-black'
   };
   
   return getAppThemeStyles({

@@ -131,31 +131,17 @@ const MyVideos = () => {
       };
     }
     
-    if (theme === 'dark-vhs') {
-      return {
-        windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
-        titleBar: 'bg-gradient-to-r from-red-600 via-red-700 to-red-800',
-        windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
-        text: 'text-white',
-        button: 'bg-gradient-to-br from-red-500 via-red-600 to-red-800 hover:from-red-400 hover:via-red-500 hover:to-red-700 text-white',
-        input: 'bg-gray-800 border-white/30 text-white',
-        link: 'text-red-400 hover:text-red-300',
-        cardBg: 'bg-gray-800 border-white/20',
-      };
-    }
-    
-    if (theme === 'adventure-canyon') {
-      return {
-        windowFrame: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600',
-        titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-slate-700',
-        windowContent: 'bg-gradient-to-br from-slate-600 via-blue-700 to-slate-800',
-        text: 'text-blue-200',
-        button: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white',
-        input: 'bg-slate-800 border-blue-400/30 text-blue-200',
-        link: 'text-blue-300 hover:text-blue-200',
-        cardBg: 'bg-slate-800 border-blue-400/30',
-      };
-    }
+    // Default fallback for space-mood theme
+    return {
+      windowFrame: 'bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800',
+      titleBar: 'bg-gradient-to-r from-cyan-600 via-blue-700 to-indigo-700',
+      windowContent: 'bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800',
+      text: 'text-blue-100',
+      button: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-800 hover:from-blue-400 hover:via-blue-500 hover:to-blue-700 text-white',
+      input: 'bg-slate-800 border-blue-400/30 text-blue-200',
+      link: 'text-blue-300 hover:text-blue-200',
+      cardBg: 'bg-slate-800 border-blue-400/30',
+    };
     
     // Default fallback
     return {

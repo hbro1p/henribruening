@@ -95,30 +95,16 @@ const MusicPlayer = () => {
       slider: 'accent-blue-500'
     };
 
-    switch (theme) {
-      case 'dark-vhs':
-        return {
-          container: 'bg-gradient-to-br from-gray-800 to-gray-900 border-2 border-gray-600 shadow-lg',
-          text: 'text-white',
-          subText: 'text-gray-300',
-          button: 'bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-500',
-          playButton: 'bg-red-600 hover:bg-red-500 text-white',
-          activeButton: 'bg-red-800 text-red-300 border-red-500',
-          slider: 'accent-red-500'
-        };
-      case 'adventure-canyon':
-        return {
-          container: 'bg-gradient-to-br from-amber-50 to-orange-100 border-2 border-orange-300 shadow-lg',
-          text: 'text-orange-900',
-          subText: 'text-orange-700',
-          button: 'bg-amber-100 hover:bg-amber-200 text-orange-800 border border-orange-400',
-          playButton: 'bg-orange-600 hover:bg-orange-700 text-white',
-          activeButton: 'bg-orange-200 text-orange-700 border-orange-500',
-          slider: 'accent-orange-600'
-        };
-      default:
-        return baseStyles;
-    }
+    // Only space-mood theme supported
+    return {
+      container: 'bg-gradient-to-br from-blue-900 to-purple-900 border-2 border-blue-400 shadow-lg',
+      text: 'text-blue-100',
+      subText: 'text-blue-300',
+      button: 'bg-blue-800 hover:bg-blue-700 text-blue-200 border border-blue-500',
+      playButton: 'bg-blue-600 hover:bg-blue-700 text-white',
+      activeButton: 'bg-blue-700 text-blue-100 border-blue-400',
+      slider: 'accent-blue-500'
+    };
   };
 
   const styles = getThemeStyles();

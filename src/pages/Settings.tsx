@@ -12,11 +12,6 @@ const Settings = () => {
       id: 'space-mood' as const,
       name: t('Space Mood'),
       preview: 'bg-gradient-to-br from-indigo-900 via-blue-900 to-black'
-    },
-    {
-      id: 'adventure-canyon' as const,
-      name: t('Adventure Canyon'),
-      preview: 'bg-gradient-to-br from-orange-300 via-amber-400 to-yellow-300'
     }
   ];
 
