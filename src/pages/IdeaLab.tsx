@@ -187,23 +187,23 @@ const IdeaLab = () => {
 
           {currentView === 'welcome' && (
             <div className="text-center space-y-6 sm:space-y-8">
-              <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
-                <Lightbulb className={`h-6 w-6 sm:h-8 sm:w-8 ${styles.accent}`} />
-                <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-pixel drop-shadow-lg ${styles.text} text-center px-2`}>
+              <div className="flex flex-col items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-10">
+                <Lightbulb className={`h-8 w-8 sm:h-10 sm:w-10 ${styles.accent}`} />
+                <h1 className={`text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-pixel drop-shadow-lg ${styles.text} text-center px-2`}>
                   {language === 'deutsch' ? 'Ideen-Labor' : 'Idea Laboratory'}
                 </h1>
               </div>
               
-              <div className="space-y-3 sm:space-y-4 lg:space-y-6 max-w-3xl mx-auto px-2">
+              <div className="space-y-4 sm:space-y-6 lg:space-y-8 max-w-4xl mx-auto px-4">
                 {welcomeText.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className={`${styles.text} leading-relaxed text-xs sm:text-sm lg:text-base font-pixel text-left`}>
+                  <p key={index} className={`${styles.text} leading-relaxed text-base sm:text-lg lg:text-xl font-pixel text-left`}>
                     {paragraph}
                   </p>
                 ))}
               </div>
               <button 
                 onClick={() => setCurrentView('list')}
-                className={`px-4 sm:px-6 lg:px-8 py-2 sm:py-3 text-sm sm:text-base rounded-lg font-pixel border-2 border-black/30 transition-all duration-200 transform hover:scale-105 ${styles.button}`}
+                className={`px-6 sm:px-8 lg:px-10 py-3 sm:py-4 text-lg sm:text-xl rounded-lg font-pixel border-2 border-black/30 transition-all duration-200 transform hover:scale-105 ${styles.button}`}
               >
                 {language === 'deutsch' ? 'Ideen entdecken' : 'Discover Ideas'}
               </button>
@@ -212,11 +212,11 @@ const IdeaLab = () => {
 
           {currentView === 'list' && (
             <div className="space-y-4 sm:space-y-6">
-              <div className="text-center space-y-2 px-2">
-                <h3 className={`text-lg sm:text-xl lg:text-2xl xl:text-3xl font-pixel font-bold ${styles.text}`}>
+              <div className="text-center space-y-3 px-4">
+                <h3 className={`text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-pixel font-bold ${styles.text}`}>
                   {language === 'deutsch' ? 'Meine Ideen' : 'My Ideas'}
                 </h3>
-                <p className={`${styles.text} font-pixel text-xs sm:text-sm lg:text-base`}>
+                <p className={`${styles.text} font-pixel text-base sm:text-lg lg:text-xl`}>
                   {language === 'deutsch' 
                     ? 'Entdecke innovative Konzepte und teste funktionsfähige Prototypen'
                     : 'Discover innovative concepts and test functional prototypes'
@@ -228,37 +228,37 @@ const IdeaLab = () => {
                   const avgRating = getAverageRating(idea);
                   return (
                     <div key={idea.id} className={`p-4 sm:p-6 border-2 rounded-lg transition-all duration-200 hover:scale-[1.02] ${styles.cardBg}`}>
-                      <div className="flex flex-col gap-3 sm:gap-4">
-                        <div className="space-y-2 flex-1">
-                          <h4 className={`text-sm sm:text-base lg:text-lg xl:text-xl ${styles.text} font-pixel font-semibold leading-tight`}>{idea.title}</h4>
-                          <p className={`text-xs sm:text-sm lg:text-base ${styles.text} font-pixel leading-relaxed`}>{idea.shortDescription}</p>
+                      <div className="flex flex-col gap-4 sm:gap-5">
+                        <div className="space-y-3 flex-1">
+                          <h4 className={`text-lg sm:text-xl lg:text-2xl xl:text-3xl ${styles.text} font-pixel font-semibold leading-tight`}>{idea.title}</h4>
+                          <p className={`text-base sm:text-lg lg:text-xl ${styles.text} font-pixel leading-relaxed`}>{idea.shortDescription}</p>
                         </div>
                         {avgRating !== null && (
                           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                             <div className="flex justify-center sm:justify-start">
                               {renderStars(avgRating)}
                             </div>
-                            <p className={`text-xs sm:text-sm ${styles.text} font-pixel text-center sm:text-right`}>
+                            <p className={`text-sm sm:text-base ${styles.text} font-pixel text-center sm:text-right`}>
                               {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
                             </p>
                           </div>
                         )}
                       </div>
-                      <div className="flex flex-col gap-2 sm:gap-3 mt-3 sm:mt-4">
+                      <div className="flex flex-col gap-3 sm:gap-4 mt-4 sm:mt-5">
                         <button 
                           onClick={() => {
                             setSelectedIdea(idea);
                             setCurrentView('detail');
                           }}
-                          className={`flex-1 px-3 sm:px-4 py-2 text-xs sm:text-sm lg:text-base font-pixel rounded-lg transition-all duration-200 border-2 ${styles.cardBg} ${styles.text} hover:bg-blue-400/10 border-black/30`}
+                          className={`flex-1 px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-200 border-2 ${styles.cardBg} ${styles.text} hover:bg-blue-400/10 border-black/30`}
                         >
                           {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
                         </button>
                         <button 
                           onClick={() => openPrototype(idea)}
-                          className={`px-3 sm:px-4 py-2 text-xs sm:text-sm lg:text-base font-pixel rounded-lg transition-all duration-200 transform hover:scale-105 border-2 border-black/30 flex items-center justify-center gap-1 sm:gap-2 ${styles.button}`}
+                          className={`px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-200 transform hover:scale-105 border-2 border-black/30 flex items-center justify-center gap-2 sm:gap-3 ${styles.button}`}
                         >
-                          <Play className="h-3 w-3 sm:h-4 sm:w-4" />
+                          <Play className="h-4 w-4 sm:h-5 sm:w-5" />
                           {language === 'deutsch' ? 'Testen' : 'Try'}
                         </button>
                       </div>
@@ -271,11 +271,11 @@ const IdeaLab = () => {
 
           {currentView === 'prototype' && selectedIdea && (
             <div className="space-y-4 sm:space-y-6">
-              <div className="text-center space-y-2">
-                <h3 className={`text-xl sm:text-2xl font-pixel font-bold ${styles.text}`}>
+              <div className="text-center space-y-3">
+                <h3 className={`text-2xl sm:text-3xl lg:text-4xl font-pixel font-bold ${styles.text}`}>
                   {selectedIdea.title}
                 </h3>
-                <p className={`text-sm sm:text-base ${styles.text} font-pixel`}>
+                <p className={`text-lg sm:text-xl ${styles.text} font-pixel`}>
                   {language === 'deutsch' ? 'Interaktiver Prototyp' : 'Interactive Prototype'}
                 </p>
               </div>
@@ -290,31 +290,31 @@ const IdeaLab = () => {
 
           {currentView === 'detail' && selectedIdea && (
             <div className="space-y-6">
-              <div className="text-center space-y-4">
-                <h3 className={`text-2xl sm:text-3xl font-pixel font-bold ${styles.text}`}>{selectedIdea.title}</h3>
+              <div className="text-center space-y-5">
+                <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-pixel font-bold ${styles.text}`}>{selectedIdea.title}</h3>
                 <button 
                   onClick={() => setCurrentView('prototype')}
-                  className={`px-6 py-3 rounded-lg font-pixel border-2 border-black/30 transition-all duration-200 transform hover:scale-105 flex items-center gap-2 mx-auto ${styles.button}`}
+                  className={`px-8 py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-200 transform hover:scale-105 flex items-center gap-3 mx-auto text-lg sm:text-xl ${styles.button}`}
                 >
-                  <Play className="h-4 w-4" />
+                  <Play className="h-5 w-5" />
                   {language === 'deutsch' ? 'Prototyp testen' : 'Test Prototype'}
                 </button>
               </div>
               
               <div className={`p-6 border-2 rounded-lg ${styles.cardBg}`}>
-                <h4 className={`text-lg font-pixel font-semibold mb-2 ${styles.text}`}>
+                <h4 className={`text-xl sm:text-2xl font-pixel font-semibold mb-3 ${styles.text}`}>
                   {language === 'deutsch' ? 'Beschreibung' : 'Description'}
                 </h4>
-                <p className={`${styles.text} font-pixel leading-relaxed`}>{selectedIdea.fullDescription}</p>
+                <p className={`${styles.text} font-pixel leading-relaxed text-base sm:text-lg`}>{selectedIdea.fullDescription}</p>
               </div>
 
               <div className={`p-6 border-2 rounded-lg ${styles.cardBg}`}>
-                <h4 className={`text-lg font-pixel font-semibold mb-4 ${styles.text}`}>
+                <h4 className={`text-xl sm:text-2xl font-pixel font-semibold mb-5 ${styles.text}`}>
                   {language === 'deutsch' ? 'Deine Bewertung' : 'Your Rating'}
                 </h4>
                 <div className="space-y-6">
-                  <div className="space-y-3">
-                    <label className={`text-sm font-pixel ${styles.text}`}>
+                  <div className="space-y-4">
+                    <label className={`text-base sm:text-lg font-pixel ${styles.text}`}>
                       {language === 'deutsch' ? 'Bewertung (1-5 Sterne)' : 'Rating (1-5 stars)'}
                     </label>
                     <div className="flex justify-center">
@@ -322,8 +322,8 @@ const IdeaLab = () => {
                     </div>
                   </div>
                   
-                  <div className="space-y-3">
-                    <label className={`text-sm font-pixel ${styles.text}`}>
+                  <div className="space-y-4">
+                    <label className={`text-base sm:text-lg font-pixel ${styles.text}`}>
                       {language === 'deutsch' ? 'Feedback (optional)' : 'Feedback (optional)'}
                     </label>
                     <Textarea
@@ -341,7 +341,7 @@ const IdeaLab = () => {
                   <button 
                     onClick={handleSubmitRating}
                     disabled={userRating === 0}
-                    className={`w-full py-3 rounded-lg font-pixel border-2 border-black/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${styles.button}`}
+                    className={`w-full py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-lg sm:text-xl ${styles.button}`}
                   >
                     {language === 'deutsch' ? 'Bewertung abgeben' : 'Submit Rating'}
                   </button>
