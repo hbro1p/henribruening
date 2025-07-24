@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGlobalAuth } from '@/hooks/useGlobalAuth';
+import { useSettings } from '@/contexts/SettingsContext';
 import ProgressBar from '@/components/ProgressBar';
 import BlinkingCursor from '@/components/BlinkingCursor';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,6 +16,7 @@ const Landing = () => {
   const [isVerifying, setIsVerifying] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { isAuthenticated, isLoading: authLoading } = useGlobalAuth();
+  const { language, setLanguage, t } = useSettings();
   const navigate = useNavigate();
 
   // Handle authenticated user redirect - only redirect if authenticated and not loading
@@ -101,6 +103,10 @@ const Landing = () => {
     }
   };
 
+  const handleTranslate = () => {
+    setLanguage('deutsch');
+  };
+
   // Show loading while auth is being determined
   if (authLoading) {
     return (
@@ -142,7 +148,7 @@ const Landing = () => {
           <div className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,0.3)] p-8 max-w-md mx-auto">
             <div className="text-center mb-8">
               <h1 className="text-4xl text-black font-pixel mb-4 flex items-center justify-center gap-2">
-                Hi, I'm Henri
+                {language === 'deutsch' ? "Hallo, ich bin Henri" : "Hi, I'm Henri"}
                 <BlinkingCursor />
               </h1>
             </div>
@@ -193,6 +199,38 @@ const Landing = () => {
                   )}
                 </button>
               </form>
+            </div>
+          </div>
+          
+          {/* Scrollable content area below */}
+          <div className="mt-8 max-w-md mx-auto">
+            <div className="bg-white/90 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-6">
+              <p className="text-black font-pixel text-sm leading-relaxed mb-4">
+                {language === 'deutsch' ? (
+                  <>
+                    Diese Seite ist nicht für jeden.<br />
+                    Hinter dieser Tür: Ideen, Gedanken – und ein bisschen Chaos.<br /><br />
+                    Wenn du hierher gehörst, kennst du den Code.<br />
+                    Wenn nicht – vielleicht irgendwann.
+                  </>
+                ) : (
+                  <>
+                    This page isn't for everyone.<br />
+                    Behind this door: ideas/thoughts and a bit of chaos.<br /><br />
+                    If you're supposed to be here, you know the code.<br />
+                    If not — well, maybe one day.
+                  </>
+                )}
+              </p>
+              
+              {language === 'english' && (
+                <button
+                  onClick={handleTranslate}
+                  className="w-full p-3 bg-gray-200 hover:bg-gray-300 border-2 border-black text-black font-pixel transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] active:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)] active:transform active:translate-x-1 active:translate-y-1"
+                >
+                  Translate
+                </button>
+              )}
             </div>
           </div>
         </div>
