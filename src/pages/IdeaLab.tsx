@@ -187,23 +187,23 @@ const IdeaLab = () => {
 
           {currentView === 'welcome' && (
             <div className="text-center space-y-6 sm:space-y-8">
-              <div className="flex flex-col items-center justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
-                <Lightbulb className={`h-6 w-6 sm:h-8 sm:w-8 ${styles.accent}`} />
-                <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-pixel drop-shadow-lg ${styles.text} text-center px-2`}>
+              <div className="flex flex-col items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                <Lightbulb className={`h-8 w-8 sm:h-10 sm:w-10 ${styles.accent}`} />
+                <h1 className={`text-3xl sm:text-4xl lg:text-5xl font-pixel drop-shadow-lg ${styles.text} text-center px-2 leading-tight`}>
                   {language === 'deutsch' ? 'Ideen-Labor' : 'Idea Laboratory'}
                 </h1>
               </div>
               
-              <div className="space-y-3 sm:space-y-4 lg:space-y-6 max-w-3xl mx-auto px-2">
+              <div className="space-y-4 sm:space-y-5 lg:space-y-6 max-w-4xl mx-auto px-4 sm:px-6">
                 {welcomeText.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className={`${styles.text} leading-relaxed text-xs sm:text-sm lg:text-base font-pixel text-left`}>
+                  <p key={index} className={`${styles.text} leading-relaxed text-base sm:text-lg lg:text-xl font-pixel text-left`}>
                     {paragraph}
                   </p>
                 ))}
               </div>
               <button 
                 onClick={() => setCurrentView('list')}
-                className={`px-4 sm:px-6 lg:px-8 py-2 sm:py-3 text-sm sm:text-base rounded-lg font-pixel border-2 border-black/30 transition-all duration-200 transform hover:scale-105 ${styles.button}`}
+                className={`px-6 sm:px-8 lg:px-10 py-3 sm:py-4 text-base sm:text-lg lg:text-xl rounded-lg font-pixel border-2 border-black/30 transition-all duration-200 transform hover:scale-105 ${styles.button}`}
               >
                 {language === 'deutsch' ? 'Ideen entdecken' : 'Discover Ideas'}
               </button>
@@ -211,54 +211,54 @@ const IdeaLab = () => {
           )}
 
           {currentView === 'list' && (
-            <div className="space-y-4 sm:space-y-6">
-              <div className="text-center space-y-2 px-2">
-                <h3 className={`text-lg sm:text-xl lg:text-2xl xl:text-3xl font-pixel font-bold ${styles.text}`}>
+            <div className="space-y-6 sm:space-y-8">
+              <div className="text-center space-y-3 px-4 sm:px-6">
+                <h3 className={`text-2xl sm:text-3xl lg:text-4xl font-pixel font-bold ${styles.text}`}>
                   {language === 'deutsch' ? 'Meine Ideen' : 'My Ideas'}
                 </h3>
-                <p className={`${styles.text} font-pixel text-xs sm:text-sm lg:text-base`}>
+                <p className={`${styles.text} font-pixel text-base sm:text-lg lg:text-xl`}>
                   {language === 'deutsch' 
                     ? 'Entdecke innovative Konzepte und teste funktionsfähige Prototypen'
                     : 'Discover innovative concepts and test functional prototypes'
                   }
                 </p>
               </div>
-              <div className="grid gap-3 sm:gap-4 lg:gap-6 px-2">{/* Reduced gap for mobile */}
+              <div className="grid gap-6 sm:gap-8 px-4 sm:px-6">{/* Increased gap and padding */}
                 {ideas.map((idea) => {
                   const avgRating = getAverageRating(idea);
                   return (
-                    <div key={idea.id} className={`p-4 sm:p-6 border-2 rounded-lg transition-all duration-200 hover:scale-[1.02] ${styles.cardBg}`}>
-                      <div className="flex flex-col gap-3 sm:gap-4">
-                        <div className="space-y-2 flex-1">
-                          <h4 className={`text-sm sm:text-base lg:text-lg xl:text-xl ${styles.text} font-pixel font-semibold leading-tight`}>{idea.title}</h4>
-                          <p className={`text-xs sm:text-sm lg:text-base ${styles.text} font-pixel leading-relaxed`}>{idea.shortDescription}</p>
+                    <div key={idea.id} className={`p-6 sm:p-8 border-2 rounded-lg transition-all duration-200 hover:scale-[1.02] ${styles.cardBg}`}>
+                      <div className="flex flex-col gap-4 sm:gap-5">
+                        <div className="space-y-3 flex-1">
+                          <h4 className={`text-lg sm:text-xl lg:text-2xl ${styles.text} font-pixel font-semibold leading-tight`}>{idea.title}</h4>
+                          <p className={`text-base sm:text-lg lg:text-xl ${styles.text} font-pixel leading-relaxed`}>{idea.shortDescription}</p>
                         </div>
                         {avgRating !== null && (
-                          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                             <div className="flex justify-center sm:justify-start">
                               {renderStars(avgRating)}
                             </div>
-                            <p className={`text-xs sm:text-sm ${styles.text} font-pixel text-center sm:text-right`}>
+                            <p className={`text-sm sm:text-base ${styles.text} font-pixel text-center sm:text-right`}>
                               {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
                             </p>
                           </div>
                         )}
                       </div>
-                      <div className="flex flex-col gap-2 sm:gap-3 mt-3 sm:mt-4">
+                      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-4 sm:mt-5">
                         <button 
                           onClick={() => {
                             setSelectedIdea(idea);
                             setCurrentView('detail');
                           }}
-                          className={`flex-1 px-3 sm:px-4 py-2 text-xs sm:text-sm lg:text-base font-pixel rounded-lg transition-all duration-200 border-2 ${styles.cardBg} ${styles.text} hover:bg-blue-400/10 border-black/30`}
+                          className={`flex-1 px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base lg:text-lg font-pixel rounded-lg transition-all duration-200 border-2 ${styles.cardBg} ${styles.text} hover:bg-blue-400/10 border-black/30`}
                         >
                           {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
                         </button>
                         <button 
                           onClick={() => openPrototype(idea)}
-                          className={`px-3 sm:px-4 py-2 text-xs sm:text-sm lg:text-base font-pixel rounded-lg transition-all duration-200 transform hover:scale-105 border-2 border-black/30 flex items-center justify-center gap-1 sm:gap-2 ${styles.button}`}
+                          className={`px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base lg:text-lg font-pixel rounded-lg transition-all duration-200 transform hover:scale-105 border-2 border-black/30 flex items-center justify-center gap-2 ${styles.button}`}
                         >
-                          <Play className="h-3 w-3 sm:h-4 sm:w-4" />
+                          <Play className="h-4 w-4 sm:h-5 sm:w-5" />
                           {language === 'deutsch' ? 'Testen' : 'Try'}
                         </button>
                       </div>
