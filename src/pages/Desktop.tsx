@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
 import TvApp from '@/components/TvApp';
-import RatingApp from '@/components/RatingApp';
 import MiniMusicPlayer from '@/components/MiniMusicPlayer';
 import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock, Star } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
@@ -12,7 +11,6 @@ import { useGlobalMusicPlayer } from '@/hooks/useGlobalMusicPlayer';
 const Desktop = () => {
   const { t, language } = useSettings();
   const [isTvOpen, setIsTvOpen] = useState(false);
-  const [isRatingOpen, setIsRatingOpen] = useState(false);
   
   // Initialize theme music and TV music control
   useThemeMusic();
@@ -59,10 +57,7 @@ const Desktop = () => {
           <DesktopIcon 
             icon={Star} 
             label={language === 'deutsch' ? 'Ideen-Labor' : 'Idea Lab'}
-            onClick={() => {
-              console.log('Rating/Idea icon clicked, opening Rating app');
-              setIsRatingOpen(true);
-            }}
+            to="/idea-lab"
           />
 
           <DesktopIcon icon={User} label={t('About Me')} to="/about" />
@@ -77,15 +72,6 @@ const Desktop = () => {
         onClose={() => {
           console.log('Closing TV app');
           setIsTvOpen(false);
-        }} 
-      />
-
-      {/* Rating/Idea App Modal */}
-      <RatingApp 
-        isOpen={isRatingOpen} 
-        onClose={() => {
-          console.log('Closing Rating app');
-          setIsRatingOpen(false);
         }} 
       />
       
