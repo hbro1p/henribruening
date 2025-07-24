@@ -11,7 +11,19 @@ const Settings = () => {
     {
       id: 'space-mood' as const,
       name: t('Space Mood'),
-      preview: 'bg-gradient-to-br from-indigo-900 via-blue-900 to-black'
+      preview: (
+        <div className="w-full h-12 rounded-md border-2 shadow-inner border-gray-500 bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 grid grid-cols-3 gap-1 p-1">
+          <div className="bg-blue-500 rounded-sm"></div>
+          <div className="bg-green-500 rounded-sm"></div>
+          <div className="bg-purple-500 rounded-sm"></div>
+          <div className="bg-yellow-500 rounded-sm"></div>
+          <div className="bg-red-500 rounded-sm"></div>
+          <div className="bg-orange-500 rounded-sm"></div>
+          <div className="bg-pink-500 rounded-sm"></div>
+          <div className="bg-indigo-500 rounded-sm"></div>
+          <div className="bg-teal-500 rounded-sm"></div>
+        </div>
+      )
     }
   ];
 
@@ -73,7 +85,9 @@ const Settings = () => {
                           : 'border-gray-500 shadow-lg bg-gray-100 hover:border-gray-600'
                       }`}
                     >
-                      <div className={`w-full h-12 rounded-md mb-3 border-2 shadow-inner border-gray-500 ${themeOption.preview}`}></div>
+                      <div className="mb-3">
+                        {themeOption.preview}
+                      </div>
                       <span className="text-lg font-pixel text-gray-900">
                         {themeOption.name}
                       </span>

@@ -127,12 +127,6 @@ const Landing = () => {
         }}
       />
 
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-3 h-3 bg-blue-600 animate-bounce delay-100"></div>
-        <div className="absolute top-40 right-32 w-2 h-2 bg-blue-800 animate-bounce delay-300"></div>
-        <div className="absolute bottom-32 left-40 w-3 h-3 bg-blue-700 animate-bounce delay-500"></div>
-        <div className="absolute bottom-20 right-20 w-2 h-2 bg-blue-900 animate-bounce delay-700"></div>
-      </div>
 
       {loading ? (
         <div className="text-center z-10">

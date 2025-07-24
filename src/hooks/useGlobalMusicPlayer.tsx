@@ -148,10 +148,8 @@ export const GlobalMusicProvider: React.FC<{ children: React.ReactNode }> = ({ c
       return nextIndex;
     });
     
-    // Always continue playing when manually switching tracks
-    if (wasPlaying) {
-      setTimeout(() => togglePlayPause(), 300);
-    }
+    // Auto-play the next track when manually switching
+    setIsPlaying(true);
   };
 
   const prevTrack = () => {
@@ -166,10 +164,8 @@ export const GlobalMusicProvider: React.FC<{ children: React.ReactNode }> = ({ c
       return prevIndex;
     });
     
-    // Always continue playing when manually switching tracks
-    if (wasPlaying) {
-      setTimeout(() => togglePlayPause(), 300);
-    }
+    // Auto-play the previous track when manually switching
+    setIsPlaying(true);
   };
 
   const setVolume = (newVolume: number) => {
