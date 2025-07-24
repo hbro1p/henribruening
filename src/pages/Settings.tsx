@@ -16,7 +16,7 @@ const Settings = () => {
   ];
 
   return (
-    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-gray' : ''}`}>
+    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
       <div className="p-2 border-2 border-black/30 w-full max-w-4xl shadow-2xl rounded-lg bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600">
         <div className="p-2 rounded-t border-b-2 border-black/20 shadow-inner bg-gradient-to-r from-gray-600 via-gray-700 to-gray-800">
           <div className="flex items-center space-x-2">
@@ -85,10 +85,8 @@ const Settings = () => {
               {/* System Info */}
               <div className="p-6 rounded-lg border-2 bg-gray-50 border-gray-600 shadow-lg">
                 <div className="space-y-2 font-pixel text-gray-900">
-                  <div className="text-lg">Henri OS v1.0</div>
-                  <div className="text-base">Designed by Henri Brüning</div>
+                  <div className="text-base">Designed by Henry Bruning</div>
                   <div className="text-base">Built for: nostalgia, creativity, and curiosity</div>
-                  <div className="text-sm mt-4 opacity-80">Support: [X] not found</div>
                 </div>
               </div>
             </div>
