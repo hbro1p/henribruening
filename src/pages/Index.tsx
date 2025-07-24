@@ -104,7 +104,7 @@ const Landing = () => {
   };
 
   const handleTranslate = () => {
-    setLanguage('deutsch');
+    setLanguage(language === 'deutsch' ? 'english' : 'deutsch');
   };
 
   // Show loading while auth is being determined
@@ -223,14 +223,12 @@ const Landing = () => {
                 )}
               </p>
               
-              {language === 'english' && (
-                <button
-                  onClick={handleTranslate}
-                  className="w-full p-3 bg-gray-200 hover:bg-gray-300 border-2 border-black text-black font-pixel transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] active:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)] active:transform active:translate-x-1 active:translate-y-1"
-                >
-                  Translate
-                </button>
-              )}
+              <button
+                onClick={handleTranslate}
+                className="w-full p-3 bg-gray-200 hover:bg-gray-300 border-2 border-black text-black font-pixel transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] active:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)] active:transform active:translate-x-1 active:translate-y-1"
+              >
+                {language === 'deutsch' ? 'Übersetzen' : 'Translate'}
+              </button>
             </div>
           </div>
         </div>

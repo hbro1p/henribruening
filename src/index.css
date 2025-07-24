@@ -4,9 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+html, body {
   font-family: VT323, monospace;
   transition: all 0.3s ease;
+  /* Prevent overscroll for clean mobile experience */
+  overscroll-behavior: none;
 }
 
 /* Space Mood Theme - Professional Windows XP/2000s style (DEFAULT) */
