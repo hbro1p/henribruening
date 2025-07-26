@@ -214,10 +214,6 @@ const Challenges = () => {
   const completeChallenge = () => {
     setIsActive(false);
     setIsCompleted(true);
-    toast({
-      title: t('Challenge completed!'),
-      description: t('You\'re building great habits!') + ' 💪',
-    });
   };
 
   useEffect(() => {
