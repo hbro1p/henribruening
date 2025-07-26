@@ -62,32 +62,7 @@ const IdeaLab = () => {
 
   // Initialize ideas data
   useEffect(() => {
-    const initialIdeas: Idea[] = [
-      {
-        id: '1',
-        title: 'Viral Video Prompt Generator',
-        shortDescription: language === 'deutsch' 
-          ? 'Ein Tool für vollständige Social-Media-Prompts basierend auf Themen'
-          : 'A tool for complete social media prompts based on topics',
-        fullDescription: language === 'deutsch'
-          ? 'Diese Idee beschreibt ein Tool, bei dem man ein Thema eingibt (z. B. Vertrauen, Sommerferien, Freundschaft), und daraufhin einen komplett vorbereiteten Social-Media-Prompt bekommt. Der Prompt enthält eine Hook, eine passende Dramaturgie und Vorschläge für Erzählstil und Videolänge.'
-          : 'This idea describes a tool where you input a topic (e.g., trust, summer vacation, friendship) and receive a complete social media prompt. The prompt includes a hook, appropriate dramaturgy, and suggestions for narrative style and video length.',
-        prototypeComponent: 'ViralVideoPromptGenerator',
-        ratings: []
-      },
-      {
-        id: '2',
-        title: 'Coesfeld Quest',
-        shortDescription: language === 'deutsch'
-          ? 'Eine digitale Schnitzeljagd durch die Stadt Coesfeld'
-          : 'A digital scavenger hunt through the city of Coesfeld',
-        fullDescription: language === 'deutsch'
-          ? 'Diese Idee beschreibt eine digitale Schnitzeljagd durch die Stadt Coesfeld. Nutzerinnen und Nutzer müssen Orte finden, Hinweise lösen und erhalten Belohnungen in teilnehmenden Geschäften, Museen oder Cafés.'
-          : 'This idea describes a digital scavenger hunt through the city of Coesfeld. Users find locations, solve clues, and receive rewards at participating businesses, museums, or cafes.',
-        prototypeComponent: 'CoesfelderQuest',
-        ratings: []
-      }
-    ];
+    const initialIdeas: Idea[] = [];
     setIdeas(initialIdeas);
   }, [language]);
 
@@ -223,48 +198,65 @@ const IdeaLab = () => {
                   }
                 </p>
               </div>
-              <div className="grid gap-3 sm:gap-4 lg:gap-6 px-2">{/* Reduced gap for mobile */}
-                {ideas.map((idea) => {
-                  const avgRating = getAverageRating(idea);
-                  return (
-                    <div key={idea.id} className={`p-4 sm:p-6 border-2 rounded-lg transition-all duration-200 hover:scale-[1.02] ${styles.cardBg}`}>
-                      <div className="flex flex-col gap-4 sm:gap-5">
-                        <div className="space-y-3 flex-1">
-                          <h4 className={`text-lg sm:text-xl lg:text-2xl xl:text-3xl ${styles.text} font-pixel font-semibold leading-tight`}>{idea.title}</h4>
-                          <p className={`text-base sm:text-lg lg:text-xl ${styles.text} font-pixel leading-relaxed`}>{idea.shortDescription}</p>
-                        </div>
-                        {avgRating !== null && (
-                          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                            <div className="flex justify-center sm:justify-start">
-                              {renderStars(avgRating)}
+              <div className="text-center space-y-6">
+                {ideas.length === 0 ? (
+                  <div className="space-y-4">
+                    <div className="text-6xl">💭</div>
+                    <h4 className={`text-2xl sm:text-3xl font-pixel ${styles.text}`}>
+                      {language === 'deutsch' ? 'Noch keine Ideen' : 'No ideas yet'}
+                    </h4>
+                    <p className={`${styles.text} font-pixel text-lg`}>
+                      {language === 'deutsch' 
+                        ? 'Hier werden bald neue Ideen auftauchen...' 
+                        : 'New ideas will appear here soon...'
+                      }
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid gap-3 sm:gap-4 lg:gap-6 px-2">
+                    {ideas.map((idea) => {
+                      const avgRating = getAverageRating(idea);
+                      return (
+                        <div key={idea.id} className={`p-4 sm:p-6 border-2 rounded-lg transition-all duration-200 hover:scale-[1.02] ${styles.cardBg}`}>
+                          <div className="flex flex-col gap-4 sm:gap-5">
+                            <div className="space-y-3 flex-1">
+                              <h4 className={`text-lg sm:text-xl lg:text-2xl xl:text-3xl ${styles.text} font-pixel font-semibold leading-tight`}>{idea.title}</h4>
+                              <p className={`text-base sm:text-lg lg:text-xl ${styles.text} font-pixel leading-relaxed`}>{idea.shortDescription}</p>
                             </div>
-                            <p className={`text-sm sm:text-base ${styles.text} font-pixel text-center sm:text-right`}>
-                              {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
-                            </p>
+                            {avgRating !== null && (
+                              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                                <div className="flex justify-center sm:justify-start">
+                                  {renderStars(avgRating)}
+                                </div>
+                                <p className={`text-sm sm:text-base ${styles.text} font-pixel text-center sm:text-right`}>
+                                  {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
+                                </p>
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                      <div className="flex flex-col gap-3 sm:gap-4 mt-4 sm:mt-5">
-                        <button 
-                          onClick={() => {
-                            setSelectedIdea(idea);
-                            setCurrentView('detail');
-                          }}
-                          className={`flex-1 px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-200 border-2 ${styles.cardBg} ${styles.text} hover:bg-blue-400/10 border-black/30`}
-                        >
-                          {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
-                        </button>
-                        <button 
-                          onClick={() => openPrototype(idea)}
-                          className={`px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-200 transform hover:scale-105 border-2 border-black/30 flex items-center justify-center gap-2 sm:gap-3 ${styles.button}`}
-                        >
-                          <Play className="h-4 w-4 sm:h-5 sm:w-5" />
-                          {language === 'deutsch' ? 'Testen' : 'Try'}
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
+                          <div className="flex flex-col gap-3 sm:gap-4 mt-4 sm:mt-5">
+                            <button 
+                              onClick={() => {
+                                setSelectedIdea(idea);
+                                setCurrentView('detail');
+                              }}
+                              className={`flex-1 px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-200 border-2 ${styles.cardBg} ${styles.text} hover:bg-blue-400/10 border-black/30`}
+                            >
+                              {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
+                            </button>
+                            <button 
+                              onClick={() => openPrototype(idea)}
+                              className={`px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-200 transform hover:scale-105 border-2 border-black/30 flex items-center justify-center gap-2 sm:gap-3 ${styles.button}`}
+                            >
+                              <Play className="h-4 w-4 sm:h-5 sm:w-5" />
+                              {language === 'deutsch' ? 'Testen' : 'Try'}
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           )}
