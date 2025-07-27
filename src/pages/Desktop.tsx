@@ -18,7 +18,7 @@ const Desktop = () => {
   
   const { isPlaying, musicFiles } = useGlobalMusicPlayer();
 
-  console.log('Desktop component rendered, isTvOpen:', isTvOpen);
+  // Desktop component rendered
 
   return (
     <>
@@ -41,7 +41,6 @@ const Desktop = () => {
             icon={Tv} 
             label={t('TV')}
             onClick={() => {
-              console.log('TV icon clicked, opening TV app');
               setIsTvOpen(true);
             }}
           />
@@ -70,9 +69,8 @@ const Desktop = () => {
       <TvApp 
         isOpen={isTvOpen} 
         onClose={() => {
-          console.log('Closing TV app');
           setIsTvOpen(false);
-        }} 
+        }}
       />
       
     </>

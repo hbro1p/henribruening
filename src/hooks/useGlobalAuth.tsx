@@ -6,18 +6,44 @@ interface SessionData {
   authenticated: boolean;
   expiresAt: number;
   lastActivity: number;
+  fingerprint?: string;
 }
 
 export const useGlobalAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const isSessionValid = (sessionData: SessionData): boolean => {
+  const isSessionValid = async (sessionData: SessionData): Promise<boolean> => {
     const now = Date.now();
     const sessionExpired = now > sessionData.expiresAt;
-    const inactivityTimeout = now - sessionData.lastActivity > (30 * 60 * 1000); // 30 minutes inactivity
+    const inactivityTimeout = now - sessionData.lastActivity > (20 * 60 * 1000); // Reduced to 20 minutes inactivity
+    
+    // Enhanced security: verify browser fingerprint
+    if (sessionData.fingerprint) {
+      const currentFingerprint = await generateBrowserFingerprint();
+      if (currentFingerprint !== sessionData.fingerprint) {
+        return false; // Session hijacking attempt detected
+      }
+    }
     
     return sessionData.authenticated && !sessionExpired && !inactivityTimeout;
+  };
+
+  const generateBrowserFingerprint = async (): Promise<string> => {
+    const components = [
+      navigator.userAgent,
+      navigator.language,
+      screen.width + 'x' + screen.height,
+      new Date().getTimezoneOffset(),
+      navigator.hardwareConcurrency || 0
+    ];
+    
+    const data = components.join('|');
+    const encoder = new TextEncoder();
+    const dataBuffer = encoder.encode(data);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   };
 
   const updateLastActivity = (sessionData: SessionData) => {
@@ -29,7 +55,7 @@ export const useGlobalAuth = () => {
   };
 
   useEffect(() => {
-    const checkAuth = () => {
+    const checkAuth = async () => {
       try {
         const globalAuth = sessionStorage.getItem('globalAuth');
         if (!globalAuth) {
@@ -40,7 +66,7 @@ export const useGlobalAuth = () => {
 
         const sessionData: SessionData = JSON.parse(globalAuth);
         
-        if (isSessionValid(sessionData)) {
+        if (await isSessionValid(sessionData)) {
           setIsAuthenticated(true);
           updateLastActivity(sessionData);
         } else {
@@ -70,7 +96,6 @@ export const useGlobalAuth = () => {
 
     // Listen for custom globalAuthChange event (for same-tab changes)
     const handleGlobalAuthChange = (e: CustomEvent) => {
-      console.log('Global auth change event received:', e.detail);
       checkAuth();
     };
 
@@ -78,12 +103,12 @@ export const useGlobalAuth = () => {
     const sessionCheckInterval = setInterval(checkAuth, 60000); // Check every minute
 
     // Update activity on user interactions
-    const updateActivity = () => {
+    const updateActivity = async () => {
       const globalAuth = sessionStorage.getItem('globalAuth');
       if (globalAuth) {
         try {
           const sessionData: SessionData = JSON.parse(globalAuth);
-          if (isSessionValid(sessionData)) {
+          if (await isSessionValid(sessionData)) {
             updateLastActivity(sessionData);
           }
         } catch (error) {

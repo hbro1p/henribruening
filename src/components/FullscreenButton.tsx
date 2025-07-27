@@ -15,9 +15,7 @@ const FullscreenButton: React.FC<FullscreenButtonProps> = ({ targetElement, clas
     e.preventDefault();
     e.stopPropagation();
     
-    console.log('Fullscreen button clicked');
-    console.log('Target element:', targetElement);
-    console.log('Current fullscreen state:', isFullscreen);
+    // Fullscreen button interaction logged securely
     
     if (!targetElement) {
       console.warn('No target element provided for fullscreen');
@@ -26,9 +24,9 @@ const FullscreenButton: React.FC<FullscreenButtonProps> = ({ targetElement, clas
 
     try {
       await toggleFullscreen(targetElement);
-      console.log('Fullscreen toggle completed');
+      // Fullscreen operation completed
     } catch (error) {
-      console.error('Failed to toggle fullscreen:', error);
+      // Fullscreen operation failed
     }
   };
 

@@ -7,6 +7,8 @@ import ProgressBar from '@/components/ProgressBar';
 import BlinkingCursor from '@/components/BlinkingCursor';
 import { supabase } from '@/integrations/supabase/client';
 import { Eye, EyeOff } from 'lucide-react';
+import { validateInput, securityMonitor } from '@/utils/securityMonitor';
+import { clientRateLimiter } from '@/utils/rateLimiter';
 
 const Landing = () => {
   const [loading, setLoading] = useState(true);
@@ -22,7 +24,6 @@ const Landing = () => {
   // Handle authenticated user redirect - only redirect if authenticated and not loading
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
-      console.log('User is authenticated, redirecting to desktop');
       navigate('/desktop', { replace: true });
     }
   }, [isAuthenticated, authLoading, navigate]);
@@ -44,36 +45,63 @@ const Landing = () => {
     }
   }, [loading]);
 
+  const sanitizeInput = (input: string): string => {
+    return input.replace(/[<>'"&]/g, '');
+  };
+
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsVerifying(true);
     setPasswordError('');
     
-    console.log('Attempting login with password:', password);
+    // Rate limiting check
+    const clientId = 'login_attempt';
+    const rateLimitCheck = clientRateLimiter.checkLimit(clientId);
+    
+    if (!rateLimitCheck.allowed) {
+      setPasswordError('Too many attempts. Please try again later.');
+      setIsVerifying(false);
+      return;
+    }
+
+    // Input validation and sanitization
+    const validation = validateInput.password(password);
+    if (!validation.valid) {
+      setPasswordError(validation.errors[0]);
+      setIsVerifying(false);
+      return;
+    }
+
+    const sanitizedPassword = validateInput.sanitizeText(password);
     
     try {
       const { data, error } = await supabase.functions.invoke('verify-password', {
         body: { 
-          password: password,
+          password: sanitizedPassword,
           section: 'global' 
         }
       });
       
-      console.log('Function response:', { data, error });
+      if (error) {
+        throw new Error('Authentication failed');
+      }
       
-      if (error) throw error;
-      
-      if (data.valid) {
+      if (data?.valid) {
+        // Record successful attempt
+        clientRateLimiter.recordAttempt(clientId, true);
+        
         setPasswordError('');
-        // Generate secure session token with expiration
+        // Generate secure session token with browser fingerprinting
+        const fingerprint = await generateBrowserFingerprint();
         const sessionToken = crypto.randomUUID() + '-' + Date.now();
-        const expiresAt = Date.now() + (24 * 60 * 60 * 1000); // 24 hours
+        const expiresAt = Date.now() + (12 * 60 * 60 * 1000); // Reduced to 12 hours
         
         const sessionData = {
           token: sessionToken,
           authenticated: true,
           expiresAt: expiresAt,
-          lastActivity: Date.now()
+          lastActivity: Date.now(),
+          fingerprint: fingerprint
         };
         
         sessionStorage.setItem('globalAuth', JSON.stringify(sessionData));
@@ -82,17 +110,57 @@ const Landing = () => {
         window.dispatchEvent(new CustomEvent('globalAuthChange', { detail: sessionData }));
         
         setPassword('');
-        console.log('Login successful, session stored and event dispatched');
+        
+        securityMonitor.logSecurityEvent({
+          type: 'AUTHENTICATION_ATTEMPT',
+          severity: 'LOW',
+          details: { success: true }
+        });
       } else {
+        // Record failed attempt
+        clientRateLimiter.recordAttempt(clientId, false);
+        
+        securityMonitor.logSecurityEvent({
+          type: 'AUTHENTICATION_ATTEMPT',
+          severity: 'MEDIUM',
+          details: { success: false, reason: 'Invalid password' }
+        });
+        
         setPasswordError('Wrong password!');
         setPassword('');
       }
     } catch (error) {
-      setPasswordError('Try again!');
+      // Record failed attempt
+      clientRateLimiter.recordAttempt(clientId, false);
+      
+      securityMonitor.logSecurityEvent({
+        type: 'AUTHENTICATION_ATTEMPT',
+        severity: 'HIGH',
+        details: { success: false, reason: 'System error' }
+      });
+      
+      setPasswordError('Authentication failed. Please try again.');
       setPassword('');
     } finally {
       setIsVerifying(false);
     }
+  };
+
+  const generateBrowserFingerprint = async (): Promise<string> => {
+    const components = [
+      navigator.userAgent,
+      navigator.language,
+      screen.width + 'x' + screen.height,
+      new Date().getTimezoneOffset(),
+      navigator.hardwareConcurrency || 0
+    ];
+    
+    const data = components.join('|');
+    const encoder = new TextEncoder();
+    const dataBuffer = encoder.encode(data);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', dataBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {

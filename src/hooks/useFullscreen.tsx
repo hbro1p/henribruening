@@ -12,14 +12,14 @@ export const useFullscreen = () => {
                              (document as any).msFullscreenElement;
     
     const isCurrentlyFullscreen = !!fullscreenElement;
-    console.log('Fullscreen check:', isCurrentlyFullscreen, fullscreenElement);
+    // Fullscreen state checked
     setIsFullscreen(isCurrentlyFullscreen);
   }, []);
 
   // Listen for fullscreen change events
   useEffect(() => {
     const handleFullscreenChange = () => {
-      console.log('Fullscreen change event triggered');
+      // Fullscreen state changed
       checkFullscreen();
     };
 
@@ -42,7 +42,7 @@ export const useFullscreen = () => {
 
   const enterFullscreen = useCallback(async (element: HTMLElement) => {
     try {
-      console.log('Attempting to enter fullscreen for element:', element);
+      // Entering fullscreen mode
       
       // Enhanced fullscreen support check
       const isSupported = document.fullscreenEnabled || 
@@ -122,7 +122,7 @@ export const useFullscreen = () => {
 
   const exitFullscreen = useCallback(async () => {
     try {
-      console.log('Attempting to exit fullscreen');
+      // Exiting fullscreen mode
       
       // First try native fullscreen exit
       let success = false;
@@ -154,7 +154,7 @@ export const useFullscreen = () => {
       });
 
       if (!success) {
-        console.log('No native fullscreen exit method available, cleaned up CSS styles');
+        // Fallback fullscreen exit completed
       }
       
       setIsFullscreen(false);
@@ -174,7 +174,7 @@ export const useFullscreen = () => {
   }, []);
 
   const toggleFullscreen = useCallback(async (element: HTMLElement | null) => {
-    console.log('Toggle fullscreen called with element:', element, 'Current state:', isFullscreen);
+    // Toggling fullscreen mode
     
     if (!element) {
       console.warn('No element provided for fullscreen toggle');
