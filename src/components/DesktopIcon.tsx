@@ -99,8 +99,7 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to, onClic
     <>
       <div className="w-20 h-20 flex items-center justify-center">
         <div className={`relative w-16 h-16 bg-gradient-to-br ${styles.gradient} rounded border-2 ${styles.border} ${styles.hoverBorder} ${styles.shadow} transition-all duration-200 flex items-center justify-center`}>
-          {/* Windows XP-style highlight */}
-          <div className={`absolute top-1 left-1 w-12 h-8 ${styles.highlight} rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200`}></div>
+          {/* Icon */}
           
           {/* Icon */}
           <Icon className="w-8 h-8 text-white drop-shadow-sm relative z-10" />
