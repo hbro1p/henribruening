@@ -20,8 +20,13 @@ const translations = {
     'My Videos': 'My Videos', 
     'My Projects': 'My Projects',
     'About Me': 'About Me',
+    'About': 'About',
     'Contact': 'Contact',
     'Settings': 'Settings',
+    'Radio': 'Radio',
+    'Pictures': 'Pictures',
+    'Challenges': 'Challenges',
+    'Idea Lab': 'Idea Lab',
     'Game.exe': 'Game.exe',
     'Language': 'Language:',
     'Appearance Theme': 'Appearance Theme:',
@@ -77,7 +82,6 @@ const translations = {
     'Get In Touch': 'Get In Touch',
     'Let\'s connect via Instagram or Email.': 'Let\'s connect via Instagram or Email.',
     // Desktop apps
-    'Radio': 'Radio',
     'TV': 'TV',
     'Challenge': 'Challenge',
     // Challenge app
@@ -100,8 +104,13 @@ const translations = {
     'My Videos': 'Meine Videos',
     'My Projects': 'Meine Projekte', 
     'About Me': 'Über Mich',
+    'About': 'Über Mich',
     'Contact': 'Kontakt',
     'Settings': 'Einstellungen',
+    'Radio': 'Radio',
+    'Pictures': 'Bilder',
+    'Challenges': 'Challenges',
+    'Idea Lab': 'Ideenlabor',
     'Game.exe': 'Spiel.exe',
     'Language': 'Sprache:',
     'Appearance Theme': 'Erscheinungsbild:',
@@ -157,7 +166,6 @@ const translations = {
     'Get In Touch': 'Kontakt Aufnehmen',
     'Let\'s connect via Instagram or Email.': 'Lass uns über Instagram oder E-Mail in Kontakt treten.',
     // Desktop apps
-    'Radio': 'Radio',
     'TV': 'TV',
     'Challenge': 'Challenge',
     // Challenge app

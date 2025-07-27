@@ -60,11 +60,8 @@ const Contact = () => {
       <div className={`p-2 border-2 border-black/30 w-full max-w-lg shadow-2xl rounded-lg ${styles.windowFrame}`}>
         {/* Title bar */}
         <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
-            <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
-            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-            <span className="text-white font-pixel text-sm ml-2">Contact.exe</span>
+          <div className="flex items-center">
+            <span className="text-white font-pixel text-sm">{t('Contact')}</span>
           </div>
         </div>
         

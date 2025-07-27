@@ -31,11 +31,8 @@ const Settings = () => {
     <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
       <div className="p-2 border-2 border-black/30 w-full max-w-4xl shadow-2xl rounded-lg bg-gradient-to-br from-gray-300 via-gray-400 to-gray-600">
         <div className="p-2 rounded-t border-b-2 border-black/20 shadow-inner bg-gradient-to-r from-gray-600 via-gray-700 to-gray-800">
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
-            <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
-            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-            <span className="text-white font-pixel text-sm ml-2">Settings.exe</span>
+          <div className="flex items-center">
+            <span className="text-white font-pixel text-sm">{t('Settings')}</span>
           </div>
         </div>
         

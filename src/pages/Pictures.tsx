@@ -178,11 +178,8 @@ const Pictures = () => {
     <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${getFolderBackground()}`}>
       <div className={`p-2 border-2 border-black/30 w-full max-w-6xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
         <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-red-600 rounded-full border border-black/20"></div>
-            <div className="w-3 h-3 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full border border-black/20"></div>
-            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-green-600 rounded-full border border-black/20"></div>
-            <span className="text-white font-pixel text-sm ml-2">Pictures.exe</span>
+          <div className="flex items-center">
+            <span className="text-white font-pixel text-sm">{t('Pictures')}</span>
           </div>
         </div>
         
@@ -205,9 +202,8 @@ const Pictures = () => {
                       ${selectedCategory === category ? 'ring-4 ring-yellow-400 ring-offset-2 ring-offset-transparent scale-110' : ''}
                     `}
                   >
-                    <div className="text-2xl mb-1">📁</div>
-                    <div className="text-sm font-bold text-center leading-tight">{category}</div>
-                    <div className="text-xs opacity-90 mt-1">({images[category].length})</div>
+                    <div className="text-lg font-bold text-center leading-tight">{category}</div>
+                    <div className="text-sm opacity-90 mt-1">({images[category].length})</div>
                   </button>
                 );
               })}
