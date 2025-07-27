@@ -187,7 +187,8 @@ const translations = {
 
 export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>('english');
-  const [theme, setThemeState] = useState<Theme>('space-mood'); // Space Mood as default
+  const [theme, setThemeState] = useState<Theme>('space-mood');
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load settings from localStorage on mount
   useEffect(() => {
@@ -206,6 +207,8 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
       localStorage.setItem('henri-os-theme', 'space-mood');
       setThemeState('space-mood');
     }
+    
+    setIsInitialized(true);
   }, []);
 
   // Apply theme to document body
@@ -226,6 +229,11 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
   const t = (key: string): string => {
     return translations[language][key] || key;
   };
+
+  // Don't render children until context is initialized
+  if (!isInitialized) {
+    return null;
+  }
 
   return (
     <SettingsContext.Provider value={{ language, theme, setLanguage, setTheme, t }}>
