@@ -17,12 +17,12 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     // Don't do anything while loading
     if (isLoading) return;
     
-    // Protected routes that require authentication
-    const protectedRoutes = ['/desktop', '/pictures', '/videos', '/projects', '/about', '/contact', '/settings'];
-    const isProtectedRoute = protectedRoutes.includes(location.pathname);
+    // Only allow access to the root path without authentication
+    // ALL other routes are protected
+    const isPublicRoute = location.pathname === '/';
     
-    // If not authenticated and trying to access protected routes, redirect to login
-    if (!isAuthenticated && isProtectedRoute) {
+    // If not authenticated and trying to access any protected route, redirect to login
+    if (!isAuthenticated && !isPublicRoute) {
       secureLogger.info('Unauthorized access attempt to protected route', { 
         route: location.pathname 
       });
@@ -42,11 +42,10 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     );
   }
 
-  // If not authenticated and trying to access protected routes, show nothing (will redirect)
-  const protectedRoutes = ['/desktop', '/pictures', '/videos', '/projects', '/about', '/contact', '/settings'];
-  const isProtectedRoute = protectedRoutes.includes(location.pathname);
+  // If not authenticated and trying to access any protected route, show nothing (will redirect)
+  const isPublicRoute = location.pathname === '/';
   
-  if (!isAuthenticated && isProtectedRoute) {
+  if (!isAuthenticated && !isPublicRoute) {
     return null;
   }
 
