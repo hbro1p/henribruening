@@ -99,7 +99,7 @@ const Settings = () => {
               {/* System Info */}
               <div className="p-6 rounded-lg border-2 bg-gray-50 border-gray-600 shadow-lg">
                 <div className="space-y-2 font-pixel text-gray-900">
-                  <div className="text-base">Designed by Henry Bruning</div>
+                  <div className="text-base">Designed by Henri Brüning</div>
                   <div className="text-base">Built for: nostalgia, creativity, and curiosity</div>
                 </div>
               </div>

@@ -191,7 +191,7 @@ const Pictures = () => {
             <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ PICTURES ]</h1>
             
             {/* Category Selection - Always visible */}
-            <div className="flex flex-wrap gap-4 mb-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8 w-full max-w-2xl">
               {Object.keys(images).map((category) => {
                 const categoryColors = getCategoryColors(category);
                 return (
@@ -199,14 +199,15 @@ const Pictures = () => {
                     key={category}
                     onClick={() => setSelectedCategory(category)}
                     className={`
-                      px-6 py-4 border-3 rounded-2xl font-pixel transition-all active:scale-95 capitalize text-lg shadow-xl
+                      aspect-square flex flex-col items-center justify-center p-4 border-3 rounded-2xl font-pixel transition-all active:scale-95 capitalize text-base shadow-xl
                       bg-gradient-to-br ${categoryColors.primary}
                       hover:shadow-2xl hover:scale-105 text-white border-white/30
                       ${selectedCategory === category ? 'ring-4 ring-yellow-400 ring-offset-2 ring-offset-transparent scale-110' : ''}
                     `}
                   >
-                    📁 {category}
-                    <div className="text-sm opacity-90">({images[category].length} photos)</div>
+                    <div className="text-2xl mb-1">📁</div>
+                    <div className="text-sm font-bold text-center leading-tight">{category}</div>
+                    <div className="text-xs opacity-90 mt-1">({images[category].length})</div>
                   </button>
                 );
               })}
