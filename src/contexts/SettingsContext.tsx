@@ -94,6 +94,16 @@ const translations = {
     'Done!': 'Done!',
     'Reset': 'Reset',
     'New Challenge': 'New Challenge',
+    // Desktop welcome
+    'Welcome to Henri\'s Digital Playground': 'Welcome to Henri\'s Digital Playground',
+    'Initializing creative workspace...': 'Initializing creative workspace...',
+    'Loading your personal interface...': 'Loading your personal interface...',
+    'Setting up digital environment...': 'Setting up digital environment...',
+    'Almost ready! Preparing final touches...': 'Almost ready! Preparing final touches...',
+    'Welcome! Explore my creative world through these applications.': 'Welcome! Explore my creative world through these applications.',
+    'Click around, discover projects, watch videos, listen to music, and get to know me better.': 'Click around, discover projects, watch videos, listen to music, and get to know me better.',
+    'Ready to explore?': 'Ready to explore?',
+    'Continue': 'Continue',
   },
   deutsch: {
     'My Pictures': 'Meine Bilder',
@@ -174,6 +184,16 @@ const translations = {
     'Done!': 'Erledigt!',
     'Reset': 'Zurücksetzen',
     'New Challenge': 'Neue Challenge',
+    // Desktop welcome
+    'Welcome to Henri\'s Digital Playground': 'Willkommen in Henris Digitalem Spielplatz',
+    'Initializing creative workspace...': 'Kreativer Arbeitsplatz wird initialisiert...',
+    'Loading your personal interface...': 'Persönliche Benutzeroberfläche wird geladen...',
+    'Setting up digital environment...': 'Digitale Umgebung wird eingerichtet...',
+    'Almost ready! Preparing final touches...': 'Fast fertig! Letzte Details werden vorbereitet...',
+    'Welcome! Explore my creative world through these applications.': 'Willkommen! Erkunde meine kreative Welt durch diese Anwendungen.',
+    'Click around, discover projects, watch videos, listen to music, and get to know me better.': 'Klicke herum, entdecke Projekte, schaue Videos, höre Musik und lerne mich besser kennen.',
+    'Ready to explore?': 'Bereit zum Erkunden?',
+    'Continue': 'Weiter',
   }
 };
 
