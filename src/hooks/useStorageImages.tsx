@@ -60,13 +60,10 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
           random: []
         };
 
-        console.log('=== STARTING IMAGE FETCH ===');
-
         // Check for folder-based organization first
         const folders = ['childhood', 'nature', 'vibe', 'random'];
         
         for (const folder of folders) {
-          console.log(`\n--- Checking folder: ${folder} ---`);
           const { data: folderFiles, error: folderError } = await supabase.storage
             .from(bucketName)
             .list(folder, {
@@ -75,22 +72,12 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
             });
 
           if (!folderError && folderFiles) {
-            console.log(`Found ${folderFiles.length} items in ${folder} folder`);
-            
             for (const file of folderFiles) {
               // Skip if it's a folder (id is null for folders)
-              if (!file.id) {
-                console.log(`Skipping folder item: ${file.name}`);
-                continue;
-              }
-              
-              console.log(`Processing file: ${file.name}`);
+              if (!file.id) continue;
               
               if (file.name) {
-                if (isHeicFile(file.name)) {
-                  console.log(`❌ HEIC file (unsupported by browsers): ${file.name}`);
-                  continue;
-                }
+                if (isHeicFile(file.name)) continue;
                 
                 if (isDisplayableImage(file.name)) {
                   const { data: urlData } = supabase.storage
@@ -99,21 +86,14 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
 
                   if (urlData?.publicUrl) {
                     categorizedImages[folder as keyof typeof categorizedImages].push(urlData.publicUrl);
-                    console.log(`✅ Added image to ${folder}: ${file.name}`);
-                    console.log(`   URL: ${urlData.publicUrl}`);
                   }
-                } else {
-                  console.log(`❌ Unsupported image format: ${file.name}`);
                 }
               }
             }
-          } else if (folderError) {
-            console.log(`❌ Error or no folder found for ${folder}:`, folderError);
           }
         }
 
         // Also check root level files and categorize them
-        console.log('\n--- Checking root level files ---');
         const { data: rootFiles, error: rootError } = await supabase.storage
           .from(bucketName)
           .list('', {
@@ -122,22 +102,12 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
           });
 
         if (!rootError && rootFiles) {
-          console.log(`Found ${rootFiles.length} items in root`);
-          
           for (const file of rootFiles) {
             // Skip folders (they have id === null)
-            if (file.id === null) {
-              console.log(`Skipping root folder: ${file.name}`);
-              continue;
-            }
-            
-            console.log(`Processing root file: ${file.name}`);
+            if (file.id === null) continue;
             
             if (file.name) {
-              if (isHeicFile(file.name)) {
-                console.log(`❌ HEIC file in root (unsupported): ${file.name}`);
-                continue;
-              }
+              if (isHeicFile(file.name)) continue;
               
               if (isDisplayableImage(file.name)) {
                 const { data: urlData } = supabase.storage
@@ -150,27 +120,20 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
                   // Categorize based on filename
                   if (matchesCategory(fileName, 'childhood')) {
                     categorizedImages.childhood.push(urlData.publicUrl);
-                    console.log(`✅ Categorized root image as childhood: ${file.name}`);
                   } else if (matchesCategory(fileName, 'nature')) {
                     categorizedImages.nature.push(urlData.publicUrl);
-                    console.log(`✅ Categorized root image as nature: ${file.name}`);
                   } else if (matchesCategory(fileName, 'vibe')) {
                     categorizedImages.vibe.push(urlData.publicUrl);
-                    console.log(`✅ Categorized root image as vibe: ${file.name}`);
                   } else {
                     categorizedImages.random.push(urlData.publicUrl);
-                    console.log(`✅ Categorized root image as random: ${file.name}`);
                   }
                 }
-              } else {
-                console.log(`❌ Unsupported root image format: ${file.name}`);
               }
             }
           }
         }
 
         // Check for the problematic "vibe " folder (with trailing space)
-        console.log('\n--- Checking for "vibe " folder (with trailing space) ---');
         const { data: vibeSpaceFiles, error: vibeSpaceError } = await supabase.storage
           .from(bucketName)
           .list('vibe ', {
@@ -179,8 +142,6 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
           });
 
         if (!vibeSpaceError && vibeSpaceFiles) {
-          console.log(`Found ${vibeSpaceFiles.length} items in "vibe " folder (with space)`);
-          
           for (const file of vibeSpaceFiles) {
             if (!file.id) continue;
             
@@ -191,22 +152,14 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
 
               if (urlData?.publicUrl) {
                 categorizedImages.vibe.push(urlData.publicUrl);
-                console.log(`✅ Added image from "vibe " folder to vibe category: ${file.name}`);
               }
             }
           }
         }
 
-        // Log final counts
-        console.log('\n=== FINAL RESULTS ===');
-        Object.keys(categorizedImages).forEach(category => {
-          console.log(`${category}: ${categorizedImages[category].length} displayable images`);
-        });
-
         setImages(categorizedImages);
         
       } catch (err) {
-        console.error('❌ Error fetching images:', err);
         setError(err instanceof Error ? err.message : 'Unknown error occurred');
       } finally {
         setLoading(false);
