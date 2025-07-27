@@ -100,16 +100,16 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to, onClic
       <div className="w-20 h-20 flex items-center justify-center">
         <div className={`relative w-16 h-16 bg-gradient-to-br ${styles.gradient} rounded border-2 ${styles.border} ${styles.hoverBorder} ${styles.shadow} transition-all duration-200 flex items-center justify-center`}>
           {/* Windows XP-style highlight */}
-          <div className={`absolute top-1 left-1 w-8 h-4 ${styles.highlight} rounded blur-sm`}></div>
+          <div className={`absolute top-1 left-1 w-12 h-6 ${styles.highlight} rounded blur-sm`}></div>
           
-          {/* Icon */}
+          {/* Icon - no transition to prevent movement */}
           <Icon className={`w-8 h-8 text-white drop-shadow-sm relative z-10 ${styles.iconGlow || ''}`} />
         </div>
       </div>
       
       <div className="h-8 flex items-center">
         <span className={`text-sm font-pixel select-none px-2 py-1 rounded transition-all duration-200 ${
-          'text-black bg-gray-200/90 border border-gray-400 group-hover:bg-gray-100/90'
+          'text-black bg-transparent group-hover:bg-white/90'
         }`}>
           {label}
         </span>
