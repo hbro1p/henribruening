@@ -51,11 +51,11 @@ const getIconStyles = (label: string, theme: string) => {
     
     return {
       gradient: colors[label as keyof typeof colors] || 'from-blue-500 to-blue-700',
-      border: 'border-gray-400',
-      hoverBorder: 'group-hover:border-gray-500',
+      border: 'border-transparent',
+      hoverBorder: 'group-hover:border-white/60',
       shadow: `shadow-lg group-hover:shadow-2xl transition-all duration-300 ${glowColors[label as keyof typeof glowColors] || 'group-hover:shadow-blue-400/60'}`,
-      highlight: 'bg-gradient-to-br from-white/50 to-transparent',
-      iconGlow: 'group-hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.8)] transition-all duration-300',
+      highlight: 'bg-gradient-to-br from-white/60 to-white/20',
+      iconGlow: '',
     };
   }
   
@@ -63,10 +63,10 @@ const getIconStyles = (label: string, theme: string) => {
   if (theme === 'dark-vhs') {
     return {
       gradient: 'from-gray-600 via-gray-700 to-gray-900',
-      border: 'border-white/20',
-      hoverBorder: 'group-hover:border-white/40',
+      border: 'border-transparent',
+      hoverBorder: 'group-hover:border-white/60',
       shadow: 'shadow-lg shadow-white/10 group-hover:shadow-white/20',
-      highlight: 'bg-gradient-to-br from-white/30 to-transparent',
+      highlight: 'bg-gradient-to-br from-white/60 to-white/20',
     };
   }
   
@@ -74,20 +74,20 @@ const getIconStyles = (label: string, theme: string) => {
   if (theme === 'adventure-canyon') {
     return {
       gradient: 'from-amber-600 via-orange-500 to-yellow-600',
-      border: 'border-orange-400/40',
-      hoverBorder: 'group-hover:border-orange-300/60',
+      border: 'border-transparent',
+      hoverBorder: 'group-hover:border-white/60',
       shadow: 'shadow-lg shadow-orange-500/30 group-hover:shadow-orange-400/40',
-      highlight: 'bg-gradient-to-br from-white/40 to-transparent',
+      highlight: 'bg-gradient-to-br from-white/60 to-white/20',
     };
   }
   
   // Default fallback
   return {
     gradient: 'from-gray-500 to-gray-700',
-    border: 'border-black/30',
-    hoverBorder: 'group-hover:border-black/50',
+    border: 'border-transparent',
+    hoverBorder: 'group-hover:border-white/60',
     shadow: 'shadow-lg',
-    highlight: 'bg-gradient-to-br from-white/30 to-transparent',
+    highlight: 'bg-gradient-to-br from-white/60 to-white/20',
   };
 };
 
@@ -100,10 +100,10 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to, onClic
       <div className="w-20 h-20 flex items-center justify-center">
         <div className={`relative w-16 h-16 bg-gradient-to-br ${styles.gradient} rounded border-2 ${styles.border} ${styles.hoverBorder} ${styles.shadow} transition-all duration-200 flex items-center justify-center`}>
           {/* Windows XP-style highlight */}
-          <div className={`absolute top-1 left-1 w-8 h-4 ${styles.highlight} rounded blur-sm`}></div>
+          <div className={`absolute top-1 left-1 w-12 h-8 ${styles.highlight} rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200`}></div>
           
           {/* Icon */}
-          <Icon className={`w-8 h-8 text-white drop-shadow-sm relative z-10 ${styles.iconGlow || ''}`} />
+          <Icon className="w-8 h-8 text-white drop-shadow-sm relative z-10" />
         </div>
       </div>
       
@@ -121,7 +121,7 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to, onClic
     return (
       <div
         onClick={onClick}
-        className="group flex flex-col items-center justify-center space-y-3 text-center transition-all duration-200 hover:scale-105 cursor-pointer"
+        className="group flex flex-col items-center justify-center space-y-3 text-center cursor-pointer"
       >
         {content}
       </div>
@@ -131,7 +131,7 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to, onClic
   return (
     <Link
       to={to || '/'}
-      className="group flex flex-col items-center justify-center space-y-3 text-center transition-all duration-200 hover:scale-105"
+      className="group flex flex-col items-center justify-center space-y-3 text-center"
     >
       {content}
     </Link>
