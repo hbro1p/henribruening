@@ -195,7 +195,18 @@ export const GlobalMusicProvider: React.FC<{ children: React.ReactNode }> = ({ c
 export const useGlobalMusicPlayer = () => {
   const context = useContext(GlobalMusicContext);
   if (!context) {
-    throw new Error('useGlobalMusicPlayer must be used within GlobalMusicProvider');
+    // Return default values when context is not available (e.g., during authentication redirects)
+    return {
+      isPlaying: false,
+      currentTrack: 0,
+      volume: 0.7,
+      isLoading: false,
+      musicFiles: [],
+      togglePlayPause: async () => {},
+      nextTrack: () => {},
+      prevTrack: () => {},
+      setVolume: () => {}
+    };
   }
   return context;
 };
