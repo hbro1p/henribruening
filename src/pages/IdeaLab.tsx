@@ -127,11 +127,11 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
-            className={`h-5 w-5 transition-colors duration-200 ${
+            className={`h-5 w-5 transition-all duration-200 star-enhanced ${
               star <= rating
-                ? 'fill-amber-400 text-amber-400'
-                : 'text-gray-300'
-            } ${interactive ? 'cursor-pointer hover:fill-amber-300 hover:text-amber-300 hover:scale-110' : ''}`}
+                ? 'fill-amber-400 text-amber-400 drop-shadow-sm'
+                : 'text-gray-400 stroke-2'
+            } ${interactive ? 'cursor-pointer hover:fill-amber-300 hover:text-amber-300' : ''}`}
             onClick={interactive && onRate ? () => onRate(star) : undefined}
           />
         ))}
@@ -197,9 +197,9 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                     setCurrentView('welcome');
                   }
                 }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-black/30 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:-translate-y-0.5 font-pixel transform active:scale-95 ${styles.button}`}
+                className={`group flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-black/30 transition-all duration-300 button-enhanced font-pixel transform active:scale-95 hover-glow ${styles.button}`}
               >
-                <ArrowLeft className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-1" />
+                <ArrowLeft className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-1 icon-interactive" />
                 {t('Back')}
               </button>
             </div>
@@ -290,16 +290,16 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                                 setSelectedIdea(idea);
                                 setCurrentView('detail');
                               }}
-                              className={`flex-1 px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-300 border-2 backdrop-blur-sm bg-white/20 ${styles.text} hover:bg-blue-400/20 hover:scale-105 hover:shadow-lg border-white/30 transform active:scale-95`}
+                              className={`flex-1 px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-300 border-2 backdrop-blur-sm bg-white/20 ${styles.text} hover:bg-blue-400/20 button-enhanced border-white/30 transform active:scale-95 hover-glow`}
                             >
                               {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
                             </button>
                             <button 
                               onClick={() => openPrototype(idea)}
-                              className={`px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:-translate-y-1 border-2 border-black/30 flex items-center justify-center gap-2 sm:gap-3 backdrop-blur-sm bg-white/10 active:scale-95 ${styles.button}`}
+                              className={`group px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-300 transform button-enhanced border-2 border-black/30 flex items-center justify-center gap-2 sm:gap-3 backdrop-blur-sm bg-white/10 active:scale-95 hover-glow ${styles.button}`}
                             >
-                              <Play className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:scale-110" />
-                              {language === 'deutsch' ? 'Testen' : 'Try'}
+                              <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12 icon-interactive" />
+                              {language === 'deutsch' ? 'Testen' : 'Test'}
                             </button>
                           </div>
                         </div>
@@ -339,9 +339,9 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                 <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-pixel font-bold ${styles.text} transition-all duration-300 hover:scale-105 drop-shadow-lg`}>{selectedIdea.title}</h3>
                 <button 
                   onClick={() => setCurrentView('prototype')}
-                  className={`group px-8 py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform hover:scale-110 hover:shadow-2xl hover:-translate-y-2 flex items-center gap-3 mx-auto text-lg sm:text-xl backdrop-blur-sm bg-white/10 active:scale-95 ${styles.button}`}
+                  className={`group px-8 py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform button-enhanced flex items-center gap-3 mx-auto text-lg sm:text-xl backdrop-blur-sm bg-white/10 active:scale-95 hover-glow ${styles.button}`}
                 >
-                  <Play className="h-5 w-5 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" />
+                  <Lightbulb className="h-5 w-5 transition-all duration-300 group-hover:scale-125 group-hover:rotate-12 icon-interactive" />
                   {language === 'deutsch' ? 'Prototyp testen' : 'Test Prototype'}
                 </button>
               </div>

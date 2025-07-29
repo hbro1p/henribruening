@@ -328,6 +328,67 @@ html, body {
   100% { transform: translateX(5%) translateY(0); }
 }
 
+/* Enhanced hover and interaction animations */
+@keyframes gentle-glow {
+  0%, 100% { 
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3), 0 4px 20px rgba(59, 130, 246, 0.1);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5), 0 8px 30px rgba(59, 130, 246, 0.2);
+  }
+}
+
+@keyframes star-shimmer {
+  0%, 100% { 
+    filter: drop-shadow(0 0 3px rgba(251, 191, 36, 0.4));
+  }
+  50% { 
+    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.8));
+  }
+}
+
+@keyframes button-rise {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-2px) scale(1.02); }
+}
+
+@keyframes icon-bounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(2deg); }
+}
+
+/* Utility classes for enhanced interactions */
+@layer components {
+  .hover-glow {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .hover-glow:hover {
+    animation: gentle-glow 2s ease-in-out infinite;
+  }
+  
+  .star-enhanced {
+    transition: all 0.2s ease-in-out;
+  }
+  .star-enhanced:hover {
+    animation: star-shimmer 1.5s ease-in-out infinite;
+    transform: scale(1.1);
+  }
+  
+  .button-enhanced {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .button-enhanced:hover {
+    animation: button-rise 0.3s ease-out forwards;
+  }
+  
+  .icon-interactive {
+    transition: all 0.3s ease-out;
+  }
+  .icon-interactive:hover {
+    animation: icon-bounce 0.6s ease-in-out;
+  }
+}
+
 /* Radial gradient utility for CRT curvature */
 @layer utilities {
   .bg-gradient-radial {
