@@ -183,7 +183,7 @@ const CareAndShare = () => {
               
               <button
                 onClick={() => setScreen('helpersList')}
-                className="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors mb-32"
+                className="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors mb-48"
               >
                 {language === 'english' ? 'Find helpers' : 'Helfer finden'}
               </button>
@@ -205,7 +205,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-4 pb-32">
+            <div className="space-y-4 pb-48">
               {filteredHelpers.map((helper) => (
                 <div key={helper.id} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
                   <div className="flex justify-between items-start mb-3">
@@ -329,7 +329,7 @@ const CareAndShare = () => {
               
               <button
                 onClick={() => setScreen('helpRequests')}
-                className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors mb-32"
+                className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors mb-48"
               >
                 {language === 'english' ? 'View help requests' : 'Hilfegesuche ansehen'}
               </button>
@@ -351,7 +351,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-4 pb-32">
+            <div className="space-y-4 pb-48">
               {[
                 { id: 1, name: 'Maria S.', age: 75, task: language === 'english' ? 'Shopping' : 'Einkauf', time: language === 'english' ? 'Today 14:00' : 'Heute 14:00' },
                 { id: 2, name: 'Klaus M.', age: 82, task: language === 'english' ? 'Walk' : 'Spaziergang', time: language === 'english' ? 'Tomorrow 10:00' : 'Morgen 10:00' },
@@ -433,7 +433,7 @@ const CareAndShare = () => {
                   setAcceptedHelper(null);
                   setFormData({ name: '', age: '', category: '', timeframe: '', date: new Date() as Date | undefined, time: '' });
                 }}
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors mb-32"
+                className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors mb-48"
               >
                 {language === 'english' ? 'Back to start' : 'Zurück zum Start'}
               </button>
@@ -460,7 +460,7 @@ const CareAndShare = () => {
                    setScreen('start');
                    setHelperData({ age: '', skills: '', availability: '', name: '', phone: '', facebook: '' });
                  }}
-                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors mb-32"
+                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors mb-48"
                >
                 {language === 'english' ? 'Back to start' : 'Zurück zum Start'}
               </button>
