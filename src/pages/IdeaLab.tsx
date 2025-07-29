@@ -171,14 +171,18 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
 
   return (
     <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-blue' : ''}`}>
-      <div className={`p-2 border-2 border-black/30 w-full max-w-5xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
-        <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
+      <div className={`relative p-2 border-2 border-black/30 w-full max-w-5xl shadow-2xl rounded-lg backdrop-blur-md bg-white/10 ${styles.windowFrame}`}>
+        <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner backdrop-blur-sm bg-black/20 ${styles.titleBar}`}>
           <div className="flex items-center">
-            <span className="text-white font-pixel text-sm">{t('Idea Lab')}</span>
+            <span className="text-white font-pixel text-sm drop-shadow-lg">{t('Idea Lab')}</span>
           </div>
         </div>
         
-        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${currentView === 'prototype' ? 'overflow-hidden h-[calc(90vh-100px)]' : 'overflow-y-auto max-h-[calc(90vh-100px)]'} ${styles.windowContent}`}>
+        <div className={`relative p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b backdrop-blur-sm bg-white/20 ${currentView === 'prototype' ? 'overflow-hidden h-[calc(90vh-100px)]' : 'overflow-y-auto max-h-[calc(90vh-100px)]'} ${styles.windowContent}`}>
+          {/* Fade-out gradient for scroll areas */}
+          {currentView !== 'prototype' && (
+            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/40 to-transparent pointer-events-none z-10" />
+          )}
           {/* Navigation */}
           {currentView !== 'welcome' && (
             <div className="mb-6">
@@ -193,9 +197,9 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                     setCurrentView('welcome');
                   }
                 }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-black/30 transition-all duration-300 hover:scale-105 font-pixel ${styles.button}`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-black/30 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:-translate-y-0.5 font-pixel transform active:scale-95 ${styles.button}`}
               >
-                <ArrowLeft className="w-4 h-4" />
+                <ArrowLeft className="w-4 h-4 transition-transform duration-200 group-hover:-translate-x-1" />
                 {t('Back')}
               </button>
             </div>
@@ -204,22 +208,22 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
           {currentView === 'welcome' && (
             <div className="text-center space-y-6 sm:space-y-8">
               <div className="flex flex-col items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-10">
-                <Lightbulb className={`h-8 w-8 sm:h-10 sm:w-10 ${styles.accent}`} />
-                <h1 className={`text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-pixel drop-shadow-lg ${styles.text} text-center px-2`}>
+                <Lightbulb className={`h-8 w-8 sm:h-10 sm:w-10 ${styles.accent} transition-all duration-300 hover:scale-110 hover:rotate-12 hover:drop-shadow-xl`} />
+                <h1 className={`text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-pixel drop-shadow-lg ${styles.text} text-center px-2 transition-all duration-300 hover:scale-105`}>
                   {language === 'deutsch' ? 'Ideen-Labor' : 'Idea Laboratory'}
                 </h1>
               </div>
               
-              <div className="space-y-4 sm:space-y-6 lg:space-y-8 max-w-4xl mx-auto px-4">
+              <div className="space-y-4 sm:space-y-6 lg:space-y-8 max-w-4xl mx-auto px-4 relative">
                 {welcomeText.split('\n\n').map((paragraph, index) => (
-                  <p key={index} className={`${styles.text} leading-relaxed text-base sm:text-lg lg:text-xl font-pixel text-left`}>
+                  <p key={index} className={`${styles.text} leading-relaxed text-base sm:text-lg lg:text-xl font-pixel text-left transition-all duration-300 hover:scale-[1.02] hover:drop-shadow-sm`}>
                     {paragraph}
                   </p>
                 ))}
               </div>
               <button 
                 onClick={() => setCurrentView('list')}
-                className={`px-6 sm:px-8 lg:px-10 py-3 sm:py-4 text-lg sm:text-xl rounded-lg font-pixel border-2 border-black/30 transition-all duration-200 transform hover:scale-105 ${styles.button}`}
+                className={`px-6 sm:px-8 lg:px-10 py-3 sm:py-4 text-lg sm:text-xl rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:-translate-y-1 active:scale-95 backdrop-blur-sm bg-white/10 ${styles.button}`}
               >
                 {language === 'deutsch' ? 'Ideen entdecken' : 'Discover Ideas'}
               </button>
@@ -258,11 +262,14 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                     {ideas.map((idea) => {
                       const avgRating = getAverageRating(idea);
                       return (
-                        <div key={idea.id} className={`p-4 sm:p-6 border-2 rounded-lg transition-all duration-200 hover:scale-[1.02] ${styles.cardBg}`}>
+                        <div key={idea.id} className={`group p-4 sm:p-6 border-2 rounded-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:-translate-y-1 backdrop-blur-sm bg-white/10 border-white/30 ${styles.cardBg}`}>
                           <div className="flex flex-col gap-4 sm:gap-5">
-                            <div className="space-y-3 flex-1">
-                              <h4 className={`text-lg sm:text-xl lg:text-2xl xl:text-3xl ${styles.text} font-pixel font-semibold leading-tight`}>{idea.title}</h4>
-                              <p className={`text-base sm:text-lg lg:text-xl ${styles.text} font-pixel leading-relaxed`}>{idea.shortDescription}</p>
+                            <div className="space-y-3 flex-1 text-center">
+                              <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 shadow-lg">
+                                🤝
+                              </div>
+                              <h4 className={`text-lg sm:text-xl lg:text-2xl xl:text-3xl ${styles.text} font-pixel font-semibold leading-tight transition-all duration-300 group-hover:scale-105`}>{idea.title}</h4>
+                              <p className={`text-base sm:text-lg lg:text-xl ${styles.text} font-pixel leading-relaxed transition-all duration-300 group-hover:text-blue-800`}>{idea.shortDescription}</p>
                             </div>
                             {avgRating !== null && (
                               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
@@ -281,15 +288,15 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                                 setSelectedIdea(idea);
                                 setCurrentView('detail');
                               }}
-                              className={`flex-1 px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-200 border-2 ${styles.cardBg} ${styles.text} hover:bg-blue-400/10 border-black/30`}
+                              className={`flex-1 px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-300 border-2 backdrop-blur-sm bg-white/20 ${styles.text} hover:bg-blue-400/20 hover:scale-105 hover:shadow-lg border-white/30 transform active:scale-95`}
                             >
                               {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
                             </button>
                             <button 
                               onClick={() => openPrototype(idea)}
-                              className={`px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-200 transform hover:scale-105 border-2 border-black/30 flex items-center justify-center gap-2 sm:gap-3 ${styles.button}`}
+                              className={`px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:-translate-y-1 border-2 border-black/30 flex items-center justify-center gap-2 sm:gap-3 backdrop-blur-sm bg-white/10 active:scale-95 ${styles.button}`}
                             >
-                              <Play className="h-4 w-4 sm:h-5 sm:w-5" />
+                              <Play className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:scale-110" />
                               {language === 'deutsch' ? 'Testen' : 'Try'}
                             </button>
                           </div>
@@ -322,25 +329,25 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
           {currentView === 'detail' && selectedIdea && (
             <div className="space-y-6">
               <div className="text-center space-y-5">
-                <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-pixel font-bold ${styles.text}`}>{selectedIdea.title}</h3>
+                <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-pixel font-bold ${styles.text} transition-all duration-300 hover:scale-105`}>{selectedIdea.title}</h3>
                 <button 
                   onClick={() => setCurrentView('prototype')}
-                  className={`px-8 py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-200 transform hover:scale-105 flex items-center gap-3 mx-auto text-lg sm:text-xl ${styles.button}`}
+                  className={`px-8 py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:-translate-y-1 flex items-center gap-3 mx-auto text-lg sm:text-xl backdrop-blur-sm bg-white/10 active:scale-95 ${styles.button}`}
                 >
-                  <Play className="h-5 w-5" />
+                  <Play className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
                   {language === 'deutsch' ? 'Prototyp testen' : 'Test Prototype'}
                 </button>
               </div>
               
-              <div className={`p-6 border-2 rounded-lg ${styles.cardBg}`}>
-                <h4 className={`text-xl sm:text-2xl font-pixel font-semibold mb-3 ${styles.text}`}>
+              <div className={`p-6 border-2 rounded-lg backdrop-blur-sm bg-white/10 border-white/30 transition-all duration-300 hover:shadow-lg ${styles.cardBg}`}>
+                <h4 className={`text-xl sm:text-2xl font-pixel font-semibold mb-3 ${styles.text} transition-all duration-300 hover:scale-105`}>
                   {language === 'deutsch' ? 'Beschreibung' : 'Description'}
                 </h4>
-                <p className={`${styles.text} font-pixel leading-relaxed text-base sm:text-lg`}>{selectedIdea.fullDescription}</p>
+                <p className={`${styles.text} font-pixel leading-relaxed text-base sm:text-lg transition-all duration-300 hover:text-blue-800`}>{selectedIdea.fullDescription}</p>
               </div>
 
-              <div className={`p-6 border-2 rounded-lg ${styles.cardBg}`}>
-                <h4 className={`text-xl sm:text-2xl font-pixel font-semibold mb-5 ${styles.text}`}>
+              <div className={`p-6 border-2 rounded-lg backdrop-blur-sm bg-white/10 border-white/30 transition-all duration-300 hover:shadow-lg ${styles.cardBg}`}>
+                <h4 className={`text-xl sm:text-2xl font-pixel font-semibold mb-5 ${styles.text} transition-all duration-300 hover:scale-105`}>
                   {language === 'deutsch' ? 'Deine Bewertung' : 'Your Rating'}
                 </h4>
                 <div className="space-y-6">
@@ -372,7 +379,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                   <button 
                     onClick={handleSubmitRating}
                     disabled={userRating === 0}
-                    className={`w-full py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-lg sm:text-xl ${styles.button}`}
+                    className={`w-full py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0 backdrop-blur-sm bg-white/10 active:scale-95 text-lg sm:text-xl ${styles.button}`}
                   >
                     {language === 'deutsch' ? 'Bewertung abgeben' : 'Submit Rating'}
                   </button>
