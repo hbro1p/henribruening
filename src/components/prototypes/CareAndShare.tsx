@@ -183,7 +183,7 @@ const CareAndShare = () => {
               
               <button
                 onClick={() => setScreen('helpersList')}
-                className="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors mb-96"
+                className="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors mb-[30rem]"
               >
                 {language === 'english' ? 'Find helpers' : 'Helfer finden'}
               </button>
@@ -329,7 +329,7 @@ const CareAndShare = () => {
               
               <button
                 onClick={() => setScreen('helpRequests')}
-                className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors mb-96"
+                className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors mb-[30rem]"
               >
                 {language === 'english' ? 'View help requests' : 'Hilfegesuche ansehen'}
               </button>
