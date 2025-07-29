@@ -67,8 +67,27 @@ const IdeaLab = () => {
       {
         id: '3',
         title: 'Care&Share',
-        shortDescription: 'Die Plattform, die Helfen einfach macht - Helfe & werde geholfen',
-        fullDescription: `Eine Nachbarschaftshilfe-Plattform, die Senioren mit hilfsbereiten Menschen in der Umgebung verbindet. Einsamkeit runter, Freude hoch.
+        shortDescription: language === 'english' 
+          ? 'The platform that makes helping easy - Help & get help'
+          : 'Die Plattform, die Helfen einfach macht - Helfe & werde geholfen',
+        fullDescription: language === 'english'
+          ? `A neighborhood help platform that connects seniors with helpful people in the area. Reduce loneliness, increase joy.
+
+Main functions:
+• Simple help requests for shopping, walks, household tasks
+• Matching system based on proximity and availability
+• Verified helpers with rating system
+• Appointment coordination and status tracking
+• Integration for community service providers
+
+Additional ideas:
+• City vouchers for milestones
+• Community service integration for mandatory hours
+• Gamification with helper points
+• Community events and neighborhood meetings
+
+The motto: From strangers to neighbors, from neighbors to friends.`
+          : `Eine Nachbarschaftshilfe-Plattform, die Senioren mit hilfsbereiten Menschen in der Umgebung verbindet. Einsamkeit runter, Freude hoch.
 
 Hauptfunktionen:
 • Einfache Hilfegesuche für Einkauf, Spaziergang, Haushalt
