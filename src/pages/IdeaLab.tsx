@@ -336,7 +336,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
               <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-blue-400/20 to-transparent pointer-events-none z-10" />
               
               <div className="text-center space-y-5 transform transition-all duration-500 hover:scale-[1.02]">
-                <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-pixel font-bold ${styles.text} transition-all duration-300 hover:scale-105 drop-shadow-lg`}>{selectedIdea.title}</h3>
+                <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-pixel font-bold ${styles.text} transition-all duration-300 hover:scale-105`}>{selectedIdea.title}</h3>
                 <button 
                   onClick={() => setCurrentView('prototype')}
                   className={`group px-8 py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform button-enhanced flex items-center gap-3 mx-auto text-lg sm:text-xl backdrop-blur-sm bg-white/10 active:scale-95 hover-glow ${styles.button}`}
