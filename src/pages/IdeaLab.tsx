@@ -178,7 +178,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
           </div>
         </div>
         
-        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b overflow-y-auto max-h-[calc(90vh-100px)] ${styles.windowContent}`}>
+        <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${currentView === 'prototype' ? 'overflow-hidden h-[calc(90vh-100px)]' : 'overflow-y-auto max-h-[calc(90vh-100px)]'} ${styles.windowContent}`}>
           {/* Navigation */}
           {currentView !== 'welcome' && (
             <div className="mb-6">
@@ -303,8 +303,8 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
           )}
 
           {currentView === 'prototype' && selectedIdea && (
-            <div className="space-y-4 sm:space-y-6">
-              <div className="text-center space-y-3">
+            <div className="h-full flex flex-col">
+              <div className="text-center space-y-3 mb-4">
                 <h3 className={`text-2xl sm:text-3xl lg:text-4xl font-pixel font-bold ${styles.text}`}>
                   {selectedIdea.title}
                 </h3>
@@ -312,7 +312,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                   {language === 'deutsch' ? 'Interaktiver Prototyp' : 'Interactive Prototype'}
                 </p>
               </div>
-              <div className="bg-white rounded-xl border-2 border-black/30 min-h-[400px] sm:min-h-[600px] overflow-auto shadow-lg">
+              <div className="flex-1 overflow-hidden">
                 {selectedIdea.prototypeComponent === 'CareAndShare' && 
                   <CareAndShare />}
               </div>
