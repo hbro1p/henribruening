@@ -57,7 +57,7 @@ const CareAndShare = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-md mx-auto h-screen flex flex-col">
+      <div className="max-w-md mx-auto min-h-screen overflow-y-auto">
         {screen === 'start' && (
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center m-4">
             <div className="mb-8">
@@ -89,8 +89,8 @@ const CareAndShare = () => {
         )}
 
         {screen === 'needHelp' && (
-          <div className="flex-1 flex flex-col bg-white rounded-2xl shadow-xl m-4 overflow-hidden">
-            <div className="flex items-center p-6 pb-4 flex-shrink-0">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-32">
+            <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('start')}
                 className="mr-4 text-gray-600 hover:text-gray-800 text-2xl"
@@ -102,10 +102,8 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="flex-1 overflow-y-auto px-6 pb-6">
-            
-              <div className="space-y-6">
-                <div>
+            <div className="space-y-6">
+              <div>
                 <input
                   type="text"
                   placeholder={language === 'english' ? 'Name' : 'Name'}
@@ -187,16 +185,15 @@ const CareAndShare = () => {
                 onClick={() => setScreen('helpersList')}
                 className="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors"
               >
-                  {language === 'english' ? 'Find helpers' : 'Helfer finden'}
-                </button>
-              </div>
+                {language === 'english' ? 'Find helpers' : 'Helfer finden'}
+              </button>
             </div>
           </div>
         )}
 
         {screen === 'helpersList' && (
-          <div className="flex-1 flex flex-col bg-white rounded-2xl shadow-xl m-4 overflow-hidden">
-            <div className="flex items-center p-6 pb-4 flex-shrink-0">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-32">
+            <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('needHelp')}
                 className="mr-4 text-gray-600 hover:text-gray-800 text-2xl"
@@ -208,10 +205,8 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="flex-1 overflow-y-auto px-6 pb-6">
-            
-              <div className="space-y-4">
-                {filteredHelpers.map((helper) => (
+            <div className="space-y-4">
+              {filteredHelpers.map((helper) => (
                 <div key={helper.id} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
                   <div className="flex justify-between items-start mb-3">
                     <div>
@@ -240,16 +235,15 @@ const CareAndShare = () => {
                       {language === 'english' ? 'Decline' : 'Ablehnen'}
                     </button>
                   </div>
-                  </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
         {screen === 'wantToHelp' && (
-          <div className="flex-1 flex flex-col bg-white rounded-2xl shadow-xl m-4 overflow-hidden">
-            <div className="flex items-center p-6 pb-4 flex-shrink-0">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-32">
+            <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('start')}
                 className="mr-4 text-gray-600 hover:text-gray-800 text-2xl"
@@ -261,10 +255,8 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="flex-1 overflow-y-auto px-6 pb-6">
-            
-              <div className="space-y-6">
-                <div>
+            <div className="space-y-6">
+              <div>
                 <input
                   type="text"
                   placeholder={language === 'english' ? 'Name' : 'Name'}
@@ -339,15 +331,14 @@ const CareAndShare = () => {
                 onClick={() => setScreen('helpRequests')}
                 className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors"
               >
-                  {language === 'english' ? 'View help requests' : 'Hilfegesuche ansehen'}
-                </button>
-              </div>
+                {language === 'english' ? 'View help requests' : 'Hilfegesuche ansehen'}
+              </button>
             </div>
           </div>
         )}
 
         {screen === 'helpRequests' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 max-h-screen overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-32">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('wantToHelp')}
@@ -360,7 +351,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-4 pb-24">
+            <div className="space-y-4">
               {[
                 { id: 1, name: 'Maria S.', age: 75, task: language === 'english' ? 'Shopping' : 'Einkauf', time: language === 'english' ? 'Today 14:00' : 'Heute 14:00' },
                 { id: 2, name: 'Klaus M.', age: 82, task: language === 'english' ? 'Walk' : 'Spaziergang', time: language === 'english' ? 'Tomorrow 10:00' : 'Morgen 10:00' },
@@ -386,7 +377,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'helperContact' && acceptedHelper && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-20">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-32">
             <div className="text-center">
               <div className="text-4xl mb-4">✅</div>
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -451,7 +442,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'confirmation' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-20">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-32">
             <div className="text-center">
               <div className="text-4xl mb-4">✅</div>
                <h2 className="text-2xl font-bold text-gray-800 mb-4">
