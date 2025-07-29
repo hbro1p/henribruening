@@ -362,7 +362,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                       ) : line.trim() === '' ? (
                         <div className="h-2" />
                       ) : line.includes(':') && !line.includes('•') ? (
-                        <div className="font-semibold mt-3 mb-1">{line}</div>
+                        <div className="mt-3 mb-1">{line}</div>
                       ) : (
                         <div>{line}</div>
                       )}
