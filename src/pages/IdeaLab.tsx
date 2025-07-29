@@ -65,39 +65,6 @@ const IdeaLab = () => {
   useEffect(() => {
     const initialIdeas: Idea[] = [
       {
-        id: '1',
-        title: 'Viral Video Prompt Generator',
-        shortDescription: 'KI-gestützte Prompts für TikTok, YouTube Shorts und Instagram Reels',
-        fullDescription: `Ein intelligenter Generator, der basierend auf aktuellen Trends, Zielgruppe und gewünschtem Stil kreative Video-Prompts erstellt.
-
-Features:
-• Trendanalyse und aktuelle Hashtags
-• Zielgruppenspezifische Anpassung  
-• Genre-Filter (Comedy, Educational, Lifestyle, etc.)
-• Template-Bibliothek für verschiedene Formate
-• A/B-Testing Vorschläge für Thumbnails
-• Optimierung für verschiedene Plattformen`,
-        prototypeComponent: 'ViralVideoPromptGenerator',
-        ratings: [5, 4, 5, 4, 5]
-      },
-      {
-        id: '2',
-        title: 'Coesfelder Quest',
-        shortDescription: 'Interaktive Stadtrallye durch Coesfeld mit AR-Elementen',
-        fullDescription: `Eine moderne Schnitzeljagd durch die Innenstadt von Coesfeld, die Geschichte, Kultur und lokale Geschäfte miteinander verbindet.
-
-Features:
-• GPS-basierte Stationen in der Innenstadt
-• Augmented Reality für historische Gebäude
-• QR-Code Rätsel an verschiedenen Standorten
-• Kooperation mit lokalen Geschäften für Belohnungen
-• Multiplayer-Modus für Teams
-• Saisonale Events und Themen-Rallyes
-• Digitale Badges und Erfolge sammeln`,
-        prototypeComponent: 'CoesfelderQuest',
-        ratings: [4, 5, 4, 3, 5]
-      },
-      {
         id: '3',
         title: 'Care&Share',
         shortDescription: 'Die Plattform, die Helfen einfach macht - Helfe & werde geholfen',
@@ -118,7 +85,7 @@ Zusätzliche Ideen:
 
 Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
         prototypeComponent: 'CareAndShare',
-        ratings: [5, 4, 5, 5, 4]
+        ratings: []
       }
     ];
     setIdeas(initialIdeas);
@@ -327,10 +294,6 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                 </p>
               </div>
               <div className="bg-white rounded-xl border-2 border-black/30 min-h-[400px] sm:min-h-[600px] overflow-auto shadow-lg">
-                {selectedIdea.prototypeComponent === 'ViralVideoPromptGenerator' && 
-                  <ViralVideoPromptGenerator language={language} />}
-                {selectedIdea.prototypeComponent === 'CoesfelderQuest' && 
-                  <CoesfelderQuest language={language} />}
                 {selectedIdea.prototypeComponent === 'CareAndShare' && 
                   <CareAndShare />}
               </div>
