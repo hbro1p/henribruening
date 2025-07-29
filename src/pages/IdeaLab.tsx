@@ -179,9 +179,9 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
         </div>
         
         <div className={`relative p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b backdrop-blur-sm bg-white/20 ${currentView === 'prototype' ? 'overflow-hidden h-[calc(90vh-100px)]' : 'overflow-y-auto max-h-[calc(90vh-100px)]'} ${styles.windowContent}`}>
-          {/* Fade-out gradient for scroll areas */}
+          {/* Fade-out gradient for scroll areas - show everywhere except prototype */}
           {currentView !== 'prototype' && (
-            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/40 to-transparent pointer-events-none z-10" />
+            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/40 via-white/20 to-transparent pointer-events-none z-20" />
           )}
           {/* Navigation */}
           {currentView !== 'welcome' && (
@@ -231,19 +231,21 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
           )}
 
           {currentView === 'list' && (
-            <div className="space-y-4 sm:space-y-6">
-              <div className="text-center space-y-3 px-4">
-                <h3 className={`text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-pixel font-bold ${styles.text}`}>
+            <div className="space-y-4 sm:space-y-6 relative">
+              <div className="text-center space-y-3 px-4 transform transition-all duration-500 animate-fade-in">
+                <h3 className={`text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-pixel font-bold ${styles.text} transition-all duration-300 hover:scale-105`}>
                   {language === 'deutsch' ? 'Meine Ideen' : 'My Ideas'}
                 </h3>
-                <p className={`${styles.text} font-pixel text-base sm:text-lg lg:text-xl`}>
+                <p className={`${styles.text} font-pixel text-base sm:text-lg lg:text-xl opacity-90 transition-all duration-300 hover:opacity-100`}>
                   {language === 'deutsch' 
                     ? 'Entdecke innovative Konzepte und teste funktionsfähige Prototypen'
                     : 'Discover innovative concepts and test functional prototypes'
                   }
                 </p>
               </div>
-              <div className="text-center space-y-6">
+              <div className="text-center space-y-6 relative">
+                {/* Bottom fade-out gradient for ideas list */}
+                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-blue-400/30 to-transparent pointer-events-none z-10" />
                 {ideas.length === 0 ? (
                   <div className="space-y-4">
                     <div className="text-6xl">💭</div>
@@ -310,34 +312,42 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
           )}
 
           {currentView === 'prototype' && selectedIdea && (
-            <div className="h-full flex flex-col">
-              <div className="text-center space-y-3 mb-4">
-                <h3 className={`text-2xl sm:text-3xl lg:text-4xl font-pixel font-bold ${styles.text}`}>
+            <div className="h-full flex flex-col animate-scale-in">
+              <div className="text-center space-y-3 mb-4 transform transition-all duration-500 hover:scale-105">
+                <h3 className={`text-2xl sm:text-3xl lg:text-4xl font-pixel font-bold ${styles.text} drop-shadow-lg`}>
                   {selectedIdea.title}
                 </h3>
-                <p className={`text-lg sm:text-xl ${styles.text} font-pixel`}>
+                <p className={`text-lg sm:text-xl ${styles.text} font-pixel opacity-80`}>
                   {language === 'deutsch' ? 'Interaktiver Prototyp' : 'Interactive Prototype'}
                 </p>
               </div>
-              <div className="flex-1 overflow-hidden">
+              <div className="flex-1 overflow-hidden rounded-xl transform transition-all duration-500 hover:scale-[1.01] hover:shadow-2xl">
                 {selectedIdea.prototypeComponent === 'CareAndShare' && 
                   <CareAndShare />}
               </div>
+              {/* Bottom fade-out gradient for prototype */}
+              <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-blue-400/40 to-transparent pointer-events-none z-10" />
             </div>
           )}
 
           {currentView === 'detail' && selectedIdea && (
-            <div className="space-y-6">
-              <div className="text-center space-y-5">
-                <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-pixel font-bold ${styles.text} transition-all duration-300 hover:scale-105`}>{selectedIdea.title}</h3>
+            <div className="space-y-6 relative animate-fade-in">
+              {/* Top fade-in effect */}
+              <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-blue-400/20 to-transparent pointer-events-none z-10" />
+              
+              <div className="text-center space-y-5 transform transition-all duration-500 hover:scale-[1.02]">
+                <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-pixel font-bold ${styles.text} transition-all duration-300 hover:scale-105 drop-shadow-lg`}>{selectedIdea.title}</h3>
                 <button 
                   onClick={() => setCurrentView('prototype')}
-                  className={`px-8 py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:-translate-y-1 flex items-center gap-3 mx-auto text-lg sm:text-xl backdrop-blur-sm bg-white/10 active:scale-95 ${styles.button}`}
+                  className={`group px-8 py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform hover:scale-110 hover:shadow-2xl hover:-translate-y-2 flex items-center gap-3 mx-auto text-lg sm:text-xl backdrop-blur-sm bg-white/10 active:scale-95 ${styles.button}`}
                 >
-                  <Play className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+                  <Play className="h-5 w-5 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12" />
                   {language === 'deutsch' ? 'Prototyp testen' : 'Test Prototype'}
                 </button>
               </div>
+              
+              {/* Bottom fade-out gradient for detail view */}
+              <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-blue-400/30 to-transparent pointer-events-none z-10" />
               
               <div className={`p-6 border-2 rounded-lg backdrop-blur-sm bg-white/10 border-white/30 transition-all duration-300 hover:shadow-lg ${styles.cardBg}`}>
                 <h4 className={`text-xl sm:text-2xl font-pixel font-semibold mb-3 ${styles.text} transition-all duration-300 hover:scale-105`}>
