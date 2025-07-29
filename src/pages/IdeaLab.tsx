@@ -344,9 +344,6 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                 </button>
               </div>
               
-              {/* Bottom fade-out gradient for detail view */}
-              <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-blue-400/30 to-transparent pointer-events-none z-10" />
-              
               <div className={`p-6 border-2 rounded-lg backdrop-blur-sm bg-white/10 border-white/30 transition-all duration-300 hover:shadow-lg ${styles.cardBg}`}>
                 <h4 className={`text-xl sm:text-2xl font-pixel font-semibold mb-3 ${styles.text} transition-all duration-300 hover:scale-105`}>
                   {language === 'deutsch' ? 'Beschreibung' : 'Description'}
