@@ -245,7 +245,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
               </div>
               <div className="text-center space-y-6 relative">
                 {/* Bottom fade-out gradient for ideas list */}
-                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-blue-400/30 to-transparent pointer-events-none z-10" />
+                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-blue-400 to-transparent pointer-events-none z-10" />
                 {ideas.length === 0 ? (
                   <div className="space-y-4">
                     <div className="text-6xl">💭</div>
