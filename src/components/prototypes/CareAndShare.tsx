@@ -28,6 +28,7 @@ const CareAndShare = () => {
   const [helperData, setHelperData] = useState({
     name: '',
     phone: '',
+    facebook: '',
     age: '',
     skills: '',
     availability: ''
@@ -49,8 +50,8 @@ const CareAndShare = () => {
     : helpers;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="max-w-md mx-auto">
+    <div className="min-h-screen bg-white">
+      <div className="max-w-md mx-auto min-h-screen">
         {screen === 'start' && (
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center m-4">
             <div className="mb-8">
@@ -248,15 +249,25 @@ const CareAndShare = () => {
                 />
               </div>
               
-              <div>
-                <input
-                  type="tel"
-                  placeholder={language === 'english' ? 'Phone number' : 'Telefonnummer'}
-                  value={helperData.phone}
-                  onChange={(e) => setHelperData({...helperData, phone: e.target.value})}
-                  className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-lg"
-                />
-              </div>
+               <div>
+                 <input
+                   type="tel"
+                   placeholder={language === 'english' ? 'Phone number' : 'Telefonnummer'}
+                   value={helperData.phone}
+                   onChange={(e) => setHelperData({...helperData, phone: e.target.value})}
+                   className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-lg"
+                 />
+               </div>
+               
+               <div>
+                 <input
+                   type="text"
+                   placeholder={language === 'english' ? 'Facebook name (optional)' : 'Facebook Name (optional)'}
+                   value={helperData.facebook}
+                   onChange={(e) => setHelperData({...helperData, facebook: e.target.value})}
+                   className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-lg"
+                 />
+               </div>
               
               <div>
                 <select
@@ -353,22 +364,22 @@ const CareAndShare = () => {
             <div className="text-center">
               <div className="text-4xl mb-4">✅</div>
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                {language === 'en' ? 'Helper contacted!' : 'Helfer kontaktiert!'}
+                {language === 'english' ? 'Helper contacted!' : 'Helfer kontaktiert!'}
               </h2>
-              <p className="text-gray-600 mb-6">
-                {language === 'en' 
-                  ? `You can now contact ${acceptedHelper.name} directly:`
-                  : `Sie können ${acceptedHelper.name} jetzt direkt kontaktieren:`
-                }
+               <p className="text-gray-600 mb-6">
+                 {language === 'english' 
+                   ? `You can now contact ${acceptedHelper.name} directly:`
+                   : `Sie können ${acceptedHelper.name} jetzt direkt kontaktieren:`
+                 }
               </p>
               
               <div className="bg-gray-50 rounded-xl p-4 mb-6">
                 <h3 className="font-semibold mb-3 text-lg">{acceptedHelper.name}</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-center">
-                    <span className="text-2xl mr-2">📞</span>
-                    <span className="text-lg font-mono">{acceptedHelper.phone}</span>
-                  </div>
+                 <div className="space-y-3">
+                   <div className="flex items-center justify-center bg-white rounded-lg p-3">
+                     <span className="text-2xl mr-3">📞</span>
+                     <span className="text-xl font-mono tracking-wider">{acceptedHelper.phone}</span>
+                   </div>
                   
                   <div className="space-y-2">
                     <a
@@ -412,23 +423,23 @@ const CareAndShare = () => {
           <div className="bg-white rounded-2xl shadow-xl p-6 m-4">
             <div className="text-center">
               <div className="text-4xl mb-4">✅</div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                {language === 'en' ? 'Offer sent!' : 'Angebot gesendet!'}
-              </h2>
-              <p className="text-gray-600 mb-6">
-                {language === 'en' 
-                  ? 'The other person has been contacted.'
-                  : 'Die andere Person wurde kontaktiert.'
-                }
+               <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                 {language === 'english' ? 'Offer sent!' : 'Angebot gesendet!'}
+               </h2>
+               <p className="text-gray-600 mb-6">
+                 {language === 'english' 
+                   ? 'The other person has been contacted.'
+                   : 'Die andere Person wurde kontaktiert.'
+                 }
               </p>
               
-              <button
-                onClick={() => {
-                  setScreen('start');
-                  setHelperData({ age: '', skills: '', availability: '', name: '', phone: '' });
-                }}
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
-              >
+               <button
+                 onClick={() => {
+                   setScreen('start');
+                   setHelperData({ age: '', skills: '', availability: '', name: '', phone: '', facebook: '' });
+                 }}
+                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+               >
                 {language === 'english' ? 'Back to start' : 'Zurück zum Start'}
               </button>
             </div>
