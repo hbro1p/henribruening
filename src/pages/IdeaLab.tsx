@@ -332,8 +332,6 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
 
           {currentView === 'detail' && selectedIdea && (
             <div className="space-y-6 relative animate-fade-in">
-              {/* Top fade-in effect */}
-              <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-blue-400/20 to-transparent pointer-events-none z-10" />
               
               <div className="text-center space-y-5 transform transition-all duration-500 hover:scale-[1.02]">
                 <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-pixel font-bold ${styles.text} transition-all duration-300 hover:scale-105`}>{selectedIdea.title}</h3>
