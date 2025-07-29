@@ -130,8 +130,8 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
             className={`h-5 w-5 transition-all duration-200 star-enhanced ${
               star <= rating
                 ? 'fill-amber-400 text-amber-400 drop-shadow-sm'
-                : 'text-gray-400 stroke-2'
-            } ${interactive ? 'cursor-pointer hover:fill-amber-300 hover:text-amber-300' : ''}`}
+                : 'text-blue-600 stroke-2 opacity-70 hover:opacity-100'
+            } ${interactive ? 'cursor-pointer hover:fill-amber-300 hover:text-amber-300 hover:scale-110' : ''}`}
             onClick={interactive && onRate ? () => onRate(star) : undefined}
           />
         ))}
@@ -179,9 +179,9 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
         </div>
         
         <div className={`relative p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b backdrop-blur-sm bg-white/20 ${currentView === 'prototype' ? 'overflow-hidden h-[calc(90vh-100px)]' : 'overflow-y-auto max-h-[calc(90vh-100px)]'} ${styles.windowContent}`}>
-          {/* Fade-out gradient for scroll areas - show everywhere except prototype */}
+          {/* Fade-out gradient only for actual scrollable content */}
           {currentView !== 'prototype' && (
-            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/40 via-white/20 to-transparent pointer-events-none z-20" />
+            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-blue-400/30 via-blue-400/15 to-transparent pointer-events-none z-20 opacity-60" />
           )}
           {/* Navigation */}
           {currentView !== 'welcome' && (
@@ -353,7 +353,24 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                 <h4 className={`text-xl sm:text-2xl font-pixel font-semibold mb-3 ${styles.text} transition-all duration-300 hover:scale-105`}>
                   {language === 'deutsch' ? 'Beschreibung' : 'Description'}
                 </h4>
-                <p className={`${styles.text} font-pixel leading-relaxed text-base sm:text-lg transition-all duration-300 hover:text-blue-800`}>{selectedIdea.fullDescription}</p>
+                <div className={`${styles.text} font-pixel leading-relaxed text-base sm:text-lg transition-all duration-300 hover:text-blue-800`}>
+                  {selectedIdea.fullDescription.split('\n').map((line, index) => (
+                    <div key={index} className="mb-2">
+                      {line.includes('• ') ? (
+                        <div className="ml-4 relative">
+                          <span className="absolute -left-4 text-blue-600 font-bold">•</span>
+                          <span className="text-blue-700">{line.replace('• ', '')}</span>
+                        </div>
+                      ) : line.trim() === '' ? (
+                        <div className="h-2" />
+                      ) : line.includes(':') && !line.includes('•') ? (
+                        <div className="font-semibold text-blue-800 mt-3 mb-1">{line}</div>
+                      ) : (
+                        <div className="text-blue-700">{line}</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <div className={`p-6 border-2 rounded-lg backdrop-blur-sm bg-white/10 border-white/30 transition-all duration-300 hover:shadow-lg ${styles.cardBg}`}>
