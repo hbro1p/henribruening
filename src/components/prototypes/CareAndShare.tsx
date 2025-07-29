@@ -89,7 +89,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'needHelp' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-20">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 max-h-screen overflow-y-auto">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('start')}
@@ -102,7 +102,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-6 pb-8">
+            <div className="space-y-6 pb-24">
               <div>
                 <input
                   type="text"
@@ -153,18 +153,18 @@ const CareAndShare = () => {
                 </select>
                 
                 {formData.timeframe && (
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="w-full">
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
                           variant="outline"
                           className={cn(
-                            "w-full justify-start text-left font-normal p-3 bg-gray-50 border-0 rounded-xl hover:bg-white",
+                            "w-full justify-start text-left font-normal p-4 bg-gray-50 border-0 rounded-2xl hover:bg-white text-lg h-auto",
                             !formData.date && "text-muted-foreground"
                           )}
                         >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {formData.date ? format(formData.date, "dd.MM.yyyy") : (language === 'english' ? 'Date' : 'Datum')}
+                          <CalendarIcon className="mr-2 h-5 w-5" />
+                          {formData.date ? format(formData.date, "dd.MM.yyyy") : (language === 'english' ? 'Pick a date' : 'Datum wählen')}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0 z-50" align="start">
@@ -177,12 +177,6 @@ const CareAndShare = () => {
                         />
                       </PopoverContent>
                     </Popover>
-                    <input
-                      type="time"
-                      value={formData.time}
-                      onChange={(e) => setFormData({...formData, time: e.target.value})}
-                      className="p-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-base"
-                    />
                   </div>
                 )}
               </div>
@@ -198,7 +192,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'helpersList' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-20">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 max-h-screen overflow-y-auto">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('needHelp')}
@@ -211,7 +205,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-4 pb-8">
+            <div className="space-y-4 pb-24">
               {filteredHelpers.map((helper) => (
                 <div key={helper.id} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
                   <div className="flex justify-between items-start mb-3">
@@ -248,7 +242,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'wantToHelp' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-20">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 max-h-screen overflow-y-auto">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('start')}
@@ -261,7 +255,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-6 pb-8">
+            <div className="space-y-6 pb-24">
               <div>
                 <input
                   type="text"
@@ -344,7 +338,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'helpRequests' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-20">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 max-h-screen overflow-y-auto">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('wantToHelp')}
@@ -357,7 +351,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-4 pb-24">
               {[
                 { id: 1, name: 'Maria S.', age: 75, task: language === 'english' ? 'Shopping' : 'Einkauf', time: language === 'english' ? 'Today 14:00' : 'Heute 14:00' },
                 { id: 2, name: 'Klaus M.', age: 82, task: language === 'english' ? 'Walk' : 'Spaziergang', time: language === 'english' ? 'Tomorrow 10:00' : 'Morgen 10:00' },
