@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
 import { useSettings } from '@/contexts/SettingsContext';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import { CalendarIcon, Phone, MessageCircle } from 'lucide-react';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 type Screen = 'start' | 'needHelp' | 'helpersList' | 'wantToHelp' | 'helpRequests' | 'helperContact' | 'confirmation';
 
@@ -21,7 +27,7 @@ const CareAndShare = () => {
     age: '',
     category: '',
     timeframe: '',
-    date: '',
+    date: new Date() as Date | undefined,
     time: ''
   });
 
@@ -51,7 +57,7 @@ const CareAndShare = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className={`max-w-md mx-auto min-h-screen ${screen === 'start' ? 'overflow-hidden' : 'overflow-y-auto max-h-screen'}`}>
+      <div className="max-w-md mx-auto min-h-screen overflow-y-auto">
         {screen === 'start' && (
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center m-4">
             <div className="mb-8">
@@ -83,7 +89,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'needHelp' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-[calc(100vh-2rem)] overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-20">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('start')}
@@ -148,12 +154,29 @@ const CareAndShare = () => {
                 
                 {formData.timeframe && (
                   <div className="grid grid-cols-2 gap-3">
-                    <input
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) => setFormData({...formData, date: e.target.value})}
-                      className="p-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-base"
-                    />
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal p-3 bg-gray-50 border-0 rounded-xl hover:bg-white",
+                            !formData.date && "text-muted-foreground"
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {formData.date ? format(formData.date, "dd.MM.yyyy") : (language === 'english' ? 'Date' : 'Datum')}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0 z-50" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={formData.date}
+                          onSelect={(date) => setFormData({...formData, date})}
+                          initialFocus
+                          className="p-3 pointer-events-auto"
+                        />
+                      </PopoverContent>
+                    </Popover>
                     <input
                       type="time"
                       value={formData.time}
@@ -175,7 +198,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'helpersList' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-[calc(100vh-2rem)] overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-20">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('needHelp')}
@@ -225,7 +248,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'wantToHelp' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-[calc(100vh-2rem)] overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-20">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('start')}
@@ -321,7 +344,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'helpRequests' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-20">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('wantToHelp')}
@@ -360,7 +383,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'helperContact' && acceptedHelper && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-[calc(100vh-2rem)] overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-20">
             <div className="text-center">
               <div className="text-4xl mb-4">✅</div>
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -373,52 +396,48 @@ const CareAndShare = () => {
                  }
               </p>
               
-              <div className="bg-gray-50 rounded-xl p-6 mb-6">
-                <h3 className="font-semibold mb-4 text-lg">{acceptedHelper.name}</h3>
-                
-                {/* Phone Number - single line display */}
-                <div className="bg-white rounded-lg p-4 mb-4 flex items-center justify-between">
-                  <div className="flex items-center">
-                    <span className="text-2xl mr-3">📞</span>
-                    <span className="text-lg font-mono">{acceptedHelper.phone}</span>
-                  </div>
-                  <a
-                    href={`tel:${acceptedHelper.phone}`}
-                    className="bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-sm"
-                  >
-                    {language === 'english' ? 'Call' : 'Anrufen'}
-                  </a>
-                </div>
-                
-                {/* Contact Buttons */}
-                <div className="space-y-3">
-                  <a
-                    href={`https://wa.me/${acceptedHelper.phone?.replace(/[\s\+\-]/g, '')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full bg-green-500 text-white py-3 px-6 rounded-xl font-semibold hover:bg-green-600 transition-colors flex items-center justify-center"
-                  >
-                    <span className="mr-2">💬</span>
-                    {language === 'english' ? 'Contact on WhatsApp' : 'Über WhatsApp kontaktieren'}
-                  </a>
-                  
-                  <a
-                    href="https://m.me/user"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full bg-blue-500 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-600 transition-colors flex items-center justify-center"
-                  >
-                    <span className="mr-2">📘</span>
-                    {language === 'english' ? 'Contact on Facebook' : 'Über Facebook kontaktieren'}
-                  </a>
-                </div>
-              </div>
+               <div className="bg-gray-50 rounded-xl p-6 mb-6">
+                 <h3 className="font-semibold mb-6 text-lg">{acceptedHelper.name}</h3>
+                 
+                 {/* Contact Buttons */}
+                 <div className="space-y-4">
+                   <a
+                     href={`tel:${acceptedHelper.phone}`}
+                     className="w-full bg-blue-600 text-white py-4 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors flex flex-col items-center justify-center"
+                   >
+                     <Phone className="h-6 w-6 mb-1" />
+                     Call
+                   </a>
+                   
+                   <a
+                     href={`https://wa.me/${acceptedHelper.phone?.replace(/[\s\+\-]/g, '')}`}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     className="w-full bg-green-500 text-white py-4 px-6 rounded-xl font-semibold hover:bg-green-600 transition-colors flex flex-col items-center justify-center"
+                   >
+                     <MessageCircle className="h-6 w-6 mb-1" />
+                     WhatsApp
+                   </a>
+                   
+                   <a
+                     href="https://m.me/user"
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     className="w-full bg-blue-500 text-white py-4 px-6 rounded-xl font-semibold hover:bg-blue-600 transition-colors flex flex-col items-center justify-center"
+                   >
+                     <svg className="h-6 w-6 mb-1" viewBox="0 0 24 24" fill="currentColor">
+                       <path d="M12 0C5.4 0 0 4.9 0 11c0 3.5 1.6 6.6 4.2 8.8L3 24l4.3-1.2C8.8 23.6 10.4 24 12 24c6.6 0 12-4.9 12-11S18.6 0 12 0zm1.2 14.8l-3.1-3.3-6 3.3 6.6-7 3.1 3.3 6-3.3-6.6 7z"/>
+                     </svg>
+                     Facebook
+                   </a>
+                 </div>
+               </div>
               
               <button
                 onClick={() => {
                   setScreen('start');
                   setAcceptedHelper(null);
-                  setFormData({ name: '', age: '', category: '', timeframe: '', date: '', time: '' });
+                  setFormData({ name: '', age: '', category: '', timeframe: '', date: new Date() as Date | undefined, time: '' });
                 }}
                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
               >
@@ -429,7 +448,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'confirmation' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-20">
             <div className="text-center">
               <div className="text-4xl mb-4">✅</div>
                <h2 className="text-2xl font-bold text-gray-800 mb-4">
