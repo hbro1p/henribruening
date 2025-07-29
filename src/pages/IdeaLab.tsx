@@ -353,7 +353,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                     <div key={index} className="mb-2">
                       {line.includes('• ') ? (
                         <div className="ml-4 relative">
-                          <span className="absolute -left-4 text-gray-600 font-bold">•</span>
+                          <span className="absolute -left-4 font-bold">•</span>
                           <span>{line.replace('• ', '')}</span>
                         </div>
                       ) : line.trim() === '' ? (
