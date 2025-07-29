@@ -51,7 +51,7 @@ const CareAndShare = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-md mx-auto min-h-screen">
+      <div className={`max-w-md mx-auto min-h-screen ${screen === 'start' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
         {screen === 'start' && (
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center m-4">
             <div className="mb-8">

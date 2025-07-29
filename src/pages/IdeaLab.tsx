@@ -353,20 +353,20 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                 <h4 className={`text-xl sm:text-2xl font-pixel font-semibold mb-3 ${styles.text} transition-all duration-300 hover:scale-105`}>
                   {language === 'deutsch' ? 'Beschreibung' : 'Description'}
                 </h4>
-                <div className={`${styles.text} font-pixel leading-relaxed text-base sm:text-lg transition-all duration-300 hover:text-blue-800`}>
+                <div className={`${styles.text} font-pixel leading-relaxed text-base sm:text-lg transition-all duration-300`}>
                   {selectedIdea.fullDescription.split('\n').map((line, index) => (
                     <div key={index} className="mb-2">
                       {line.includes('• ') ? (
                         <div className="ml-4 relative">
-                          <span className="absolute -left-4 text-blue-600 font-bold">•</span>
-                          <span className="text-blue-700">{line.replace('• ', '')}</span>
+                          <span className="absolute -left-4 text-gray-600 font-bold">•</span>
+                          <span>{line.replace('• ', '')}</span>
                         </div>
                       ) : line.trim() === '' ? (
                         <div className="h-2" />
                       ) : line.includes(':') && !line.includes('•') ? (
-                        <div className="font-semibold text-blue-800 mt-3 mb-1">{line}</div>
+                        <div className="font-semibold mt-3 mb-1">{line}</div>
                       ) : (
-                        <div className="text-blue-700">{line}</div>
+                        <div>{line}</div>
                       )}
                     </div>
                   ))}
