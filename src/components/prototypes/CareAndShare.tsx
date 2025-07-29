@@ -56,8 +56,8 @@ const CareAndShare = () => {
     : helpers;
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-md mx-auto min-h-screen overflow-y-auto">
+    <div className="w-full h-screen overflow-y-scroll bg-white">
+      <div className="max-w-md mx-auto">
         {screen === 'start' && (
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center m-4">
             <div className="mb-8">
@@ -89,7 +89,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'needHelp' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-32">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-screen">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('start')}
@@ -183,7 +183,7 @@ const CareAndShare = () => {
               
               <button
                 onClick={() => setScreen('helpersList')}
-                className="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors"
+                className="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors mb-32"
               >
                 {language === 'english' ? 'Find helpers' : 'Helfer finden'}
               </button>
@@ -192,7 +192,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'helpersList' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-32">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-screen">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('needHelp')}
@@ -205,7 +205,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-4 pb-32">
               {filteredHelpers.map((helper) => (
                 <div key={helper.id} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
                   <div className="flex justify-between items-start mb-3">
@@ -242,7 +242,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'wantToHelp' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-32">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-screen">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('start')}
@@ -329,7 +329,7 @@ const CareAndShare = () => {
               
               <button
                 onClick={() => setScreen('helpRequests')}
-                className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors"
+                className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors mb-32"
               >
                 {language === 'english' ? 'View help requests' : 'Hilfegesuche ansehen'}
               </button>
@@ -338,7 +338,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'helpRequests' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-32">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-screen">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('wantToHelp')}
@@ -351,7 +351,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-4 pb-32">
               {[
                 { id: 1, name: 'Maria S.', age: 75, task: language === 'english' ? 'Shopping' : 'Einkauf', time: language === 'english' ? 'Today 14:00' : 'Heute 14:00' },
                 { id: 2, name: 'Klaus M.', age: 82, task: language === 'english' ? 'Walk' : 'Spaziergang', time: language === 'english' ? 'Tomorrow 10:00' : 'Morgen 10:00' },
@@ -377,7 +377,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'helperContact' && acceptedHelper && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-32">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-screen">
             <div className="text-center">
               <div className="text-4xl mb-4">✅</div>
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -433,7 +433,7 @@ const CareAndShare = () => {
                   setAcceptedHelper(null);
                   setFormData({ name: '', age: '', category: '', timeframe: '', date: new Date() as Date | undefined, time: '' });
                 }}
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+                className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors mb-32"
               >
                 {language === 'english' ? 'Back to start' : 'Zurück zum Start'}
               </button>
@@ -442,7 +442,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'confirmation' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 pb-32">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-screen">
             <div className="text-center">
               <div className="text-4xl mb-4">✅</div>
                <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -460,7 +460,7 @@ const CareAndShare = () => {
                    setScreen('start');
                    setHelperData({ age: '', skills: '', availability: '', name: '', phone: '', facebook: '' });
                  }}
-                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors mb-32"
                >
                 {language === 'english' ? 'Back to start' : 'Zurück zum Start'}
               </button>
