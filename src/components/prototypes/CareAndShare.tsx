@@ -83,7 +83,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'needHelp' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-[calc(100vh-2rem)] overflow-y-auto">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('start')}
@@ -96,7 +96,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-6">
+            <div className="space-y-6 pb-8">
               <div>
                 <input
                   type="text"
@@ -166,7 +166,7 @@ const CareAndShare = () => {
               
               <button
                 onClick={() => setScreen('helpersList')}
-                className="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors mt-6"
+                className="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors"
               >
                 {language === 'english' ? 'Find helpers' : 'Helfer finden'}
               </button>
@@ -175,7 +175,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'helpersList' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-[calc(100vh-2rem)] overflow-y-auto">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('needHelp')}
@@ -188,7 +188,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-4">
+            <div className="space-y-4 pb-8">
               {filteredHelpers.map((helper) => (
                 <div key={helper.id} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
                   <div className="flex justify-between items-start mb-3">
@@ -225,7 +225,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'wantToHelp' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-[calc(100vh-2rem)] overflow-y-auto">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('start')}
@@ -238,7 +238,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-6">
+            <div className="space-y-6 pb-8">
               <div>
                 <input
                   type="text"
@@ -312,7 +312,7 @@ const CareAndShare = () => {
               
               <button
                 onClick={() => setScreen('helpRequests')}
-                className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors mt-6"
+                className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors"
               >
                 {language === 'english' ? 'View help requests' : 'Hilfegesuche ansehen'}
               </button>
@@ -360,7 +360,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'helperContact' && acceptedHelper && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 min-h-[calc(100vh-2rem)] overflow-y-auto">
             <div className="text-center">
               <div className="text-4xl mb-4">✅</div>
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -373,35 +373,44 @@ const CareAndShare = () => {
                  }
               </p>
               
-              <div className="bg-gray-50 rounded-xl p-4 mb-6">
-                <h3 className="font-semibold mb-3 text-lg">{acceptedHelper.name}</h3>
-                 <div className="space-y-3">
-                   <div className="flex items-center justify-center bg-white rounded-lg p-3">
-                     <span className="text-2xl mr-3">📞</span>
-                     <span className="text-xl font-mono tracking-wider">{acceptedHelper.phone}</span>
-                   </div>
-                  
-                  <div className="space-y-2">
-                    <a
-                      href={`https://wa.me/${acceptedHelper.phone?.replace(/[\s\+\-]/g, '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full bg-green-500 text-white py-3 px-6 rounded-xl font-semibold hover:bg-green-600 transition-colors flex items-center justify-center"
-                    >
-                      <span className="mr-2">💬</span>
-                      {language === 'english' ? 'Contact on WhatsApp' : 'Über WhatsApp kontaktieren'}
-                    </a>
-                    
-                    <a
-                      href="https://m.me/user"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full bg-blue-500 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-600 transition-colors flex items-center justify-center"
-                    >
-                      <span className="mr-2">📘</span>
-                      {language === 'english' ? 'Contact on Facebook' : 'Über Facebook kontaktieren'}
-                    </a>
+              <div className="bg-gray-50 rounded-xl p-6 mb-6">
+                <h3 className="font-semibold mb-4 text-lg">{acceptedHelper.name}</h3>
+                
+                {/* Phone Number - single line display */}
+                <div className="bg-white rounded-lg p-4 mb-4 flex items-center justify-between">
+                  <div className="flex items-center">
+                    <span className="text-2xl mr-3">📞</span>
+                    <span className="text-lg font-mono">{acceptedHelper.phone}</span>
                   </div>
+                  <a
+                    href={`tel:${acceptedHelper.phone}`}
+                    className="bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-sm"
+                  >
+                    {language === 'english' ? 'Call' : 'Anrufen'}
+                  </a>
+                </div>
+                
+                {/* Contact Buttons */}
+                <div className="space-y-3">
+                  <a
+                    href={`https://wa.me/${acceptedHelper.phone?.replace(/[\s\+\-]/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-green-500 text-white py-3 px-6 rounded-xl font-semibold hover:bg-green-600 transition-colors flex items-center justify-center"
+                  >
+                    <span className="mr-2">💬</span>
+                    {language === 'english' ? 'Contact on WhatsApp' : 'Über WhatsApp kontaktieren'}
+                  </a>
+                  
+                  <a
+                    href="https://m.me/user"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-blue-500 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-600 transition-colors flex items-center justify-center"
+                  >
+                    <span className="mr-2">📘</span>
+                    {language === 'english' ? 'Contact on Facebook' : 'Über Facebook kontaktieren'}
+                  </a>
                 </div>
               </div>
               
