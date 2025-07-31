@@ -178,7 +178,7 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-4 pb-8">
+            <div className="space-y-4 pb-24">
               {filteredHelpers.map((helper) => (
                 <div key={helper.id} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
                   <div className="flex justify-between items-start mb-3">
@@ -215,7 +215,7 @@ const CareAndShare = () => {
         )}
 
         {screen === 'wantToHelp' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4">
+          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 mb-8">
             <div className="flex items-center mb-6">
               <button
                 onClick={() => setScreen('start')}
@@ -228,14 +228,14 @@ const CareAndShare = () => {
               </h2>
             </div>
             
-            <div className="space-y-6">
+            <div className="space-y-6 pb-8">
               <div>
                 <input
                   type="text"
                   placeholder={language === 'english' ? 'Name' : 'Name'}
                   value={helperData.name}
                   onChange={(e) => setHelperData({...helperData, name: e.target.value})}
-                  className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-lg"
+                  className="w-full p-3 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-base"
                 />
               </div>
               
@@ -245,7 +245,7 @@ const CareAndShare = () => {
                    placeholder={language === 'english' ? 'Phone number' : 'Telefonnummer'}
                    value={helperData.phone}
                    onChange={(e) => setHelperData({...helperData, phone: e.target.value})}
-                   className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-lg"
+                   className="w-full p-3 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-base"
                  />
                </div>
                
@@ -255,7 +255,7 @@ const CareAndShare = () => {
                    placeholder={language === 'english' ? 'Facebook name (optional)' : 'Facebook Name (optional)'}
                    value={helperData.facebook}
                    onChange={(e) => setHelperData({...helperData, facebook: e.target.value})}
-                   className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-lg"
+                   className="w-full p-3 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-base"
                  />
                </div>
               
@@ -263,7 +263,7 @@ const CareAndShare = () => {
                 <select
                   value={helperData.age}
                   onChange={(e) => setHelperData({...helperData, age: e.target.value})}
-                  className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-lg"
+                  className="w-full p-3 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-base"
                 >
                   <option value="">{language === 'english' ? 'Age range' : 'Altersbereich'}</option>
                   <option value="18-30">18-30</option>
@@ -276,7 +276,7 @@ const CareAndShare = () => {
                 <select
                   value={helperData.skills}
                   onChange={(e) => setHelperData({...helperData, skills: e.target.value})}
-                  className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-lg"
+                  className="w-full p-3 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-base"
                 >
                   <option value="">{language === 'english' ? 'What can you help with?' : 'Wobei können Sie helfen?'}</option>
                   <option value={language === 'english' ? 'Shopping' : 'Einkauf'}>{language === 'english' ? 'Shopping' : 'Einkauf'}</option>
@@ -290,7 +290,7 @@ const CareAndShare = () => {
                 <select
                   value={helperData.availability}
                   onChange={(e) => setHelperData({...helperData, availability: e.target.value})}
-                  className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-lg"
+                  className="w-full p-3 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-base"
                 >
                   <option value="">{language === 'english' ? 'When are you available?' : 'Wann sind Sie verfügbar?'}</option>
                   <option value={language === 'english' ? 'Mornings' : 'Vormittags'}>{language === 'english' ? 'Mornings' : 'Vormittags'}</option>
@@ -302,10 +302,12 @@ const CareAndShare = () => {
               
               <button
                 onClick={() => setScreen('helpRequests')}
-                className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors mb-8"
+                className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors"
               >
-                {language === 'english' ? 'View help requests' : 'Hilfegesuche ansehen'}
+                {language === 'english' ? 'Find people in need' : 'Hilfesuchende finden'}
               </button>
+              
+              <div className="h-20"></div>
             </div>
           </div>
         )}
