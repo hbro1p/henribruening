@@ -147,13 +147,18 @@ const CareAndShare = () => {
                   className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all appearance-none text-lg"
                 >
                   <option value="">{language === 'english' ? 'When do you need help?' : 'Wann brauchen Sie Hilfe?'}</option>
-                  <option value={language === 'english' ? 'Today' : 'Heute'}>{language === 'english' ? 'Today' : 'Heute'}</option>
+                  <option value={language === 'english' ? 'Today morning' : 'Heute Morgen'}>{language === 'english' ? 'Today morning' : 'Heute Morgen'}</option>
+                  <option value={language === 'english' ? 'Today afternoon' : 'Heute Nachmittag'}>{language === 'english' ? 'Today afternoon' : 'Heute Nachmittag'}</option>
                   <option value={language === 'english' ? 'Tomorrow' : 'Morgen'}>{language === 'english' ? 'Tomorrow' : 'Morgen'}</option>
                   <option value={language === 'english' ? 'This week' : 'Diese Woche'}>{language === 'english' ? 'This week' : 'Diese Woche'}</option>
                 </select>
                 
-                {formData.timeframe && (
-                  <div className="w-full">
+                {(formData.timeframe === (language === 'english' ? 'Today morning' : 'Heute Morgen') || 
+                  formData.timeframe === (language === 'english' ? 'This week' : 'Diese Woche')) && (
+                  <div className="w-full animate-fadeIn">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {language === 'english' ? 'Select specific date:' : 'Spezifisches Datum wählen:'}
+                    </label>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button
