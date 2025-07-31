@@ -56,8 +56,8 @@ const CareAndShare = () => {
     : helpers;
 
   return (
-    <div className="w-full min-h-screen bg-white">
-      <div className="max-w-md mx-auto h-screen overflow-y-auto pb-20">
+    <div className="w-full h-screen bg-white">
+      <div className="max-w-md mx-auto h-full overflow-y-auto">
         {screen === 'start' && (
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center m-4">
             <div className="mb-8">
