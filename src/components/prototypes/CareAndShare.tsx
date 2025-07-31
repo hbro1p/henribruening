@@ -215,99 +215,85 @@ const CareAndShare = () => {
         )}
 
         {screen === 'wantToHelp' && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4 mb-8">
-            <div className="flex items-center mb-6">
+          <div className="bg-white rounded-2xl shadow-xl p-4 m-4">
+            <div className="flex items-center mb-4">
               <button
                 onClick={() => setScreen('start')}
                 className="mr-4 text-gray-600 hover:text-gray-800 text-2xl"
               >
                 ←
               </button>
-              <h2 className="text-2xl font-bold text-gray-800">
+              <h2 className="text-xl font-bold text-gray-800">
                 {language === 'english' ? 'I want to help' : 'Ich möchte helfen'}
               </h2>
             </div>
             
-            <div className="space-y-6 pb-8">
-              <div>
-                <input
-                  type="text"
-                  placeholder={language === 'english' ? 'Name' : 'Name'}
-                  value={helperData.name}
-                  onChange={(e) => setHelperData({...helperData, name: e.target.value})}
-                  className="w-full p-3 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-base"
-                />
-              </div>
+            <div className="space-y-3">
+              <input
+                type="text"
+                placeholder={language === 'english' ? 'Name' : 'Name'}
+                value={helperData.name}
+                onChange={(e) => setHelperData({...helperData, name: e.target.value})}
+                className="w-full p-2 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-sm"
+              />
               
-               <div>
-                 <input
-                   type="tel"
-                   placeholder={language === 'english' ? 'Phone number' : 'Telefonnummer'}
-                   value={helperData.phone}
-                   onChange={(e) => setHelperData({...helperData, phone: e.target.value})}
-                   className="w-full p-3 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-base"
-                 />
-               </div>
-               
-               <div>
-                 <input
-                   type="text"
-                   placeholder={language === 'english' ? 'Facebook name (optional)' : 'Facebook Name (optional)'}
-                   value={helperData.facebook}
-                   onChange={(e) => setHelperData({...helperData, facebook: e.target.value})}
-                   className="w-full p-3 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-base"
-                 />
-               </div>
+              <input
+                type="tel"
+                placeholder={language === 'english' ? 'Phone number' : 'Telefonnummer'}
+                value={helperData.phone}
+                onChange={(e) => setHelperData({...helperData, phone: e.target.value})}
+                className="w-full p-2 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-sm"
+              />
               
-              <div>
-                <select
-                  value={helperData.age}
-                  onChange={(e) => setHelperData({...helperData, age: e.target.value})}
-                  className="w-full p-3 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-base"
-                >
-                  <option value="">{language === 'english' ? 'Age range' : 'Altersbereich'}</option>
-                  <option value="18-30">18-30</option>
-                  <option value="30-50">30-50</option>
-                  <option value="50+">50+</option>
-                </select>
-              </div>
+              <input
+                type="text"
+                placeholder={language === 'english' ? 'Facebook name (optional)' : 'Facebook Name (optional)'}
+                value={helperData.facebook}
+                onChange={(e) => setHelperData({...helperData, facebook: e.target.value})}
+                className="w-full p-2 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-sm"
+              />
               
-              <div>
-                <select
-                  value={helperData.skills}
-                  onChange={(e) => setHelperData({...helperData, skills: e.target.value})}
-                  className="w-full p-3 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-base"
-                >
-                  <option value="">{language === 'english' ? 'What can you help with?' : 'Wobei können Sie helfen?'}</option>
-                  <option value={language === 'english' ? 'Shopping' : 'Einkauf'}>{language === 'english' ? 'Shopping' : 'Einkauf'}</option>
-                  <option value={language === 'english' ? 'Garden' : 'Garten'}>{language === 'english' ? 'Garden' : 'Garten'}</option>
-                  <option value="IT">IT</option>
-                  <option value={language === 'english' ? 'Household' : 'Haushalt'}>{language === 'english' ? 'Household' : 'Haushalt'}</option>
-                </select>
-              </div>
+              <select
+                value={helperData.age}
+                onChange={(e) => setHelperData({...helperData, age: e.target.value})}
+                className="w-full p-2 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-sm"
+              >
+                <option value="">{language === 'english' ? 'Age range' : 'Altersbereich'}</option>
+                <option value="18-30">18-30</option>
+                <option value="30-50">30-50</option>
+                <option value="50+">50+</option>
+              </select>
               
-              <div>
-                <select
-                  value={helperData.availability}
-                  onChange={(e) => setHelperData({...helperData, availability: e.target.value})}
-                  className="w-full p-3 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-base"
-                >
-                  <option value="">{language === 'english' ? 'When are you available?' : 'Wann sind Sie verfügbar?'}</option>
-                  <option value={language === 'english' ? 'Mornings' : 'Vormittags'}>{language === 'english' ? 'Mornings' : 'Vormittags'}</option>
-                  <option value={language === 'english' ? 'Afternoons' : 'Nachmittags'}>{language === 'english' ? 'Afternoons' : 'Nachmittags'}</option>
-                  <option value={language === 'english' ? 'Evenings' : 'Abends'}>{language === 'english' ? 'Evenings' : 'Abends'}</option>
-                  <option value={language === 'english' ? 'Weekends' : 'Wochenende'}>{language === 'english' ? 'Weekends' : 'Wochenende'}</option>
-                </select>
-              </div>
+              <select
+                value={helperData.skills}
+                onChange={(e) => setHelperData({...helperData, skills: e.target.value})}
+                className="w-full p-2 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-sm"
+              >
+                <option value="">{language === 'english' ? 'What can you help with?' : 'Wobei können Sie helfen?'}</option>
+                <option value={language === 'english' ? 'Shopping' : 'Einkauf'}>{language === 'english' ? 'Shopping' : 'Einkauf'}</option>
+                <option value={language === 'english' ? 'Garden' : 'Garten'}>{language === 'english' ? 'Garden' : 'Garten'}</option>
+                <option value="IT">IT</option>
+                <option value={language === 'english' ? 'Household' : 'Haushalt'}>{language === 'english' ? 'Household' : 'Haushalt'}</option>
+              </select>
+              
+              <select
+                value={helperData.availability}
+                onChange={(e) => setHelperData({...helperData, availability: e.target.value})}
+                className="w-full p-2 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-sm"
+              >
+                <option value="">{language === 'english' ? 'When are you available?' : 'Wann sind Sie verfügbar?'}</option>
+                <option value={language === 'english' ? 'Mornings' : 'Vormittags'}>{language === 'english' ? 'Mornings' : 'Vormittags'}</option>
+                <option value={language === 'english' ? 'Afternoons' : 'Nachmittags'}>{language === 'english' ? 'Afternoons' : 'Nachmittags'}</option>
+                <option value={language === 'english' ? 'Evenings' : 'Abends'}>{language === 'english' ? 'Evenings' : 'Abends'}</option>
+                <option value={language === 'english' ? 'Weekends' : 'Wochenende'}>{language === 'english' ? 'Weekends' : 'Wochenende'}</option>
+              </select>
               
               <button
                 onClick={() => setScreen('helpRequests')}
-                className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors"
+                className="w-full bg-green-600 text-white py-3 px-6 rounded-xl font-semibold text-base hover:bg-green-700 transition-colors mt-4"
               >
                 {language === 'english' ? 'Find people in need' : 'Hilfesuchende finden'}
               </button>
-              
-              <div className="h-20"></div>
             </div>
           </div>
         )}
