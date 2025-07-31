@@ -140,50 +140,18 @@ const CareAndShare = () => {
                 </select>
               </div>
               
-              <div className="space-y-3">
+              <div>
                 <select
                   value={formData.timeframe}
                   onChange={(e) => setFormData({...formData, timeframe: e.target.value})}
                   className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all appearance-none text-lg"
                 >
                   <option value="">{language === 'english' ? 'When do you need help?' : 'Wann brauchen Sie Hilfe?'}</option>
-                  <option value={language === 'english' ? 'Today morning' : 'Heute Morgen'}>{language === 'english' ? 'Today morning' : 'Heute Morgen'}</option>
+                  <option value={language === 'english' ? 'Today' : 'Heute'}>{language === 'english' ? 'Today' : 'Heute'}</option>
                   <option value={language === 'english' ? 'Today afternoon' : 'Heute Nachmittag'}>{language === 'english' ? 'Today afternoon' : 'Heute Nachmittag'}</option>
+                  <option value={language === 'english' ? 'Today evening' : 'Heute Abend'}>{language === 'english' ? 'Today evening' : 'Heute Abend'}</option>
                   <option value={language === 'english' ? 'Tomorrow' : 'Morgen'}>{language === 'english' ? 'Tomorrow' : 'Morgen'}</option>
-                  <option value={language === 'english' ? 'This week' : 'Diese Woche'}>{language === 'english' ? 'This week' : 'Diese Woche'}</option>
                 </select>
-                
-                {(formData.timeframe === (language === 'english' ? 'Today morning' : 'Heute Morgen') || 
-                  formData.timeframe === (language === 'english' ? 'This week' : 'Diese Woche')) && (
-                  <div className="w-full animate-fadeIn">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      {language === 'english' ? 'Select specific date:' : 'Spezifisches Datum wählen:'}
-                    </label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full justify-start text-left font-normal p-4 bg-gray-50 border-0 rounded-2xl hover:bg-white text-lg h-auto",
-                            !formData.date && "text-muted-foreground"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-5 w-5" />
-                          {formData.date ? format(formData.date, "dd.MM.yyyy") : (language === 'english' ? 'Pick a date' : 'Datum wählen')}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 z-50" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={formData.date}
-                          onSelect={(date) => setFormData({...formData, date})}
-                          initialFocus
-                          className="p-3 pointer-events-auto"
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                )}
               </div>
               
               <button
