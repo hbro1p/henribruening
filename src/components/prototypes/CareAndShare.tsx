@@ -179,7 +179,7 @@ const CareAndShare = () => {
             </div>
             
             <div className="space-y-4 pb-24">
-              {filteredHelpers.map((helper) => (
+              {filteredHelpers.slice(0, 2).map((helper) => (
                 <div key={helper.id} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
                   <div className="flex justify-between items-start mb-3">
                     <div>
@@ -317,7 +317,7 @@ const CareAndShare = () => {
                 { id: 1, name: 'Maria S.', age: 75, task: language === 'english' ? 'Shopping' : 'Einkauf', time: language === 'english' ? 'Today 14:00' : 'Heute 14:00' },
                 { id: 2, name: 'Klaus M.', age: 82, task: language === 'english' ? 'Walk' : 'Spaziergang', time: language === 'english' ? 'Tomorrow 10:00' : 'Morgen 10:00' },
                 { id: 3, name: 'Ingrid B.', age: 78, task: language === 'english' ? 'Garden' : 'Garten', time: language === 'english' ? 'This week' : 'Diese Woche' }
-              ].map((request) => (
+              ].slice(0, 2).map((request) => (
                 <div key={request.id} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
                   <div className="mb-3">
                     <h3 className="font-semibold text-lg">{request.name}</h3>
