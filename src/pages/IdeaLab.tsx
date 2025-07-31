@@ -367,7 +367,8 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                   ))}
                 </div>
               </div>
-                {/* Instagram Contact Section */}
+              
+              {/* Instagram Contact Section */}
                 <div className={`p-4 border-2 rounded-lg backdrop-blur-sm bg-gradient-to-r from-pink-100/20 to-purple-100/20 border-pink-300/30 transition-all duration-300 hover:shadow-lg ${styles.cardBg}`}>
                   <div className="text-center space-y-3">
                     <p className={`text-base sm:text-lg font-pixel ${styles.text}`}>
