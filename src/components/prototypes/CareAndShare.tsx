@@ -338,29 +338,28 @@ const CareAndShare = () => {
         )}
 
         {screen === 'helperContact' && acceptedHelper && (
-          <div className="bg-white rounded-2xl shadow-xl p-6 m-4">
+          <div className="bg-white rounded-2xl shadow-xl p-4 m-4">
             <div className="text-center">
-              <div className="text-4xl mb-4">✅</div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              <div className="text-2xl mb-2">✅</div>
+              <h2 className="text-lg font-bold text-gray-800 mb-2">
                 {language === 'english' ? 'Helper contacted!' : 'Helfer kontaktiert!'}
               </h2>
-               <p className="text-gray-600 mb-6">
+               <p className="text-gray-600 mb-4 text-sm">
                  {language === 'english' 
                    ? `You can now contact ${acceptedHelper.name} directly:`
                    : `Sie können ${acceptedHelper.name} jetzt direkt kontaktieren:`
                  }
               </p>
               
-               <div className="bg-gray-50 rounded-xl p-6 mb-6">
-                 <h3 className="font-semibold mb-6 text-lg">{acceptedHelper.name}</h3>
+               <div className="bg-gray-50 rounded-xl p-3 mb-4">
+                 <h3 className="font-semibold mb-3 text-base">{acceptedHelper.name}</h3>
                  
-                 {/* Contact Buttons */}
-                 <div className="space-y-4">
+                 <div className="grid grid-cols-3 gap-2">
                    <a
                      href={`tel:${acceptedHelper.phone}`}
-                     className="w-full bg-blue-600 text-white py-4 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors flex flex-col items-center justify-center"
+                     className="bg-blue-600 text-white py-2 px-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex flex-col items-center justify-center text-xs"
                    >
-                     <Phone className="h-6 w-6 mb-1" />
+                     <Phone className="h-4 w-4 mb-1" />
                      Call
                    </a>
                    
@@ -368,9 +367,9 @@ const CareAndShare = () => {
                      href={`https://wa.me/${acceptedHelper.phone?.replace(/[\s\+\-]/g, '')}`}
                      target="_blank"
                      rel="noopener noreferrer"
-                     className="w-full bg-green-500 text-white py-4 px-6 rounded-xl font-semibold hover:bg-green-600 transition-colors flex flex-col items-center justify-center"
+                     className="bg-green-500 text-white py-2 px-3 rounded-lg font-semibold hover:bg-green-600 transition-colors flex flex-col items-center justify-center text-xs"
                    >
-                     <MessageCircle className="h-6 w-6 mb-1" />
+                     <MessageCircle className="h-4 w-4 mb-1" />
                      WhatsApp
                    </a>
                    
@@ -378,9 +377,9 @@ const CareAndShare = () => {
                      href="https://m.me/user"
                      target="_blank"
                      rel="noopener noreferrer"
-                     className="w-full bg-blue-500 text-white py-4 px-6 rounded-xl font-semibold hover:bg-blue-600 transition-colors flex flex-col items-center justify-center"
+                     className="bg-blue-500 text-white py-2 px-3 rounded-lg font-semibold hover:bg-blue-600 transition-colors flex flex-col items-center justify-center text-xs"
                    >
-                     <svg className="h-6 w-6 mb-1" viewBox="0 0 24 24" fill="currentColor">
+                     <svg className="h-4 w-4 mb-1" viewBox="0 0 24 24" fill="currentColor">
                        <path d="M12 0C5.4 0 0 4.9 0 11c0 3.5 1.6 6.6 4.2 8.8L3 24l4.3-1.2C8.8 23.6 10.4 24 12 24c6.6 0 12-4.9 12-11S18.6 0 12 0zm1.2 14.8l-3.1-3.3-6 3.3 6.6-7 3.1 3.3 6-3.3-6.6 7z"/>
                      </svg>
                      Facebook
@@ -394,7 +393,7 @@ const CareAndShare = () => {
                   setAcceptedHelper(null);
                   setFormData({ name: '', age: '', category: '', timeframe: '', date: new Date() as Date | undefined, time: '' });
                 }}
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors mb-8"
+                className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
               >
                 {language === 'english' ? 'Back to start' : 'Zurück zum Start'}
               </button>
