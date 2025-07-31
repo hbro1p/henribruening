@@ -298,7 +298,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                               onClick={() => openPrototype(idea)}
                               className={`group px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-300 transform button-enhanced border-2 border-black/30 flex items-center justify-center gap-2 sm:gap-3 backdrop-blur-sm bg-white/10 active:scale-95 hover-glow ${styles.button}`}
                             >
-                              <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 icon-interactive" />
+                              <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5" />
                               {language === 'deutsch' ? 'Testen' : 'Test'}
                             </button>
                           </div>
@@ -339,7 +339,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                   onClick={() => setCurrentView('prototype')}
                   className={`group px-8 py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform button-enhanced flex items-center gap-3 mx-auto text-lg sm:text-xl backdrop-blur-sm bg-white/10 active:scale-95 hover-glow ${styles.button}`}
                 >
-                  <Lightbulb className="h-5 w-5 transition-all duration-300 group-hover:scale-125 group-hover:-translate-y-1 icon-interactive" />
+                  <Lightbulb className="h-5 w-5" />
                   {language === 'deutsch' ? 'Prototyp testen' : 'Test Prototype'}
                 </button>
               </div>
@@ -378,7 +378,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                       }
                     </p>
                     <a
-                      href="https://instagram.com/direct/new/"
+                      href="https://www.instagram.com/henribruening/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`inline-flex items-center gap-2 px-6 py-3 rounded-lg font-pixel border-2 border-pink-400/50 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:-translate-y-1 backdrop-blur-sm bg-gradient-to-r from-pink-500/20 to-purple-500/20 text-pink-800 hover:text-pink-900 active:scale-95`}
