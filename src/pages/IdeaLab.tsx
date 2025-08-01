@@ -65,6 +65,102 @@ const IdeaLab = () => {
   useEffect(() => {
     const initialIdeas: Idea[] = [
       {
+        id: '1',
+        title: 'Pulse-Pad – die Bad-Matte, die Leben ruft',
+        shortDescription: language === 'english' 
+          ? 'Ultra-thin memory foam bathroom mat with fall detection and emergency alert via LoRaWAN'
+          : 'Ultra­dünne Memory-Foam-Badematte mit Sturzerkennung und Notruf via LoRaWAN',
+        fullDescription: language === 'english'
+          ? `An ultra-thin memory foam bathroom mat that detects fall impact and alerts when no one has stood on it for eight hours – completely without wearables, completely without WIFI. The LoRaWAN signal immediately reaches care relatives or neighbors and starts the rescue chain.
+
+🛁📡 Core Functions:
+
+**Fall Detection Module:**
+• Piezo-Sensor + Impact-Algorithm register falls (> G-Threshold)
+• Instant detection of sudden impact patterns
+
+**Inactivity Timer:**
+• "No foot contact > 8h" → Pre-warning (Yellow)
+• Customizable time thresholds
+
+**LoRa-SOS:**
+• Sends location ping (Gateway-ID) to registered contacts
+• No internet dependency, works in basements
+
+**Status-LED:**
+• Green = OK • Yellow = Check-in needed • Red = SOS sent
+• Blue = Battery < 20%
+
+**App-Dashboard:**
+• Received alarms, history, trigger test alarm
+• Contact management and emergency protocols
+
+**Test Mode:**
+• Simulates fall & timer for care staff demos
+• Training mode for family members
+
+**Technical Specifications:**
+
+**Sensor Layer:** PVDF-Piezo-Film (A4-Grid) – thin, robust, IPX5
+**MCU:** STM32WLE5 – integrated LoRa, Low-Power
+**Communication:** LoRaWAN Class A, 868 MHz – house & basement compatible, no WIFI needed
+**Power:** 2× AA (Li-SOCl₂) – 12–18 month runtime at Duty Cycle < 0.1%
+**BOM-Target:** ≤ 29 € @ 10k – Consumer price < 59 €
+
+**Backend Flow (Live Operation):**
+Mat sends LoRa-Uplink → Cloud-Webhook → SMS/App-Push to contacts → Contacts confirm receipt ("Everything ok?") → Status back to Green or escalation (112)
+
+**Prototype Flow (UI-Simulation):**
+1. Start screen: Logo "Pulse-Pad" + subtitle + Info/Demo buttons
+2. Info: Brief tech explanation (Memory-Foam + Piezo + LoRa), battery life, privacy
+3. Demo: Mat rollout → Green status → Simulate 8h inactivity (Yellow + warning popup) → Simulate fall (Red + SOS alarm overlay with countdown, LoRa packet log) → Acknowledge alarm → Reset to Green`
+          : `Eine ultra­dünne Memory-Foam-Badematte erkennt Sturz-Impact und meldet sich, wenn acht Stunden lang niemand darauf gestanden hat – ganz ohne Wearable, ganz ohne WLAN. Das LoRaWAN-Signal erreicht sofort Pflege­angehörige oder Nachbarn und startet die Rettungskette.
+
+🛁📡 Kernfunktionen:
+
+**Sturz-Erkennung:**
+• Piezo-Sensor + Impact-Algorithmus registrieren Fall (> G-Threshold)
+• Sofortige Erkennung plötzlicher Aufprallmuster
+
+**Inaktivitäts-Timer:**
+• „Kein Fußkontakt > 8 h" → Vorwarnung (Gelb)
+• Anpassbare Zeitschwellen
+
+**LoRa-SOS:**
+• Sendet Standort-Ping (Gateway-ID) an registrierte Kontakte
+• Keine Internet-Abhängigkeit, funktioniert im Keller
+
+**Status-LED:**
+• Grün = OK • Gelb = Check-in nötig • Rot = SOS gesendet
+• Blau = Akku < 20 %
+
+**App-Dashboard:**
+• Empfangene Alarme, Historie, Test-Alarm auslösen
+• Kontaktverwaltung und Notfallprotokolle
+
+**Test-Modus:**
+• Simuliert Sturz & Timer für Pflegepersonal-Demos
+• Trainingsmodus für Angehörige
+
+**Technische Eckdaten:**
+
+**Sensor-Layer:** PVDF-Piezo-Folie (A4-Grid) – dünn, robust, IPX5
+**MCU:** STM32WLE5 – integriertes LoRa, Low-Power
+**Funk:** LoRaWAN Class A, 868 MHz – Haus-& Keller-tauglich, kein WLAN nötig
+**Strom:** 2× AA (Li-SOCl₂) – 12–18 Mon Laufzeit bei Duty Cycle < 0.1 %
+**BOM-Target:** ≤ 29 € @ 10 k – Consumer-Preis < 59 €
+
+**Backend-Flow (Live-Betrieb):**
+Matte sendet LoRa-Uplink → Cloud-Webhook → SMS / App-Push an Kontakte → Kontakte bestätigen Empfang („Alles ok?") → Status zurück auf Grün oder Eskalation (112)
+
+**Prototyp-Ablauf (UI-Simulation):**
+1. Startscreen: Logo „Pulse-Pad" + Untertitel + Info/Demo-Buttons
+2. Info: Kurz­erklärung Technik (Memory-Foam + Piezo + LoRa), Batterielaufzeit, Datenschutz
+3. Demo: Matte ausrollen → Statusanzeige Grün → 8 h Inaktivität simulieren (Status Gelb + Vorwarn-Popup) → Sturz simulieren (Status Rot + SOS-Alarm-Overlay mit Countdown, LoRa-Packet-Log) → Alarm quittieren → Reset Grün`,
+        prototypeComponent: 'PulsePad',
+        ratings: []
+      },
+      {
         id: '3',
         title: 'Care&Share',
         shortDescription: language === 'english' 
