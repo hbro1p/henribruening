@@ -68,10 +68,30 @@ const IdeaLab = () => {
         id: '1',
         title: 'Pulse-Pad – die Bad-Matte, die Leben ruft',
         shortDescription: language === 'english' 
-          ? 'Ultra-thin memory foam bathroom mat with fall detection and emergency alert via LoRaWAN'
-          : 'Ultra­dünne Memory-Foam-Badematte mit Sturzerkennung und Notruf via LoRaWAN',
+          ? 'Ultra-thin memory foam bathroom mat with invisible piezo sensors for fall detection and emergency alerts'
+          : 'Hauchdünne Badematte aus Memory-Foam mit unsichtbaren Piezo-Sensoren für Sturzerkennung und Notrufe',
         fullDescription: language === 'english'
-          ? `An ultra-thin memory foam bathroom mat that detects fall impact and alerts when no one has stood on it for eight hours – completely without wearables, completely without WIFI. The LoRaWAN signal immediately reaches care relatives or neighbors and starts the rescue chain.
+          ? `Pulse-Pad is an ultra-thin memory foam bathroom mat with invisible woven piezo sensors. It detects falls in fractions of a second and sounds an alarm as soon as the bathroom remains unused for an extended period – completely without WIFI, smartphone or disruptive wearables. An ultra-low-power LoRaWAN signal automatically radios an SOS to relatives or helpful neighbors in an emergency, while a discreet traffic light LED shows the status: Green means all is well, Yellow reminds you to check in, Red calls for help. This makes Pulse-Pad the safest room in the house – and gives older people maximum freedom with minimal technical effort. Loneliness down, quality of life up.
+
+**Pulse-Pad – simply explained:**
+
+**Fall? Immediate alarm.**
+The mat senses a fall and automatically sends a call for help.
+
+**Long absence? Friendly reminder.**
+If the bathroom is not used for many hours, your trusted person gets a message: "Everything okay with you?"
+
+**Help without WIFI or cell reception.**
+The signal goes by radio directly to relatives or neighbors – even in the basement bathroom.
+
+**More than a year of peace.**
+Two normal batteries power Pulse-Pad for over twelve months before you need to change them.
+
+**Easy to test.**
+With the push of a button you can try out the alarm so everyone knows how it works.
+
+**Optional overview via app.**
+Anyone who wants can see in a small overview when an alarm was sent or the battery is low – without revealing personal data.
 
 🛁📡 Core Functions:
 
@@ -114,7 +134,27 @@ Mat sends LoRa-Uplink → Cloud-Webhook → SMS/App-Push to contacts → Contact
 1. Start screen: Logo "Pulse-Pad" + subtitle + Info/Demo buttons
 2. Info: Brief tech explanation (Memory-Foam + Piezo + LoRa), battery life, privacy
 3. Demo: Mat rollout → Green status → Simulate 8h inactivity (Yellow + warning popup) → Simulate fall (Red + SOS alarm overlay with countdown, LoRa packet log) → Acknowledge alarm → Reset to Green`
-          : `Eine ultra­dünne Memory-Foam-Badematte erkennt Sturz-Impact und meldet sich, wenn acht Stunden lang niemand darauf gestanden hat – ganz ohne Wearable, ganz ohne WLAN. Das LoRaWAN-Signal erreicht sofort Pflege­angehörige oder Nachbarn und startet die Rettungskette.
+          : `Pulse-Pad ist eine hauchdünne Badematte aus Memory-Foam mit unsichtbar eingewebten Piezo-Sensoren. Sie erkennt Stürze in Sekundenbruchteilen und schlägt Alarm, sobald das Bad über längere Zeit unbenutzt bleibt – ganz ohne WLAN, Smartphone oder störende Wearables. Ein ultrastromsparendes LoRaWAN-Signal funkt im Ernstfall automatisch ein SOS an Angehörige oder hilfsbereite Nachbarn, während eine dezente Ampel-LED den Status anzeigt: Grün bedeutet alles in Ordnung, Gelb erinnert ans Nachschauen, Rot ruft um Hilfe. Damit macht Pulse-Pad das Badezimmer zum sichersten Raum des Hauses – und schenkt älteren Menschen maximale Freiheit bei minimalem Technikaufwand. Einsamkeit runter, Lebensqualität rauf.
+
+**Pulse-Pad – leicht erklärt:**
+
+**Sturz? Sofort Alarm.**
+Die Matte spürt einen Fall und schickt automatisch einen Hilferuf.
+
+**Lange kein Besuch? Freundliche Erinnerung.**
+Wird das Bad viele Stunden nicht genutzt, bekommt deine Vertrauensperson eine Nachricht: „Alles okay bei dir?"
+
+**Hilfe ohne WLAN oder Handyempfang.**
+Das Signal geht per Funk direkt an Angehörige oder Nachbarn – auch im Kellerbad.
+
+**Mehr als ein Jahr Ruhe.**
+Zwei normale Batterien versorgen Pulse-Pad über zwölf Monate, bevor du sie wechseln musst.
+
+**Einfach testen.**
+Mit einem Knopfdruck kannst du den Alarm ausprobieren, damit alle wissen, wie es funktioniert.
+
+**Optionaler Überblick per App.**
+Wer möchte, sieht in einer kleinen Übersicht, wann ein Alarm geschickt oder der Akku schwach wird – ganz ohne persönliche Daten preiszugeben.
 
 🛁📡 Kernfunktionen:
 
