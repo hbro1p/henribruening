@@ -66,13 +66,137 @@ const IdeaLab = () => {
     const initialIdeas: Idea[] = [
       {
         id: '1',
-        title: 'Pulse-Pad – die Bad-Matte, die Leben ruft',
+        title: 'Pulse-Pad – die Bad-Matte, die Leben rettet',
         shortDescription: language === 'english' 
-          ? 'Pulsepad – the bathroom mat that saves lives.'
-          : 'Pulsepad – die Badematte, die Leben rettet.',
+          ? 'Ultra-thin memory foam bathroom mat with invisible piezo sensors for fall detection and emergency alerts'
+          : 'Hauchdünne Badematte aus Memory-Foam mit unsichtbaren Piezo-Sensoren für Sturzerkennung und Notrufe',
         fullDescription: language === 'english'
-          ? `Pulsepad – the bathroom mat that saves lives.`
-          : `Pulsepad – die Badematte, die Leben rettet.`,
+          ? `Pulse-Pad is an ultra-thin memory foam bathroom mat with invisible woven piezo sensors. It detects falls in fractions of a second and sounds an alarm as soon as the bathroom remains unused for an extended period – completely without WIFI, smartphone or disruptive wearables. An ultra-low-power LoRaWAN signal automatically radios an SOS to relatives or helpful neighbors in an emergency, while a discreet traffic light LED shows the status: Green means all is well, Yellow reminds you to check in, Red calls for help. This makes Pulse-Pad the safest room in the house – and gives older people maximum freedom with minimal technical effort. Loneliness down, quality of life up.
+
+**Pulse-Pad – simply explained:**
+
+**Fall? Immediate alarm.**
+The mat senses a fall and automatically sends a call for help.
+
+**Long absence? Friendly reminder.**
+If the bathroom is not used for many hours, your trusted person gets a message: "Everything okay with you?"
+
+**Help without WIFI or cell reception.**
+The signal goes by radio directly to relatives or neighbors – even in the basement bathroom.
+
+**More than a year of peace.**
+Two normal batteries power Pulse-Pad for over twelve months before you need to change them.
+
+**Easy to test.**
+With the push of a button you can try out the alarm so everyone knows how it works.
+
+**Optional overview via app.**
+Anyone who wants can see in a small overview when an alarm was sent or the battery is low – without revealing personal data.
+
+🛁📡 Core Functions:
+
+**Fall Detection Module:**
+• Piezo-Sensor + Impact-Algorithm register falls (> G-Threshold)
+• Instant detection of sudden impact patterns
+
+**Inactivity Timer:**
+• "No foot contact > 8h" → Pre-warning (Yellow)
+• Customizable time thresholds
+
+**LoRa-SOS:**
+• Sends location ping (Gateway-ID) to registered contacts
+• No internet dependency, works in basements
+
+**Status-LED:**
+• Green = OK • Yellow = Check-in needed • Red = SOS sent
+• Blue = Battery < 20%
+
+**App-Dashboard:**
+• Received alarms, history, trigger test alarm
+• Contact management and emergency protocols
+
+**Test Mode:**
+• Simulates fall & timer for care staff demos
+• Training mode for family members
+
+**Technical Specifications:**
+
+**Sensor Layer:** PVDF-Piezo-Film (A4-Grid) – thin, robust, IPX5
+**MCU:** STM32WLE5 – integrated LoRa, Low-Power
+**Communication:** LoRaWAN Class A, 868 MHz – house & basement compatible, no WIFI needed
+**Power:** 2× AA (Li-SOCl₂) – 12–18 month runtime at Duty Cycle < 0.1%
+**BOM-Target:** ≤ 29 € @ 10k – Consumer price < 59 €
+
+**Backend Flow (Live Operation):**
+Mat sends LoRa-Uplink → Cloud-Webhook → SMS/App-Push to contacts → Contacts confirm receipt ("Everything ok?") → Status back to Green or escalation (112)
+
+**Prototype Flow (UI-Simulation):**
+1. Start screen: Logo "Pulse-Pad" + subtitle + Info/Demo buttons
+2. Info: Brief tech explanation (Memory-Foam + Piezo + LoRa), battery life, privacy
+3. Demo: Mat rollout → Green status → Simulate 8h inactivity (Yellow + warning popup) → Simulate fall (Red + SOS alarm overlay with countdown, LoRa packet log) → Acknowledge alarm → Reset to Green`
+          : `Pulse-Pad ist eine hauchdünne Badematte aus Memory-Foam mit unsichtbar eingewebten Piezo-Sensoren. Sie erkennt Stürze in Sekundenbruchteilen und schlägt Alarm, sobald das Bad über längere Zeit unbenutzt bleibt – ganz ohne WLAN, Smartphone oder störende Wearables. Ein ultrastromsparendes LoRaWAN-Signal funkt im Ernstfall automatisch ein SOS an Angehörige oder hilfsbereite Nachbarn, während eine dezente Ampel-LED den Status anzeigt: Grün bedeutet alles in Ordnung, Gelb erinnert ans Nachschauen, Rot ruft um Hilfe. Damit macht Pulse-Pad das Badezimmer zum sichersten Raum des Hauses – und schenkt älteren Menschen maximale Freiheit bei minimalem Technikaufwand. Einsamkeit runter, Lebensqualität rauf.
+
+**Pulse-Pad – leicht erklärt:**
+
+**Sturz? Sofort Alarm.**
+Die Matte spürt einen Fall und schickt automatisch einen Hilferuf.
+
+**Lange kein Besuch? Freundliche Erinnerung.**
+Wird das Bad viele Stunden nicht genutzt, bekommt deine Vertrauensperson eine Nachricht: „Alles okay bei dir?"
+
+**Hilfe ohne WLAN oder Handyempfang.**
+Das Signal geht per Funk direkt an Angehörige oder Nachbarn – auch im Kellerbad.
+
+**Mehr als ein Jahr Ruhe.**
+Zwei normale Batterien versorgen Pulse-Pad über zwölf Monate, bevor du sie wechseln musst.
+
+**Einfach testen.**
+Mit einem Knopfdruck kannst du den Alarm ausprobieren, damit alle wissen, wie es funktioniert.
+
+**Optionaler Überblick per App.**
+Wer möchte, sieht in einer kleinen Übersicht, wann ein Alarm geschickt oder der Akku schwach wird – ganz ohne persönliche Daten preiszugeben.
+
+🛁📡 Kernfunktionen:
+
+**Sturz-Erkennung:**
+• Piezo-Sensor + Impact-Algorithmus registrieren Fall (> G-Threshold)
+• Sofortige Erkennung plötzlicher Aufprallmuster
+
+**Inaktivitäts-Timer:**
+• „Kein Fußkontakt > 8 h" → Vorwarnung (Gelb)
+• Anpassbare Zeitschwellen
+
+**LoRa-SOS:**
+• Sendet Standort-Ping (Gateway-ID) an registrierte Kontakte
+• Keine Internet-Abhängigkeit, funktioniert im Keller
+
+**Status-LED:**
+• Grün = OK • Gelb = Check-in nötig • Rot = SOS gesendet
+• Blau = Akku < 20 %
+
+**App-Dashboard:**
+• Empfangene Alarme, Historie, Test-Alarm auslösen
+• Kontaktverwaltung und Notfallprotokolle
+
+**Test-Modus:**
+• Simuliert Sturz & Timer für Pflegepersonal-Demos
+• Trainingsmodus für Angehörige
+
+**Technische Eckdaten:**
+
+**Sensor-Layer:** PVDF-Piezo-Folie (A4-Grid) – dünn, robust, IPX5
+**MCU:** STM32WLE5 – integriertes LoRa, Low-Power
+**Funk:** LoRaWAN Class A, 868 MHz – Haus-& Keller-tauglich, kein WLAN nötig
+**Strom:** 2× AA (Li-SOCl₂) – 12–18 Mon Laufzeit bei Duty Cycle < 0.1 %
+**BOM-Target:** ≤ 29 € @ 10 k – Consumer-Preis < 59 €
+
+**Backend-Flow (Live-Betrieb):**
+Matte sendet LoRa-Uplink → Cloud-Webhook → SMS / App-Push an Kontakte → Kontakte bestätigen Empfang („Alles ok?") → Status zurück auf Grün oder Eskalation (112)
+
+**Prototyp-Ablauf (UI-Simulation):**
+1. Startscreen: Logo „Pulse-Pad" + Untertitel + Info/Demo-Buttons
+2. Info: Kurz­erklärung Technik (Memory-Foam + Piezo + LoRa), Batterielaufzeit, Datenschutz
+3. Demo: Matte ausrollen → Statusanzeige Grün → 8 h Inaktivität simulieren (Status Gelb + Vorwarn-Popup) → Sturz simulieren (Status Rot + SOS-Alarm-Overlay mit Countdown, LoRa-Packet-Log) → Alarm quittieren → Reset Grün`,
         prototypeComponent: 'PulsePad',
         ratings: []
       },
@@ -274,11 +398,11 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                     {ideas.map((idea) => {
                       const avgRating = getAverageRating(idea);
                       return (
-                        <div key={idea.id} className={`group p-4 sm:p-6 border-2 rounded-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:-translate-y-1 backdrop-blur-sm bg-white/10 border-white/30 ${styles.cardBg}`}>
+                         <div key={idea.id} className={`group p-4 sm:p-6 border-2 rounded-lg transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:-translate-y-1 backdrop-blur-sm bg-white/10 border-white/30 ${styles.cardBg}`}>
                           <div className="flex flex-col gap-4 sm:gap-5">
                             <div className="space-y-3 flex-1 text-center">
                               <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 shadow-lg">
-                                🛁
+                                {idea.id === '1' ? '🛁' : idea.id === '3' ? '🤝' : '💡'}
                               </div>
                               <h4 className={`text-lg sm:text-xl lg:text-2xl xl:text-3xl ${styles.text} font-pixel font-semibold leading-tight transition-all duration-300 group-hover:scale-105`}>{idea.title}</h4>
                               <p className={`text-base sm:text-lg lg:text-xl ${styles.text} font-pixel leading-relaxed transition-all duration-300 group-hover:text-blue-800`}>{idea.shortDescription}</p>
