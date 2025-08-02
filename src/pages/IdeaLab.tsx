@@ -68,8 +68,8 @@ const IdeaLab = () => {
         id: '1',
         title: 'Pulse-Pad – die Bad-Matte, die Leben ruft',
         shortDescription: language === 'english' 
-          ? 'Ultra-thin memory foam bathroom mat with invisible piezo sensors for fall detection and emergency alerts'
-          : 'Hauchdünne Badematte aus Memory-Foam mit unsichtbaren Piezo-Sensoren für Sturzerkennung und Notrufe',
+          ? 'Pulsepad – the bathroom mat that saves lives.'
+          : 'Pulsepad – die Badematte, die Leben rettet.',
         fullDescription: language === 'english'
           ? `Pulse-Pad is an ultra-thin memory foam bathroom mat with invisible woven piezo sensors. It detects falls in fractions of a second and sounds an alarm as soon as the bathroom remains unused for an extended period – completely without WIFI, smartphone or disruptive wearables. An ultra-low-power LoRaWAN signal automatically radios an SOS to relatives or helpful neighbors in an emergency, while a discreet traffic light LED shows the status: Green means all is well, Yellow reminds you to check in, Red calls for help. This makes Pulse-Pad the safest room in the house – and gives older people maximum freedom with minimal technical effort. Loneliness down, quality of life up.
 
@@ -372,16 +372,14 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                 <h3 className={`text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-pixel font-bold ${styles.text} transition-all duration-300 hover:scale-105`}>
                   {language === 'deutsch' ? 'Meine Ideen' : 'My Ideas'}
                 </h3>
-                <p className={`${styles.text} font-pixel text-base sm:text-lg lg:text-xl opacity-90 transition-all duration-300 hover:opacity-100`}>
-                  {language === 'deutsch' 
-                    ? 'Entdecke innovative Konzepte und teste funktionsfähige Prototypen'
-                    : 'Discover innovative concepts and test functional prototypes'
-                  }
-                </p>
+                  <p className={`${styles.text} font-pixel text-base sm:text-lg lg:text-xl opacity-90 transition-all duration-300 hover:opacity-100`}>
+                    {language === 'deutsch' 
+                      ? 'Entdecke innovative Konzepte und teste funktionsfähige Prototypen'
+                      : 'Discover innovative concepts and test functional prototypes'
+                    }
+                  </p>
               </div>
               <div className="text-center space-y-6 relative">
-                {/* Bottom fade-out gradient for ideas list */}
-                <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-blue-400 to-transparent pointer-events-none z-10" />
                 {ideas.length === 0 ? (
                   <div className="space-y-4">
                     <div className="text-6xl">💭</div>
@@ -404,7 +402,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                           <div className="flex flex-col gap-4 sm:gap-5">
                             <div className="space-y-3 flex-1 text-center">
                               <div className="mx-auto w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1 shadow-lg">
-                                🤝
+                                🛁
                               </div>
                               <h4 className={`text-lg sm:text-xl lg:text-2xl xl:text-3xl ${styles.text} font-pixel font-semibold leading-tight transition-all duration-300 group-hover:scale-105`}>{idea.title}</h4>
                               <p className={`text-base sm:text-lg lg:text-xl ${styles.text} font-pixel leading-relaxed transition-all duration-300 group-hover:text-blue-800`}>{idea.shortDescription}</p>
@@ -414,9 +412,9 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                                 <div className="flex justify-center sm:justify-start">
                                   {renderStars(avgRating)}
                                 </div>
-                                <p className={`text-sm sm:text-base ${styles.text} font-pixel text-center sm:text-right`}>
-                                  {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
-                                </p>
+                                 <p className={`text-sm sm:text-base ${styles.text} font-pixel text-center sm:text-right`}>
+                                   {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
+                                 </p>
                               </div>
                             )}
                           </div>
