@@ -356,6 +356,22 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
             </div>
           )}
 
+          {currentView === 'prototype' && selectedIdea && (
+            <div className="h-full flex flex-col animate-scale-in">
+              <div className="text-center space-y-3 mb-4 transform transition-all duration-500 hover:scale-105">
+                <h3 className={`text-2xl sm:text-3xl lg:text-4xl font-pixel font-bold ${styles.text} drop-shadow-lg`}>
+                  {selectedIdea.title}
+                </h3>
+                <p className={`text-lg sm:text-xl ${styles.text} font-pixel opacity-80`}>
+                  {language === 'deutsch' ? 'Interaktiver Prototyp' : 'Interactive Prototype'}
+                </p>
+              </div>
+              <div className="flex-1">
+                {selectedIdea.prototypeComponent === 'CareAndShare' && 
+                  <CareAndShare />}
+              </div>
+            </div>
+          )}
 
           {currentView === 'detail' && selectedIdea && (
             <div className="space-y-6 relative animate-fade-in">
