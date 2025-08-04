@@ -403,8 +403,7 @@ html, body {
   .desktop-content:hover {
     transform: translateY(-2px);
   }
-}
-}
+  }
 
 /* Radial gradient utility for CRT curvature */
 @layer utilities {
