@@ -7,7 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SettingsProvider } from "./contexts/SettingsContext";
 import { GlobalMusicProvider } from "./hooks/useGlobalMusicPlayer";
 import AuthGuard from "./components/AuthGuard";
-import Logo from "./components/Logo";
 import Index from "./pages/Index";
 import Desktop from "./pages/Desktop";
 import Pictures from "./pages/Pictures";
@@ -30,10 +29,9 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-        <BrowserRouter>
-          <AuthGuard>
-            <Logo />
-            <Routes>
+          <BrowserRouter>
+            <AuthGuard>
+              <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/desktop" element={<Desktop />} />
                 <Route path="/pictures" element={<Pictures />} />
