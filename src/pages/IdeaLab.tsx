@@ -226,7 +226,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
           </div>
         </div>
         
-        <div className={`relative p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b backdrop-blur-sm bg-white/20 ${currentView === 'prototype' ? 'overflow-hidden h-[calc(90vh-100px)]' : 'overflow-y-auto max-h-[calc(90vh-100px)]'} ${styles.windowContent}`}>
+        <div className={`relative p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b backdrop-blur-sm bg-white/20 overflow-y-auto max-h-[calc(90vh-100px)] ${styles.windowContent}`}>
           {/* Navigation */}
           {/* Navigation */}
           {currentView !== 'welcome' && (
@@ -370,8 +370,6 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                 {selectedIdea.prototypeComponent === 'CareAndShare' && 
                   <CareAndShare />}
               </div>
-              {/* Bottom fade-out gradient for prototype */}
-              <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-blue-400/40 to-transparent pointer-events-none z-10" />
             </div>
           )}
 
