@@ -337,13 +337,15 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                             >
                               {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
                             </button>
-                            <button 
-                              onClick={() => openPrototype(idea)}
-                              className={`group px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-300 transform button-enhanced border-2 border-black/30 flex items-center justify-center gap-2 sm:gap-3 backdrop-blur-sm bg-white/10 active:scale-95 hover-glow ${styles.button}`}
-                            >
-                              <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5" />
-                              {language === 'deutsch' ? 'Testen' : 'Test'}
-                            </button>
+                            {idea.id !== '1' && (
+                              <button 
+                                onClick={() => openPrototype(idea)}
+                                className={`group px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-300 transform button-enhanced border-2 border-black/30 flex items-center justify-center gap-2 sm:gap-3 backdrop-blur-sm bg-white/10 active:scale-95 hover-glow ${styles.button}`}
+                              >
+                                <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5" />
+                                {language === 'deutsch' ? 'Testen' : 'Test'}
+                              </button>
+                            )}
                           </div>
                         </div>
                       );
@@ -378,13 +380,15 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
               
               <div className="text-center space-y-5 transform transition-all duration-500 hover:scale-[1.02]">
                 <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-pixel font-bold ${styles.text} transition-all duration-300 hover:scale-105`}>{selectedIdea.title}</h3>
-                <button 
-                  onClick={() => setCurrentView('prototype')}
-                  className={`group px-8 py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform button-enhanced flex items-center gap-3 mx-auto text-lg sm:text-xl backdrop-blur-sm bg-white/10 active:scale-95 hover-glow ${styles.button}`}
-                >
-                  <Lightbulb className="h-5 w-5" />
-                  {language === 'deutsch' ? 'Prototyp testen' : 'Test Prototype'}
-                </button>
+                {selectedIdea.id !== '1' && (
+                  <button 
+                    onClick={() => setCurrentView('prototype')}
+                    className={`group px-8 py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform button-enhanced flex items-center gap-3 mx-auto text-lg sm:text-xl backdrop-blur-sm bg-white/10 active:scale-95 hover-glow ${styles.button}`}
+                  >
+                    <Lightbulb className="h-5 w-5" />
+                    {language === 'deutsch' ? 'Prototyp testen' : 'Test Prototype'}
+                  </button>
+                )}
               </div>
               
               <div className="p-6">
