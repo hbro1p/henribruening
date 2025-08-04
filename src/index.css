@@ -405,6 +405,16 @@ html, body {
   }
   }
 
+/* Retro Logo Styles */
+.retro-logo {
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  transform-origin: center;
+}
+
+.retro-logo:hover {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4)) brightness(1.1);
+}
+
 /* Radial gradient utility for CRT curvature */
 @layer utilities {
   .bg-gradient-radial {
