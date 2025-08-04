@@ -57,7 +57,7 @@ const CareAndShare = () => {
 
   return (
     <div className="w-full h-screen bg-white">
-      <div className="max-w-md mx-auto h-full overflow-y-auto">
+      
         {screen === 'start' && (
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center m-4">
             <div className="mb-8">
@@ -427,7 +427,6 @@ const CareAndShare = () => {
             </div>
           </div>
         )}
-      </div>
     </div>
   );
 };
