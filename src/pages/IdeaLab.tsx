@@ -366,7 +366,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                   {language === 'deutsch' ? 'Interaktiver Prototyp' : 'Interactive Prototype'}
                 </p>
               </div>
-              <div className="flex-1 overflow-hidden rounded-xl transform transition-all duration-500 hover:scale-[1.01] hover:shadow-2xl">
+              <div className="flex-1">
                 {selectedIdea.prototypeComponent === 'CareAndShare' && 
                   <CareAndShare />}
               </div>
