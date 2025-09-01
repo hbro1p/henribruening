@@ -334,6 +334,9 @@ const translations = {
     'Track': 'Pista',
     'of': 'de',
     'Restart Track': 'Reiniciar Pista',
+    
+    // More Videos text
+    'More Videos Available on the TV App': 'Más Videos Disponibles en la App de TV',
     // Footer
     'Imprint': 'Aviso Legal',
     'Privacy': 'Privacidad',
@@ -356,6 +359,9 @@ const translations = {
     // About page
     'A Walk Through My Brain': 'Un Paseo por Mi Mente',
     'Hi, I\'m Henri – a 17-year-old creative from Germany who sees the world through a lens that\'s a little nostalgic, a little curious, and always searching for meaning. I started taking photos not because I wanted to be a photographer, but because I wanted to hold on to feelings. To moments. To the little things that usually slip by unnoticed.': 'Hola, soy Henri – un creativo de 17 años de Alemania que ve el mundo a través de una lente un poco nostálgica, un poco curiosa y siempre buscando significado. Comencé a tomar fotos no porque quisiera ser fotógrafo, sino porque quería aferrarme a los sentimientos. A los momentos. A las pequeñas cosas que usualmente pasan desapercibidas.',
+    
+    // Additional translations for Spanish
+    'Back': 'Atrás',
     'I\'m someone who loves to explore – new places, new people, new ways of expressing myself. Whether it\'s through photography, video, design, or just late-night ideas written down in my notes app, I enjoy creating things that make others feel something. I believe creativity should be a playground, not a pressure – and that\'s the energy I try to bring into everything I do.': 'Soy alguien que ama explorar – nuevos lugares, nuevas personas, nuevas formas de expresarme. Ya sea a través de fotografía, video, diseño, o simplemente ideas nocturnas escritas en mi app de notas, disfruto crear cosas que hagan sentir algo a otros. Creo que la creatividad debería ser un patio de juegos, no una presión – y esa es la energía que trato de llevar a todo lo que hago.',
     'I\'ve always been fascinated by the mix of old and new. I love analog cameras just as much as glitchy websites. I enjoy building digital spaces that feel human, that are imperfect, honest, and a little playful. This site is a piece of that – not just a portfolio, but a small reflection of who I am, where I\'ve been, and what I\'m still figuring out.': 'Siempre me ha fascinado la mezcla de lo viejo y lo nuevo. Amo las cámaras analógicas tanto como los sitios web con fallas. Disfruto construir espacios digitales que se sienten humanos, que son imperfectos, honestos y un poco juguetones. Este sitio es una parte de eso – no solo un portafolio, sino un pequeño reflejo de quién soy, dónde he estado y lo que aún estoy descubriendo.',
     'If you want to connect, collaborate, or just share thoughts – feel free to reach out. I\'m always open to new ideas, new perspectives, and new stories.': 'Si quieres conectar, colaborar, o simplemente compartir pensamientos – no dudes en contactarme. Siempre estoy abierto a nuevas ideas, nuevas perspectivas y nuevas historias.',

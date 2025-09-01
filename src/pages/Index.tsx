@@ -221,8 +221,8 @@ const Landing = () => {
         <div className={`transition-all duration-1000 z-10 ${showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
           <div className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,0.3)] p-8 max-w-md mx-auto">
             <div className="text-center mb-8">
-              <h1 className="text-4xl text-black font-pixel mb-4 flex items-center justify-center gap-2">
-                {language === 'deutsch' ? "Hallo, ich bin Henri" : "Hi, I'm Henri"}
+              <h1 className="text-4xl text-black font-pixel mb-4 flex items-center justify-center gap-2 min-h-16">
+                {language === 'deutsch' ? "Hallo, ich bin Henri" : language === 'español' ? "Hola, soy Henri" : "Hi, I'm Henri"}
                 <BlinkingCursor />
               </h1>
             </div>
@@ -279,7 +279,7 @@ const Landing = () => {
           {/* Scrollable content area below */}
           <div className="mt-8 max-w-md mx-auto">
             <div className="bg-white/90 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-6">
-              <div className="h-20 flex items-center">
+              <div className="min-h-24 flex items-center">
                 <p className="text-black font-pixel text-sm leading-relaxed">
                   {language === 'deutsch' ? (
                     <>
@@ -308,9 +308,9 @@ const Landing = () => {
               
               <button
                 onClick={handleTranslate}
-                className="w-full p-3 bg-gray-200 hover:bg-gray-300 border-2 border-black text-black font-pixel transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] active:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)] active:transform active:translate-x-1 active:translate-y-1"
+                className="w-full p-3 bg-gray-200 hover:bg-gray-300 border-2 border-black text-black font-pixel transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] active:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)] active:transform active:translate-x-1 active:translate-y-1 min-h-12"
               >
-                {language === 'deutsch' ? 'English / Español' : language === 'english' ? 'Deutsch / Español' : 'English / Deutsch'}
+                Translate
               </button>
             </div>
           </div>

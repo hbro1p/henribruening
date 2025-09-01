@@ -106,7 +106,7 @@ const About = () => {
         {/* Window content */}
         <div className={`p-6 sm:p-8 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
           <div className="flex flex-col items-start">
-            <h1 className={`text-2xl sm:text-4xl mb-6 font-pixel drop-shadow-lg self-start ${styles.text}`}>[ {aboutContent.title} ]</h1>
+            <h1 className={`text-2xl sm:text-4xl mb-6 font-pixel drop-shadow-lg self-start ${styles.text}`}>[ {t('A Walk Through My Brain')} ]</h1>
             
             {/* Content with image */}
             <div className="flex flex-col lg:flex-row gap-6 items-start">

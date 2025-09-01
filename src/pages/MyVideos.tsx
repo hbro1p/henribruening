@@ -212,7 +212,7 @@ const MyVideos = () => {
 
             <div className={`mt-8 p-4 border-2 ${styles.cardBg} rounded`}>
               <p className={`font-pixel text-sm ${styles.text}`}>
-                More videos available on the TV app...
+                {t('More Videos Available on the TV App')}
               </p>
             </div>
 
