@@ -221,7 +221,7 @@ const Landing = () => {
         <div className={`transition-all duration-1000 z-10 ${showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
           <div className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,0.3)] p-4 sm:p-8 mx-auto w-80 sm:w-96 h-80 sm:h-96">
             <div className="text-center mb-4 sm:mb-8 h-32 sm:h-40">
-              <h1 className="text-3xl sm:text-5xl text-black font-pixel mb-2 sm:mb-4 flex flex-col items-center justify-center gap-1 sm:gap-2 h-28 sm:h-36 w-full leading-tight">
+              <h1 className="text-4xl sm:text-6xl text-black font-pixel mb-2 sm:mb-4 flex flex-col items-center justify-center gap-1 sm:gap-2 h-20 sm:h-24 w-full leading-tight">
                 <div className="flex items-center gap-2">
                   {language === 'deutsch' ? "Hallo, ich bin Henri" : language === 'español' ? "Hola, soy Henri" : "Hi, I'm Henri"}
                   <BlinkingCursor />
