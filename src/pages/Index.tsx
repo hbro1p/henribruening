@@ -219,9 +219,9 @@ const Landing = () => {
         </div>
       ) : (
         <div className={`transition-all duration-1000 z-10 ${showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-          <div className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,0.3)] p-8 max-w-md mx-auto w-96 h-96">
-            <div className="text-center mb-8 h-32">
-              <h1 className="text-4xl text-black font-pixel mb-4 flex items-center justify-center gap-2 h-20 w-full">
+          <div className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,0.3)] p-4 sm:p-8 mx-auto w-80 sm:w-96 h-80 sm:h-96">
+            <div className="text-center mb-4 sm:mb-8 h-24 sm:h-32">
+              <h1 className="text-2xl sm:text-4xl text-black font-pixel mb-2 sm:mb-4 flex items-center justify-center gap-2 h-16 sm:h-20 w-full">
                 {language === 'deutsch' ? "Hallo, ich bin Henri" : language === 'español' ? "Hola, soy Henri" : "Hi, I'm Henri"}
                 <BlinkingCursor />
               </h1>
@@ -277,10 +277,10 @@ const Landing = () => {
           </div>
           
           {/* Scrollable content area below */}
-          <div className="mt-8 max-w-md mx-auto w-96">
-            <div className="bg-white/90 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-6 h-64 w-96">
-              <div className="h-44 flex items-center justify-center">
-                <p className="text-black font-pixel text-sm leading-relaxed text-center">
+          <div className="mt-6 sm:mt-8 mx-auto w-80 sm:w-96">
+            <div className="bg-white/90 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-4 sm:p-6 h-52 sm:h-64 w-80 sm:w-96">
+              <div className="h-32 sm:h-44 flex items-center justify-center">
+                <p className="text-black font-pixel text-xs sm:text-sm leading-relaxed text-center">
                   {language === 'deutsch' ? (
                     <>
                       Diese Seite ist nicht für jeden.<br />
@@ -308,7 +308,7 @@ const Landing = () => {
               
               <button
                 onClick={handleTranslate}
-                className="w-full p-3 bg-gray-200 hover:bg-gray-300 border-2 border-black text-black font-pixel transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] active:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)] active:transform active:translate-x-1 active:translate-y-1 h-12"
+                className="w-full p-2 sm:p-3 bg-gray-200 hover:bg-gray-300 border-2 border-black text-black font-pixel transition-all duration-200 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)] active:shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)] active:transform active:translate-x-1 active:translate-y-1 h-10 sm:h-12 text-xs sm:text-base"
               >
                 Translate
               </button>
