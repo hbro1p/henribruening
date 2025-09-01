@@ -66,9 +66,11 @@ const IdeaLab = () => {
     const initialIdeas: Idea[] = [
       {
         id: '1',
-        title: language === 'english' ? 'Pulse-Pad – the bathroom mat that saves lives' : 'Pulse-Pad – die Bad-Matte, die Leben rettet',
+        title: language === 'english' ? 'Pulse-Pad – the bathroom mat that saves lives' : language === 'español' ? 'Pulse-Pad – la alfombra de baño que salva vidas' : 'Pulse-Pad – die Bad-Matte, die Leben rettet',
         shortDescription: language === 'english' 
           ? 'Ultra-thin memory foam bathroom mat with invisible piezo sensors for fall detection and emergency alerts'
+          : language === 'español'
+          ? 'Alfombra de baño ultra-delgada de espuma viscoelástica con sensores piezoeléctricos invisibles para detección de caídas y alertas de emergencia'
           : 'Hauchdünne Badematte aus Memory-Foam mit unsichtbaren Piezo-Sensoren für Sturzerkennung und Notrufe',
         fullDescription: language === 'english'
           ? `Pulse-Pad – simply explained
@@ -90,6 +92,26 @@ With the push of a button you can try out the alarm so everyone knows how it wor
 
 Optional overview via app.
 Anyone who wants can see in a small overview when an alarm was sent or the battery is low – without revealing personal data.`
+          : language === 'español'
+          ? `Pulse-Pad – explicado simplemente
+
+¿Caída? Alarma inmediata.
+La alfombra detecta una caída y automáticamente envía una llamada de auxilio.
+
+¿Ausencia prolongada? Recordatorio amigable.
+Si el baño no se usa por muchas horas, tu persona de confianza recibe un mensaje: "¿Todo bien contigo?"
+
+Ayuda sin WIFI o señal de celular.
+La señal va por radio directamente a familiares o vecinos – incluso en el baño del sótano.
+
+Más de un año de tranquilidad.
+Dos baterías normales alimentan Pulse-Pad por más de doce meses antes de que necesites cambiarlas.
+
+Fácil de probar.
+Con solo presionar un botón puedes probar la alarma para que todos sepan cómo funciona.
+
+Vista general opcional vía app.
+Cualquiera que quiera puede ver en una pequeña vista general cuándo se envió una alarma o la batería está baja – sin revelar datos personales.`
           : `Pulse-Pad – leicht erklärt
 
 Sturz? Sofort Alarm.
@@ -114,9 +136,11 @@ Wer möchte, sieht in einer kleinen Übersicht, wann ein Alarm geschickt oder de
       },
       {
         id: '3',
-        title: 'Care&Share',
+        title: language === 'español' ? 'Cuidar y Compartir' : 'Care&Share',
         shortDescription: language === 'english' 
           ? 'The platform that makes helping easy - Help & get help'
+          : language === 'español'
+          ? 'La plataforma que hace que ayudar sea fácil - Ayuda y recibe ayuda'
           : 'Die Plattform, die Helfen einfach macht - Helfe & werde geholfen',
         fullDescription: language === 'english'
           ? `A neighborhood help platform that connects seniors with helpful people in the area. Reduce loneliness, increase joy.
@@ -135,6 +159,23 @@ Additional ideas:
 • Community events and neighborhood meetings
 
 The motto: From strangers to neighbors, from neighbors to friends.`
+          : language === 'español'
+          ? `Una plataforma de ayuda vecinal que conecta a personas mayores con personas útiles en el área. Reduce la soledad, aumenta la alegría.
+
+Funciones principales:
+• Solicitudes simples de ayuda para compras, paseos, tareas domésticas
+• Sistema de emparejamiento basado en proximidad y disponibilidad
+• Ayudantes verificados con sistema de calificación
+• Coordinación de citas y seguimiento de estado
+• Integración para proveedores de servicio comunitario
+
+Ideas adicionales:
+• Vouchers de la ciudad por hitos alcanzados
+• Integración de servicio comunitario para horas obligatorias
+• Gamificación con puntos de ayudante
+• Eventos comunitarios y reuniones vecinales
+
+El lema: De extraños a vecinos, de vecinos a amigos.`
           : `Eine Nachbarschaftshilfe-Plattform, die Senioren mit hilfsbereiten Menschen in der Umgebung verbindet. Einsamkeit runter, Freude hoch.
 
 Hauptfunktionen:
@@ -167,6 +208,8 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
 
   const welcomeText = language === 'deutsch' 
     ? 'Willkommen in meinem Ideen-Labor.\n\nHier findest du Konzepte, die ich noch nicht umgesetzt habe – manchmal roh, manchmal fast fertig, aber immer offen für Feedback.\n\nDu kannst jede Idee bewerten und mir mit einem Kommentar weiterhelfen.\n\nWelche Idee findest du gut? Was würdest du anders machen? Sag\'s mir. Deine Meinung zählt.'
+    : language === 'español'
+    ? 'Bienvenido a mi Laboratorio de Ideas.\n\nAquí encontrarás conceptos que aún no he implementado – a veces crudos, a veces casi terminados, pero siempre abiertos a comentarios.\n\nPuedes calificar cada idea y ayudarme con un comentario.\n\n¿Qué idea te gusta? ¿Qué harías diferente? Dímelo. Tu opinión importa.'
     : 'Welcome to my Idea Laboratory.\n\nHere you\'ll find concepts I haven\'t implemented yet – sometimes raw, sometimes almost finished, but always open for feedback.\n\nYou can rate each idea and help me with a comment.\n\nWhich idea do you like? What would you do differently? Tell me. Your opinion matters.';
 
   const renderStars = (rating: number, interactive = false, onRate?: (rating: number) => void) => {
@@ -255,7 +298,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
               <div className="flex flex-col items-center justify-center gap-3 sm:gap-4 mb-8 sm:mb-10">
                 <Lightbulb className={`h-8 w-8 sm:h-10 sm:w-10 ${styles.accent} transition-all duration-300 hover:scale-110 hover:-translate-y-1 hover:drop-shadow-xl`} />
                 <h1 className={`text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-pixel drop-shadow-lg ${styles.text} text-center px-2 transition-all duration-300 hover:scale-105`}>
-                  {language === 'deutsch' ? 'Ideen-Labor' : 'Idea Laboratory'}
+                  {language === 'deutsch' ? 'Ideen-Labor' : language === 'español' ? 'Laboratorio de Ideas' : 'Idea Laboratory'}
                 </h1>
               </div>
               
@@ -270,7 +313,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                 onClick={() => setCurrentView('list')}
                 className={`px-6 sm:px-8 lg:px-10 py-3 sm:py-4 text-lg sm:text-xl rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:-translate-y-1 active:scale-95 backdrop-blur-sm bg-white/10 ${styles.button}`}
               >
-                {language === 'deutsch' ? 'Ideen entdecken' : 'Discover Ideas'}
+                {language === 'deutsch' ? 'Ideen entdecken' : language === 'español' ? 'Descubrir Ideas' : 'Discover Ideas'}
               </button>
             </div>
           )}
@@ -279,11 +322,13 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
             <div className="space-y-4 sm:space-y-6 relative">
               <div className="text-center space-y-3 px-4 transform transition-all duration-500 animate-fade-in">
                 <h3 className={`text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-pixel font-bold ${styles.text} transition-all duration-300 hover:scale-105`}>
-                  {language === 'deutsch' ? 'Meine Ideen' : 'My Ideas'}
+                  {language === 'deutsch' ? 'Meine Ideen' : language === 'español' ? 'Mis Ideas' : 'My Ideas'}
                 </h3>
                   <p className={`${styles.text} font-pixel text-base sm:text-lg lg:text-xl opacity-90 transition-all duration-300 hover:opacity-100`}>
                     {language === 'deutsch' 
                       ? 'Entdecke innovative Konzepte und teste funktionsfähige Prototypen'
+                      : language === 'español'
+                      ? 'Descubre conceptos innovadores y prueba prototipos funcionales'
                       : 'Discover innovative concepts and test functional prototypes'
                     }
                   </p>
@@ -293,11 +338,13 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                   <div className="space-y-4">
                     <div className="text-6xl">💭</div>
                     <h4 className={`text-2xl sm:text-3xl font-pixel ${styles.text}`}>
-                      {language === 'deutsch' ? 'Noch keine Ideen' : 'No ideas yet'}
+                      {language === 'deutsch' ? 'Noch keine Ideen' : language === 'español' ? 'Aún no hay ideas' : 'No ideas yet'}
                     </h4>
                     <p className={`${styles.text} font-pixel text-lg`}>
                       {language === 'deutsch' 
                         ? 'Hier werden bald neue Ideen auftauchen...' 
+                        : language === 'español'
+                        ? 'Nuevas ideas aparecerán aquí pronto...'
                         : 'New ideas will appear here soon...'
                       }
                     </p>
@@ -322,7 +369,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                                   {renderStars(avgRating)}
                                 </div>
                                  <p className={`text-sm sm:text-base ${styles.text} font-pixel text-center sm:text-right`}>
-                                   {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : 'ratings'})
+                                   {avgRating.toFixed(1)} ({idea.ratings.length} {language === 'deutsch' ? 'Bewertungen' : language === 'español' ? 'calificaciones' : 'ratings'})
                                  </p>
                               </div>
                             )}
@@ -335,7 +382,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                               }}
                               className={`flex-1 px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-300 border-2 backdrop-blur-sm bg-white/20 ${styles.text} hover:bg-blue-400/20 button-enhanced border-white/30 transform active:scale-95 hover-glow`}
                             >
-                              {language === 'deutsch' ? 'Details ansehen' : 'View Details'}
+                              {language === 'deutsch' ? 'Details ansehen' : language === 'español' ? 'Ver Detalles' : 'View Details'}
                             </button>
                             {idea.id !== '1' && (
                               <button 
@@ -343,7 +390,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                                 className={`group px-4 sm:px-5 py-3 text-base sm:text-lg lg:text-xl font-pixel rounded-lg transition-all duration-300 transform button-enhanced border-2 border-black/30 flex items-center justify-center gap-2 sm:gap-3 backdrop-blur-sm bg-white/10 active:scale-95 hover-glow ${styles.button}`}
                               >
                                 <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5" />
-                                {language === 'deutsch' ? 'Testen' : 'Test'}
+                                {language === 'deutsch' ? 'Testen' : language === 'español' ? 'Probar' : 'Test'}
                               </button>
                             )}
                           </div>
