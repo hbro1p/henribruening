@@ -219,9 +219,9 @@ const Landing = () => {
         </div>
       ) : (
         <div className={`transition-all duration-1000 z-10 ${showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
-          <div className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,0.3)] p-8 max-w-md mx-auto h-80">
-            <div className="text-center mb-8">
-              <h1 className="text-4xl text-black font-pixel mb-4 flex items-center justify-center gap-2 h-20">
+          <div className="bg-white border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,0.3)] p-8 max-w-md mx-auto w-96 h-96">
+            <div className="text-center mb-8 h-32">
+              <h1 className="text-4xl text-black font-pixel mb-4 flex items-center justify-center gap-2 h-20 w-full">
                 {language === 'deutsch' ? "Hallo, ich bin Henri" : language === 'español' ? "Hola, soy Henri" : "Hi, I'm Henri"}
                 <BlinkingCursor />
               </h1>
@@ -277,9 +277,9 @@ const Landing = () => {
           </div>
           
           {/* Scrollable content area below */}
-          <div className="mt-8 max-w-md mx-auto">
-            <div className="bg-white/90 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-6 h-56">
-              <div className="h-36 flex items-center justify-center">
+          <div className="mt-8 max-w-md mx-auto w-96">
+            <div className="bg-white/90 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] p-6 h-64 w-96">
+              <div className="h-44 flex items-center justify-center">
                 <p className="text-black font-pixel text-sm leading-relaxed text-center">
                   {language === 'deutsch' ? (
                     <>
