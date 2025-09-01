@@ -201,6 +201,7 @@ const MyProjects = () => {
                       instagramVideos={project.videos.instagram || []}
                       tiktokVideos={project.videos.tiktok || []}
                       styles={styles}
+                      isCollapsible={project.id === '2'}
                     />
                   )}
                 </div>
