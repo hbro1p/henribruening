@@ -55,6 +55,8 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ instagramVideos, tiktokVide
     return url;
   };
 
+  const totalVideos = instagramVideos.length + tiktokVideos.length;
+
   if (isCollapsible) {
     return (
       <>
@@ -64,27 +66,27 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ instagramVideos, tiktokVide
             className={`w-full p-3 rounded-lg border-2 transition-all duration-200 hover:scale-105 flex items-center justify-between ${styles.cardBg}`}
           >
             <span className={`font-pixel ${styles.text}`}>
-              📱 Instagram Reels ({instagramVideos.length})
+              Videos ({totalVideos})
             </span>
             {isExpanded ? <ChevronUp className={`w-5 h-5 ${styles.text}`} /> : <ChevronDown className={`w-5 h-5 ${styles.text}`} />}
           </button>
           
           {isExpanded && (
-            <div className="mt-4 space-y-6">
+            <div className="mt-4 space-y-4">
               {instagramVideos.length > 0 && (
                 <div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <h4 className={`font-bold mb-2 ${styles.text}`}>Instagram Reels:</h4>
+                  <div className="space-y-1">
                     {instagramVideos.map((video, index) => (
-                      <div
+                      <a 
                         key={index}
-                        className={`p-4 border-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${styles.cardBg}`}
-                        onClick={() => openVideoModal(video, 'instagram')}
+                        href={video.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className={`inline-flex items-center gap-1 text-sm underline ${styles.link} mr-4`}
                       >
-                        <div className="flex items-center justify-center h-32 bg-gradient-to-br from-pink-500 to-orange-500 rounded-lg mb-2">
-                          <Play className="w-12 h-12 text-white" />
-                        </div>
-                        <p className={`text-center font-pixel ${styles.text}`}>{video.title}</p>
-                      </div>
+                        Video {index + 1} <ExternalLink className="w-3 h-3" />
+                      </a>
                     ))}
                   </div>
                 </div>
@@ -92,21 +94,18 @@ const VideoGallery: React.FC<VideoGalleryProps> = ({ instagramVideos, tiktokVide
 
               {tiktokVideos.length > 0 && (
                 <div>
-                  <h4 className={`text-lg font-bold mb-3 font-pixel ${styles.text}`}>
-                    🎵 TikTok Videos ({tiktokVideos.length})
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <h4 className={`font-bold mb-2 ${styles.text}`}>TikTok Videos:</h4>
+                  <div className="space-y-1">
                     {tiktokVideos.map((video, index) => (
-                      <div
+                      <a 
                         key={index}
-                        className={`p-4 border-2 rounded-lg cursor-pointer hover:opacity-80 transition-opacity ${styles.cardBg}`}
-                        onClick={() => openVideoModal(video, 'tiktok')}
+                        href={video.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className={`inline-flex items-center gap-1 text-sm underline ${styles.link} mr-4`}
                       >
-                        <div className="flex items-center justify-center h-32 bg-gradient-to-br from-black to-red-500 rounded-lg mb-2">
-                          <Play className="w-12 h-12 text-white" />
-                        </div>
-                        <p className={`text-center font-pixel ${styles.text}`}>{video.title}</p>
-                      </div>
+                        Video {index + 1} <ExternalLink className="w-3 h-3" />
+                      </a>
                     ))}
                   </div>
                 </div>
