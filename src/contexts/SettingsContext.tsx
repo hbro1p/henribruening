@@ -1,7 +1,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type Language = 'english' | 'deutsch';
+export type Language = 'english' | 'deutsch' | 'español';
 export type Theme = 'space-mood';
 
 interface SettingsContextType {
@@ -39,6 +39,7 @@ const translations = {
     'VIBES': 'VIBES',
     'English': 'English',
     'German': 'German',
+    'Spanish': 'Spanish',
     'Enter Password': 'Enter Password',
     'Password': 'Password',
     'Submit': 'Submit',
@@ -134,6 +135,7 @@ const translations = {
     'Done!': 'Done!',
     'Reset': 'Reset',
     'New Challenge': 'New Challenge',
+    'View on': 'View on',
   },
   deutsch: {
     'My Pictures': 'Meine Bilder',
@@ -159,6 +161,7 @@ const translations = {
     'VIBES': 'STIMMUNG',
     'English': 'Englisch',
     'German': 'Deutsch',
+    'Spanish': 'Spanisch',
     'Enter Password': 'Passwort eingeben',
     'Password': 'Passwort',
     'Submit': 'Bestätigen',
@@ -254,6 +257,129 @@ const translations = {
     'Done!': 'Erledigt!',
     'Reset': 'Zurücksetzen',
     'New Challenge': 'Neue Challenge',
+    'View on': 'Ansehen auf',
+  },
+  español: {
+    'My Pictures': 'Mis Fotos',
+    'My Videos': 'Mis Videos',
+    'My Projects': 'Mis Proyectos', 
+    'About Me': 'Sobre Mí',
+    'About': 'Sobre Mí',
+    'Contact': 'Contacto',
+    'Settings': 'Configuración',
+    'Radio': 'Radio',
+    'Pictures': 'Fotos',
+    'Challenges': 'Desafíos',
+    'Idea Lab': 'Laboratorio de Ideas',
+    'Game.exe': 'Juego.exe',
+    'Language': 'Idioma:',
+    'Appearance Theme': 'Tema de Apariencia:',
+    'Space Mood': 'Vibra 2000',
+    'Dark VHS': 'VHS Oscuro',
+    'Adventure Canyon': 'Cañón Aventura',
+    'Back to Desktop': 'Volver al Escritorio',
+    'Now Playing': 'Reproduciendo',
+    'TRACK': 'PISTA',
+    'VIBES': 'VIBRAS',
+    'English': 'Inglés',
+    'German': 'Alemán',
+    'Spanish': 'Español',
+    'Enter Password': 'Introducir Contraseña',
+    'Password': 'Contraseña',
+    'Submit': 'Enviar',
+    'Wrong Password': '¡Contraseña incorrecta! Inténtalo de nuevo.',
+    'This folder is protected': 'Esta carpeta está protegida. Por favor introduce la contraseña para continuar.',
+    'language': 'español',
+    
+    // Care&Share translations
+    'care_share_title': 'Care&Share',
+    'care_share_subtitle': 'Ayuda y recibe ayuda',
+    'care_share_description': 'Conéctate con tu vecindario. Ofrece ayuda o encuentra a alguien que te ayude.',
+    'care_share_need_help': 'Necesito ayuda',
+    'care_share_want_help': 'Quiero ayudar',
+    'care_share_find_helpers': 'Encontrar ayudantes',
+    'care_share_show_requests': 'Mostrar solicitudes de ayuda',
+    'care_share_accept': 'Aceptar',
+    'care_share_decline': 'Rechazar',
+    'care_share_offer_help': 'Ofrecer ayuda',
+    'care_share_back_start': 'Volver al inicio',
+    'care_share_name': 'Nombre',
+    'care_share_age': 'Edad',
+    'care_share_category': 'Categoría',
+    'care_share_timeframe': 'Marco temporal',
+    'care_share_skills': 'Habilidades',
+    'care_share_availability': 'Disponibilidad',
+    'care_share_shopping': 'Compras',
+    'care_share_walk': 'Paseo',
+    'care_share_household': 'Hogar',
+    'care_share_garden': 'Jardín',
+    'care_share_it_help': 'Ayuda IT',
+    'care_share_transport': 'Transporte',
+    'care_share_today': 'Hoy',
+    'care_share_tomorrow': 'Mañana',
+    'care_share_this_week': 'Esta semana',
+    'care_share_flexible': 'Flexible',
+    'care_share_it': 'IT',
+    'care_share_company': 'Compañía',
+    'care_share_morning': 'Mañana',
+    'care_share_afternoon': 'Tarde',
+    'care_share_evening': 'Noche',
+    'care_share_weekend': 'Fin de semana',
+    
+    // Music Player
+    'Loading...': 'Cargando...',
+    'Unknown Track': 'Pista Desconocida',
+    'No Music': 'Sin Música',
+    'Chill Out': 'Relajarse',
+    'Track': 'Pista',
+    'of': 'de',
+    'Restart Track': 'Reiniciar Pista',
+    // Footer
+    'Imprint': 'Aviso Legal',
+    'Privacy': 'Privacidad',
+    'Privacy Policy': 'Política de Privacidad',
+    'This personal website does not collect or store personal data.': 'Este sitio web personal no recopila ni almacena datos personales.',
+    'No tracking cookies, analytics services or third-party advertising are used.': 'No se utilizan cookies de seguimiento, servicios de análisis o publicidad de terceros.',
+    'Uploaded media is static and privately hosted. No visitor data is analyzed or monetized.': 'Los medios subidos son estáticos y alojados de forma privada. No se analizan ni monetizan los datos de visitantes.',
+    'Any form submissions or visitor interactions are purely voluntary and not recorded or evaluated.': 'Cualquier envío de formulario o interacción de visitantes es puramente voluntario y no se registra ni evalúa.',
+    'Responsible for content:': 'Responsable del contenido:',
+    // Videos page
+    'Oops... looks like this section requires a password': 'Ups... parece que esta sección requiere contraseña',
+    'Enter the password to continue.': 'Introduce la contraseña para continuar.',
+    'Incorrect password. Try again.': 'Contraseña incorrecta. Inténtalo de nuevo.',
+    'Unlock': 'Desbloquear',
+    'Teen coaching videos created for Ute\'s TikTok and Instagram': 'Videos de coaching para adolescentes creados para TikTok e Instagram de Ute',
+    'Website I built': 'Sitio web que construí',
+    'A creative and content-focused internship at FALC Real Estate in Cala Millor': 'Una pasantía creativa y enfocada en contenido en FALC Real Estate en Cala Millor',
+    'Entertaining TikToks with surprising twists, hooks, and storytelling': 'TikToks entretenidos con giros sorprendentes, ganchos y narrativa',
+    'My storytelling identity for vlogs, creative clips, and travel adventures': 'Mi identidad narrativa para vlogs, clips creativos y aventuras de viaje',
+    // About page
+    'A Walk Through My Brain': 'Un Paseo por Mi Mente',
+    'Hi, I\'m Henri – a 17-year-old creative from Germany who sees the world through a lens that\'s a little nostalgic, a little curious, and always searching for meaning. I started taking photos not because I wanted to be a photographer, but because I wanted to hold on to feelings. To moments. To the little things that usually slip by unnoticed.': 'Hola, soy Henri – un creativo de 17 años de Alemania que ve el mundo a través de una lente un poco nostálgica, un poco curiosa y siempre buscando significado. Comencé a tomar fotos no porque quisiera ser fotógrafo, sino porque quería aferrarme a los sentimientos. A los momentos. A las pequeñas cosas que usualmente pasan desapercibidas.',
+    'I\'m someone who loves to explore – new places, new people, new ways of expressing myself. Whether it\'s through photography, video, design, or just late-night ideas written down in my notes app, I enjoy creating things that make others feel something. I believe creativity should be a playground, not a pressure – and that\'s the energy I try to bring into everything I do.': 'Soy alguien que ama explorar – nuevos lugares, nuevas personas, nuevas formas de expresarme. Ya sea a través de fotografía, video, diseño, o simplemente ideas nocturnas escritas en mi app de notas, disfruto crear cosas que hagan sentir algo a otros. Creo que la creatividad debería ser un patio de juegos, no una presión – y esa es la energía que trato de llevar a todo lo que hago.',
+    'I\'ve always been fascinated by the mix of old and new. I love analog cameras just as much as glitchy websites. I enjoy building digital spaces that feel human, that are imperfect, honest, and a little playful. This site is a piece of that – not just a portfolio, but a small reflection of who I am, where I\'ve been, and what I\'m still figuring out.': 'Siempre me ha fascinado la mezcla de lo viejo y lo nuevo. Amo las cámaras analógicas tanto como los sitios web con fallas. Disfruto construir espacios digitales que se sienten humanos, que son imperfectos, honestos y un poco juguetones. Este sitio es una parte de eso – no solo un portafolio, sino un pequeño reflejo de quién soy, dónde he estado y lo que aún estoy descubriendo.',
+    'If you want to connect, collaborate, or just share thoughts – feel free to reach out. I\'m always open to new ideas, new perspectives, and new stories.': 'Si quieres conectar, colaborar, o simplemente compartir pensamientos – no dudes en contactarme. Siempre estoy abierto a nuevas ideas, nuevas perspectivas y nuevas historias.',
+    // Contact page
+    'Get In Touch': 'Ponerse en Contacto',
+    'Let\'s connect via Instagram or Email.': 'Conectemos a través de Instagram o Email.',
+    // Desktop apps
+    'TV': 'TV',
+    'Challenge': 'Desafío',
+    // Challenge app
+    '1-Minute Challenge': 'Desafío de 1 Minuto',
+    'Ready for your daily mini-challenge?': '¿Listo para tu mini-desafío diario?',
+    'Short tasks for more focus and variety in everyday life': 'Tareas cortas para más enfoque y variedad en la vida diaria',
+    'Your Challenge:': 'Tu Desafío:',
+    'Challenge Started!': '¡Desafío Iniciado!',
+    'Challenge Complete!': '¡Desafío Completado!',
+    'Great job! You\'re building amazing habits!': '¡Excelente trabajo! ¡Estás construyendo hábitos increíbles!',
+    'Challenge completed!': '¡Desafío completado!',
+    'You\'re building great habits!': '¡Estás construyendo grandes hábitos!',
+    'Start Challenge': 'Iniciar Desafío',
+    'Done!': '¡Listo!',
+    'Reset': 'Reiniciar',
+    'New Challenge': 'Nuevo Desafío',
+    'View on': 'Ver en',
   }
 };
 
@@ -267,7 +393,7 @@ export const SettingsProvider: React.FC<{ children: ReactNode }> = ({ children }
     const savedLanguage = localStorage.getItem('henri-os-language') as Language;
     const savedTheme = localStorage.getItem('henri-os-theme');
     
-    if (savedLanguage && ['english', 'deutsch'].includes(savedLanguage)) {
+    if (savedLanguage && ['english', 'deutsch', 'español'].includes(savedLanguage)) {
       setLanguageState(savedLanguage);
     }
     

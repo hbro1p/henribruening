@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
+import VideoGallery from '@/components/VideoGallery';
 
 interface Project {
   id: string;
@@ -9,11 +10,22 @@ interface Project {
   description: {
     en: string;
     de: string;
+    es: string;
   };
   links: Array<{
     url: string;
     label: string;
   }>;
+  videos?: {
+    instagram: Array<{
+      url: string;
+      title: string;
+    }>;
+    tiktok: Array<{
+      url: string;
+      title: string;
+    }>;
+  };
 }
 
 const MyProjects = () => {
@@ -25,7 +37,8 @@ const MyProjects = () => {
       title: 'Internly',
       description: {
         en: 'Currently developing a platform to connect students with internships',
-        de: 'Entwickle derzeit eine Plattform, um Studenten mit Praktikumsplätzen zu verbinden'
+        de: 'Entwickle derzeit eine Plattform, um Studenten mit Praktikumsplätzen zu verbinden',
+        es: 'Actualmente desarrollando una plataforma para conectar estudiantes con prácticas profesionales'
       },
       links: [
         {
@@ -36,21 +49,56 @@ const MyProjects = () => {
     },
     {
       id: '2',
-      title: 'Echo Coesfeld',
+      title: 'Florian Klostermann – Social Media Unterstützung',
       description: {
-        en: 'A public voice project using QR codes & interviews to gather real opinions from people in Coesfeld',
-        de: 'Ein öffentliches Stimme-Projekt mit QR-Codes und Interviews, um echte Meinungen von Menschen in Coesfeld zu sammeln'
+        en: 'Campaign engagement videos: Successfully produced multiple videos for the Döner action. The videos achieved a total of more than 90,000 views across all platforms.',
+        de: 'Wahlkampf-Engagement Videos: Erfolgreich mehrere Videos zur Döner-Aktion produziert. Die Videos haben insgesamt mehr als 90.000 Aufrufe auf allen Plattformen erzielt.',
+        es: 'Videos de participación en campaña: Produje exitosamente múltiples videos para la acción Döner. Los videos lograron un total de más de 90,000 visualizaciones en todas las plataformas.'
       },
       links: [
         {
-          url: 'https://www.instagram.com/echo.coesfeld/',
+          url: 'https://www.instagram.com/florianklostermann/',
           label: 'Instagram'
         },
         {
-          url: 'https://www.tiktok.com/@echo.coesfeld',
+          url: 'https://www.tiktok.com/@florianklostermann',
           label: 'TikTok'
         }
-      ]
+      ],
+      videos: {
+        instagram: [
+          {
+            url: 'https://www.instagram.com/reel/DL8DnBNq1Qs/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
+            title: 'Video 1'
+          },
+          {
+            url: 'https://www.instagram.com/reel/DL9609GqBS6/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
+            title: 'Video 2'
+          },
+          {
+            url: 'https://www.instagram.com/reel/DMS06m0qLCj/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==',
+            title: 'Video 3'
+          }
+        ],
+        tiktok: [
+          {
+            url: 'https://www.tiktok.com/@florianklostermann/video/7524008300548082966?is_from_webapp=1&sender_device=pc&web_id=7543726847503500802',
+            title: 'Video 1'
+          },
+          {
+            url: 'https://www.tiktok.com/@florianklostermann/video/7524687424543280406?is_from_webapp=1&sender_device=pc&web_id=7543726847503500802',
+            title: 'Video 2'
+          },
+          {
+            url: 'https://www.tiktok.com/@florianklostermann/video/7525530991381777686?is_from_webapp=1&sender_device=pc&web_id=7543726847503500802',
+            title: 'Video 3'
+          },
+          {
+            url: 'https://www.tiktok.com/@florianklostermann/video/7525799413751680279?is_from_webapp=1&sender_device=pc&web_id=7543726847503500802',
+            title: 'Video 4'
+          }
+        ]
+      }
     }
   ];
 
@@ -134,7 +182,9 @@ const MyProjects = () => {
                     {project.title}
                   </h3>
                   <p className={`mb-4 drop-shadow-sm ${styles.text}`}>
-                    {t('language') === 'deutsch' ? project.description.de : project.description.en}
+                    {t('language') === 'deutsch' ? project.description.de : 
+                     t('language') === 'español' ? project.description.es : 
+                     project.description.en}
                   </p>
                   <div className="space-y-2">
                     {project.links.map((link, index) => (
@@ -144,6 +194,15 @@ const MyProjects = () => {
                       </a>
                     ))}
                   </div>
+                  
+                  {/* Video Gallery */}
+                  {project.videos && (
+                    <VideoGallery
+                      instagramVideos={project.videos.instagram || []}
+                      tiktokVideos={project.videos.tiktok || []}
+                      styles={styles}
+                    />
+                  )}
                 </div>
               ))}
             </div>

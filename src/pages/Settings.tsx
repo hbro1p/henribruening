@@ -65,6 +65,16 @@ const Settings = () => {
                       {t('German')}
                     </label>
                   </div>
+                  <div className="flex items-center space-x-3">
+                    <RadioGroupItem 
+                      value="español" 
+                      id="español"
+                      className="w-6 h-6 border-2 border-gray-600 bg-gray-100 data-[state=checked]:bg-gray-700"
+                    />
+                    <label htmlFor="español" className="text-xl font-pixel text-gray-900 cursor-pointer">
+                      {t('Spanish')}
+                    </label>
+                  </div>
                 </RadioGroup>
               </div>
 
