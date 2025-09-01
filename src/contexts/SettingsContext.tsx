@@ -384,6 +384,31 @@ const translations = {
     // Project titles in Spanish
     'Pulse-Pad – the bathroom mat that saves lives': 'Pulse-Pad – la alfombra de baño que salva vidas',
     'Care and Share': 'Cuidar y Compartir',
+    
+    // Rating System Spanish
+    'You like what you see and want to make it come true?': '¿Te gusta lo que ves y quieres hacerlo realidad?',
+    'Message Me': 'Escríbeme',
+    'Your Rating': 'Tu Calificación',
+    'Rating (1-5 stars)': 'Calificación (1-5 estrellas)',
+    'Feedback (optional)': 'Comentarios (opcional)',
+    'Share your thoughts and suggestions for improvement...': 'Comparte tus pensamientos y sugerencias de mejora...',
+    'Submit Rating': 'Enviar Calificación',
+    
+    // Care&Share Prototype Spanish
+    'Helfe und werde geholfen': 'Ayuda y recibe ayuda',
+    'Ich brauche Hilfe': 'Necesito ayuda',
+    'Ich möchte helfen': 'Quiero ayudar',
+    'Name': 'Nombre',
+    'Altersbereich': 'Rango de edad',
+    'Hilfe-Kategorie': 'Categoría de ayuda',
+    'Wann brauchen Sie Hilfe?': '¿Cuándo necesitas ayuda?',
+    'Helfer finden': 'Encontrar ayudantes',
+    'Telefonnummer': 'Número de teléfono',
+    'Facebook Name (optional)': 'Nombre de Facebook (opcional)',
+    'Wobei können Sie helfen?': '¿En qué puedes ayudar?',
+    'Wann sind Sie verfügbar?': '¿Cuándo estás disponible?',
+    'Hilfesuchende finden': 'Encontrar personas que buscan ayuda',
+    'Interactive Prototype': 'Prototipo Interactivo',
   }
 };
 

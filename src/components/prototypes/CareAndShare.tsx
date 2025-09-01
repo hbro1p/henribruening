@@ -41,12 +41,12 @@ const CareAndShare = () => {
   });
 
   const [helpers, setHelpers] = useState([
-    { id: 1, name: 'Anna M.', age: 28, distance: '0.5km', skills: [language === 'english' ? 'Shopping' : 'Einkauf', language === 'english' ? 'Household' : 'Haushalt'], availability: language === 'english' ? 'Mornings' : 'Vormittags', phone: '+49 123 456 7890' },
-    { id: 2, name: 'Tom K.', age: 35, distance: '1.2km', skills: [language === 'english' ? 'Garden' : 'Garten', 'IT'], availability: language === 'english' ? 'Evenings' : 'Abends', phone: '+49 123 456 7891' },
-    { id: 3, name: 'Sarah L.', age: 42, distance: '0.8km', skills: [language === 'english' ? 'Shopping' : 'Einkauf', language === 'english' ? 'Walk' : 'Spaziergang'], availability: language === 'english' ? 'Afternoons' : 'Nachmittags', phone: '+49 123 456 7892' },
-    { id: 4, name: 'Michael R.', age: 29, distance: '1.5km', skills: [language === 'english' ? 'Shopping' : 'Einkauf', language === 'english' ? 'Household' : 'Haushalt'], availability: language === 'english' ? 'Weekends' : 'Wochenende', phone: '+49 123 456 7893' },
-    { id: 5, name: 'Lisa B.', age: 33, distance: '2.1km', skills: [language === 'english' ? 'Garden' : 'Garten', language === 'english' ? 'Walk' : 'Spaziergang'], availability: language === 'english' ? 'Mornings' : 'Vormittags', phone: '+49 123 456 7894' },
-    { id: 6, name: 'David W.', age: 45, distance: '0.7km', skills: ['IT', language === 'english' ? 'Household' : 'Haushalt'], availability: language === 'english' ? 'Evenings' : 'Abends', phone: '+49 123 456 7895' }
+    { id: 1, name: 'Anna M.', age: 28, distance: '0.5km', skills: [language === 'english' ? 'Shopping' : language === 'español' ? 'Compras' : 'Einkauf', language === 'english' ? 'Household' : language === 'español' ? 'Hogar' : 'Haushalt'], availability: language === 'english' ? 'Mornings' : language === 'español' ? 'Mañanas' : 'Vormittags', phone: '+49 123 456 7890' },
+    { id: 2, name: 'Tom K.', age: 35, distance: '1.2km', skills: [language === 'english' ? 'Garden' : language === 'español' ? 'Jardín' : 'Garten', 'IT'], availability: language === 'english' ? 'Evenings' : language === 'español' ? 'Noches' : 'Abends', phone: '+49 123 456 7891' },
+    { id: 3, name: 'Sarah L.', age: 42, distance: '0.8km', skills: [language === 'english' ? 'Shopping' : language === 'español' ? 'Compras' : 'Einkauf', language === 'english' ? 'Walk' : language === 'español' ? 'Paseo' : 'Spaziergang'], availability: language === 'english' ? 'Afternoons' : language === 'español' ? 'Tardes' : 'Nachmittags', phone: '+49 123 456 7892' },
+    { id: 4, name: 'Michael R.', age: 29, distance: '1.5km', skills: [language === 'english' ? 'Shopping' : language === 'español' ? 'Compras' : 'Einkauf', language === 'english' ? 'Household' : language === 'español' ? 'Hogar' : 'Haushalt'], availability: language === 'english' ? 'Weekends' : language === 'español' ? 'Fines de semana' : 'Wochenende', phone: '+49 123 456 7893' },
+    { id: 5, name: 'Lisa B.', age: 33, distance: '2.1km', skills: [language === 'english' ? 'Garden' : language === 'español' ? 'Jardín' : 'Garten', language === 'english' ? 'Walk' : language === 'español' ? 'Paseo' : 'Spaziergang'], availability: language === 'english' ? 'Mornings' : language === 'español' ? 'Mañanas' : 'Vormittags', phone: '+49 123 456 7894' },
+    { id: 6, name: 'David W.', age: 45, distance: '0.7km', skills: ['IT', language === 'english' ? 'Household' : language === 'español' ? 'Hogar' : 'Haushalt'], availability: language === 'english' ? 'Evenings' : language === 'español' ? 'Noches' : 'Abends', phone: '+49 123 456 7895' }
   ]);
 
   const [acceptedHelper, setAcceptedHelper] = useState<Helper | null>(null);
@@ -63,10 +63,10 @@ const CareAndShare = () => {
             <div className="mb-8">
               <div className="text-4xl mb-4">🤝</div>
               <h1 className="text-3xl font-bold text-gray-800 mb-2">
-                {language === 'english' ? 'Care&Share' : 'Care&Share'}
+                {language === 'english' ? 'Care&Share' : language === 'español' ? 'Cuidar y Compartir' : 'Care&Share'}
               </h1>
               <p className="text-gray-600">
-                {language === 'english' ? 'Help and get help' : 'Helfe und werde geholfen'}
+                {language === 'english' ? 'Help and get help' : language === 'español' ? 'Ayuda y recibe ayuda' : 'Helfe und werde geholfen'}
               </p>
             </div>
             
@@ -75,14 +75,14 @@ const CareAndShare = () => {
                 onClick={() => setScreen('needHelp')}
                 className="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors"
               >
-                {language === 'english' ? 'I need help' : 'Ich brauche Hilfe'}
+                {language === 'english' ? 'I need help' : language === 'español' ? 'Necesito ayuda' : 'Ich brauche Hilfe'}
               </button>
               
               <button
                 onClick={() => setScreen('wantToHelp')}
                 className="w-full bg-green-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-green-700 transition-colors"
               >
-                {language === 'english' ? 'I want to help' : 'Ich möchte helfen'}
+                {language === 'english' ? 'I want to help' : language === 'español' ? 'Quiero ayudar' : 'Ich möchte helfen'}
               </button>
             </div>
           </div>
@@ -98,7 +98,7 @@ const CareAndShare = () => {
                 ←
               </button>
               <h2 className="text-2xl font-bold text-gray-800">
-                {language === 'english' ? 'I need help' : 'Ich brauche Hilfe'}
+                {language === 'english' ? 'I need help' : language === 'español' ? 'Necesito ayuda' : 'Ich brauche Hilfe'}
               </h2>
             </div>
             
@@ -106,7 +106,7 @@ const CareAndShare = () => {
               <div>
                 <input
                   type="text"
-                  placeholder={language === 'english' ? 'Name' : 'Name'}
+                  placeholder={language === 'english' ? 'Name' : language === 'español' ? 'Nombre' : 'Name'}
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-lg"
@@ -119,7 +119,7 @@ const CareAndShare = () => {
                   onChange={(e) => setFormData({...formData, age: e.target.value})}
                   className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all appearance-none text-lg"
                 >
-                  <option value="">{language === 'english' ? 'Age range' : 'Altersbereich'}</option>
+                  <option value="">{language === 'english' ? 'Age range' : language === 'español' ? 'Rango de edad' : 'Altersbereich'}</option>
                   <option value="40-67">40-67</option>
                   <option value="67-80">67-80</option>
                   <option value="80+">80+</option>
@@ -132,11 +132,11 @@ const CareAndShare = () => {
                   onChange={(e) => setFormData({...formData, category: e.target.value})}
                   className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all appearance-none text-lg"
                 >
-                  <option value="">{language === 'english' ? 'Help category' : 'Hilfe-Kategorie'}</option>
-                  <option value={language === 'english' ? 'Shopping' : 'Einkauf'}>{language === 'english' ? 'Shopping' : 'Einkauf'}</option>
-                  <option value={language === 'english' ? 'Walk' : 'Spaziergang'}>{language === 'english' ? 'Walk' : 'Spaziergang'}</option>
-                  <option value={language === 'english' ? 'Household' : 'Haushalt'}>{language === 'english' ? 'Household' : 'Haushalt'}</option>
-                  <option value={language === 'english' ? 'Garden' : 'Garten'}>{language === 'english' ? 'Garden' : 'Garten'}</option>
+                  <option value="">{language === 'english' ? 'Help category' : language === 'español' ? 'Categoría de ayuda' : 'Hilfe-Kategorie'}</option>
+                  <option value={language === 'english' ? 'Shopping' : language === 'español' ? 'Compras' : 'Einkauf'}>{language === 'english' ? 'Shopping' : language === 'español' ? 'Compras' : 'Einkauf'}</option>
+                  <option value={language === 'english' ? 'Walk' : language === 'español' ? 'Paseo' : 'Spaziergang'}>{language === 'english' ? 'Walk' : language === 'español' ? 'Paseo' : 'Spaziergang'}</option>
+                  <option value={language === 'english' ? 'Household' : language === 'español' ? 'Hogar' : 'Haushalt'}>{language === 'english' ? 'Household' : language === 'español' ? 'Hogar' : 'Haushalt'}</option>
+                  <option value={language === 'english' ? 'Garden' : language === 'español' ? 'Jardín' : 'Garten'}>{language === 'english' ? 'Garden' : language === 'español' ? 'Jardín' : 'Garten'}</option>
                 </select>
               </div>
               
@@ -146,11 +146,11 @@ const CareAndShare = () => {
                   onChange={(e) => setFormData({...formData, timeframe: e.target.value})}
                   className="w-full p-4 bg-gray-50 border-0 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all appearance-none text-lg"
                 >
-                  <option value="">{language === 'english' ? 'When do you need help?' : 'Wann brauchen Sie Hilfe?'}</option>
-                  <option value={language === 'english' ? 'Today' : 'Heute'}>{language === 'english' ? 'Today' : 'Heute'}</option>
-                  <option value={language === 'english' ? 'Today afternoon' : 'Heute Nachmittag'}>{language === 'english' ? 'Today afternoon' : 'Heute Nachmittag'}</option>
-                  <option value={language === 'english' ? 'Today evening' : 'Heute Abend'}>{language === 'english' ? 'Today evening' : 'Heute Abend'}</option>
-                  <option value={language === 'english' ? 'Tomorrow' : 'Morgen'}>{language === 'english' ? 'Tomorrow' : 'Morgen'}</option>
+                  <option value="">{language === 'english' ? 'When do you need help?' : language === 'español' ? '¿Cuándo necesitas ayuda?' : 'Wann brauchen Sie Hilfe?'}</option>
+                  <option value={language === 'english' ? 'Today' : language === 'español' ? 'Hoy' : 'Heute'}>{language === 'english' ? 'Today' : language === 'español' ? 'Hoy' : 'Heute'}</option>
+                  <option value={language === 'english' ? 'Today afternoon' : language === 'español' ? 'Hoy por la tarde' : 'Heute Nachmittag'}>{language === 'english' ? 'Today afternoon' : language === 'español' ? 'Hoy por la tarde' : 'Heute Nachmittag'}</option>
+                  <option value={language === 'english' ? 'Today evening' : language === 'español' ? 'Hoy por la noche' : 'Heute Abend'}>{language === 'english' ? 'Today evening' : language === 'español' ? 'Hoy por la noche' : 'Heute Abend'}</option>
+                  <option value={language === 'english' ? 'Tomorrow' : language === 'español' ? 'Mañana' : 'Morgen'}>{language === 'english' ? 'Tomorrow' : language === 'español' ? 'Mañana' : 'Morgen'}</option>
                 </select>
               </div>
               
@@ -158,7 +158,7 @@ const CareAndShare = () => {
                 onClick={() => setScreen('helpersList')}
                 className="w-full bg-blue-600 text-white py-4 px-6 rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors mb-8"
               >
-                {language === 'english' ? 'Find helpers' : 'Helfer finden'}
+                {language === 'english' ? 'Find helpers' : language === 'español' ? 'Encontrar ayudantes' : 'Helfer finden'}
               </button>
             </div>
           </div>
@@ -174,7 +174,7 @@ const CareAndShare = () => {
                 ←
               </button>
               <h2 className="text-2xl font-bold text-gray-800">
-                {language === 'english' ? 'Available helpers' : 'Verfügbare Helfer'}
+                {language === 'english' ? 'Available helpers' : language === 'español' ? 'Ayudantes disponibles' : 'Verfügbare Helfer'}
               </h2>
             </div>
             
@@ -184,9 +184,9 @@ const CareAndShare = () => {
                   <div className="flex justify-between items-start mb-3">
                     <div>
                       <h3 className="font-semibold text-lg">{helper.name}</h3>
-                      <p className="text-gray-600">{language === 'english' ? 'Age' : 'Alter'}: {helper.age}</p>
-                      <p className="text-gray-600">{language === 'english' ? 'Distance' : 'Entfernung'}: {helper.distance}</p>
-                      <p className="text-gray-600">{language === 'english' ? 'Skills' : 'Kenntnisse'}: {helper.skills.join(', ')}</p>
+                      <p className="text-gray-600">{language === 'english' ? 'Age' : language === 'español' ? 'Edad' : 'Alter'}: {helper.age}</p>
+                      <p className="text-gray-600">{language === 'english' ? 'Distance' : language === 'español' ? 'Distancia' : 'Entfernung'}: {helper.distance}</p>
+                      <p className="text-gray-600">{language === 'english' ? 'Skills' : language === 'español' ? 'Habilidades' : 'Kenntnisse'}: {helper.skills.join(', ')}</p>
                     </div>
                   </div>
                   <div className="flex space-x-3">
@@ -197,7 +197,7 @@ const CareAndShare = () => {
                       }}
                       className="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors font-semibold"
                     >
-                      {language === 'english' ? 'Accept' : 'Annehmen'}
+                      {language === 'english' ? 'Accept' : language === 'español' ? 'Aceptar' : 'Annehmen'}
                     </button>
                     <button
                       onClick={() => {
@@ -205,7 +205,7 @@ const CareAndShare = () => {
                       }}
                       className="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors font-semibold"
                     >
-                      {language === 'english' ? 'Decline' : 'Ablehnen'}
+                      {language === 'english' ? 'Decline' : language === 'español' ? 'Rechazar' : 'Ablehnen'}
                     </button>
                   </div>
                 </div>
@@ -224,14 +224,14 @@ const CareAndShare = () => {
                 ←
               </button>
               <h2 className="text-xl font-bold text-gray-800">
-                {language === 'english' ? 'I want to help' : 'Ich möchte helfen'}
+                {language === 'english' ? 'I want to help' : language === 'español' ? 'Quiero ayudar' : 'Ich möchte helfen'}
               </h2>
             </div>
             
             <div className="space-y-3">
               <input
                 type="text"
-                placeholder={language === 'english' ? 'Name' : 'Name'}
+                placeholder={language === 'english' ? 'Name' : language === 'español' ? 'Nombre' : 'Name'}
                 value={helperData.name}
                 onChange={(e) => setHelperData({...helperData, name: e.target.value})}
                 className="w-full p-2 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-sm"
@@ -239,7 +239,7 @@ const CareAndShare = () => {
               
               <input
                 type="tel"
-                placeholder={language === 'english' ? 'Phone number' : 'Telefonnummer'}
+                placeholder={language === 'english' ? 'Phone number' : language === 'español' ? 'Número de teléfono' : 'Telefonnummer'}
                 value={helperData.phone}
                 onChange={(e) => setHelperData({...helperData, phone: e.target.value})}
                 className="w-full p-2 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-sm"
@@ -247,7 +247,7 @@ const CareAndShare = () => {
               
               <input
                 type="text"
-                placeholder={language === 'english' ? 'Facebook name (optional)' : 'Facebook Name (optional)'}
+                placeholder={language === 'english' ? 'Facebook name (optional)' : language === 'español' ? 'Nombre de Facebook (opcional)' : 'Facebook Name (optional)'}
                 value={helperData.facebook}
                 onChange={(e) => setHelperData({...helperData, facebook: e.target.value})}
                 className="w-full p-2 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all text-sm"
@@ -258,7 +258,7 @@ const CareAndShare = () => {
                 onChange={(e) => setHelperData({...helperData, age: e.target.value})}
                 className="w-full p-2 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-sm"
               >
-                <option value="">{language === 'english' ? 'Age range' : 'Altersbereich'}</option>
+                <option value="">{language === 'english' ? 'Age range' : language === 'español' ? 'Rango de edad' : 'Altersbereich'}</option>
                 <option value="18-30">18-30</option>
                 <option value="30-50">30-50</option>
                 <option value="50+">50+</option>
@@ -269,11 +269,11 @@ const CareAndShare = () => {
                 onChange={(e) => setHelperData({...helperData, skills: e.target.value})}
                 className="w-full p-2 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-sm"
               >
-                <option value="">{language === 'english' ? 'What can you help with?' : 'Wobei können Sie helfen?'}</option>
-                <option value={language === 'english' ? 'Shopping' : 'Einkauf'}>{language === 'english' ? 'Shopping' : 'Einkauf'}</option>
-                <option value={language === 'english' ? 'Garden' : 'Garten'}>{language === 'english' ? 'Garden' : 'Garten'}</option>
+                <option value="">{language === 'english' ? 'What can you help with?' : language === 'español' ? '¿En qué puedes ayudar?' : 'Wobei können Sie helfen?'}</option>
+                <option value={language === 'english' ? 'Shopping' : language === 'español' ? 'Compras' : 'Einkauf'}>{language === 'english' ? 'Shopping' : language === 'español' ? 'Compras' : 'Einkauf'}</option>
+                <option value={language === 'english' ? 'Garden' : language === 'español' ? 'Jardín' : 'Garten'}>{language === 'english' ? 'Garden' : language === 'español' ? 'Jardín' : 'Garten'}</option>
                 <option value="IT">IT</option>
-                <option value={language === 'english' ? 'Household' : 'Haushalt'}>{language === 'english' ? 'Household' : 'Haushalt'}</option>
+                <option value={language === 'english' ? 'Household' : language === 'español' ? 'Hogar' : 'Haushalt'}>{language === 'english' ? 'Household' : language === 'español' ? 'Hogar' : 'Haushalt'}</option>
               </select>
               
               <select
@@ -281,18 +281,18 @@ const CareAndShare = () => {
                 onChange={(e) => setHelperData({...helperData, availability: e.target.value})}
                 className="w-full p-2 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-green-500 focus:bg-white transition-all appearance-none text-sm"
               >
-                <option value="">{language === 'english' ? 'When are you available?' : 'Wann sind Sie verfügbar?'}</option>
-                <option value={language === 'english' ? 'Mornings' : 'Vormittags'}>{language === 'english' ? 'Mornings' : 'Vormittags'}</option>
-                <option value={language === 'english' ? 'Afternoons' : 'Nachmittags'}>{language === 'english' ? 'Afternoons' : 'Nachmittags'}</option>
-                <option value={language === 'english' ? 'Evenings' : 'Abends'}>{language === 'english' ? 'Evenings' : 'Abends'}</option>
-                <option value={language === 'english' ? 'Weekends' : 'Wochenende'}>{language === 'english' ? 'Weekends' : 'Wochenende'}</option>
+                <option value="">{language === 'english' ? 'When are you available?' : language === 'español' ? '¿Cuándo estás disponible?' : 'Wann sind Sie verfügbar?'}</option>
+                <option value={language === 'english' ? 'Mornings' : language === 'español' ? 'Mañanas' : 'Vormittags'}>{language === 'english' ? 'Mornings' : language === 'español' ? 'Mañanas' : 'Vormittags'}</option>
+                <option value={language === 'english' ? 'Afternoons' : language === 'español' ? 'Tardes' : 'Nachmittags'}>{language === 'english' ? 'Afternoons' : language === 'español' ? 'Tardes' : 'Nachmittags'}</option>
+                <option value={language === 'english' ? 'Evenings' : language === 'español' ? 'Noches' : 'Abends'}>{language === 'english' ? 'Evenings' : language === 'español' ? 'Noches' : 'Abends'}</option>
+                <option value={language === 'english' ? 'Weekends' : language === 'español' ? 'Fines de semana' : 'Wochenende'}>{language === 'english' ? 'Weekends' : language === 'español' ? 'Fines de semana' : 'Wochenende'}</option>
               </select>
               
               <button
                 onClick={() => setScreen('helpRequests')}
                 className="w-full bg-green-600 text-white py-3 px-6 rounded-xl font-semibold text-base hover:bg-green-700 transition-colors mt-4"
               >
-                {language === 'english' ? 'Find people in need' : 'Hilfesuchende finden'}
+                {language === 'english' ? 'Find people in need' : language === 'español' ? 'Encontrar personas que buscan ayuda' : 'Hilfesuchende finden'}
               </button>
             </div>
           </div>

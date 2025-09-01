@@ -410,7 +410,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                   {selectedIdea.title}
                 </h3>
                 <p className={`text-lg sm:text-xl ${styles.text} font-pixel opacity-80`}>
-                  {language === 'deutsch' ? 'Interaktiver Prototyp' : 'Interactive Prototype'}
+                  {t('Interactive Prototype')}
                 </p>
               </div>
               <div className="flex-1">
@@ -431,14 +431,14 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                     className={`group px-8 py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform button-enhanced flex items-center gap-3 mx-auto text-lg sm:text-xl backdrop-blur-sm bg-white/10 active:scale-95 hover-glow ${styles.button}`}
                   >
                     <Lightbulb className="h-5 w-5" />
-                    {language === 'deutsch' ? 'Prototyp testen' : 'Test Prototype'}
+                    {language === 'deutsch' ? 'Prototyp testen' : language === 'español' ? 'Probar Prototipo' : 'Test Prototype'}
                   </button>
                 )}
               </div>
               
               <div className="p-6">
                 <h4 className={`text-xl sm:text-2xl font-pixel font-semibold mb-3 ${styles.text} transition-all duration-300 hover:scale-105`}>
-                  {language === 'deutsch' ? 'Beschreibung' : 'Description'}
+                  {language === 'deutsch' ? 'Beschreibung' : language === 'español' ? 'Descripción' : 'Description'}
                 </h4>
                 <div className={`${styles.text} font-pixel leading-relaxed text-base sm:text-lg transition-all duration-300`}>
                   {selectedIdea.fullDescription.split('\n').map((line, index) => (
@@ -466,6 +466,8 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                     <p className={`text-base sm:text-lg font-pixel ${styles.text}`}>
                       {language === 'deutsch' 
                         ? 'Gefällt dir was du siehst und möchtest es verwirklichen?' 
+                        : language === 'español'
+                        ? '¿Te gusta lo que ves y quieres hacerlo realidad?'
                         : 'You like what you see and want to make it come true?'
                       }
                     </p>
@@ -478,19 +480,19 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                       <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                       </svg>
-                      {language === 'deutsch' ? 'Schreib mir' : 'Message Me'}
+                      {language === 'deutsch' ? 'Schreib mir' : language === 'español' ? 'Escríbeme' : 'Message Me'}
                     </a>
                   </div>
                 </div>
 
               <div className={`p-6 border-2 rounded-lg backdrop-blur-sm bg-white/10 border-white/30 transition-all duration-300 hover:shadow-lg ${styles.cardBg}`}>
                 <h4 className={`text-xl sm:text-2xl font-pixel font-semibold mb-5 ${styles.text} transition-all duration-300 hover:scale-105`}>
-                  {language === 'deutsch' ? 'Deine Bewertung' : 'Your Rating'}
+                  {language === 'deutsch' ? 'Deine Bewertung' : language === 'español' ? 'Tu Calificación' : 'Your Rating'}
                 </h4>
                 <div className="space-y-6">
                   <div className="space-y-4">
                     <label className={`text-base sm:text-lg font-pixel ${styles.text}`}>
-                      {language === 'deutsch' ? 'Bewertung (1-5 Sterne)' : 'Rating (1-5 stars)'}
+                      {language === 'deutsch' ? 'Bewertung (1-5 Sterne)' : language === 'español' ? 'Calificación (1-5 estrellas)' : 'Rating (1-5 stars)'}
                     </label>
                     <div className="flex justify-center">
                       {renderStars(userRating, true, setUserRating)}
@@ -499,11 +501,13 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                   
                   <div className="space-y-4">
                     <label className={`text-base sm:text-lg font-pixel ${styles.text}`}>
-                      {language === 'deutsch' ? 'Feedback (optional)' : 'Feedback (optional)'}
+                      {language === 'deutsch' ? 'Feedback (optional)' : language === 'español' ? 'Comentarios (opcional)' : 'Feedback (optional)'}
                     </label>
                     <Textarea
                       placeholder={language === 'deutsch' 
                         ? 'Teile deine Gedanken und Verbesserungsvorschläge mit...'
+                        : language === 'español'
+                        ? 'Comparte tus pensamientos y sugerencias de mejora...'
                         : 'Share your thoughts and suggestions for improvement...'
                       }
                       value={feedback}
@@ -518,7 +522,7 @@ Das Motto: Aus Fremden werden Nachbarn, aus Nachbarn werden Freunde.`,
                     disabled={userRating === 0}
                     className={`w-full py-4 rounded-lg font-pixel border-2 border-black/30 transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0 backdrop-blur-sm bg-white/10 active:scale-95 text-lg sm:text-xl ${styles.button}`}
                   >
-                    {language === 'deutsch' ? 'Bewertung abgeben' : 'Submit Rating'}
+                    {language === 'deutsch' ? 'Bewertung abgeben' : language === 'español' ? 'Enviar Calificación' : 'Submit Rating'}
                   </button>
                 </div>
               </div>
