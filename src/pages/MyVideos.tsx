@@ -11,6 +11,7 @@ interface VideoProject {
   description: {
     en: string;
     de: string;
+    es: string;
   };
   links: Array<{
     url: string;
@@ -28,7 +29,8 @@ const MyVideos = () => {
       title: 'Ute Uphues',
       description: {
         en: 'Teen coaching videos created for Ute\'s TikTok and Instagram',
-        de: 'Teen-Coaching-Videos für Utes TikTok und Instagram erstellt'
+        de: 'Teen-Coaching-Videos für Utes TikTok und Instagram erstellt',
+        es: 'Videos de coaching para adolescentes creados para TikTok e Instagram de Ute'
       },
       links: [
         {
@@ -42,7 +44,8 @@ const MyVideos = () => {
       title: 'Real Estate Internship (Mallorca)',
       description: {
         en: 'A creative and content-focused internship at FALC Real Estate in Cala Millor',
-        de: 'Ein kreatives und inhaltsfokussiertes Praktikum bei FALC Real Estate in Cala Millor'
+        de: 'Ein kreatives und inhaltsfokussiertes Praktikum bei FALC Real Estate in Cala Millor',
+        es: 'Una pasantía creativa y enfocada en contenido en FALC Real Estate en Cala Millor'
       },
       links: [
         {
@@ -56,7 +59,8 @@ const MyVideos = () => {
       title: 'HenriAWB – Blackstories with a Hook',
       description: {
         en: 'Entertaining TikToks with surprising twists, hooks, and storytelling',
-        de: 'Unterhaltsame TikToks mit überraschenden Wendungen, Hooks und Storytelling'
+        de: 'Unterhaltsame TikToks mit überraschenden Wendungen, Hooks und Storytelling',
+        es: 'TikToks entretenidos con giros sorprendentes, ganchos y narrativa'
       },
       links: [
         {
@@ -70,7 +74,8 @@ const MyVideos = () => {
       title: 'ThisTimeFr',
       description: {
         en: 'My storytelling identity for vlogs, creative clips, and travel adventures',
-        de: 'Meine Storytelling-Identität für Vlogs, kreative Clips und Reiseabenteuer'
+        de: 'Meine Storytelling-Identität für Vlogs, kreative Clips und Reiseabenteuer',
+        es: 'Mi identidad narrativa para vlogs, clips creativos y aventuras de viaje'
       },
       links: [
         {
@@ -88,7 +93,8 @@ const MyVideos = () => {
       title: 'More Videos',
       description: {
         en: 'Additional videos from various projects and collaborations',
-        de: 'Weitere Videos aus verschiedenen Projekten und Kooperationen'
+        de: 'Weitere Videos aus verschiedenen Projekten und Kooperationen',
+        es: 'Videos adicionales de varios proyectos y colaboraciones'
       },
       links: [
         {
@@ -196,7 +202,7 @@ const MyVideos = () => {
                     {video.title}
                   </h3>
                   <p className={`mb-4 font-pixel ${styles.text}`}>
-                    {t('language') === 'deutsch' ? video.description.de : video.description.en}
+                    {t('language') === 'deutsch' ? video.description.de : t('language') === 'español' ? video.description.es : video.description.en}
                   </p>
                   <div className="space-y-2">
                     {video.links.map((link, index) => (

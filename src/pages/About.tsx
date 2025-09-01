@@ -69,6 +69,25 @@ const About = () => {
           'Und im Mai? Ich fuhr nachts mit dem Rad los mit der Idee, nach Amsterdam zu fahren – eine 400 km Rundfahrt. Ich schaffte es nicht ganz, aber ich radelte 200 km. Ich sah den surreal nebligen Sonnenaufgang unterwegs. Es lehrte mich etwas Wichtiges: manchmal muss man einfach anfangen. Man muss nicht alles durchdacht haben – nur den Mut zu beginnen. So lernt man, wer man wirklich ist. Danach lebe ich.'
         ]
       };
+    } else if (t('language') === 'español') {
+      return {
+        title: 'Un Paseo por Mi Mente',
+        paragraphs: [
+          'Hola, soy Henri – una mente creativa con pasión por dar vida a las ideas.',
+          'Ya sea editando videos, capturando momentos a través de la fotografía, diseñando espacios digitales o planeando estrategias completas de contenido – amo crear experiencias que resuenen, tengan sentido y destaquen a su manera.',
+          'No encajo perfectamente en una sola categoría. A veces estoy profundamente en flujo creativo, otras veces estoy completamente enfocado en estrategia. Disfruto trabajar en proyectos desde la primera chispa hasta el pulido final – no solo las imágenes, sino también el impacto, el ambiente y la emoción detrás de ellos.',
+          '¿Qué me define? Conecto cosas – personas, ideas, imágenes e historias. Pienso visualmente, siento en atmósferas y detalles, y trabajo tan bien por mi cuenta como en equipo. La colaboración me energiza, y amo aprender de otros.',
+          'Me inspiran los contrastes – entre analógico y digital, métodos de la vieja escuela y herramientas modernas. No persigo tendencias. Construyo espacios que se sienten auténticos para mí. Y creo en aprender haciendo, no esperando permiso.',
+          'Esta página refleja cómo pienso: curioso, práctico y siempre evolucionando.'
+        ],
+        freeTimeTitle: 'Qué Hago en Mi Tiempo Libre',
+        freeTimeParagraphs: [
+          'Fuera de editar, diseñar y construir proyectos, paso la mayor parte de mi tiempo explorando. Amo el ciclismo de larga distancia – ya sea solo un paseo por la naturaleza o un tour nocturno espontáneo en mi bicicleta de carrera. También disfruto la fotografía, filmando pequeños momentos, desarrollando ideas creativas y sumergiéndome en proyectos paralelos. Los fines de semana, a menudo me encuentras en mercados de pulgas o afuera con amigos. También colecciono autógrafos raros y cartas coleccionables – incluyendo Pelé, Beckenbauer y Otto Waalkes. Y sí, a veces aún lanzo algunos dardos por diversión.',
+          'Pero lo que realmente me impulsa es la aventura. Me he propuesto como meta personal vivir una aventura única cada mes – y documento estas historias en mi canal de vlogs ThisTimeFr. No se trata de visualizaciones – se trata de memorias. Poder mirar atrás algún día y decir: "Esto es lo que hice. Esto es quien fui."',
+          'En enero, hice un viaje de 24 horas a París – salí de Düsseldorf a las 10 PM, llegué a las 6 AM. Estaba lluvioso, tormentoso, helado – e inolvidable. En febrero, volé a Faro, Portugal por un fin de semana – mi primer vuelo sin padres. Marzo fue una visita a Egmond aan Zee, un lugar lleno de memorias de la infancia. En abril, pasé 3 semanas en Mallorca, viviendo solo en un nuevo país, trabajando en bienes raíces y mejorando mi español.',
+          '¿Y en mayo? Salí por la noche en mi bicicleta con la idea de ir a Ámsterdam – un viaje redondo de 400 km. No llegué hasta allá, pero sí pedalee 200 km. Vi el amanecer neblinoso más surrealista en el camino. Me enseñó algo importante: a veces solo tienes que empezar. No necesitas tener todo resuelto – solo el valor para comenzar. Así es como aprendes quién realmente eres. Así es como vivo.'
+        ]
+      };
     }
     
     return {
