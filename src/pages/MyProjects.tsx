@@ -99,6 +99,44 @@ const MyProjects = () => {
           }
         ]
       }
+    },
+    {
+      id: '3',
+      title: 'Kebab Bros – Social Media Presence',
+      description: {
+        en: 'Created and managed engaging short-form videos for Kebab Bros Coesfeld. The videos achieved several tens of thousands of views across TikTok and Instagram.',
+        de: 'Erstellung und Verwaltung ansprechender kurzer Videos für Kebab Bros Coesfeld. Die Videos erreichten mehrere zehntausend Aufrufe auf TikTok und Instagram.',
+        es: 'Creé y gestioné videos cortos atractivos para Kebab Bros Coesfeld. Los videos alcanzaron varias decenas de miles de visualizaciones en TikTok e Instagram.'
+      },
+      links: [
+        {
+          url: 'https://www.instagram.com/kebab_bros_coesfeld/',
+          label: 'Instagram'
+        },
+        {
+          url: 'https://www.tiktok.com/@kebab_bros_coesfeld',
+          label: 'TikTok'
+        }
+      ]
+    },
+    {
+      id: '4',
+      title: 'Website Design – Real Estate & Coaching',
+      description: {
+        en: 'Designed and launched professional websites for local businesses and initiatives: Modern one-page site for real estate valuation in Coesfeld and coaching & mentoring page with a clear and personal design.',
+        de: 'Gestaltung und Umsetzung professioneller Websites für lokale Unternehmen und Initiativen: Moderne einseitige Website für Immobilienbewertung in Coesfeld und Coaching- & Mentoring-Seite mit klarem und persönlichem Design.',
+        es: 'Diseñé e implementé sitios web profesionales para empresas e iniciativas locales: Sitio moderno de una página para evaluación inmobiliaria en Coesfeld y página de coaching y mentoría con un diseño claro y personal.'
+      },
+      links: [
+        {
+          url: 'https://immobilienbewertung-lamparter.de/',
+          label: 'Immobilienbewertung Lamparter'
+        },
+        {
+          url: 'https://uteuphues.de/',
+          label: 'Ute Uphues Coaching'
+        }
+      ]
     }
   ];
 
