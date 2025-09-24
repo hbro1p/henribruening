@@ -6,7 +6,11 @@ import VideoGallery from '@/components/VideoGallery';
 
 interface Project {
   id: string;
-  title: string;
+  title: {
+    en: string;
+    de: string;
+    es: string;
+  };
   description: {
     en: string;
     de: string;
@@ -34,7 +38,11 @@ const MyProjects = () => {
   const projects: Project[] = [
     {
       id: '1',
-      title: 'Internly',
+      title: {
+        en: 'Internly',
+        de: 'Internly',
+        es: 'Internly'
+      },
       description: {
         en: 'Currently developing a platform to connect students with internships',
         de: 'Entwickle derzeit eine Plattform, um Studenten mit Praktikumsplätzen zu verbinden',
@@ -49,7 +57,11 @@ const MyProjects = () => {
     },
     {
       id: '2',
-      title: 'Florian Klostermann – Social Media Unterstützung',
+      title: {
+        en: 'Florian Klostermann – Social Media Support',
+        de: 'Florian Klostermann – Social Media Unterstützung',
+        es: 'Florian Klostermann – Apoyo en Redes Sociales'
+      },
       description: {
         en: 'Campaign engagement videos: Successfully produced multiple videos for the Döner action. The videos achieved a total of more than 90,000 views across all platforms.',
         de: 'Wahlkampf-Engagement Videos: Erfolgreich mehrere Videos zur Döner-Aktion produziert. Die Videos haben insgesamt mehr als 90.000 Aufrufe auf allen Plattformen erzielt.',
@@ -102,7 +114,11 @@ const MyProjects = () => {
     },
     {
       id: '3',
-      title: 'Kebab Bros – Social Media Presence',
+      title: {
+        en: 'Kebab Bros – Social Media Presence',
+        de: 'Kebab Bros – Social Media Präsenz',
+        es: 'Kebab Bros – Presencia en Redes Sociales'
+      },
       description: {
         en: 'Created and managed engaging short-form videos for Kebab Bros Coesfeld. The videos achieved several tens of thousands of views across TikTok and Instagram.',
         de: 'Erstellung und Verwaltung ansprechender kurzer Videos für Kebab Bros Coesfeld. Die Videos erreichten mehrere zehntausend Aufrufe auf TikTok und Instagram.',
@@ -121,7 +137,11 @@ const MyProjects = () => {
     },
     {
       id: '4',
-      title: 'Website Design – Real Estate & Coaching',
+      title: {
+        en: 'Website Design – Real Estate & Coaching',
+        de: 'Website Design – Immobilien & Coaching',
+        es: 'Diseño Web – Inmobiliaria y Coaching'
+      },
       description: {
         en: 'Designed and launched professional websites for local businesses and initiatives: Modern one-page site for real estate valuation in Coesfeld and coaching & mentoring page with a clear and personal design.',
         de: 'Gestaltung und Umsetzung professioneller Websites für lokale Unternehmen und Initiativen: Moderne einseitige Website für Immobilienbewertung in Coesfeld und Coaching- & Mentoring-Seite mit klarem und persönlichem Design.',
@@ -217,7 +237,9 @@ const MyProjects = () => {
                 <div key={project.id} className={`p-6 border-2 rounded-lg shadow-lg relative ${styles.cardBg}`}>
                   <div className="absolute inset-x-2 top-2 h-2 bg-gradient-to-b from-white/40 to-transparent rounded-t"></div>
                   <h3 className={`text-xl font-bold mb-2 flex items-center gap-2 font-pixel drop-shadow-sm ${styles.text}`}>
-                    {project.title}
+                    {t('language') === 'deutsch' ? project.title.de : 
+                     t('language') === 'español' ? project.title.es : 
+                     project.title.en}
                   </h3>
                   <p className={`mb-4 drop-shadow-sm ${styles.text}`}>
                     {t('language') === 'deutsch' ? project.description.de : 
