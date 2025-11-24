@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Play, Pause, SkipForward, SkipBack, ArrowLeft } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useGlobalMusicPlayer } from '@/hooks/useGlobalMusicPlayer';
+import { AudioVisualizer } from '@/components/AudioVisualizer';
 
 const Radio = () => {
   const { t, theme } = useSettings();
@@ -16,6 +17,14 @@ const Radio = () => {
     nextTrack,
     prevTrack
   } = useGlobalMusicPlayer();
+  
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    // Get reference to the global audio element
+    const audioElements = document.querySelectorAll('audio');
+    audioRef.current = audioElements[0] as HTMLAudioElement || null;
+  }, []);
 
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
@@ -80,18 +89,19 @@ const Radio = () => {
               </div>
               
               {/* Digital Display */}
-              <div className={`absolute top-24 left-6 right-6 h-16 rounded-xl border-2 ${styles.display} p-3 shadow-inner`}>
-                <div className={`text-center ${styles.text}`}>
-                  <div className="text-lg font-pixel font-bold">
+              <div className={`absolute top-24 left-6 right-6 h-20 rounded-xl border-2 ${styles.display} p-2 shadow-inner`}>
+                <div className={`text-center ${styles.text} mb-1`}>
+                  <div className="text-sm font-pixel font-bold">
                     {musicFiles.length > 0 ? 'FM 88.5' : 'NO SIGNAL'}
                   </div>
-                  <div className={`text-xs ${styles.text} truncate`}>
+                  <div className={`text-xs ${styles.text} truncate px-2`}>
                     {musicFiles.length > 0 && currentTrack < musicFiles.length ? 
                       musicFiles[currentTrack]?.title || 'Unknown Track' : 
                       'No music files found'
                     }
                   </div>
                 </div>
+                <AudioVisualizer audioElement={audioRef.current} isPlaying={isPlaying} />
               </div>
               
               {/* Volume/Tuning Knobs */}
