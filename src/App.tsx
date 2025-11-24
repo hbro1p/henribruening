@@ -5,9 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SettingsProvider } from "./contexts/SettingsContext";
-import { DarkModeProvider } from "./contexts/DarkModeContext";
 import { GlobalMusicProvider } from "./hooks/useGlobalMusicPlayer";
-import { DarkModeToggle } from "./components/DarkModeToggle";
 import AuthGuard from "./components/AuthGuard";
 import Index from "./pages/Index";
 import Desktop from "./pages/Desktop";
@@ -26,36 +24,33 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <DarkModeProvider>
-      <SettingsProvider>
-        <GlobalMusicProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <DarkModeToggle />
-            <BrowserRouter>
-              <AuthGuard>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/desktop" element={<Desktop />} />
-                  <Route path="/pictures" element={<Pictures />} />
-                  <Route path="/videos" element={<MyVideos />} />
-                  <Route path="/projects" element={<MyProjects />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/radio" element={<Radio />} />
-                  <Route path="/challenges" element={<Challenges />} />
-                  <Route path="/idea-lab" element={<IdeaLab />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </AuthGuard>
-            </BrowserRouter>
-          </TooltipProvider>
-        </GlobalMusicProvider>
-      </SettingsProvider>
-    </DarkModeProvider>
+    <SettingsProvider>
+      <GlobalMusicProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <AuthGuard>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/desktop" element={<Desktop />} />
+                <Route path="/pictures" element={<Pictures />} />
+                <Route path="/videos" element={<MyVideos />} />
+                <Route path="/projects" element={<MyProjects />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/radio" element={<Radio />} />
+                <Route path="/challenges" element={<Challenges />} />
+                <Route path="/idea-lab" element={<IdeaLab />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AuthGuard>
+          </BrowserRouter>
+        </TooltipProvider>
+      </GlobalMusicProvider>
+    </SettingsProvider>
   </QueryClientProvider>
 );
 

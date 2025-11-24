@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
 import TvApp from '@/components/TvApp';
 import MiniMusicPlayer from '@/components/MiniMusicPlayer';
-import { AnimatedBackground } from '@/components/AnimatedBackground';
 import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock, Star } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useThemeMusic } from '@/hooks/useThemeMusic';
@@ -10,7 +9,7 @@ import { useTvMusicControl } from '@/hooks/useTvMusicControl';
 import { useGlobalMusicPlayer } from '@/hooks/useGlobalMusicPlayer';
 
 const Desktop = () => {
-  const { t, language, theme } = useSettings();
+  const { t, language } = useSettings();
   const [isTvOpen, setIsTvOpen] = useState(false);
   
   // Initialize theme music and TV music control
@@ -19,10 +18,11 @@ const Desktop = () => {
   
   const { isPlaying, musicFiles } = useGlobalMusicPlayer();
 
+  // Desktop component rendered
+
   return (
     <>
-      <AnimatedBackground theme={theme} />
-      <div className="min-h-screen w-full flex items-start justify-start p-6 relative z-10">{/* Consistent grid layout with proper spacing */}
+      <div className="min-h-screen w-full flex items-start justify-start p-6">
         {/* Consistent grid layout with proper spacing */}
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 w-full">
           <DesktopIcon icon={Folder} label={t('My Pictures')} to="/pictures" />
