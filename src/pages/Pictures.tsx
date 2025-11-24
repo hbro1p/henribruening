@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import { useStorageImages } from '@/hooks/useStorageImages';
 import { useSettings } from '@/contexts/SettingsContext';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Pictures = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [imagesLoading, setImagesLoading] = useState<Record<number, boolean>>({});
+  const [categoryLoading, setCategoryLoading] = useState(false);
   const { images, loading, error } = useStorageImages();
   const { theme, t } = useSettings();
 
@@ -33,9 +36,33 @@ const Pictures = () => {
     }
   };
 
-  // Reset image index when category changes
+  // Reset image index and show loading when category changes
   React.useEffect(() => {
     setCurrentImageIndex(0);
+    if (selectedCategory) {
+      setCategoryLoading(true);
+      // Preload first 4 images
+      const imagesToPreload = currentCategoryImages.slice(0, 4);
+      const promises = imagesToPreload.map((url, index) => {
+        return new Promise<void>((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            setImagesLoading(prev => ({ ...prev, [index]: false }));
+            resolve();
+          };
+          img.onerror = () => {
+            setImagesLoading(prev => ({ ...prev, [index]: false }));
+            resolve();
+          };
+          setImagesLoading(prev => ({ ...prev, [index]: true }));
+          img.src = url;
+        });
+      });
+      
+      Promise.all(promises).then(() => {
+        setCategoryLoading(false);
+      });
+    }
   }, [selectedCategory]);
 
   // Category color schemes
@@ -187,27 +214,35 @@ const Pictures = () => {
           <div className="flex flex-col items-center justify-center text-center">
             <h1 className={`text-4xl mb-8 font-pixel drop-shadow-lg ${styles.text}`}>[ PICTURES ]</h1>
             
-            {/* Category Selection - Always visible */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8 w-full max-w-2xl">
-              {Object.keys(images).map((category) => {
-                const categoryColors = getCategoryColors(category);
-                return (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`
-                      aspect-square flex flex-col items-center justify-center p-4 border-3 rounded-2xl font-pixel transition-all active:scale-95 capitalize text-base shadow-xl
-                      bg-gradient-to-br ${categoryColors.primary}
-                      hover:shadow-2xl hover:scale-105 text-white border-white/30
-                      ${selectedCategory === category ? 'ring-4 ring-yellow-400 ring-offset-2 ring-offset-transparent scale-110' : ''}
-                    `}
-                  >
-                    <div className="text-lg font-bold text-center leading-tight">{category}</div>
-                    <div className="text-sm opacity-90 mt-1">({images[category].length})</div>
-                  </button>
-                );
-              })}
-            </div>
+            {/* Category Selection - Show skeletons while loading */}
+            {loading ? (
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8 w-full max-w-2xl">
+                {[1, 2, 3, 4].map((i) => (
+                  <Skeleton key={i} className="aspect-square rounded-2xl" />
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8 w-full max-w-2xl">
+                {Object.keys(images).map((category) => {
+                  const categoryColors = getCategoryColors(category);
+                  return (
+                    <button
+                      key={category}
+                      onClick={() => setSelectedCategory(category)}
+                      className={`
+                        aspect-square flex flex-col items-center justify-center p-4 border-3 rounded-2xl font-pixel transition-all active:scale-95 capitalize text-base shadow-xl
+                        bg-gradient-to-br ${categoryColors.primary}
+                        hover:shadow-2xl hover:scale-105 text-white border-white/30
+                        ${selectedCategory === category ? 'ring-4 ring-yellow-400 ring-offset-2 ring-offset-transparent scale-110' : ''}
+                      `}
+                    >
+                      <div className="text-lg font-bold text-center leading-tight">{category}</div>
+                      <div className="text-sm opacity-90 mt-1">({images[category].length})</div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
 
             {/* Back to folder selection button when category is selected */}
             {selectedCategory && (
@@ -219,29 +254,50 @@ const Pictures = () => {
               </button>
             )}
             
-            {/* Fixed height container to prevent movement */}
-            <div className="min-h-[100px] w-full flex flex-col items-center justify-center">
-              {loading && (
-                <div className={`${styles.text} font-pixel text-center`}>Loading pictures...</div>
-              )}
-              
-              {error && (
-                <div className="text-red-600 font-pixel text-center">{error}</div>
-              )}
-              
-              {!loading && !error && selectedCategory && imageObjects.length === 0 && (
-                <div className={`${styles.text} font-pixel text-center`}>No pictures found in {selectedCategory}</div>
-              )}
-            </div>
+            {/* Show loading when switching categories */}
+            {categoryLoading && selectedCategory && (
+              <div className="w-full max-w-4xl mb-8">
+                <Skeleton className="w-full h-96 rounded-xl mb-6" />
+                <div className="flex gap-4 justify-center mb-6">
+                  <Skeleton className="h-12 w-32 rounded-lg" />
+                  <Skeleton className="h-12 w-32 rounded-lg" />
+                </div>
+                <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                  {[...Array(8)].map((_, i) => (
+                    <Skeleton key={i} className="aspect-square rounded-lg" />
+                  ))}
+                </div>
+              </div>
+            )}
             
-            {!loading && !error && selectedCategory && imageObjects.length > 0 && (
+            {/* Fixed height container to prevent movement */}
+            {!categoryLoading && (
+              <div className="min-h-[100px] w-full flex flex-col items-center justify-center">
+                {error && (
+                  <div className="text-red-600 font-pixel text-center">{error}</div>
+                )}
+                
+                {!loading && !error && selectedCategory && imageObjects.length === 0 && (
+                  <div className={`${styles.text} font-pixel text-center`}>No pictures found in {selectedCategory}</div>
+                )}
+              </div>
+            )}
+            
+            {!categoryLoading && !error && selectedCategory && imageObjects.length > 0 && (
               <div className="w-full max-w-4xl">
                 <div className={`mb-6 border-4 rounded-xl overflow-hidden shadow-2xl ${styles.imageContainer}`}>
-                  <img 
-                    src={imageObjects[currentImageIndex]?.url} 
-                    alt={imageObjects[currentImageIndex]?.name}
-                    className="w-full h-96 object-contain bg-gradient-to-br from-white via-gray-50 to-gray-100"
-                  />
+                  {imagesLoading[currentImageIndex] ? (
+                    <Skeleton className="w-full h-96" />
+                  ) : (
+                    <img 
+                      src={imageObjects[currentImageIndex]?.url} 
+                      alt={imageObjects[currentImageIndex]?.name}
+                      className="w-full h-96 object-contain bg-gradient-to-br from-white via-gray-50 to-gray-100"
+                      loading="lazy"
+                      onLoad={() => setImagesLoading(prev => ({ ...prev, [currentImageIndex]: false }))}
+                      onError={() => setImagesLoading(prev => ({ ...prev, [currentImageIndex]: false }))}
+                    />
+                  )}
                 </div>
                 
                 <div className="flex gap-4 justify-center mb-6">
@@ -274,6 +330,7 @@ const Pictures = () => {
                         src={image.url} 
                         alt={image.name}
                         className="w-full h-full object-cover"
+                        loading="lazy"
                       />
                     </button>
                   ))}
