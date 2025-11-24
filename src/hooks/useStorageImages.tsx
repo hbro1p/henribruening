@@ -15,8 +15,7 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
   const [images, setImages] = useState<Record<string, string[]>>({
     childhood: [],
     nature: [],
-    vibe: [],
-    random: []
+    travel: []
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +38,7 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
     const categoryKeywords = {
       childhood: ['childhood', 'child', 'kid', 'baby', 'young'],
       nature: ['nature', 'landscape', 'outdoor', 'tree', 'forest', 'mountain', 'beach', 'sky'],
-      vibe: ['vibe', 'mood', 'aesthetic', 'art', 'style', 'cool']
+      travel: ['travel', 'trip', 'vacation', 'journey', 'adventure', 'explore']
     };
 
     const keywords = categoryKeywords[category as keyof typeof categoryKeywords] || [];
@@ -56,12 +55,11 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
         const categorizedImages: Record<string, string[]> = {
           childhood: [],
           nature: [],
-          vibe: [],
-          random: []
+          travel: []
         };
 
         // Check for folder-based organization first
-        const folders = ['childhood', 'nature', 'vibe', 'random'];
+        const folders = ['childhood', 'nature', 'travel'];
         
         for (const folder of folders) {
           const { data: folderFiles, error: folderError } = await supabase.storage
@@ -122,10 +120,8 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
                     categorizedImages.childhood.push(urlData.publicUrl);
                   } else if (matchesCategory(fileName, 'nature')) {
                     categorizedImages.nature.push(urlData.publicUrl);
-                  } else if (matchesCategory(fileName, 'vibe')) {
-                    categorizedImages.vibe.push(urlData.publicUrl);
-                  } else {
-                    categorizedImages.random.push(urlData.publicUrl);
+                  } else if (matchesCategory(fileName, 'travel')) {
+                    categorizedImages.travel.push(urlData.publicUrl);
                   }
                 }
               }
@@ -133,29 +129,6 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
           }
         }
 
-        // Check for the problematic "vibe " folder (with trailing space)
-        const { data: vibeSpaceFiles, error: vibeSpaceError } = await supabase.storage
-          .from(bucketName)
-          .list('vibe ', {
-            limit: 1000,
-            sortBy: { column: 'name', order: 'asc' }
-          });
-
-        if (!vibeSpaceError && vibeSpaceFiles) {
-          for (const file of vibeSpaceFiles) {
-            if (!file.id) continue;
-            
-            if (file.name && isDisplayableImage(file.name) && !isHeicFile(file.name)) {
-              const { data: urlData } = supabase.storage
-                .from(bucketName)
-                .getPublicUrl(`vibe /${file.name}`);
-
-              if (urlData?.publicUrl) {
-                categorizedImages.vibe.push(urlData.publicUrl);
-              }
-            }
-          }
-        }
 
         setImages(categorizedImages);
         
