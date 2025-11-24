@@ -172,6 +172,36 @@ html, body {
   }
 }
 
+/* Animated background effects */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  25% { transform: translateY(-20px) translateX(10px); }
+  50% { transform: translateY(-10px) translateX(-10px); }
+  75% { transform: translateY(-15px) translateX(5px); }
+}
+
+@keyframes parallax-slow {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-50px); }
+}
+
+@keyframes parallax-fast {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-100px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-parallax-slow {
+  animation: parallax-slow 20s linear infinite;
+}
+
+.animate-parallax-fast {
+  animation: parallax-fast 10s linear infinite;
+}
+
 /* Folder Color Schemes for Space Mood */
 .folder-blue {
   background: linear-gradient(135deg, #ddeeff 0%, #aaccff 25%, #77aaff 75%, #4488ff 100%);
