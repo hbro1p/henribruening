@@ -15,7 +15,7 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
   const [images, setImages] = useState<Record<string, string[]>>({
     childhood: [],
     nature: [],
-    travel: []
+    Travel: []
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +38,7 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
     const categoryKeywords = {
       childhood: ['childhood', 'child', 'kid', 'baby', 'young'],
       nature: ['nature', 'landscape', 'outdoor', 'tree', 'forest', 'mountain', 'beach', 'sky'],
-      travel: ['travel', 'trip', 'vacation', 'journey', 'adventure', 'explore']
+      Travel: ['travel', 'trip', 'vacation', 'journey', 'adventure', 'explore']
     };
 
     const keywords = categoryKeywords[category as keyof typeof categoryKeywords] || [];
@@ -55,11 +55,11 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
         const categorizedImages: Record<string, string[]> = {
           childhood: [],
           nature: [],
-          travel: []
+          Travel: []
         };
 
         // Check for folder-based organization first
-        const folders = ['childhood', 'nature', 'travel'];
+        const folders = ['childhood', 'nature', 'Travel'];
         
         for (const folder of folders) {
           const { data: folderFiles, error: folderError } = await supabase.storage
@@ -120,8 +120,8 @@ export const useStorageImages = (bucketName: string = 'pictures') => {
                     categorizedImages.childhood.push(urlData.publicUrl);
                   } else if (matchesCategory(fileName, 'nature')) {
                     categorizedImages.nature.push(urlData.publicUrl);
-                  } else if (matchesCategory(fileName, 'travel')) {
-                    categorizedImages.travel.push(urlData.publicUrl);
+                  } else if (matchesCategory(fileName, 'Travel')) {
+                    categorizedImages.Travel.push(urlData.publicUrl);
                   }
                 }
               }
