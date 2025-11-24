@@ -146,6 +146,17 @@ const Pictures = () => {
         thumb: 'border-cyan-400/50 hover:border-cyan-600 hover:bg-cyan-100/50',
         container: 'border-cyan-400/50 bg-white/90',
         folder: 'folder-cyan'
+      },
+      Travel: {
+        primary: 'from-cyan-400 via-cyan-500 to-cyan-700',
+        secondary: 'from-cyan-600 via-cyan-700 to-cyan-800',
+        content: 'from-cyan-100 via-cyan-200 to-cyan-300',
+        text: 'text-cyan-900',
+        link: 'text-cyan-800 hover:text-cyan-900',
+        button: 'bg-gradient-to-br from-cyan-500 via-cyan-600 to-cyan-800 hover:from-cyan-400 hover:via-cyan-500 hover:to-cyan-700 text-white border-cyan-300/50',
+        thumb: 'border-cyan-400/50 hover:border-cyan-600 hover:bg-cyan-100/50',
+        container: 'border-cyan-400/50 bg-white/90',
+        folder: 'folder-cyan'
       }
     };
 
