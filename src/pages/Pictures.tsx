@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Image as ImageIcon } from 'lucide-react';
+import { ArrowLeft, Maximize, Play, Pause, X } from 'lucide-react';
 import { useStorageImages } from '@/hooks/useStorageImages';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -10,6 +10,9 @@ const Pictures = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [imagesLoading, setImagesLoading] = useState<Record<number, boolean>>({});
   const [categoryLoading, setCategoryLoading] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [preloadedImages, setPreloadedImages] = useState<Set<string>>(new Set());
   const { images, loading, error } = useStorageImages();
   const { theme, t } = useSettings();
 
@@ -36,34 +39,77 @@ const Pictures = () => {
     }
   };
 
-  // Reset image index and show loading when category changes
-  React.useEffect(() => {
+  // Preload all images for smooth transitions
+  useEffect(() => {
+    if (!selectedCategory || currentCategoryImages.length === 0) return;
+    
+    setCategoryLoading(true);
     setCurrentImageIndex(0);
-    if (selectedCategory) {
-      setCategoryLoading(true);
-      // Preload first 4 images
-      const imagesToPreload = currentCategoryImages.slice(0, 4);
-      const promises = imagesToPreload.map((url, index) => {
-        return new Promise<void>((resolve) => {
-          const img = new Image();
-          img.onload = () => {
-            setImagesLoading(prev => ({ ...prev, [index]: false }));
-            resolve();
-          };
-          img.onerror = () => {
-            setImagesLoading(prev => ({ ...prev, [index]: false }));
-            resolve();
-          };
-          setImagesLoading(prev => ({ ...prev, [index]: true }));
-          img.src = url;
-        });
+    
+    // Preload ALL images in the category for smooth navigation
+    const preloadPromises = currentCategoryImages.map((url) => {
+      return new Promise<void>((resolve) => {
+        if (preloadedImages.has(url)) {
+          resolve();
+          return;
+        }
+        
+        const img = new Image();
+        img.onload = () => {
+          setPreloadedImages(prev => new Set(prev).add(url));
+          resolve();
+        };
+        img.onerror = () => resolve();
+        img.src = url;
       });
-      
-      Promise.all(promises).then(() => {
-        setCategoryLoading(false);
-      });
-    }
+    });
+    
+    Promise.all(preloadPromises).then(() => {
+      setCategoryLoading(false);
+    });
   }, [selectedCategory]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (!selectedCategory || currentCategoryImages.length === 0) return;
+      
+      switch(e.key) {
+        case 'ArrowLeft':
+          handleImageNavigation('prev');
+          break;
+        case 'ArrowRight':
+          handleImageNavigation('next');
+          break;
+        case 'f':
+        case 'F':
+          setIsFullscreen(prev => !prev);
+          break;
+        case 'Escape':
+          setIsFullscreen(false);
+          setIsPlaying(false);
+          break;
+        case ' ':
+          e.preventDefault();
+          setIsPlaying(prev => !prev);
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [selectedCategory, currentCategoryImages.length]);
+
+  // Slideshow auto-play
+  useEffect(() => {
+    if (!isPlaying || currentCategoryImages.length === 0) return;
+    
+    const interval = setInterval(() => {
+      handleImageNavigation('next');
+    }, 3000); // 3 seconds per image
+
+    return () => clearInterval(interval);
+  }, [isPlaying, currentImageIndex, currentCategoryImages.length]);
 
   // Category color schemes
   const getCategoryColors = (category: string) => {
@@ -193,6 +239,67 @@ const Pictures = () => {
 
   const styles = getWindowStyles();
 
+  // Fullscreen render
+  if (isFullscreen && selectedCategory && imageObjects.length > 0) {
+    return (
+      <div className="fixed inset-0 z-50 bg-black flex items-center justify-center">
+        {/* Close and control buttons */}
+        <div className="absolute top-4 right-4 flex gap-2 z-10">
+          <button
+            onClick={() => setIsPlaying(!isPlaying)}
+            className="p-3 bg-white/10 hover:bg-white/20 rounded-lg backdrop-blur-sm transition-all"
+          >
+            {isPlaying ? <Pause className="w-6 h-6 text-white" /> : <Play className="w-6 h-6 text-white" />}
+          </button>
+          <button
+            onClick={() => {
+              setIsFullscreen(false);
+              setIsPlaying(false);
+            }}
+            className="p-3 bg-white/10 hover:bg-white/20 rounded-lg backdrop-blur-sm transition-all"
+          >
+            <X className="w-6 h-6 text-white" />
+          </button>
+        </div>
+
+        {/* Image */}
+        <img 
+          src={imageObjects[currentImageIndex]?.url} 
+          alt={imageObjects[currentImageIndex]?.name}
+          className="max-w-full max-h-full object-contain"
+        />
+
+        {/* Navigation arrows */}
+        <button
+          onClick={() => handleImageNavigation('prev')}
+          className="absolute left-4 p-4 bg-white/10 hover:bg-white/20 rounded-lg backdrop-blur-sm transition-all"
+        >
+          <ArrowLeft className="w-8 h-8 text-white" />
+        </button>
+        <button
+          onClick={() => handleImageNavigation('next')}
+          className="absolute right-4 p-4 bg-white/10 hover:bg-white/20 rounded-lg backdrop-blur-sm transition-all"
+        >
+          <ArrowLeft className="w-8 h-8 text-white rotate-180" />
+        </button>
+
+        {/* Counter */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-lg">
+          <span className="text-white font-pixel text-sm">
+            {currentImageIndex + 1} / {imageObjects.length}
+          </span>
+        </div>
+
+        {/* Keyboard hints */}
+        <div className="absolute bottom-4 left-4 px-3 py-2 bg-white/10 backdrop-blur-sm rounded-lg">
+          <span className="text-white/70 font-pixel text-xs">
+            ← → Navigate | Space Play/Pause | ESC Exit
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   // Get folder background class
   const getFolderBackground = () => {
     if (selectedCategory) {
@@ -300,18 +407,25 @@ const Pictures = () => {
                   )}
                 </div>
                 
-                <div className="flex gap-4 justify-center mb-6">
+                <div className="flex gap-4 justify-center mb-6 flex-wrap">
                   <button 
                     onClick={() => handleImageNavigation('prev')}
                     className={`px-6 py-3 border-2 rounded-lg font-pixel transition-all active:scale-95 shadow-lg ${styles.controlButton}`}
                   >
-                    Previous
+                    ← Previous
+                  </button>
+                  <button 
+                    onClick={() => setIsFullscreen(true)}
+                    className={`px-6 py-3 border-2 rounded-lg font-pixel transition-all active:scale-95 shadow-lg flex items-center gap-2 ${styles.controlButton}`}
+                  >
+                    <Maximize className="w-4 h-4" />
+                    Slideshow
                   </button>
                   <button 
                     onClick={() => handleImageNavigation('next')}
                     className={`px-6 py-3 border-2 rounded-lg font-pixel transition-all active:scale-95 shadow-lg ${styles.controlButton}`}
                   >
-                    Next
+                    Next →
                   </button>
                 </div>
                 
