@@ -136,31 +136,20 @@ const Pictures = () => {
         container: 'border-green-400/50 bg-white/90',
         folder: 'folder-green'
       },
-      vibe: {
-        primary: 'from-purple-400 via-purple-500 to-purple-700',
-        secondary: 'from-purple-600 via-purple-700 to-purple-800',
-        content: 'from-purple-100 via-purple-200 to-purple-300',
-        text: 'text-purple-900',
-        link: 'text-purple-800 hover:text-purple-900',
-        button: 'bg-gradient-to-br from-purple-500 via-purple-600 to-purple-800 hover:from-purple-400 hover:via-purple-500 hover:to-purple-700 text-white border-purple-300/50',
-        thumb: 'border-purple-400/50 hover:border-purple-600 hover:bg-purple-100/50',
-        container: 'border-purple-400/50 bg-white/90',
-        folder: 'folder-purple'
-      },
-      random: {
-        primary: 'from-orange-400 via-orange-500 to-orange-700',
-        secondary: 'from-orange-600 via-orange-700 to-orange-800',
-        content: 'from-orange-100 via-orange-200 to-orange-300',
-        text: 'text-orange-900',
-        link: 'text-orange-800 hover:text-orange-900',
-        button: 'bg-gradient-to-br from-orange-500 via-orange-600 to-orange-800 hover:from-orange-400 hover:via-orange-500 hover:to-orange-700 text-white border-orange-300/50',
-        thumb: 'border-orange-400/50 hover:border-orange-600 hover:bg-orange-100/50',
-        container: 'border-orange-400/50 bg-white/90',
-        folder: 'folder-orange'
+      travel: {
+        primary: 'from-cyan-400 via-cyan-500 to-cyan-700',
+        secondary: 'from-cyan-600 via-cyan-700 to-cyan-800',
+        content: 'from-cyan-100 via-cyan-200 to-cyan-300',
+        text: 'text-cyan-900',
+        link: 'text-cyan-800 hover:text-cyan-900',
+        button: 'bg-gradient-to-br from-cyan-500 via-cyan-600 to-cyan-800 hover:from-cyan-400 hover:via-cyan-500 hover:to-cyan-700 text-white border-cyan-300/50',
+        thumb: 'border-cyan-400/50 hover:border-cyan-600 hover:bg-cyan-100/50',
+        container: 'border-cyan-400/50 bg-white/90',
+        folder: 'folder-cyan'
       }
     };
 
-    return colorSchemes[category as keyof typeof colorSchemes] || colorSchemes.random;
+    return colorSchemes[category as keyof typeof colorSchemes] || colorSchemes.childhood;
   };
 
   // Get window styles based on theme and selected category
@@ -262,11 +251,12 @@ const Pictures = () => {
           </button>
         </div>
 
-        {/* Image */}
+        {/* Image with transitions */}
         <img 
+          key={currentImageIndex}
           src={imageObjects[currentImageIndex]?.url} 
           alt={imageObjects[currentImageIndex]?.name}
-          className="max-w-full max-h-full object-contain"
+          className="max-w-full max-h-full object-contain animate-in fade-in zoom-in-95 duration-700"
         />
 
         {/* Navigation arrows */}
