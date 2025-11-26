@@ -110,9 +110,9 @@ const Shop = () => {
 
           {/* After Click: Two-Column Layout */}
           {showDetails && (
-            <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
+            <div className="w-full flex flex-row gap-8 items-start">
               {/* Left Column: Typewriter Story */}
-              <div className="flex-1 lg:w-3/5">
+              <div className="flex-1">
                 <div className={`font-mono text-sm leading-snug whitespace-pre-wrap ${styles.text}`}>
                   {displayedText}
                   {displayedText.length < fullStory.length && <BlinkingCursor />}
@@ -121,18 +121,19 @@ const Shop = () => {
                 {displayedText.length >= fullStory.length && (
                   <div className="mt-6 animate-fade-in">
                     <button className={`w-full font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}>
-                      {t('Inquire')}
+                      €399 - {t('Buy now')}
                     </button>
                   </div>
                 )}
               </div>
               
               {/* Right Column: Image */}
-              <div className="lg:w-2/5 flex justify-center">
+              <div className="w-2/5 flex justify-center">
                 <img
                   src="/lovable-uploads/la-vaca-painting.jpg"
                   alt="La Vaca"
-                  className="w-full max-w-[300px] h-auto rounded-lg shadow-xl"
+                  onClick={() => setShowDetails(false)}
+                  className="w-full max-w-[300px] h-auto rounded-lg shadow-xl cursor-pointer transition-all duration-300 hover:shadow-2xl"
                 />
               </div>
             </div>
