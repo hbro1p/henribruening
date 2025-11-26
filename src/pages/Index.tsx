@@ -104,7 +104,9 @@ const Landing = () => {
           fingerprint: fingerprint
         };
         
+        // Store in both sessionStorage and localStorage for persistence across browser restarts
         sessionStorage.setItem('globalAuth', JSON.stringify(sessionData));
+        localStorage.setItem('globalAuth', JSON.stringify(sessionData));
         
         // Dispatch custom event to notify auth hook of the change
         window.dispatchEvent(new CustomEvent('globalAuthChange', { detail: sessionData }));
