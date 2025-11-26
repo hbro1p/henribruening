@@ -122,6 +122,7 @@ const translations = {
     // Shop page
     'La Vaca': 'La Vaca',
     'Click to flip': 'Click to flip',
+    'Buy now': 'Buy now',
     'Inquire': 'Inquire',
     'la-vaca-story-1': 'A cow that got lost on a log. She is now in the middle of nowhere - on a lake, on a sea, one doesn\'t know exactly.',
     'la-vaca-story-2': 'What we do know: The cow used to live on the green frame, the meadow. Now she has somehow ended up in the blue, in the middle of nowhere.',
@@ -254,6 +255,7 @@ const translations = {
     // Shop page
     'La Vaca': 'La Vaca',
     'Click to flip': 'Klicke zum Umdrehen',
+    'Buy now': 'Jetzt kaufen',
     'Inquire': 'Anfragen',
     'la-vaca-story-1': 'Eine Kuh, die sich verirrt hat auf einem Baumstamm. Sie ist nun mitten im Nirgendwo - auf einem See, auf einem Meer, man weiß es nicht so genau.',
     'la-vaca-story-2': 'Was man aber weiß: Die Kuh lebte früher auf dem grünen Rahmen, der Wiese. Jetzt ist sie irgendwie ins Blaue gekommen, ins Nirgendwo.',
@@ -389,6 +391,7 @@ const translations = {
     // Shop page
     'La Vaca': 'La Vaca',
     'Click to flip': 'Haz clic para voltear',
+    'Buy now': 'Comprar ahora',
     'Inquire': 'Consultar',
     'la-vaca-story-1': 'Una vaca que se perdió en un tronco. Ahora está en medio de la nada - en un lago, en un mar, no se sabe exactamente.',
     'la-vaca-story-2': 'Lo que sí sabemos: La vaca vivía antes en el marco verde, el prado. Ahora de alguna manera ha llegado al azul, a la nada.',

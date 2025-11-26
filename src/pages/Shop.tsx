@@ -85,36 +85,56 @@ const Shop = () => {
         </div>
         
         {/* Window content */}
-        <div className={`p-6 sm:p-12 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent} min-h-[600px] flex flex-col items-center justify-start pt-8`}>
+        <div className={`p-6 sm:p-12 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent} min-h-[700px] flex flex-col items-center justify-start pt-8`}>
           
-          {/* Floating Image - disappears when clicked */}
+          {/* Initial State: Image + Price + Buy Button */}
           {!showDetails && (
-            <div className="mb-8" style={{ maxWidth: '350px', margin: '0 auto' }}>
-              <img
-                src="/lovable-uploads/la-vaca-painting.jpg"
-                alt="La Vaca - Eine Kuh auf einem Baumstamm"
-                onClick={() => setShowDetails(true)}
-                className="w-full h-auto rounded-lg shadow-2xl cursor-pointer transition-all duration-500 hover:shadow-[0_0_60px_rgba(234,179,8,0.8)]"
-                style={{ animation: 'float 6s ease-in-out infinite' }}
-              />
+            <div className="flex flex-col items-center space-y-6">
+              <div style={{ maxWidth: '450px', margin: '0 auto' }}>
+                <img
+                  src="/lovable-uploads/la-vaca-painting.jpg"
+                  alt="La Vaca - Eine Kuh auf einem Baumstamm"
+                  onClick={() => setShowDetails(true)}
+                  className="w-full h-auto rounded-lg shadow-2xl cursor-pointer transition-all duration-500 hover:shadow-[0_0_60px_rgba(234,179,8,0.8)]"
+                  style={{ animation: 'float 6s ease-in-out infinite' }}
+                />
+              </div>
+              <div className="text-center space-y-4">
+                <p className={`text-3xl font-bold font-pixel ${styles.text}`}>€399</p>
+                <button className={`px-8 py-3 rounded-lg transition-colors shadow-lg font-pixel text-lg ${styles.button}`}>
+                  {t('Buy now')}
+                </button>
+              </div>
             </div>
           )}
 
-          {/* Typewriter Story */}
+          {/* After Click: Two-Column Layout */}
           {showDetails && (
-            <div className="w-full max-w-2xl mx-auto mb-8">
-              <div className={`font-mono text-base sm:text-lg leading-relaxed whitespace-pre-wrap ${styles.text}`}>
-                {displayedText}
-                {displayedText.length < fullStory.length && <BlinkingCursor />}
+            <div className="w-full flex flex-col lg:flex-row gap-8 items-start">
+              {/* Left Column: Typewriter Story */}
+              <div className="flex-1 lg:w-3/5">
+                <div className={`font-mono text-sm leading-snug whitespace-pre-wrap ${styles.text}`}>
+                  {displayedText}
+                  {displayedText.length < fullStory.length && <BlinkingCursor />}
+                </div>
+                
+                {displayedText.length >= fullStory.length && (
+                  <div className="mt-6 animate-fade-in">
+                    <button className={`w-full font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}>
+                      {t('Inquire')}
+                    </button>
+                  </div>
+                )}
               </div>
               
-              {displayedText.length >= fullStory.length && (
-                <div className="mt-8 space-y-4 animate-fade-in">
-                  <button className={`w-full font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}>
-                    {t('Inquire')}
-                  </button>
-                </div>
-              )}
+              {/* Right Column: Image */}
+              <div className="lg:w-2/5 flex justify-center">
+                <img
+                  src="/lovable-uploads/la-vaca-painting.jpg"
+                  alt="La Vaca"
+                  className="w-full max-w-[300px] h-auto rounded-lg shadow-xl"
+                />
+              </div>
             </div>
           )}
 
