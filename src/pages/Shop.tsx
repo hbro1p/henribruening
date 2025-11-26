@@ -1,36 +1,78 @@
 import { useState } from 'react';
 import { useSettings } from '@/contexts/SettingsContext';
-import { ArrowLeft, RotateCw } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Shop = () => {
-  const { t } = useSettings();
-  const navigate = useNavigate();
+  const { theme, t } = useSettings();
   const [isFlipped, setIsFlipped] = useState(false);
+
+  const getWindowStyles = () => {
+    if (theme === 'space-mood') {
+      return {
+        windowFrame: 'bg-gradient-to-br from-amber-300 via-yellow-400 to-orange-500',
+        titleBar: 'bg-gradient-to-r from-amber-600 via-yellow-600 to-orange-600',
+        windowContent: 'bg-gradient-to-br from-amber-200 via-yellow-300 to-orange-300',
+        text: 'text-amber-900',
+        link: 'text-amber-800 hover:text-amber-900',
+        button: 'bg-amber-500 hover:bg-amber-400 text-amber-900',
+      };
+    }
+    
+    if (theme === 'dark-vhs') {
+      return {
+        windowFrame: 'bg-gradient-to-br from-gray-600 via-gray-700 to-black',
+        titleBar: 'bg-gradient-to-r from-amber-600 via-yellow-600 to-orange-600',
+        windowContent: 'bg-gradient-to-br from-gray-700 via-black to-gray-800',
+        text: 'text-white',
+        link: 'text-amber-400 hover:text-amber-300',
+        button: 'bg-amber-500 hover:bg-amber-400 text-gray-900',
+      };
+    }
+    
+    if (theme === 'adventure-canyon') {
+      return {
+        windowFrame: 'bg-gradient-to-br from-slate-400 via-blue-500 to-slate-600',
+        titleBar: 'bg-gradient-to-r from-blue-600 via-blue-700 to-slate-700',
+        windowContent: 'bg-gradient-to-br from-slate-600 via-blue-700 to-slate-800',
+        text: 'text-blue-200',
+        link: 'text-blue-300 hover:text-blue-200',
+        button: 'bg-amber-500 hover:bg-amber-400 text-amber-900',
+      };
+    }
+    
+    // Default fallback
+    return {
+      windowFrame: 'bg-gradient-to-br from-amber-300 via-yellow-400 to-orange-500',
+      titleBar: 'bg-gradient-to-r from-amber-600 via-yellow-600 to-orange-600',
+      windowContent: 'bg-gradient-to-br from-amber-200 via-yellow-300 to-orange-300',
+      text: 'text-amber-900',
+      link: 'text-amber-800 hover:text-amber-900',
+      button: 'bg-amber-500 hover:bg-amber-400 text-amber-900',
+    };
+  };
+
+  const styles = getWindowStyles();
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 md:p-8 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="w-full max-w-7xl bg-gradient-to-br from-yellow-900/30 via-amber-900/30 to-orange-900/30 backdrop-blur-xl border border-yellow-500/30 rounded-2xl shadow-[0_0_50px_rgba(234,179,8,0.3)] overflow-hidden">
-        {/* Header */}
-        <div className="bg-black/30 backdrop-blur-sm p-4 flex items-center justify-between border-b border-yellow-500/20">
-          <button
-            onClick={() => navigate('/desktop')}
-            className="flex items-center gap-2 text-yellow-200 hover:text-yellow-400 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-semibold">{t('Back to Desktop')}</span>
-          </button>
-          <h1 className="text-2xl font-bold text-yellow-400">{t('Shop')}</h1>
-          <div className="w-32"></div>
+    <div className={`flex items-center justify-center min-h-screen p-4 sm:p-8 ${theme === 'space-mood' ? 'folder-amber' : ''}`}>
+      <div className={`p-2 border-2 border-black/30 w-full max-w-6xl shadow-2xl rounded-lg ${styles.windowFrame}`}>
+        {/* Title bar */}
+        <div className={`p-2 rounded-t border-b-2 border-black/20 shadow-inner ${styles.titleBar}`}>
+          <div className="flex items-center">
+            <span className="text-white font-pixel text-sm">{t('Shop')}</span>
+          </div>
         </div>
-
-        {/* Content */}
-        <div className="p-6 md:p-12 flex items-center justify-center min-h-[600px]">
-          <div style={{ perspective: '1500px' }}>
+        
+        {/* Window content */}
+        <div className={`p-6 sm:p-12 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent} min-h-[600px] flex flex-col items-center justify-center`}>
+          
+          {/* Floating Image */}
+          <div style={{ perspective: '1500px' }} className="mb-8">
             <div
               onClick={handleFlip}
               style={{
@@ -45,7 +87,7 @@ const Shop = () => {
                 animation: 'float 6s ease-in-out infinite',
               }}
             >
-              {/* Front Side - Image */}
+              {/* Front Side - NUR das Bild */}
               <div
                 style={{
                   position: 'absolute',
@@ -55,20 +97,14 @@ const Shop = () => {
                   WebkitBackfaceVisibility: 'hidden',
                 }}
               >
-                <div className="relative w-full h-full bg-gradient-to-br from-green-700 to-green-800 rounded-xl border-[16px] border-green-600 shadow-2xl hover:shadow-[0_0_60px_rgba(234,179,8,0.8)] transition-shadow duration-300">
-                  <img
-                    src="/lovable-uploads/la-vaca-painting.jpg"
-                    alt="La Vaca - Eine Kuh auf einem Baumstamm"
-                    className="w-full h-full object-contain rounded p-2"
-                  />
-                  <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-2 text-white bg-black/40 backdrop-blur-sm py-2 text-sm font-medium">
-                    <RotateCw className="w-4 h-4" />
-                    <span>{t('Click to flip')}</span>
-                  </div>
-                </div>
+                <img
+                  src="/lovable-uploads/la-vaca-painting.jpg"
+                  alt="La Vaca - Eine Kuh auf einem Baumstamm"
+                  className="w-full h-full object-contain rounded-lg shadow-2xl hover:shadow-[0_0_60px_rgba(234,179,8,0.8)] transition-shadow duration-300"
+                />
               </div>
 
-              {/* Back Side - Story */}
+              {/* Back Side - Die Geschichte */}
               <div
                 style={{
                   position: 'absolute',
@@ -79,32 +115,34 @@ const Shop = () => {
                   transform: 'rotateY(180deg)',
                 }}
               >
-                <div className="w-full h-full bg-gradient-to-br from-green-700 to-green-800 rounded-xl border-[16px] border-green-600 shadow-2xl p-8 flex flex-col justify-between overflow-y-auto">
+                <div className="w-full h-full bg-gradient-to-br from-amber-100 to-yellow-200 rounded-lg shadow-2xl p-6 sm:p-8 flex flex-col justify-between overflow-y-auto border-4 border-amber-400">
                   <div>
-                    <h2 className="text-4xl font-bold text-yellow-300 mb-6 text-center">
+                    <h2 className="text-3xl sm:text-4xl font-bold text-amber-900 mb-6 text-center font-pixel">
                       {t('La Vaca')} 🐄
                     </h2>
-                    <div className="text-white text-base leading-relaxed space-y-4">
+                    <div className="text-amber-900 text-sm sm:text-base leading-relaxed space-y-3">
                       <p>{t('la-vaca-story-1')}</p>
                       <p>{t('la-vaca-story-2')}</p>
                       <p>{t('la-vaca-story-3')}</p>
                       <p>{t('la-vaca-story-4')}</p>
-                      <p className="font-semibold text-yellow-200">{t('la-vaca-story-5')}</p>
+                      <p className="font-semibold">{t('la-vaca-story-5')}</p>
                     </div>
                   </div>
-                  <div className="mt-6 space-y-3">
-                    <button className="w-full bg-yellow-500 hover:bg-yellow-400 text-green-900 font-bold py-4 rounded-lg transition-colors shadow-lg">
+                  <div className="mt-6">
+                    <button className={`w-full font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}>
                       {t('Inquire')}
                     </button>
-                    <div className="flex items-center justify-center gap-2 text-white/70 text-xs">
-                      <RotateCw className="w-3 h-3" />
-                      <span>{t('Click to flip')}</span>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Back to Desktop Link */}
+          <Link to="/desktop" className={`text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
+            <ArrowLeft className="w-5 h-5" />
+            {t('Back to Desktop')}
+          </Link>
         </div>
       </div>
 
