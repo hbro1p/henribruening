@@ -1,11 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import BlinkingCursor from '@/components/BlinkingCursor';
 
 const Shop = () => {
   const { theme, t } = useSettings();
   const [showDetails, setShowDetails] = useState(false);
+  const [displayedText, setDisplayedText] = useState('');
+
+  const fullStory = showDetails ? `${t('La Vaca')} 🐄\n\n${t('la-vaca-story-1')}\n\n${t('la-vaca-story-2')}\n\n${t('la-vaca-story-3')}\n\n${t('la-vaca-story-4')}\n\n${t('la-vaca-story-5')}` : '';
+
+  useEffect(() => {
+    if (showDetails && fullStory) {
+      setDisplayedText('');
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index <= fullStory.length) {
+          setDisplayedText(fullStory.slice(0, index));
+          index++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 30);
+      return () => clearInterval(interval);
+    }
+  }, [showDetails, fullStory]);
 
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
@@ -65,58 +85,41 @@ const Shop = () => {
         </div>
         
         {/* Window content */}
-        <div className={`p-6 sm:p-12 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent} min-h-[600px] flex flex-col items-center justify-center`}>
+        <div className={`p-6 sm:p-12 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent} min-h-[600px] flex flex-col items-center justify-start pt-8`}>
           
-          {/* Floating Image with Overlay */}
-          <div className="relative mb-8" style={{ maxWidth: '350px', margin: '0 auto' }}>
-            {/* Floating Image */}
-            <img
-              src="/lovable-uploads/la-vaca-painting.jpg"
-              alt="La Vaca - Eine Kuh auf einem Baumstamm"
-              onClick={() => setShowDetails(true)}
-              className={`w-full h-auto rounded-lg shadow-2xl cursor-pointer transition-all duration-500 ${
-                showDetails ? 'blur-sm scale-105' : 'hover:shadow-[0_0_60px_rgba(234,179,8,0.8)]'
-              }`}
-              style={{ animation: 'float 6s ease-in-out infinite' }}
-            />
-            
-            {/* Details Overlay */}
-            {showDetails && (
-              <div 
-                className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/70 to-black/80 rounded-lg flex flex-col justify-between p-6 sm:p-8 animate-fade-in backdrop-blur-sm"
-              >
-                <div className="overflow-y-auto">
-                  <h2 className="text-2xl sm:text-3xl font-bold text-amber-400 mb-4 text-center font-pixel">
-                    {t('La Vaca')} 🐄
-                  </h2>
-                  <div className="text-white/90 text-xs sm:text-sm leading-relaxed space-y-2">
-                    <p>{t('la-vaca-story-1')}</p>
-                    <p>{t('la-vaca-story-2')}</p>
-                    <p>{t('la-vaca-story-3')}</p>
-                    <p>{t('la-vaca-story-4')}</p>
-                    <p className="font-semibold">{t('la-vaca-story-5')}</p>
-                  </div>
-                </div>
-                <div className="mt-4 space-y-2">
+          {/* Floating Image - disappears when clicked */}
+          {!showDetails && (
+            <div className="mb-8" style={{ maxWidth: '350px', margin: '0 auto' }}>
+              <img
+                src="/lovable-uploads/la-vaca-painting.jpg"
+                alt="La Vaca - Eine Kuh auf einem Baumstamm"
+                onClick={() => setShowDetails(true)}
+                className="w-full h-auto rounded-lg shadow-2xl cursor-pointer transition-all duration-500 hover:shadow-[0_0_60px_rgba(234,179,8,0.8)]"
+                style={{ animation: 'float 6s ease-in-out infinite' }}
+              />
+            </div>
+          )}
+
+          {/* Typewriter Story */}
+          {showDetails && (
+            <div className="w-full max-w-2xl mx-auto mb-8">
+              <div className={`font-mono text-base sm:text-lg leading-relaxed whitespace-pre-wrap ${styles.text}`}>
+                {displayedText}
+                {displayedText.length < fullStory.length && <BlinkingCursor />}
+              </div>
+              
+              {displayedText.length >= fullStory.length && (
+                <div className="mt-8 space-y-4 animate-fade-in">
                   <button className={`w-full font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}>
                     {t('Inquire')}
                   </button>
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setShowDetails(false);
-                    }}
-                    className="w-full text-white/70 hover:text-white text-sm transition-colors"
-                  >
-                    ← {t('Back to image') || 'Zurück zum Bild'}
-                  </button>
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
 
-          {/* Back to Desktop Link */}
-          <Link to="/desktop" className={`text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
+          {/* Back to Desktop Link - at the bottom */}
+          <Link to="/desktop" className={`mt-auto text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
             <ArrowLeft className="w-5 h-5" />
             {t('Back to Desktop')}
           </Link>
