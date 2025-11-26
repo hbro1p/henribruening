@@ -8,8 +8,16 @@ const Shop = () => {
   const { theme, t } = useSettings();
   const [showDetails, setShowDetails] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const fullStory = showDetails ? `${t('La Vaca')} 🐄\n\n${t('la-vaca-story-1')}\n\n${t('la-vaca-story-2')}\n\n${t('la-vaca-story-3')}\n\n${t('la-vaca-story-4')}\n\n${t('la-vaca-story-5')}` : '';
+
+  // Preload image
+  useEffect(() => {
+    const img = new Image();
+    img.src = "/lovable-uploads/la-vaca-painting.jpg";
+    img.onload = () => setImageLoaded(true);
+  }, []);
 
   useEffect(() => {
     if (showDetails && fullStory) {
@@ -87,36 +95,42 @@ const Shop = () => {
         {/* Window content */}
         <div className={`p-6 sm:p-12 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent} min-h-[700px] flex flex-col items-center justify-start pt-8`}>
           
-          {/* Initial State: Image + Price + Buy Button */}
-          {!showDetails && (
-            <div className="flex flex-col items-center space-y-6">
-              <div style={{ maxWidth: '450px', margin: '0 auto' }}>
-                <img
-                  src="/lovable-uploads/la-vaca-painting.jpg"
-                  alt="La Vaca - Eine Kuh auf einem Baumstamm"
-                  onClick={() => setShowDetails(true)}
-                  className="w-full h-auto rounded-lg shadow-2xl cursor-pointer transition-all duration-500 hover:shadow-[0_0_60px_rgba(234,179,8,0.8)]"
-                  style={{ animation: 'float 6s ease-in-out infinite' }}
-                />
-              </div>
-              <div className="text-center space-y-4">
-                <p className={`text-3xl font-bold font-pixel ${styles.text}`}>€399</p>
-                <button className={`px-8 py-3 rounded-lg transition-colors shadow-lg font-pixel text-lg ${styles.button}`}>
-                  {t('Buy now')}
-                </button>
-              </div>
+          {!imageLoaded ? (
+            <div className="flex items-center justify-center h-[500px]">
+              <div className={`animate-pulse text-2xl font-pixel ${styles.text}`}>Laden...</div>
             </div>
-          )}
-
-          {/* After Click: Two-Column Layout */}
-          {showDetails && (
-            <div className="w-full flex flex-row gap-8 items-start">
-              {/* Left Column: Typewriter Story */}
-              <div className="flex-1">
-                <div className={`font-mono text-base leading-relaxed whitespace-pre-wrap ${styles.text}`}>
-                  {displayedText}
-                  {displayedText.length < fullStory.length && <BlinkingCursor />}
+          ) : (
+            <>
+              {/* Initial State: Image + Price + Buy Button */}
+              {!showDetails && (
+                <div className="flex flex-col items-center space-y-6 animate-fade-in">
+                  <div className="w-full max-w-[450px] aspect-[4/3]">
+                    <img
+                      src="/lovable-uploads/la-vaca-painting.jpg"
+                      alt="La Vaca - Eine Kuh auf einem Baumstamm"
+                      onClick={() => setShowDetails(true)}
+                      className="w-full h-full object-contain rounded-lg shadow-2xl cursor-pointer transition-all duration-500 hover:shadow-[0_0_60px_rgba(234,179,8,0.8)]"
+                      style={{ animation: 'float 6s ease-in-out infinite' }}
+                    />
+                  </div>
+                  <div className="text-center space-y-4">
+                    <p className={`text-3xl font-bold font-pixel ${styles.text}`}>€399</p>
+                    <button className={`px-8 py-3 rounded-lg transition-colors shadow-lg font-pixel text-lg ${styles.button}`}>
+                      {t('Buy now')}
+                    </button>
+                  </div>
                 </div>
+              )}
+
+              {/* After Click: Two-Column Layout */}
+              {showDetails && (
+                <div className="w-full flex flex-row gap-8 items-start animate-fade-in">
+                  {/* Left Column: Typewriter Story */}
+                  <div className="flex-1">
+                    <div className={`font-mono text-sm leading-snug whitespace-pre-wrap ${styles.text}`}>
+                      {displayedText}
+                      {displayedText.length < fullStory.length && <BlinkingCursor />}
+                    </div>
                 
                 {displayedText.length >= fullStory.length && (
                   <div className="mt-6 animate-fade-in space-y-3">
@@ -130,16 +144,18 @@ const Shop = () => {
                 )}
               </div>
               
-              {/* Right Column: Image */}
-              <div className="w-2/5 flex justify-center">
-                <img
-                  src="/lovable-uploads/la-vaca-painting.jpg"
-                  alt="La Vaca"
-                  onClick={() => setShowDetails(false)}
-                  className="w-full max-w-[300px] h-auto rounded-lg shadow-xl cursor-pointer transition-all duration-300 hover:shadow-2xl"
-                />
-              </div>
-            </div>
+                  {/* Right Column: Image */}
+                  <div className="w-2/5 flex justify-center">
+                    <img
+                      src="/lovable-uploads/la-vaca-painting.jpg"
+                      alt="La Vaca"
+                      onClick={() => setShowDetails(false)}
+                      className="w-full max-w-[300px] h-auto rounded-lg shadow-xl cursor-pointer transition-all duration-300 hover:shadow-2xl"
+                    />
+                  </div>
+                </div>
+              )}
+            </>
           )}
 
           {/* Back to Desktop Link - at the bottom */}
