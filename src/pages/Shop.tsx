@@ -76,9 +76,8 @@ const Shop = () => {
             <div
               onClick={handleFlip}
               style={{
-                width: '700px',
-                height: '520px',
-                maxWidth: '90vw',
+                maxWidth: '500px',
+                width: '100%',
                 position: 'relative',
                 transformStyle: 'preserve-3d',
                 transition: 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
@@ -90,9 +89,7 @@ const Shop = () => {
               {/* Front Side - NUR das Bild */}
               <div
                 style={{
-                  position: 'absolute',
                   width: '100%',
-                  height: '100%',
                   backfaceVisibility: 'hidden',
                   WebkitBackfaceVisibility: 'hidden',
                 }}
@@ -100,7 +97,7 @@ const Shop = () => {
                 <img
                   src="/lovable-uploads/la-vaca-painting.jpg"
                   alt="La Vaca - Eine Kuh auf einem Baumstamm"
-                  className="w-full h-full object-contain rounded-lg shadow-2xl hover:shadow-[0_0_60px_rgba(234,179,8,0.8)] transition-shadow duration-300"
+                  className="w-full h-auto rounded-lg shadow-2xl hover:shadow-[0_0_60px_rgba(234,179,8,0.8)] transition-shadow duration-300"
                 />
               </div>
 
