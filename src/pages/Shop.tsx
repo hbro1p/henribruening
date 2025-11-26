@@ -93,14 +93,14 @@ const Shop = () => {
         </div>
         
         {/* Window content */}
-        <div className={`p-6 sm:p-12 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent} min-h-[700px] flex flex-col items-center justify-start pt-8`}>
+        <div className={`p-6 sm:p-12 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent} min-h-[700px] flex flex-col justify-between`}>
           
           {!imageLoaded ? (
             <div className="flex items-center justify-center h-[500px]">
               <div className={`animate-pulse text-2xl font-pixel ${styles.text}`}>Laden...</div>
             </div>
           ) : (
-            <>
+            <div className="flex-1 flex items-start justify-center w-full">
               {/* Initial State: Image + Price + Buy Button */}
               {!showDetails && (
                 <div className="flex flex-col items-center space-y-6 animate-fade-in">
@@ -122,11 +122,11 @@ const Shop = () => {
                 </div>
               )}
 
-              {/* After Click: Two-Column Layout */}
+              {/* After Click: Two-Column Layout - Fixed Height */}
               {showDetails && (
-                <div className="w-full flex flex-row gap-8 items-start animate-fade-in">
+                <div className="w-full flex flex-row gap-8 items-start animate-fade-in h-[500px]">
                   {/* Left Column: Typewriter Story */}
-                  <div className="flex-1">
+                  <div className="flex-1 h-full overflow-y-auto flex flex-col">
                     <div className={`font-mono text-sm leading-snug whitespace-pre-wrap ${styles.text}`}>
                       {displayedText}
                       {displayedText.length < fullStory.length && <BlinkingCursor />}
@@ -163,11 +163,11 @@ const Shop = () => {
                   </div>
                 </div>
               )}
-            </>
+            </div>
           )}
 
-          {/* Back to Desktop Link - at the bottom */}
-          <Link to="/desktop" className={`mt-12 text-lg underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
+          {/* Back to Desktop Link - fixed at the bottom */}
+          <Link to="/desktop" className={`mt-auto text-lg underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
             <ArrowLeft className="w-5 h-5" />
             {t('Back to Desktop')}
           </Link>
