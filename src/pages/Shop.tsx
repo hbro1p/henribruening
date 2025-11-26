@@ -154,23 +154,12 @@ const Shop = () => {
 
               {/* After Click: Two-Column Layout - Fixed Height */}
               {showDetails && (
-                <div className="w-full flex flex-row gap-8 items-start animate-fade-in h-[500px]">
+                <div className="w-full flex flex-col sm:flex-row gap-6 sm:gap-8 items-start animate-fade-in h-[500px]">
                   {/* Left Column: Typewriter Story */}
                   <div className="flex-1 h-full overflow-y-auto flex flex-col">
-                    <div className={`font-mono text-sm leading-snug whitespace-pre-wrap ${styles.text}`}>
+                    <div className={`font-mono text-base sm:text-sm leading-relaxed sm:leading-snug whitespace-pre-wrap ${styles.text}`}>
                       {displayedText}
                       {displayedText.length < fullStory.length && <BlinkingCursor />}
-                    </div>
-                
-                    <div className={`mt-6 space-y-3 transition-opacity duration-500 ${
-                      displayedText.length >= fullStory.length ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                    }`}>
-                      <button 
-                        onClick={handleBuyNow}
-                        className={`w-full font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}
-                      >
-                        €399 - {t('Buy now')}
-                      </button>
                     </div>
                   </div>
               
