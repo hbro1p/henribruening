@@ -26,6 +26,7 @@ const translations = {
     'Radio': 'Radio',
     'Pictures': 'Pictures',
     'Challenges': 'Challenges',
+    'Shop': 'Shop',
     'Idea Lab': 'Idea Lab',
     'Game.exe': 'Game.exe',
     'Language': 'Language:',
@@ -118,6 +119,15 @@ const translations = {
     // Contact page
     'Get In Touch': 'Get In Touch',
     'Let\'s connect via Instagram or Email.': 'Let\'s connect via Instagram or Email.',
+    // Shop page
+    'La Vaca': 'La Vaca',
+    'Click to flip': 'Click to flip',
+    'Inquire': 'Inquire',
+    'la-vaca-story-1': 'A cow that got lost on a log. She is now in the middle of nowhere - on a lake, on a sea, one doesn\'t know exactly.',
+    'la-vaca-story-2': 'What we do know: The cow used to live on the green frame, the meadow. Now she has somehow ended up in the blue, in the middle of nowhere.',
+    'la-vaca-story-3': 'That\'s how it is with our lives too. Sometimes we get lost, don\'t know exactly where we are, but know exactly where we come from.',
+    'la-vaca-story-4': 'But the cow doesn\'t look unhappy. On the contrary - she is probably happy about the opportunity to experience an adventure.',
+    'la-vaca-story-5': 'Maybe we should try that too. 🌊',
     // Desktop apps
     'TV': 'TV',
     'Challenge': 'Challenge',
@@ -148,6 +158,7 @@ const translations = {
     'Radio': 'Radio',
     'Pictures': 'Bilder',
     'Challenges': 'Challenges',
+    'Shop': 'Shop',
     'Idea Lab': 'Ideenlabor',
     'Game.exe': 'Spiel.exe',
     'Language': 'Sprache:',
@@ -240,6 +251,15 @@ const translations = {
     // Contact page
     'Get In Touch': 'Kontakt Aufnehmen',
     'Let\'s connect via Instagram or Email.': 'Lass uns über Instagram oder E-Mail in Kontakt treten.',
+    // Shop page
+    'La Vaca': 'La Vaca',
+    'Click to flip': 'Klicke zum Umdrehen',
+    'Inquire': 'Anfragen',
+    'la-vaca-story-1': 'Eine Kuh, die sich verirrt hat auf einem Baumstamm. Sie ist nun mitten im Nirgendwo - auf einem See, auf einem Meer, man weiß es nicht so genau.',
+    'la-vaca-story-2': 'Was man aber weiß: Die Kuh lebte früher auf dem grünen Rahmen, der Wiese. Jetzt ist sie irgendwie ins Blaue gekommen, ins Nirgendwo.',
+    'la-vaca-story-3': 'So geht es mit unserem Leben auch. Manchmal verirren wir uns, wissen nicht genau wo wir sind, aber wissen ganz genau wo wir herkommen.',
+    'la-vaca-story-4': 'Die Kuh sieht aber nicht unglücklich aus. Im Gegenteil - sie freut sich wahrscheinlich über die Möglichkeit, mal ein Abenteuer zu erleben.',
+    'la-vaca-story-5': 'Vielleicht sollten wir das auch mal probieren. 🌊',
     // Desktop apps
     'TV': 'TV',
     'Challenge': 'Challenge',
@@ -270,6 +290,7 @@ const translations = {
     'Radio': 'Radio',
     'Pictures': 'Fotos',
     'Challenges': 'Desafíos',
+    'Shop': 'Tienda',
     'Idea Lab': 'Laboratorio de Ideas',
     'Game.exe': 'Juego.exe',
     'Language': 'Idioma:',
@@ -362,6 +383,19 @@ const translations = {
     
     // Additional translations for Spanish
     'Back': 'Atrás',
+    // Contact page
+    'Get In Touch': 'Ponerse en Contacto',
+    'Let\'s connect via Instagram or Email.': 'Conectemos a través de Instagram o correo electrónico.',
+    // Shop page
+    'La Vaca': 'La Vaca',
+    'Click to flip': 'Haz clic para voltear',
+    'Inquire': 'Consultar',
+    'la-vaca-story-1': 'Una vaca que se perdió en un tronco. Ahora está en medio de la nada - en un lago, en un mar, no se sabe exactamente.',
+    'la-vaca-story-2': 'Lo que sí sabemos: La vaca vivía antes en el marco verde, el prado. Ahora de alguna manera ha llegado al azul, a la nada.',
+    'la-vaca-story-3': 'Así es con nuestras vidas también. A veces nos perdemos, no sabemos exactamente dónde estamos, pero sabemos exactamente de dónde venimos.',
+    'la-vaca-story-4': 'Pero la vaca no parece infeliz. Al contrario - probablemente esté feliz por la oportunidad de vivir una aventura.',
+    'la-vaca-story-5': 'Quizás deberíamos intentarlo también. 🌊',
+    
     
     // IdeaLab Complete Spanish translations
     'Idea Laboratory': 'Laboratorio de Ideas',

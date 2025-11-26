@@ -17,6 +17,7 @@ import Contact from "./pages/Contact";
 import Settings from "./pages/Settings";
 import Radio from "./pages/Radio";
 import Challenges from "./pages/Challenges";
+import Shop from "./pages/Shop";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/radio" element={<Radio />} />
                 <Route path="/challenges" element={<Challenges />} />
+                <Route path="/shop" element={<Shop />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
