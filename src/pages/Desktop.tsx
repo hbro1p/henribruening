@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
 import TvApp from '@/components/TvApp';
 import MiniMusicPlayer from '@/components/MiniMusicPlayer';
-import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock, Star } from 'lucide-react';
+import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useThemeMusic } from '@/hooks/useThemeMusic';
 import { useTvMusicControl } from '@/hooks/useTvMusicControl';
@@ -50,13 +50,6 @@ const Desktop = () => {
             icon={Clock} 
             label={t('Challenge')}
             to="/challenges"
-          />
-
-          {/* Rating/Idea App Icon */}
-          <DesktopIcon 
-            icon={Star} 
-            label={language === 'deutsch' ? 'Ideen-Labor' : 'Idea Lab'}
-            to="/idea-lab"
           />
 
           <DesktopIcon icon={User} label={t('About Me')} to="/about" />
