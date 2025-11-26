@@ -3,6 +3,8 @@ import { useSettings } from '@/contexts/SettingsContext';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import BlinkingCursor from '@/components/BlinkingCursor';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 const Shop = () => {
   const { theme, t } = useSettings();
@@ -19,6 +21,15 @@ const Shop = () => {
     img.onload = () => setImageLoaded(true);
   }, []);
 
+  // Check for success parameter from Stripe redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('success') === 'true') {
+      toast.success(t('language') === 'deutsch' ? 'Vielen Dank für deinen Kauf! Wir melden uns bald bei dir.' : t('language') === 'español' ? '¡Gracias por tu compra! Nos pondremos en contacto pronto.' : 'Thank you for your purchase! We will get in touch soon.');
+      window.history.replaceState({}, '', '/shop');
+    }
+  }, [t]);
+
   useEffect(() => {
     if (showDetails && fullStory) {
       setDisplayedText('');
@@ -34,6 +45,22 @@ const Shop = () => {
       return () => clearInterval(interval);
     }
   }, [showDetails, fullStory]);
+
+  const handleBuyNow = async () => {
+    try {
+      const { data, error } = await supabase.functions.invoke('create-la-vaca-checkout', {
+        body: { origin: window.location.origin }
+      });
+      
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, '_blank');
+      }
+    } catch (error) {
+      console.error('Error creating checkout:', error);
+      toast.error(t('language') === 'deutsch' ? 'Fehler beim Laden der Kaufseite. Bitte versuche es erneut.' : t('language') === 'español' ? 'Error al cargar la página de compra. Inténtalo de nuevo.' : 'Error loading checkout page. Please try again.');
+    }
+  };
 
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
@@ -114,8 +141,11 @@ const Shop = () => {
                     />
                   </div>
                   <div className="text-center space-y-4">
-                    <p className={`text-3xl font-bold font-pixel ${styles.text}`}>€399</p>
-                    <button className={`px-8 py-3 rounded-lg transition-colors shadow-lg font-pixel text-lg ${styles.button}`}>
+                    <p className={`text-3xl font-bold font-pixel ${styles.text}`}>„La Vaca" - €399</p>
+                    <button 
+                      onClick={handleBuyNow}
+                      className={`px-8 py-3 rounded-lg transition-colors shadow-lg font-pixel text-lg ${styles.button}`}
+                    >
                       {t('Buy now')}
                     </button>
                   </div>
@@ -135,20 +165,29 @@ const Shop = () => {
                     <div className={`mt-6 space-y-3 transition-opacity duration-500 ${
                       displayedText.length >= fullStory.length ? 'opacity-100' : 'opacity-0 pointer-events-none'
                     }`}>
-                      <button className={`w-full font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}>
+                      <button 
+                        onClick={handleBuyNow}
+                        className={`w-full font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}
+                      >
                         €399 - {t('Buy now')}
                       </button>
                     </div>
                   </div>
               
-                  {/* Right Column: Image + Artist Credit */}
-                  <div className="w-2/5 flex flex-col items-center gap-3">
+                  {/* Right Column: Image + Button + Artist Credit */}
+                  <div className="w-2/5 flex flex-col items-center gap-4">
                     <img
                       src="/lovable-uploads/la-vaca-painting.jpg"
                       alt="La Vaca"
                       onClick={() => setShowDetails(false)}
                       className="w-full max-w-[300px] h-auto rounded-lg shadow-xl cursor-pointer transition-all duration-300 hover:shadow-2xl"
                     />
+                    <button 
+                      onClick={handleBuyNow}
+                      className={`w-full max-w-[300px] font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}
+                    >
+                      €399 - {t('Buy now')}
+                    </button>
                     <p className={`text-sm text-center ${styles.text} opacity-80`}>
                       Ein Kunstwerk von{' '}
                       <a 
