@@ -8,8 +8,12 @@ const Shop = () => {
   const navigate = useNavigate();
   const [isFlipped, setIsFlipped] = useState(false);
 
+  const handleFlip = () => {
+    setIsFlipped(!isFlipped);
+  };
+
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 md:p-8">
+    <div className="min-h-screen w-full flex items-center justify-center p-4 md:p-8 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="w-full max-w-7xl bg-gradient-to-br from-yellow-900/30 via-amber-900/30 to-orange-900/30 backdrop-blur-xl border border-yellow-500/30 rounded-2xl shadow-[0_0_50px_rgba(234,179,8,0.3)] overflow-hidden">
         {/* Header */}
         <div className="bg-black/30 backdrop-blur-sm p-4 flex items-center justify-between border-b border-yellow-500/20">
@@ -25,11 +29,10 @@ const Shop = () => {
         </div>
 
         {/* Content */}
-        <div className="p-6 md:p-12 flex items-center justify-center min-h-[500px]">
-          <div className="perspective-container" style={{ perspective: '1500px' }}>
+        <div className="p-6 md:p-12 flex items-center justify-center min-h-[600px]">
+          <div style={{ perspective: '1500px' }}>
             <div
-              className="flip-card"
-              onClick={() => setIsFlipped(!isFlipped)}
+              onClick={handleFlip}
               style={{
                 width: '700px',
                 height: '520px',
@@ -44,7 +47,6 @@ const Shop = () => {
             >
               {/* Front Side - Image */}
               <div
-                className="flip-card-front"
                 style={{
                   position: 'absolute',
                   width: '100%',
@@ -55,9 +57,9 @@ const Shop = () => {
               >
                 <div className="relative w-full h-full bg-gradient-to-br from-green-700 to-green-800 rounded-xl border-[16px] border-green-600 shadow-2xl hover:shadow-[0_0_60px_rgba(234,179,8,0.8)] transition-shadow duration-300">
                   <img
-                    src="/lovable-uploads/la-vaca.jpg"
-                    alt="La Vaca"
-                    className="w-full h-full object-cover rounded"
+                    src="/lovable-uploads/la-vaca-painting.jpg"
+                    alt="La Vaca - Eine Kuh auf einem Baumstamm"
+                    className="w-full h-full object-contain rounded p-2"
                   />
                   <div className="absolute bottom-4 left-0 right-0 flex items-center justify-center gap-2 text-white bg-black/40 backdrop-blur-sm py-2 text-sm font-medium">
                     <RotateCw className="w-4 h-4" />
@@ -68,7 +70,6 @@ const Shop = () => {
 
               {/* Back Side - Story */}
               <div
-                className="flip-card-back"
                 style={{
                   position: 'absolute',
                   width: '100%',
