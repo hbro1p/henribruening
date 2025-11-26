@@ -51,13 +51,27 @@ export const useGlobalAuth = () => {
       ...sessionData,
       lastActivity: Date.now()
     };
+    // Save to both sessionStorage and localStorage for persistence
     sessionStorage.setItem('globalAuth', JSON.stringify(updatedSession));
+    localStorage.setItem('globalAuth', JSON.stringify(updatedSession));
   };
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const globalAuth = sessionStorage.getItem('globalAuth');
+        // Try sessionStorage first, then localStorage for persistent sessions
+        let globalAuth = sessionStorage.getItem('globalAuth');
+        
+        if (!globalAuth) {
+          // Check localStorage for persistent session
+          globalAuth = localStorage.getItem('globalAuth');
+          
+          // If found in localStorage, restore to sessionStorage
+          if (globalAuth) {
+            sessionStorage.setItem('globalAuth', globalAuth);
+          }
+        }
+        
         if (!globalAuth) {
           setIsAuthenticated(false);
           setIsLoading(false);
@@ -104,7 +118,16 @@ export const useGlobalAuth = () => {
 
     // Update activity on user interactions
     const updateActivity = async () => {
-      const globalAuth = sessionStorage.getItem('globalAuth');
+      let globalAuth = sessionStorage.getItem('globalAuth');
+      
+      // Fallback to localStorage if not in sessionStorage
+      if (!globalAuth) {
+        globalAuth = localStorage.getItem('globalAuth');
+        if (globalAuth) {
+          sessionStorage.setItem('globalAuth', globalAuth);
+        }
+      }
+      
       if (globalAuth) {
         try {
           const sessionData: SessionData = JSON.parse(globalAuth);
