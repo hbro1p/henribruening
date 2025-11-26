@@ -9,7 +9,7 @@ import { useTvMusicControl } from '@/hooks/useTvMusicControl';
 import { useGlobalMusicPlayer } from '@/hooks/useGlobalMusicPlayer';
 
 const Desktop = () => {
-  const { t, language, theme } = useSettings();
+  const { t, language } = useSettings();
   const [isTvOpen, setIsTvOpen] = useState(false);
   
   // Initialize theme music and TV music control
@@ -18,41 +18,13 @@ const Desktop = () => {
   
   const { isPlaying, musicFiles } = useGlobalMusicPlayer();
 
-  // Generate floating particles for space-mood theme
-  const particles = theme === 'space-mood' ? Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    size: Math.random() * 4 + 2,
-    left: Math.random() * 100,
-    top: Math.random() * 100,
-    delay: Math.random() * 5,
-    duration: Math.random() * 10 + 10
-  })) : [];
+  // Desktop component rendered
 
   return (
     <>
-      <div className="min-h-screen w-full flex items-start justify-start p-6 relative parallax-container">
-        {/* Floating particles for space-mood theme */}
-        {theme === 'space-mood' && (
-          <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-            {particles.map((particle) => (
-              <div
-                key={particle.id}
-                className="absolute rounded-full bg-white/30"
-                style={{
-                  width: `${particle.size}px`,
-                  height: `${particle.size}px`,
-                  left: `${particle.left}%`,
-                  top: `${particle.top}%`,
-                  animation: `float-particle ${particle.duration}s ease-in-out infinite`,
-                  animationDelay: `${particle.delay}s`,
-                  filter: 'blur(1px)',
-                }}
-              />
-            ))}
-          </div>
-        )}
+      <div className="min-h-screen w-full flex items-start justify-start p-6">
         {/* Consistent grid layout with proper spacing */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 w-full relative z-10">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-6 w-full">
           <DesktopIcon icon={Folder} label={t('My Pictures')} to="/pictures" />
           <DesktopIcon icon={Video} label={t('My Videos')} to="/videos" />
           <DesktopIcon icon={Code} label={t('My Projects')} to="/projects" />
