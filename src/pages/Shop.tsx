@@ -132,26 +132,34 @@ const Shop = () => {
                       {displayedText.length < fullStory.length && <BlinkingCursor />}
                     </div>
                 
-                {displayedText.length >= fullStory.length && (
-                  <div className="mt-6 animate-fade-in space-y-3">
-                    <button className={`w-full font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}>
-                      €399 - {t('Buy now')}
-                    </button>
-                    <p className={`text-center text-sm ${styles.text} opacity-80`}>
-                      {t('Artist credit')} <a href="https://www.instagram.com/henribruening" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-100 transition-opacity">Instagram</a>
-                    </p>
+                    <div className={`mt-6 space-y-3 transition-opacity duration-500 ${
+                      displayedText.length >= fullStory.length ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                    }`}>
+                      <button className={`w-full font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}>
+                        €399 - {t('Buy now')}
+                      </button>
+                    </div>
                   </div>
-                )}
-              </div>
               
-                  {/* Right Column: Image */}
-                  <div className="w-2/5 flex justify-center">
+                  {/* Right Column: Image + Artist Credit */}
+                  <div className="w-2/5 flex flex-col items-center gap-3">
                     <img
                       src="/lovable-uploads/la-vaca-painting.jpg"
                       alt="La Vaca"
                       onClick={() => setShowDetails(false)}
                       className="w-full max-w-[300px] h-auto rounded-lg shadow-xl cursor-pointer transition-all duration-300 hover:shadow-2xl"
                     />
+                    <p className={`text-sm text-center ${styles.text} opacity-80`}>
+                      Ein Kunstwerk von{' '}
+                      <a 
+                        href="https://www.instagram.com/henribruening" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="underline hover:opacity-100 transition-opacity"
+                      >
+                        Henribruening
+                      </a>
+                    </p>
                   </div>
                 </div>
               )}
@@ -159,7 +167,7 @@ const Shop = () => {
           )}
 
           {/* Back to Desktop Link - at the bottom */}
-          <Link to="/desktop" className={`mt-auto text-xl underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
+          <Link to="/desktop" className={`mt-12 text-lg underline transition-colors flex items-center gap-2 font-pixel drop-shadow-sm ${styles.link}`}>
             <ArrowLeft className="w-5 h-5" />
             {t('Back to Desktop')}
           </Link>
