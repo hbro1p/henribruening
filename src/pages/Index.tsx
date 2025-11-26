@@ -17,7 +17,6 @@ const Landing = () => {
   const [passwordError, setPasswordError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const { isAuthenticated, isLoading: authLoading } = useGlobalAuth();
   const { language, setLanguage, t } = useSettings();
   const navigate = useNavigate();
@@ -102,20 +101,12 @@ const Landing = () => {
           authenticated: true,
           expiresAt: expiresAt,
           lastActivity: Date.now(),
-          fingerprint: fingerprint,
-          rememberMe: rememberMe
+          fingerprint: fingerprint
         };
         
-        // Always store in sessionStorage
+        // Store in both sessionStorage and localStorage for persistence across browser restarts
         sessionStorage.setItem('globalAuth', JSON.stringify(sessionData));
-        
-        // Only store in localStorage if "Remember me" is checked
-        if (rememberMe) {
-          localStorage.setItem('globalAuth', JSON.stringify(sessionData));
-        } else {
-          // Clear localStorage if user doesn't want to be remembered
-          localStorage.removeItem('globalAuth');
-        }
+        localStorage.setItem('globalAuth', JSON.stringify(sessionData));
         
         // Dispatch custom event to notify auth hook of the change
         window.dispatchEvent(new CustomEvent('globalAuthChange', { detail: sessionData }));
@@ -273,22 +264,6 @@ const Landing = () => {
                       <p className="text-red-800 font-pixel text-center">{passwordError}</p>
                     </div>
                   )}
-                  
-                  <div className="flex items-center gap-3 px-2">
-                    <input
-                      type="checkbox"
-                      id="rememberMe"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                      className="w-4 h-4 border-2 border-black cursor-pointer accent-blue-500"
-                    />
-                    <label 
-                      htmlFor="rememberMe" 
-                      className="text-black font-pixel text-sm cursor-pointer select-none"
-                    >
-                      {language === 'deutsch' ? 'Eingeloggt bleiben' : language === 'español' ? 'Mantener sesión' : 'Remember me'}
-                    </label>
-                  </div>
                   
                   <button
                     type="submit"

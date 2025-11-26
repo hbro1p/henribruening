@@ -7,7 +7,6 @@ interface SessionData {
   expiresAt: number;
   lastActivity: number;
   fingerprint?: string;
-  rememberMe?: boolean;
 }
 
 export const useGlobalAuth = () => {
@@ -52,29 +51,23 @@ export const useGlobalAuth = () => {
       ...sessionData,
       lastActivity: Date.now()
     };
-    // Always save to sessionStorage
+    // Save to both sessionStorage and localStorage for persistence
     sessionStorage.setItem('globalAuth', JSON.stringify(updatedSession));
-    
-    // Only save to localStorage if user chose "Remember me"
-    if (updatedSession.rememberMe) {
-      localStorage.setItem('globalAuth', JSON.stringify(updatedSession));
-    }
+    localStorage.setItem('globalAuth', JSON.stringify(updatedSession));
   };
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Try sessionStorage first
+        // Try sessionStorage first, then localStorage for persistent sessions
         let globalAuth = sessionStorage.getItem('globalAuth');
-        let fromLocalStorage = false;
         
         if (!globalAuth) {
-          // Check localStorage for persistent session (only if user chose "Remember me")
+          // Check localStorage for persistent session
           globalAuth = localStorage.getItem('globalAuth');
           
           // If found in localStorage, restore to sessionStorage
           if (globalAuth) {
-            fromLocalStorage = true;
             sessionStorage.setItem('globalAuth', globalAuth);
           }
         }
@@ -86,16 +79,6 @@ export const useGlobalAuth = () => {
         }
 
         const sessionData: SessionData = JSON.parse(globalAuth);
-        
-        // If session came from localStorage, verify rememberMe was set
-        if (fromLocalStorage && !sessionData.rememberMe) {
-          // Invalid persistent session, clean up
-          localStorage.removeItem('globalAuth');
-          sessionStorage.removeItem('globalAuth');
-          setIsAuthenticated(false);
-          setIsLoading(false);
-          return;
-        }
         
         if (await isSessionValid(sessionData)) {
           setIsAuthenticated(true);
@@ -137,23 +120,11 @@ export const useGlobalAuth = () => {
     const updateActivity = async () => {
       let globalAuth = sessionStorage.getItem('globalAuth');
       
-      // Fallback to localStorage only if rememberMe was enabled
+      // Fallback to localStorage if not in sessionStorage
       if (!globalAuth) {
         globalAuth = localStorage.getItem('globalAuth');
         if (globalAuth) {
-          try {
-            const data = JSON.parse(globalAuth);
-            // Verify rememberMe flag before restoring
-            if (data.rememberMe) {
-              sessionStorage.setItem('globalAuth', globalAuth);
-            } else {
-              // Invalid persistent session
-              localStorage.removeItem('globalAuth');
-              return;
-            }
-          } catch {
-            return;
-          }
+          sessionStorage.setItem('globalAuth', globalAuth);
         }
       }
       
