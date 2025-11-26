@@ -113,16 +113,19 @@ const Shop = () => {
             <div className="w-full flex flex-row gap-8 items-start">
               {/* Left Column: Typewriter Story */}
               <div className="flex-1">
-                <div className={`font-mono text-sm leading-snug whitespace-pre-wrap ${styles.text}`}>
+                <div className={`font-mono text-base leading-relaxed whitespace-pre-wrap ${styles.text}`}>
                   {displayedText}
                   {displayedText.length < fullStory.length && <BlinkingCursor />}
                 </div>
                 
                 {displayedText.length >= fullStory.length && (
-                  <div className="mt-6 animate-fade-in">
+                  <div className="mt-6 animate-fade-in space-y-3">
                     <button className={`w-full font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}>
                       €399 - {t('Buy now')}
                     </button>
+                    <p className={`text-center text-sm ${styles.text} opacity-80`}>
+                      {t('Artist credit')} <a href="https://www.instagram.com/henribruening" target="_blank" rel="noopener noreferrer" className="underline hover:opacity-100 transition-opacity">Instagram</a>
+                    </p>
                   </div>
                 )}
               </div>
