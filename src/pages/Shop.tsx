@@ -46,20 +46,8 @@ const Shop = () => {
     }
   }, [showDetails, fullStory]);
 
-  const handleBuyNow = async () => {
-    try {
-      const { data, error } = await supabase.functions.invoke('create-la-vaca-checkout', {
-        body: { origin: window.location.origin }
-      });
-      
-      if (error) throw error;
-      if (data?.url) {
-        window.open(data.url, '_blank');
-      }
-    } catch (error) {
-      console.error('Error creating checkout:', error);
-      toast.error(t('language') === 'deutsch' ? 'Fehler beim Laden der Kaufseite. Bitte versuche es erneut.' : t('language') === 'español' ? 'Error al cargar la página de compra. Inténtalo de nuevo.' : 'Error loading checkout page. Please try again.');
-    }
+  const handleBuyNow = () => {
+    window.open('https://www.etsy.com/listing/4414180329', '_blank');
   };
 
   const getWindowStyles = () => {
@@ -134,14 +122,14 @@ const Shop = () => {
                   <div className="w-full max-w-[450px] aspect-[4/3]">
                     <img
                       src="/lovable-uploads/la-vaca-painting.jpg"
-                      alt="La Vaca - Eine Kuh auf einem Baumstamm"
+                      alt="The Silly Cow - Eine Kuh auf einem Baumstamm"
                       onClick={() => setShowDetails(true)}
                       className="w-full h-full object-contain rounded-lg shadow-2xl cursor-pointer transition-all duration-500 hover:shadow-[0_0_60px_rgba(234,179,8,0.8)]"
                       style={{ animation: 'float 6s ease-in-out infinite' }}
                     />
                   </div>
                   <div className="text-center space-y-4">
-                    <p className={`text-3xl font-bold font-pixel ${styles.text}`}>„La Vaca" - €399</p>
+                    <p className={`text-3xl font-bold font-pixel ${styles.text}`}>„The Silly Cow" - €399</p>
                     <button 
                       onClick={handleBuyNow}
                       className={`px-8 py-3 rounded-lg transition-colors shadow-lg font-pixel text-lg ${styles.button}`}
@@ -167,7 +155,7 @@ const Shop = () => {
                   <div className="w-2/5 flex flex-col items-center gap-4">
                     <img
                       src="/lovable-uploads/la-vaca-painting.jpg"
-                      alt="La Vaca"
+                      alt="The Silly Cow"
                       onClick={() => setShowDetails(false)}
                       className="w-full max-w-[300px] h-auto rounded-lg shadow-xl cursor-pointer transition-all duration-300 hover:shadow-2xl"
                     />
