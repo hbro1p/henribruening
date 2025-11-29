@@ -166,14 +166,14 @@ const Shop = () => {
                       €499 - {t('Buy now')}
                     </button>
                     <p className={`text-sm text-center ${styles.text} opacity-80`}>
-                      Ein Kunstwerk von{' '}
+                      {t('Artist credit').split('@')[0]}
                       <a 
                         href="https://www.instagram.com/henribruening" 
                         target="_blank" 
                         rel="noopener noreferrer" 
                         className="underline hover:opacity-100 transition-opacity"
                       >
-                        Henribruening
+                        {t('Artist credit').split('@')[1]?.replace('Henribruening', 'Henribruening')}
                       </a>
                     </p>
                   </div>
