@@ -6,7 +6,7 @@ import { useSettings } from '@/contexts/SettingsContext';
 import ProgressBar from '@/components/ProgressBar';
 import BlinkingCursor from '@/components/BlinkingCursor';
 import { supabase } from '@/integrations/supabase/client';
-import { Eye, EyeOff, X } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { validateInput, securityMonitor } from '@/utils/securityMonitor';
 import { clientRateLimiter } from '@/utils/rateLimiter';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -324,8 +324,7 @@ const Landing = () => {
           <div className="mt-24 animate-fade-in flex justify-center" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
             <button
               onClick={() => setShowContactPopup(true)}
-              className="w-20 h-20 rounded-full overflow-hidden border-2 border-white/50 shadow-lg hover:scale-110 transition-transform duration-300 cursor-pointer animate-pulse"
-              style={{ animationDuration: '3s' }}
+              className="w-20 h-20 rounded-full overflow-hidden border-2 border-white/50 shadow-lg hover:scale-110 transition-transform duration-300 cursor-pointer"
             >
               <img 
                 src={henriProfile} 
@@ -338,12 +337,6 @@ const Landing = () => {
           {/* Contact Popup Dialog */}
           <Dialog open={showContactPopup} onOpenChange={setShowContactPopup}>
             <DialogContent className="bg-white/90 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] max-w-sm p-0 gap-0">
-              <button
-                onClick={() => setShowContactPopup(false)}
-                className="absolute right-2 top-2 rounded-sm opacity-70 hover:opacity-100 transition-opacity"
-              >
-                <X className="h-4 w-4" />
-              </button>
               <div className="p-6">
                 <p className="text-center font-pixel text-sm md:text-base mb-4 leading-relaxed">
                   {t('askingIsFree')}
@@ -352,7 +345,7 @@ const Landing = () => {
                   href="https://ig.me/m/Henribruening"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full bg-primary text-primary-foreground hover:bg-primary/90 font-pixel py-3 px-6 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 text-center"
+                  className="block w-full bg-blue-500 text-white hover:bg-blue-600 font-pixel py-3 px-6 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 text-center"
                   onClick={() => setShowContactPopup(false)}
                 >
                   {t('message')}
