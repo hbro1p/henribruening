@@ -129,7 +129,7 @@ const Shop = () => {
                     />
                   </div>
                   <div className="text-center space-y-4">
-                    <p className={`text-3xl font-bold font-pixel ${styles.text}`}>„The Silly Cow" - €399</p>
+                    <p className={`text-3xl font-bold font-pixel ${styles.text}`}>„The Silly Cow" - €499</p>
                     <button 
                       onClick={handleBuyNow}
                       className={`px-8 py-3 rounded-lg transition-colors shadow-lg font-pixel text-lg ${styles.button}`}
@@ -163,7 +163,7 @@ const Shop = () => {
                       onClick={handleBuyNow}
                       className={`w-full max-w-[300px] font-bold py-3 rounded-lg transition-colors shadow-lg font-pixel ${styles.button}`}
                     >
-                      €399 - {t('Buy now')}
+                      €499 - {t('Buy now')}
                     </button>
                     <p className={`text-sm text-center ${styles.text} opacity-80`}>
                       Ein Kunstwerk von{' '}
