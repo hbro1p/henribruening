@@ -6,9 +6,11 @@ import { useSettings } from '@/contexts/SettingsContext';
 import ProgressBar from '@/components/ProgressBar';
 import BlinkingCursor from '@/components/BlinkingCursor';
 import { supabase } from '@/integrations/supabase/client';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, X } from 'lucide-react';
 import { validateInput, securityMonitor } from '@/utils/securityMonitor';
 import { clientRateLimiter } from '@/utils/rateLimiter';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import henriProfile from '@/assets/henri-profile.jpg';
 
 const Landing = () => {
   const [loading, setLoading] = useState(true);
@@ -17,6 +19,7 @@ const Landing = () => {
   const [passwordError, setPasswordError] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showContactPopup, setShowContactPopup] = useState(false);
   const { isAuthenticated, isLoading: authLoading } = useGlobalAuth();
   const { language, setLanguage, t } = useSettings();
   const navigate = useNavigate();
@@ -317,33 +320,46 @@ const Landing = () => {
             </div>
           </div>
 
-          {/* Cloud-shaped message box */}
-          <div className="mt-16 animate-fade-in" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
-            <div className="relative max-w-xs mx-auto">
-              {/* Cloud shape using overlapping circles */}
-              <div className="relative bg-white/95 rounded-[50%] px-8 py-6 shadow-lg">
-                {/* Cloud bumps */}
-                <div className="absolute -top-3 left-1/4 w-12 h-12 bg-white/95 rounded-full"></div>
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-white/95 rounded-full"></div>
-                <div className="absolute -top-3 right-1/4 w-10 h-10 bg-white/95 rounded-full"></div>
-                
-                {/* Content */}
-                <div className="relative z-10">
-                  <p className="text-center font-pixel text-xs leading-relaxed mb-3">
-                    {t('askingIsFree')}
-                  </p>
-                  <a
-                    href="https://ig.me/m/Henribruening"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block w-full bg-white hover:bg-gray-50 font-pixel py-2 px-4 text-xs rounded-full shadow-sm hover:shadow-md transition-all duration-200 text-center border border-gray-200"
-                  >
-                    {t('message')}
-                  </a>
-                </div>
-              </div>
-            </div>
+          {/* Circular profile photo button */}
+          <div className="mt-24 animate-fade-in flex justify-center" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
+            <button
+              onClick={() => setShowContactPopup(true)}
+              className="w-20 h-20 rounded-full overflow-hidden border-2 border-white/50 shadow-lg hover:scale-110 transition-transform duration-300 cursor-pointer animate-pulse"
+              style={{ animationDuration: '3s' }}
+            >
+              <img 
+                src={henriProfile} 
+                alt="Henri" 
+                className="w-full h-full object-cover"
+              />
+            </button>
           </div>
+
+          {/* Contact Popup Dialog */}
+          <Dialog open={showContactPopup} onOpenChange={setShowContactPopup}>
+            <DialogContent className="bg-white/90 border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,0.2)] max-w-sm p-0 gap-0">
+              <button
+                onClick={() => setShowContactPopup(false)}
+                className="absolute right-2 top-2 rounded-sm opacity-70 hover:opacity-100 transition-opacity"
+              >
+                <X className="h-4 w-4" />
+              </button>
+              <div className="p-6">
+                <p className="text-center font-pixel text-sm md:text-base mb-4 leading-relaxed">
+                  {t('askingIsFree')}
+                </p>
+                <a
+                  href="https://ig.me/m/Henribruening"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full bg-primary text-primary-foreground hover:bg-primary/90 font-pixel py-3 px-6 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 text-center"
+                  onClick={() => setShowContactPopup(false)}
+                >
+                  {t('message')}
+                </a>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       )}
     </div>
