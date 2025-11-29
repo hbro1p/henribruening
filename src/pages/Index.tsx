@@ -318,19 +318,30 @@ const Landing = () => {
           </div>
 
           {/* Cloud-shaped message box */}
-          <div className="mt-8 animate-fade-in" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)] p-6 md:p-8 border-4 border-black max-w-md mx-auto">
-              <p className="text-center font-pixel text-sm md:text-base mb-4">
-                {t('askingIsFree')}
-              </p>
-              <a
-                href="https://ig.me/m/Henribruening"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full bg-primary text-primary-foreground hover:bg-primary/90 font-pixel py-3 px-6 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 text-center"
-              >
-                {t('message')}
-              </a>
+          <div className="mt-16 animate-fade-in" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
+            <div className="relative max-w-xs mx-auto">
+              {/* Cloud shape using overlapping circles */}
+              <div className="relative bg-white/95 rounded-[50%] px-8 py-6 shadow-lg">
+                {/* Cloud bumps */}
+                <div className="absolute -top-3 left-1/4 w-12 h-12 bg-white/95 rounded-full"></div>
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 w-14 h-14 bg-white/95 rounded-full"></div>
+                <div className="absolute -top-3 right-1/4 w-10 h-10 bg-white/95 rounded-full"></div>
+                
+                {/* Content */}
+                <div className="relative z-10">
+                  <p className="text-center font-pixel text-xs leading-relaxed mb-3">
+                    {t('askingIsFree')}
+                  </p>
+                  <a
+                    href="https://ig.me/m/Henribruening"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block w-full bg-white hover:bg-gray-50 font-pixel py-2 px-4 text-xs rounded-full shadow-sm hover:shadow-md transition-all duration-200 text-center border border-gray-200"
+                  >
+                    {t('message')}
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

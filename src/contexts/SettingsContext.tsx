@@ -148,7 +148,7 @@ const translations = {
     'Reset': 'Reset',
     'New Challenge': 'New Challenge',
     'View on': 'View on',
-    'askingIsFree': 'Asking is free :)',
+    'askingIsFree': 'Want the password? Or a site like this? Just ask :)',
     'message': 'Message',
   },
   deutsch: {
@@ -284,7 +284,7 @@ const translations = {
     'Reset': 'Zurücksetzen',
     'New Challenge': 'Neue Challenge',
     'View on': 'Ansehen auf',
-    'askingIsFree': 'Fragen kostet nichts :)',
+    'askingIsFree': 'Du willst das Passwort? Oder so eine Seite? Frag mich :)',
     'message': 'Nachricht',
   },
   español: {
@@ -472,7 +472,7 @@ const translations = {
     'Reset': 'Reiniciar',
     'New Challenge': 'Nuevo Desafío',
     'View on': 'Ver en',
-    'askingIsFree': 'Preguntar no cuesta nada :)',
+    'askingIsFree': '¿Quieres la contraseña? ¿O una página así? Pregúntame :)',
     'message': 'Mensaje',
   }
 };
