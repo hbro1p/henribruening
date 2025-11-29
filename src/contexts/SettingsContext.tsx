@@ -148,6 +148,8 @@ const translations = {
     'Reset': 'Reset',
     'New Challenge': 'New Challenge',
     'View on': 'View on',
+    'askingIsFree': 'Asking is free :)',
+    'message': 'Message',
   },
   deutsch: {
     'My Pictures': 'Meine Bilder',
@@ -282,6 +284,8 @@ const translations = {
     'Reset': 'Zurücksetzen',
     'New Challenge': 'Neue Challenge',
     'View on': 'Ansehen auf',
+    'askingIsFree': 'Fragen kostet nichts :)',
+    'message': 'Nachricht',
   },
   español: {
     'My Pictures': 'Mis Fotos',
@@ -449,6 +453,27 @@ const translations = {
     'Wann sind Sie verfügbar?': '¿Cuándo estás disponible?',
     'Hilfesuchende finden': 'Encontrar personas que buscan ayuda',
     'Interactive Prototype': 'Prototipo Interactivo',
+    
+    // Desktop apps
+    'TV': 'TV',
+    'Challenge': 'Desafío',
+    // Challenge app
+    '1-Minute Challenge': 'Desafío de 1 Minuto',
+    'Ready for your daily mini-challenge?': '¿Listo para tu mini-desafío diario?',
+    'Short tasks for more focus and variety in everyday life': 'Tareas cortas para más enfoque y variedad en la vida cotidiana',
+    'Your Challenge:': 'Tu Desafío:',
+    'Challenge Started!': '¡Desafío Iniciado!',
+    'Challenge Complete!': '¡Desafío Completado!',
+    'Great job! You\'re building amazing habits!': '¡Excelente trabajo! ¡Estás construyendo hábitos increíbles!',
+    'Challenge completed!': '¡Desafío completado!',
+    'You\'re building great habits!': '¡Estás construyendo grandes hábitos!',
+    'Start Challenge': 'Iniciar Desafío',
+    'Done!': '¡Listo!',
+    'Reset': 'Reiniciar',
+    'New Challenge': 'Nuevo Desafío',
+    'View on': 'Ver en',
+    'askingIsFree': 'Preguntar no cuesta nada :)',
+    'message': 'Mensaje',
   }
 };
 
