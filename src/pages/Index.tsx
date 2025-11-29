@@ -242,8 +242,8 @@ const Landing = () => {
                       value={password}
                       onChange={handlePasswordChange}
                       disabled={isVerifying}
-                      className={`w-full p-4 bg-gray-100 border-2 ${passwordError ? 'border-red-600' : 'border-black'} text-black text-center font-pixel placeholder:text-gray-500 focus:outline-none focus:bg-white transition-all duration-300 disabled:opacity-50 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2)]`}
-                      placeholder="Enter password..."
+                      className={`w-full p-4 bg-gray-100 border-2 ${passwordError ? 'border-red-600' : 'border-black'} text-black text-center font-pixel ${passwordError ? 'placeholder:text-red-600' : 'placeholder:text-gray-500'} focus:outline-none focus:bg-white transition-all duration-300 disabled:opacity-50 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.2)]`}
+                      placeholder={passwordError ? (language === 'deutsch' ? 'Falsches Passwort!' : language === 'español' ? '¡Contraseña incorrecta!' : 'Wrong password!') : (language === 'deutsch' ? 'Passwort eingeben...' : language === 'español' ? 'Ingresar contraseña...' : 'Enter password...')}
                       autoComplete="new-password"
                       data-form-type="other"
                       spellCheck="false"
@@ -257,11 +257,6 @@ const Landing = () => {
                     >
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
-                    {passwordError && (
-                      <p className="absolute -bottom-6 left-0 right-0 text-red-600 font-pixel text-xs text-center animate-fade-in">
-                        {passwordError}
-                      </p>
-                    )}
                   </div>
                   
                   <button
