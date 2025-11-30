@@ -194,16 +194,28 @@ const Landing = () => {
   };
 
   const handleInstagramMessage = () => {
-    // Try to open Instagram app first
-    window.location.href = 'instagram://user?username=Henribruening';
+    const username = 'Henribruening';
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isAndroid = /Android/.test(navigator.userAgent);
     
-    // Fallback to web link after 500ms if app doesn't open
-    setTimeout(() => {
-      window.open('https://ig.me/m/Henribruening', '_blank');
-    }, 500);
-    
-    // Close the popup
+    // Close popup first
     setShowContactPopup(false);
+    
+    if (isAndroid) {
+      // Android Intent - most reliable for Android
+      window.location.href = `intent://instagram.com/_u/${username}#Intent;scheme=https;package=com.instagram.android;end`;
+    } else if (isIOS) {
+      // iOS URI Scheme
+      window.location.href = `instagram://user?username=${username}`;
+      
+      // Fallback after delay
+      setTimeout(() => {
+        window.open(`https://instagram.com/${username}`, '_blank');
+      }, 1500);
+    } else {
+      // Desktop - open web
+      window.open(`https://ig.me/m/${username}`, '_blank');
+    }
   };
 
   // Show loading while auth is being determined
