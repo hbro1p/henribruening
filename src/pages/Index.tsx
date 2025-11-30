@@ -195,11 +195,19 @@ const Landing = () => {
 
   const handleInstagramMessage = () => {
     const username = 'Henribruening';
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    const isAndroid = /Android/.test(navigator.userAgent);
+    const userAgent = navigator.userAgent || navigator.vendor;
+    const isInstagramBrowser = /Instagram/.test(userAgent);
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+    const isAndroid = /Android/.test(userAgent);
     
     // Close popup first
     setShowContactPopup(false);
+    
+    // If in Instagram in-app browser, force open in Instagram app
+    if (isInstagramBrowser) {
+      window.location.href = `instagram://user?username=${username}`;
+      return;
+    }
     
     if (isAndroid) {
       // Android Intent - most reliable for Android
