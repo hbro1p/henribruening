@@ -25,6 +25,13 @@ const Landing = () => {
   const navigate = useNavigate();
 
   // Handle authenticated user redirect - only redirect if authenticated and not loading
+  // Preload profile image
+  useEffect(() => {
+    const img = new Image();
+    img.src = henriProfile;
+  }, []);
+
+  // Handle authenticated user redirect - only redirect if authenticated and not loading
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
       navigate('/desktop', { replace: true });
