@@ -364,13 +364,15 @@ const Landing = () => {
           <div className="mt-24 animate-fade-in flex justify-center" style={{ animationDelay: '0.6s', animationFillMode: 'both' }}>
             <button
               onClick={() => setShowContactPopup(true)}
-              className="w-20 h-20 rounded-full overflow-hidden border-2 border-white/50 shadow-lg hover:scale-110 transition-transform duration-300 cursor-pointer"
+              className="w-20 h-20 rounded-full overflow-hidden border-2 border-white/50 shadow-lg hover:scale-110 transition-transform duration-300 cursor-pointer relative"
             >
               <img 
                 src={henriProfile} 
                 alt="Henri" 
                 className="w-full h-full object-cover"
               />
+              {/* Notification Badge */}
+              <div className="absolute top-0 right-0 w-5 h-5 bg-red-500 border-2 border-white rounded-full animate-pulse shadow-lg"></div>
             </button>
           </div>
 
