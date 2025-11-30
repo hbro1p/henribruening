@@ -193,6 +193,19 @@ const Landing = () => {
     }
   };
 
+  const handleInstagramMessage = () => {
+    // Try to open Instagram app first
+    window.location.href = 'instagram://user?username=Henribruening';
+    
+    // Fallback to web link after 500ms if app doesn't open
+    setTimeout(() => {
+      window.open('https://ig.me/m/Henribruening', '_blank');
+    }, 500);
+    
+    // Close the popup
+    setShowContactPopup(false);
+  };
+
   // Show loading while auth is being determined
   if (authLoading) {
     return (
@@ -348,15 +361,12 @@ const Landing = () => {
                 <p className="text-center font-pixel text-sm md:text-base mb-4 leading-relaxed">
                   {t('askingIsFree')}
                 </p>
-                <a
-                  href="https://ig.me/m/Henribruening"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full bg-blue-500 text-white hover:bg-blue-600 font-pixel py-3 px-6 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 text-center"
-                  onClick={() => setShowContactPopup(false)}
+                <button
+                  onClick={handleInstagramMessage}
+                  className="w-full bg-blue-500 text-white hover:bg-blue-600 font-pixel py-3 px-6 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 text-center"
                 >
                   {t('message')}
-                </a>
+                </button>
               </div>
             </DialogContent>
           </Dialog>
