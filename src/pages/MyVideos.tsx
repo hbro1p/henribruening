@@ -71,7 +71,7 @@ const MyVideos = () => {
     },
     {
       id: '4',
-      title: 'ThisTimeFr',
+      title: 'Henri.abenteuer',
       description: {
         en: 'My storytelling identity for vlogs, creative clips, and travel adventures',
         de: 'Meine Storytelling-Identität für Vlogs, kreative Clips und Reiseabenteuer',
@@ -79,7 +79,7 @@ const MyVideos = () => {
       },
       links: [
         {
-          url: 'https://www.tiktok.com/@thistimefrr',
+          url: 'https://www.tiktok.com/@henri.abenteuer',
           label: 'TikTok'
         },
         {

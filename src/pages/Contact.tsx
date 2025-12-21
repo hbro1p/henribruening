@@ -97,11 +97,11 @@ const Contact = () => {
               </a>
 
               <a
-                href="mailto:mail@henribrueningportfolio.com"
+                href="mailto:henribruening@yahoo.com"
                 className={`flex items-center justify-center gap-3 px-4 py-3 rounded-lg font-pixel transition-all duration-200 hover:scale-105 active:scale-95 ${styles.button}`}
               >
                 <Mail className="w-5 h-5" />
-                <span>mail@henribrueningportfolio.com</span>
+                <span>henribruening@yahoo.com</span>
               </a>
             </div>
 
