@@ -62,6 +62,36 @@ export type Database = {
         }
         Relationships: []
       }
+      strava_challenge_videos: {
+        Row: {
+          created_at: string
+          day_number: number
+          id: string
+          tiktok_thumbnail: string | null
+          tiktok_title: string | null
+          tiktok_url: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          day_number: number
+          id?: string
+          tiktok_thumbnail?: string | null
+          tiktok_title?: string | null
+          tiktok_url: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          day_number?: number
+          id?: string
+          tiktok_thumbnail?: string | null
+          tiktok_title?: string | null
+          tiktok_url?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       themes: {
         Row: {
           color: string | null
