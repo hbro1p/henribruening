@@ -6,7 +6,7 @@ const corsHeaders = {
 }
 
 // Challenge configuration
-const CHALLENGE_START_DATE = '2026-01-01'
+const CHALLENGE_START_DATE = '2025-12-14'
 const TOTAL_DAYS = 365
 const MIN_DISTANCE_KM = 5
 

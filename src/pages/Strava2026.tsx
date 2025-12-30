@@ -106,23 +106,22 @@ const Strava2026 = () => {
   const fetchChallengeData = async () => {
     setLoading(true);
     try {
-      // Fetch summary
-      const { data: summaryData, error: summaryError } = await supabase.functions.invoke('strava-challenge', {
-        body: {},
-      });
-      
-      if (summaryError) throw summaryError;
-      
-      // Parse the response - it comes as the direct response
-      const summaryUrl = new URL('https://uwwxkkkzkwiftbekezvl.supabase.co/functions/v1/strava-challenge?action=summary');
-      const summaryRes = await fetch(summaryUrl.toString());
+      // Fetch summary using direct fetch
+      const summaryRes = await fetch('https://uwwxkkkzkwiftbekezvl.supabase.co/functions/v1/strava-challenge?action=summary');
+      if (!summaryRes.ok) {
+        throw new Error(`Summary fetch failed: ${summaryRes.status}`);
+      }
       const summaryJson = await summaryRes.json();
+      console.log('Summary data:', summaryJson);
       setSummary(summaryJson);
 
       // Fetch calendar
-      const calendarUrl = new URL('https://uwwxkkkzkwiftbekezvl.supabase.co/functions/v1/strava-challenge?action=calendar');
-      const calendarRes = await fetch(calendarUrl.toString());
+      const calendarRes = await fetch('https://uwwxkkkzkwiftbekezvl.supabase.co/functions/v1/strava-challenge?action=calendar');
+      if (!calendarRes.ok) {
+        throw new Error(`Calendar fetch failed: ${calendarRes.status}`);
+      }
       const calendarJson = await calendarRes.json();
+      console.log('Calendar data:', calendarJson);
       setCalendar(calendarJson);
 
       if (summaryJson.todayDayNumber > 0) {
@@ -132,7 +131,7 @@ const Strava2026 = () => {
       console.error('Error fetching challenge data:', error);
       toast({
         title: 'Error',
-        description: 'Failed to load challenge data. The challenge starts January 1, 2026.',
+        description: 'Failed to load challenge data. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -237,7 +236,7 @@ Zeitdruck ist brutal: Ich muss jeden Tag ran — keine Ausreden.`,
       loading: { en: 'Loading challenge data...', deutsch: 'Lade Challenge-Daten...' },
       noActivity: { en: 'No activity recorded yet', deutsch: 'Noch keine Aktivität aufgezeichnet' },
       noVideo: { en: 'No video linked yet', deutsch: 'Noch kein Video verknüpft' },
-      challengeNotStarted: { en: 'Challenge starts January 1, 2026!', deutsch: 'Challenge startet am 1. Januar 2026!' },
+      challengeNotStarted: { en: 'Challenge started December 14, 2025!', deutsch: 'Challenge startete am 14. Dezember 2025!' },
     };
     return texts[key]?.[language === 'deutsch' ? 'deutsch' : 'en'] || key;
   };
