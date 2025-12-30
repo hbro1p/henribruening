@@ -39,7 +39,7 @@ async function getAccessToken(): Promise<string> {
   }
 
   console.log('Refreshing Strava access token...')
-  
+
   const response = await fetch('https://www.strava.com/oauth/token', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -54,7 +54,7 @@ async function getAccessToken(): Promise<string> {
   if (!response.ok) {
     const errorText = await response.text()
     console.error('Strava token refresh failed:', errorText)
-    throw new Error(`Failed to refresh Strava token: ${response.status}`)
+    throw new Error(`Failed to refresh Strava token (${response.status}). ${errorText}`)
   }
 
   const data: StravaTokenResponse = await response.json()
@@ -64,8 +64,10 @@ async function getAccessToken(): Promise<string> {
 
 // Fetch activities from Strava
 async function fetchStravaActivities(accessToken: string, after: number, before: number): Promise<StravaActivity[]> {
-  console.log(`Fetching Strava activities from ${new Date(after * 1000).toISOString()} to ${new Date(before * 1000).toISOString()}`)
-  
+  console.log(
+    `Fetching Strava activities from ${new Date(after * 1000).toISOString()} to ${new Date(before * 1000).toISOString()}`
+  )
+
   const allActivities: StravaActivity[] = []
   let page = 1
   const perPage = 200
@@ -84,14 +86,21 @@ async function fetchStravaActivities(accessToken: string, after: number, before:
     if (!response.ok) {
       const errorText = await response.text()
       console.error('Strava activities fetch failed:', errorText)
-      throw new Error(`Failed to fetch Strava activities: ${response.status}`)
+
+      if (response.status === 401 && errorText.includes('activity:read_permission')) {
+        throw new Error(
+          `Strava token is missing activity read permissions. Re-authorize the Strava app with scope "activity:read_all" (or at least "activity:read") and update STRAVA_REFRESH_TOKEN. Strava said: ${errorText}`
+        )
+      }
+
+      throw new Error(`Failed to fetch Strava activities (${response.status}). ${errorText}`)
     }
 
     const activities: StravaActivity[] = await response.json()
     console.log(`Page ${page}: fetched ${activities.length} activities`)
-    
+
     if (activities.length === 0) break
-    
+
     allActivities.push(...activities)
     if (activities.length < perPage) break
     page++
@@ -107,7 +116,7 @@ function getDayNumber(date: Date): number {
   startDate.setHours(0, 0, 0, 0)
   const targetDate = new Date(date)
   targetDate.setHours(0, 0, 0, 0)
-  
+
   const diffTime = targetDate.getTime() - startDate.getTime()
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
   return diffDays + 1 // Day 1 is the start date
@@ -143,24 +152,22 @@ function isQualifyingActivity(activity: StravaActivity): boolean {
 function findActivityForDay(activities: StravaActivity[], dayNumber: number): StravaActivity | null {
   const targetDate = getDateFromDayNumber(dayNumber)
   const targetDateStr = targetDate.toISOString().split('T')[0]
-  
-  const dayActivities = activities.filter(a => {
+
+  const dayActivities = activities.filter((a) => {
     const activityDate = a.start_date_local.split('T')[0]
     return activityDate === targetDateStr && isQualifyingActivity(a)
   })
 
   if (dayActivities.length === 0) return null
-  
+
   // Return the one with longest distance
-  return dayActivities.reduce((best, current) => 
-    current.distance > best.distance ? current : best
-  )
+  return dayActivities.reduce((best, current) => (current.distance > best.distance ? current : best))
 }
 
 // Build done map for all days
 function buildDoneMap(activities: StravaActivity[], todayDayNumber: number): boolean[] {
   const doneMap: boolean[] = []
-  
+
   for (let day = 1; day <= TOTAL_DAYS; day++) {
     if (day > todayDayNumber) {
       // Future day - not done yet
@@ -170,7 +177,7 @@ function buildDoneMap(activities: StravaActivity[], todayDayNumber: number): boo
       doneMap.push(activity !== null)
     }
   }
-  
+
   return doneMap
 }
 
@@ -182,8 +189,21 @@ Deno.serve(async (req) => {
 
   try {
     const url = new URL(req.url)
-    const action = url.searchParams.get('action') || 'summary'
-    const dayParam = url.searchParams.get('day')
+
+    // Support BOTH:
+    // - GET requests with query params (public fetch)
+    // - POST requests with JSON body (supabase.functions.invoke)
+    let action = url.searchParams.get('action') || 'summary'
+    let dayParam = url.searchParams.get('day')
+
+    if (req.method !== 'GET') {
+      const contentType = req.headers.get('content-type') || ''
+      if (contentType.includes('application/json')) {
+        const body = await req.json().catch(() => ({}))
+        if (typeof body?.action === 'string') action = body.action
+        if (body?.day != null) dayParam = String(body.day)
+      }
+    }
 
     console.log(`Strava Challenge API: action=${action}, day=${dayParam}`)
 
@@ -210,12 +230,11 @@ Deno.serve(async (req) => {
       // GET /api/challenge/summary
       const doneMap = buildDoneMap(activities, todayDayNumber)
       const daysDone = doneMap.filter(Boolean).length
-      const daysRemaining = Math.max(0, todayDayNumber - daysDone) + (TOTAL_DAYS - todayDayNumber)
       const pct = todayDayNumber > 0 ? Math.round((daysDone / todayDayNumber) * 100) : 0
 
       // Get today's activity
       const todayActivity = todayDayNumber > 0 ? findActivityForDay(activities, todayDayNumber) : null
-      
+
       const response = {
         startDateISO: CHALLENGE_START_DATE,
         totalDays: TOTAL_DAYS,
@@ -224,11 +243,13 @@ Deno.serve(async (req) => {
         pct,
         todayDayNumber,
         todayDone: todayActivity !== null,
-        todayStats: todayActivity ? {
-          distanceKm: Math.round(todayActivity.distance / 10) / 100,
-          movingTimeSec: todayActivity.moving_time,
-          activityName: todayActivity.name,
-        } : null,
+        todayStats: todayActivity
+          ? {
+              distanceKm: Math.round(todayActivity.distance / 10) / 100,
+              movingTimeSec: todayActivity.moving_time,
+              activityName: todayActivity.name,
+            }
+          : null,
       }
 
       console.log('Summary response:', response)
@@ -256,7 +277,7 @@ Deno.serve(async (req) => {
     if (action === 'day') {
       // GET /api/challenge/day?day=42
       const dayNumber = parseInt(dayParam || '1', 10)
-      
+
       if (dayNumber < 1 || dayNumber > TOTAL_DAYS) {
         return new Response(JSON.stringify({ error: 'Invalid day number' }), {
           status: 400,
@@ -278,18 +299,22 @@ Deno.serve(async (req) => {
         dayNumber,
         dateISO: targetDate.toISOString().split('T')[0],
         done: activity !== null,
-        strava: activity ? {
-          distanceKm: Math.round(activity.distance / 10) / 100,
-          movingTimeSec: activity.moving_time,
-          paceSecPerKm: Math.round(activity.moving_time / (activity.distance / 1000)),
-          elevationM: Math.round(activity.total_elevation_gain),
-          activityName: activity.name,
-        } : null,
-        tiktok: videoData ? {
-          title: videoData.tiktok_title || `Day ${dayNumber} – 5K done`,
-          url: videoData.tiktok_url,
-          thumbnail: videoData.tiktok_thumbnail,
-        } : null,
+        strava: activity
+          ? {
+              distanceKm: Math.round(activity.distance / 10) / 100,
+              movingTimeSec: activity.moving_time,
+              paceSecPerKm: Math.round(activity.moving_time / (activity.distance / 1000)),
+              elevationM: Math.round(activity.total_elevation_gain),
+              activityName: activity.name,
+            }
+          : null,
+        tiktok: videoData
+          ? {
+              title: videoData.tiktok_title || `Day ${dayNumber} – 5K done`,
+              url: videoData.tiktok_url,
+              thumbnail: videoData.tiktok_thumbnail,
+            }
+          : null,
       }
 
       console.log('Day response:', response)
@@ -302,12 +327,15 @@ Deno.serve(async (req) => {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
-
   } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    const status = message.includes('missing activity read permissions') ? 401 : 500
+
     console.error('Strava Challenge API error:', error)
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
+    return new Response(JSON.stringify({ error: message }), {
+      status,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     })
   }
 })
+

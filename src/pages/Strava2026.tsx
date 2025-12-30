@@ -103,35 +103,53 @@ const Strava2026 = () => {
     fetchChallengeData();
   }, []);
 
+  const extractEdgeFunctionError = async (err: any): Promise<string | null> => {
+    const res: Response | undefined = err?.context;
+    if (!res || typeof res.headers?.get !== 'function') return null;
+
+    try {
+      const contentType = (res.headers.get('Content-Type') ?? '').split(';')[0].trim();
+      if (contentType === 'application/json') {
+        const json = await res.json().catch(() => null);
+        if (json?.error && typeof json.error === 'string') return json.error;
+        if (json) return JSON.stringify(json);
+      }
+
+      const text = await res.text().catch(() => '');
+      return text || null;
+    } catch {
+      return null;
+    }
+  };
+
   const fetchChallengeData = async () => {
     setLoading(true);
     try {
-      // Fetch summary using direct fetch
-      const summaryRes = await fetch('https://uwwxkkkzkwiftbekezvl.supabase.co/functions/v1/strava-challenge?action=summary');
-      if (!summaryRes.ok) {
-        throw new Error(`Summary fetch failed: ${summaryRes.status}`);
-      }
-      const summaryJson = await summaryRes.json();
-      console.log('Summary data:', summaryJson);
-      setSummary(summaryJson);
+      const { data: summaryData, error: summaryError } = await supabase.functions.invoke('strava-challenge', {
+        body: { action: 'summary' },
+      });
+      if (summaryError) throw summaryError;
+      setSummary(summaryData as ChallengeSummary);
 
-      // Fetch calendar
-      const calendarRes = await fetch('https://uwwxkkkzkwiftbekezvl.supabase.co/functions/v1/strava-challenge?action=calendar');
-      if (!calendarRes.ok) {
-        throw new Error(`Calendar fetch failed: ${calendarRes.status}`);
-      }
-      const calendarJson = await calendarRes.json();
-      console.log('Calendar data:', calendarJson);
-      setCalendar(calendarJson);
+      const { data: calendarData, error: calendarError } = await supabase.functions.invoke('strava-challenge', {
+        body: { action: 'calendar' },
+      });
+      if (calendarError) throw calendarError;
+      setCalendar(calendarData as CalendarData);
 
-      if (summaryJson.todayDayNumber > 0) {
-        setSelectedDay(summaryJson.todayDayNumber);
-      }
+      const today = (summaryData as ChallengeSummary | null)?.todayDayNumber ?? 0;
+      if (today > 0) setSelectedDay(today);
     } catch (error: any) {
       console.error('Error fetching challenge data:', error);
+
+      const edgeError = await extractEdgeFunctionError(error);
+      const description =
+        edgeError ??
+        (typeof error?.message === 'string' ? error.message : 'Failed to load challenge data. Please try again.');
+
       toast({
         title: 'Error',
-        description: 'Failed to load challenge data. Please try again.',
+        description,
         variant: 'destructive',
       });
     } finally {
@@ -142,16 +160,19 @@ const Strava2026 = () => {
   const fetchDayDetails = async (day: number) => {
     setDayLoading(true);
     try {
-      const url = new URL(`https://uwwxkkkzkwiftbekezvl.supabase.co/functions/v1/strava-challenge?action=day&day=${day}`);
-      const res = await fetch(url.toString());
-      const json = await res.json();
-      setDayDetails(json);
+      const { data, error } = await supabase.functions.invoke('strava-challenge', {
+        body: { action: 'day', day },
+      });
+      if (error) throw error;
+      setDayDetails(data as DayDetails);
       setView('day');
     } catch (error: any) {
       console.error('Error fetching day details:', error);
+
+      const edgeError = await extractEdgeFunctionError(error);
       toast({
         title: 'Error',
-        description: 'Failed to load day details',
+        description: edgeError ?? 'Failed to load day details',
         variant: 'destructive',
       });
     } finally {
