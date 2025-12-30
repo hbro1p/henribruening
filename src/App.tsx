@@ -18,6 +18,7 @@ import Settings from "./pages/Settings";
 import Radio from "./pages/Radio";
 import Challenges from "./pages/Challenges";
 import Shop from "./pages/Shop";
+import Strava2026 from "./pages/Strava2026";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +44,7 @@ const App = () => (
                 <Route path="/radio" element={<Radio />} />
                 <Route path="/challenges" element={<Challenges />} />
                 <Route path="/shop" element={<Shop />} />
+                <Route path="/strava2026" element={<Strava2026 />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

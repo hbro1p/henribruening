@@ -2,3 +2,6 @@ project_id = "uwwxkkkzkwiftbekezvl"
 
 [functions.create-la-vaca-checkout]
 verify_jwt = false
+
+[functions.strava-challenge]
+verify_jwt = false
