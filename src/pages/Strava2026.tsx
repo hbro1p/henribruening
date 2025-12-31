@@ -5,7 +5,7 @@ import { useSettings } from '@/contexts/SettingsContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import AnimatedCounter from '@/components/AnimatedCounter';
-import stravaLogo from '@/assets/strava-logo.png';
+import stravaLogo from '@/assets/strava-logo-new.png';
 
 interface ChallengeSummary {
   startDateISO: string;
