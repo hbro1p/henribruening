@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
 import TvApp from '@/components/TvApp';
 import MiniMusicPlayer from '@/components/MiniMusicPlayer';
-import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock, ShoppingBag, TrendingUp } from 'lucide-react';
+import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock, ShoppingBag } from 'lucide-react';
+import stravaLogo from '@/assets/strava-logo.png';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useThemeMusic } from '@/hooks/useThemeMusic';
 import { useTvMusicControl } from '@/hooks/useTvMusicControl';
@@ -61,7 +62,7 @@ const Desktop = () => {
 
           {/* Strava 2026 App Icon */}
           <DesktopIcon 
-            icon={TrendingUp} 
+            imageSrc={stravaLogo}
             label="Strava 2026"
             to="/strava2026"
           />
