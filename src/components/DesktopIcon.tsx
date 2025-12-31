@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { useSettings } from '@/contexts/SettingsContext';
 
 interface DesktopIconProps {
-  icon: React.ElementType;
+  icon?: React.ElementType;
+  imageSrc?: string;
   label: string;
   to?: string;
   onClick?: () => void;
@@ -117,7 +118,7 @@ const getIconStyles = (label: string, theme: string) => {
   };
 };
 
-const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to, onClick }) => {
+const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, imageSrc, label, to, onClick }) => {
   const { theme } = useSettings();
   const styles = getIconStyles(label, theme);
   
@@ -125,10 +126,11 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, label, to, onClic
     <>
       <div className="w-20 h-20 flex items-center justify-center">
         <div className={`relative w-16 h-16 bg-gradient-to-br ${styles.gradient} rounded border-2 ${styles.border} ${styles.hoverBorder} ${styles.shadow} transition-all duration-200 flex items-center justify-center`}>
-          {/* Icon */}
-          
-          {/* Icon */}
-          <Icon className="w-8 h-8 text-white drop-shadow-sm relative z-10" />
+          {imageSrc ? (
+            <img src={imageSrc} alt={label} className="w-10 h-10 object-contain relative z-10" />
+          ) : Icon ? (
+            <Icon className="w-8 h-8 text-white drop-shadow-sm relative z-10" />
+          ) : null}
         </div>
       </div>
       
