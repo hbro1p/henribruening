@@ -376,7 +376,7 @@ const Strava2026 = () => {
                   aspect-square rounded-lg sm:rounded-xl flex flex-col items-center justify-center
                   font-pixel transition-all duration-200 text-xs sm:text-base
                   ${bgClass}
-                  ${isToday ? 'ring-1 sm:ring-2 ring-yellow-500' : ''}
+                  ${isToday ? 'ring-1 sm:ring-2 ring-black' : ''}
                   ${isInChallenge && !isFuture ? 'hover:scale-105 cursor-pointer hover:shadow-lg' : ''}
                   ${!isInChallenge ? 'cursor-default' : ''}
                 `}
