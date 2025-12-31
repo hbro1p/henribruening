@@ -640,22 +640,6 @@ const Strava2026 = () => {
           </div>
         )}
 
-        {/* Video */}
-        {dayDetails.tiktok && (
-          <div className={`p-4 rounded-xl ${styles.cardBg}`}>
-            <h3 className={`text-lg font-pixel font-bold mb-3 ${styles.text}`}>🎬 {getText('videoProof')}</h3>
-            <p className={`font-pixel mb-3 ${styles.textMuted}`}>{dayDetails.tiktok.title}</p>
-            <a
-              href={dayDetails.tiktok.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg font-pixel transition-all hover:scale-105 ${styles.button}`}
-            >
-              {getText('openTikTok')}
-              <ExternalLink className="w-4 h-4" />
-            </a>
-          </div>
-        )}
 
         {/* No activity message */}
         {!dayDetails.strava && (
