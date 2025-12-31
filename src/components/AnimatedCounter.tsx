@@ -1,38 +1,44 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 interface AnimatedCounterProps {
   value: number;
   duration?: number;
   className?: string;
+  decimals?: number;
 }
 
 const AnimatedCounter: React.FC<AnimatedCounterProps> = ({ 
   value, 
   duration = 2000,
-  className = '' 
+  className = '',
+  decimals = 0
 }) => {
-  const [count, setCount] = useState(0);
+  const [displayValue, setDisplayValue] = useState(0);
+  const previousValue = useRef(0);
 
   useEffect(() => {
-    if (value === 0) return;
+    if (value === previousValue.current) return;
     
-    let startTime: number | null = null;
+    const startValue = previousValue.current;
+    const endValue = value;
+    const startTime = performance.now();
     let animationFrame: number;
 
     const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
-      const progress = Math.min((currentTime - startTime) / duration, 1);
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
       
-      // Easing function for smooth animation
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-      const currentCount = Math.floor(easeOutQuart * value);
+      // Smooth easing with cubic bezier feel
+      const easeOutExpo = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
       
-      setCount(currentCount);
+      const current = startValue + (endValue - startValue) * easeOutExpo;
+      setDisplayValue(current);
 
       if (progress < 1) {
         animationFrame = requestAnimationFrame(animate);
       } else {
-        setCount(value);
+        setDisplayValue(endValue);
+        previousValue.current = endValue;
       }
     };
 
@@ -45,7 +51,11 @@ const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
     };
   }, [value, duration]);
 
-  return <span className={className}>{count}</span>;
+  const formatted = decimals > 0 
+    ? displayValue.toFixed(decimals)
+    : Math.round(displayValue).toString();
+
+  return <span className={className}>{formatted}</span>;
 };
 
 export default AnimatedCounter;

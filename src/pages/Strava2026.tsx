@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ExternalLink, Check, Clock, Calendar as CalendarIcon, TrendingUp, MapPin, Timer, Flame, Heart, Zap, Mountain, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Check, Clock, Calendar as CalendarIcon, TrendingUp, MapPin, Timer, Flame, Heart, Zap, Mountain, ChevronLeft, ChevronRight, Route } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import AnimatedCounter from '@/components/AnimatedCounter';
+import RouteMap from '@/components/RouteMap';
 import stravaLogo from '@/assets/strava-logo-new.png';
 
 // Helper: Parse ISO date string (YYYY-MM-DD) to local midnight Date
@@ -30,6 +31,12 @@ interface ChallengeSummary {
     movingTimeSec: number;
     activityName: string;
   } | null;
+  totalStats: {
+    totalDistanceKm: number;
+    totalMovingTimeSec: number;
+    avgPaceSecPerKm: number;
+    activityCount: number;
+  };
 }
 
 interface CalendarData {
@@ -48,6 +55,7 @@ interface DayDetails {
     paceSecPerKm: number;
     elevationM: number;
     activityName: string;
+    polyline?: string;
     calories?: number;
     avgHeartRate?: number;
     maxHeartRate?: number;
@@ -465,6 +473,46 @@ const Strava2026 = () => {
     </div>
   );
 
+  // Total Stats Section
+  const renderTotalStats = () => {
+    if (!summary?.totalStats) return null;
+    
+    const { totalDistanceKm, totalMovingTimeSec, avgPaceSecPerKm } = summary.totalStats;
+    
+    // Format total time as hours and minutes
+    const totalHours = Math.floor(totalMovingTimeSec / 3600);
+    const totalMinutes = Math.floor((totalMovingTimeSec % 3600) / 60);
+    
+    return (
+      <div className={`p-4 sm:p-6 rounded-xl ${styles.cardBg}`}>
+        <h2 className={`text-lg sm:text-xl font-pixel font-bold mb-4 flex items-center gap-2 ${styles.text}`}>
+          <TrendingUp className="w-5 h-5" />
+          {language === 'deutsch' ? 'Gesamtstatistiken' : 'Total Stats'}
+        </h2>
+        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+          <div className="text-center">
+            <div className={`text-2xl sm:text-4xl font-pixel font-black ${styles.textAccent} tabular-nums`}>
+              <AnimatedCounter value={totalDistanceKm} duration={2500} decimals={1} />
+            </div>
+            <p className={`font-pixel text-xs sm:text-sm ${styles.textMuted}`}>km {language === 'deutsch' ? 'Gesamt' : 'Total'}</p>
+          </div>
+          <div className="text-center">
+            <div className={`text-2xl sm:text-4xl font-pixel font-bold ${styles.text} tabular-nums`}>
+              <AnimatedCounter value={totalHours} duration={2000} />h <AnimatedCounter value={totalMinutes} duration={2000} />m
+            </div>
+            <p className={`font-pixel text-xs sm:text-sm ${styles.textMuted}`}>{language === 'deutsch' ? 'Laufzeit' : 'Time'}</p>
+          </div>
+          <div className="text-center">
+            <div className={`text-2xl sm:text-4xl font-pixel font-bold ${styles.text} tabular-nums`}>
+              {formatPace(avgPaceSecPerKm)}
+            </div>
+            <p className={`font-pixel text-xs sm:text-sm ${styles.textMuted}`}>Ø /km</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // External Links Section
   const renderExternalLinks = () => (
     <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 mt-4 sm:mt-6">
@@ -494,6 +542,7 @@ const Strava2026 = () => {
   const renderHomeView = () => (
     <div className="space-y-4 sm:space-y-6">
       {renderHeroHeader()}
+      {renderTotalStats()}
       {renderGoalDescription()}
       {renderMonthCalendar()}
       {renderExternalLinks()}
@@ -562,7 +611,19 @@ const Strava2026 = () => {
           </div>
         )}
 
-        {/* Additional Stats */}
+        {/* Route Map */}
+        {dayDetails.strava?.polyline && (
+          <div className={`p-4 rounded-xl ${styles.cardBg}`}>
+            <h3 className={`text-lg font-pixel font-bold mb-4 flex items-center gap-2 ${styles.text}`}>
+              <Route className="w-5 h-5" />
+              {language === 'deutsch' ? 'Route' : 'Route'}
+            </h3>
+            <RouteMap 
+              polylineData={dayDetails.strava.polyline} 
+              className="h-64 sm:h-80"
+            />
+          </div>
+        )}
         {dayDetails.strava && (dayDetails.strava.avgHeartRate || dayDetails.strava.calories || dayDetails.strava.suffer_score) && (
           <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
             {dayDetails.strava.avgHeartRate && (
