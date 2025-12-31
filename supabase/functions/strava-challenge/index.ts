@@ -26,6 +26,10 @@ interface StravaActivity {
   start_date: string
   start_date_local: string
   type: string
+  map?: {
+    summary_polyline: string
+    polyline?: string
+  }
 }
 
 // Get fresh access token using refresh token
@@ -235,6 +239,22 @@ Deno.serve(async (req) => {
       // Get today's activity
       const todayActivity = todayDayNumber > 0 ? findActivityForDay(activities, todayDayNumber) : null
 
+      // Calculate total stats from all completed activities
+      let totalDistanceKm = 0
+      let totalMovingTimeSec = 0
+      let activityCount = 0
+
+      for (let day = 1; day <= todayDayNumber; day++) {
+        const activity = findActivityForDay(activities, day)
+        if (activity) {
+          totalDistanceKm += activity.distance / 1000
+          totalMovingTimeSec += activity.moving_time
+          activityCount++
+        }
+      }
+
+      const avgPaceSecPerKm = activityCount > 0 ? Math.round(totalMovingTimeSec / totalDistanceKm) : 0
+
       const response = {
         startDateISO: CHALLENGE_START_DATE,
         totalDays: TOTAL_DAYS,
@@ -250,6 +270,12 @@ Deno.serve(async (req) => {
               activityName: todayActivity.name,
             }
           : null,
+        totalStats: {
+          totalDistanceKm: Math.round(totalDistanceKm * 100) / 100,
+          totalMovingTimeSec,
+          avgPaceSecPerKm,
+          activityCount,
+        },
       }
 
       console.log('Summary response:', response)
@@ -306,6 +332,7 @@ Deno.serve(async (req) => {
               paceSecPerKm: Math.round(activity.moving_time / (activity.distance / 1000)),
               elevationM: Math.round(activity.total_elevation_gain),
               activityName: activity.name,
+              polyline: activity.map?.summary_polyline || null,
             }
           : null,
         tiktok: videoData
