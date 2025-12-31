@@ -63,6 +63,7 @@ const Desktop = () => {
           {/* Strava 2026 App Icon */}
           <DesktopIcon 
             imageSrc={stravaLogo}
+            fullImage
             label="Strava 2026"
             to="/strava2026"
           />
