@@ -288,18 +288,18 @@ const Strava2026 = () => {
     const canGoNext = currentMonth < 12;
 
     return (
-      <div className={`p-6 rounded-xl ${styles.cardBg}`}>
+      <div className={`p-4 sm:p-6 rounded-xl ${styles.cardBg}`}>
         {/* Month Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4">
           <button 
             onClick={() => canGoPrev && setCurrentMonth(currentMonth - 1)}
             disabled={!canGoPrev}
             className={`p-2 rounded-lg transition-all ${canGoPrev ? 'hover:bg-orange-200 text-orange-800' : 'opacity-30 cursor-not-allowed text-orange-400'}`}
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
           
-          <h3 className={`text-2xl font-pixel font-bold ${styles.text}`}>
+          <h3 className={`text-lg sm:text-2xl font-pixel font-bold ${styles.text}`}>
             {monthName} {year}
           </h3>
           
@@ -308,21 +308,21 @@ const Strava2026 = () => {
             disabled={!canGoNext}
             className={`p-2 rounded-lg transition-all ${canGoNext ? 'hover:bg-orange-200 text-orange-800' : 'opacity-30 cursor-not-allowed text-orange-400'}`}
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
         {/* Weekday Headers */}
-        <div className="grid grid-cols-7 gap-2 mb-3">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
           {weekDays.map(day => (
-            <div key={day} className={`text-center font-pixel text-sm ${styles.textMuted}`}>
+            <div key={day} className={`text-center font-pixel text-xs sm:text-sm ${styles.textMuted}`}>
               {day}
             </div>
           ))}
         </div>
 
         {/* Calendar Grid */}
-        <div className="grid grid-cols-7 gap-2">
+        <div className="grid grid-cols-7 gap-1 sm:gap-2">
           {/* Empty cells for days before month starts */}
           {Array.from({ length: adjustedFirstDay }, (_, i) => (
             <div key={`empty-${i}`} className="aspect-square" />
@@ -336,15 +336,20 @@ const Strava2026 = () => {
             const isToday = challengeDay === calendar.todayDayNumber;
             const isFuture = challengeDay ? challengeDay > calendar.todayDayNumber : true;
             const isInChallenge = challengeDay !== null;
+            const isPastNotDone = isInChallenge && !isDone && !isFuture && !isToday;
 
             let bgClass = 'bg-gray-200/50 text-gray-400';
             if (isInChallenge) {
               if (isDone) {
                 bgClass = 'bg-gradient-to-br from-green-400 to-green-500 text-white shadow-md';
+              } else if (isToday) {
+                // Today not done yet - orange/pending
+                bgClass = 'bg-gradient-to-br from-orange-400 to-orange-500 text-white shadow-md';
               } else if (isFuture) {
                 bgClass = 'bg-orange-100 text-orange-300';
-              } else {
-                bgClass = 'bg-gradient-to-br from-orange-400 to-red-400 text-white shadow-md';
+              } else if (isPastNotDone) {
+                // Past day not done - red/missed
+                bgClass = 'bg-gradient-to-br from-red-400 to-red-500 text-white shadow-md';
               }
             }
 
@@ -354,20 +359,20 @@ const Strava2026 = () => {
                 onClick={() => isInChallenge && !isFuture && fetchDayDetails(challengeDay!)}
                 disabled={!isInChallenge || isFuture || dayLoading}
                 className={`
-                  aspect-square rounded-xl flex flex-col items-center justify-center
-                  font-pixel transition-all duration-200
+                  aspect-square rounded-lg sm:rounded-xl flex flex-col items-center justify-center
+                  font-pixel transition-all duration-200 text-xs sm:text-base
                   ${bgClass}
-                  ${isToday ? 'ring-4 ring-red-500 ring-offset-2' : ''}
+                  ${isToday ? 'ring-2 sm:ring-4 ring-red-500 ring-offset-1 sm:ring-offset-2' : ''}
                   ${isInChallenge && !isFuture ? 'hover:scale-105 cursor-pointer hover:shadow-lg' : ''}
                   ${!isInChallenge ? 'cursor-default' : ''}
                 `}
               >
-                <span className="text-lg font-bold">{dayOfMonth}</span>
+                <span className="text-sm sm:text-lg font-bold">{dayOfMonth}</span>
                 {isInChallenge && (
-                  <span className="text-[10px] opacity-70">Tag {challengeDay}</span>
+                  <span className="text-[8px] sm:text-[10px] opacity-70 hidden sm:block">Tag {challengeDay}</span>
                 )}
                 {isDone && (
-                  <Check className="w-4 h-4 mt-0.5" />
+                  <Check className="w-3 h-3 sm:w-4 sm:h-4 mt-0.5" />
                 )}
               </button>
             );
@@ -377,52 +382,65 @@ const Strava2026 = () => {
     );
   };
 
+  // Goal Description Section
+  const renderGoalDescription = () => (
+    <div className={`p-4 sm:p-6 rounded-xl ${styles.cardBg}`}>
+      <h2 className={`text-lg sm:text-xl font-pixel font-bold mb-3 ${styles.text}`}>
+        {getText('myStravaGoal')}
+      </h2>
+      <p className={`font-pixel text-sm sm:text-base whitespace-pre-line ${styles.textMuted}`}>
+        {getText('goalDescription')}
+      </p>
+    </div>
+  );
+
   // Hero Header with Logo and animated counter
   const renderHeroHeader = () => (
-    <div className={`relative overflow-hidden rounded-xl ${styles.cardBgAlt} p-6 mb-6`}>
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+    <div className={`relative overflow-hidden rounded-xl ${styles.cardBgAlt} p-4 sm:p-6`}>
+      {/* Mobile: Stack vertically, Desktop: side by side */}
+      <div className="flex flex-col items-center gap-4 sm:gap-6">
         {/* Logo & Title */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           <img 
             src={stravaLogo} 
             alt="Strava Logo" 
-            className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-lg"
+            className="w-12 h-12 sm:w-16 sm:h-16 object-contain drop-shadow-lg"
           />
-          <div>
-            <h1 className={`text-2xl sm:text-3xl font-pixel font-bold ${styles.text}`}>
+          <div className="text-center sm:text-left">
+            <h1 className={`text-xl sm:text-2xl font-pixel font-bold ${styles.text}`}>
               365 Day Challenge
             </h1>
-            <p className={`font-pixel ${styles.textMuted}`}>5 km • {language === 'deutsch' ? 'Jeden Tag' : 'Every Day'}</p>
+            <p className={`font-pixel text-sm ${styles.textMuted}`}>5 km • {language === 'deutsch' ? 'Jeden Tag' : 'Every Day'}</p>
           </div>
         </div>
 
-        {/* Big Counter */}
-        <div className="flex items-center gap-6">
+        {/* Counter Section */}
+        <div className="flex items-center gap-4 sm:gap-6">
           <div className="text-center">
-            <div className={`text-6xl sm:text-7xl font-pixel font-black ${styles.textAccent} tabular-nums`}>
+            <div className={`text-4xl sm:text-6xl font-pixel font-black ${styles.textAccent} tabular-nums`}>
               <AnimatedCounter value={summary?.daysDone || 0} duration={2000} />
             </div>
-            <p className={`font-pixel text-sm ${styles.textMuted}`}>{getText('daysCompleted')}</p>
+            <p className={`font-pixel text-xs sm:text-sm ${styles.textMuted}`}>{getText('daysCompleted')}</p>
           </div>
           
-          <div className={`h-16 w-px bg-orange-400/30`} />
+          <div className={`h-12 sm:h-16 w-px bg-orange-400/30`} />
           
           <div className="text-center">
-            <div className={`text-4xl font-pixel font-bold ${styles.text} tabular-nums`}>
+            <div className={`text-2xl sm:text-4xl font-pixel font-bold ${styles.text} tabular-nums`}>
               {summary?.daysRemaining || 365}
             </div>
-            <p className={`font-pixel text-sm ${styles.textMuted}`}>{getText('daysLeft')}</p>
+            <p className={`font-pixel text-xs sm:text-sm ${styles.textMuted}`}>{getText('daysLeft')}</p>
           </div>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="mt-6">
-        <div className={`flex justify-between text-sm font-pixel ${styles.textMuted} mb-2`}>
+      <div className="mt-4 sm:mt-6">
+        <div className={`flex justify-between text-xs sm:text-sm font-pixel ${styles.textMuted} mb-2`}>
           <span>{getText('progress')}</span>
           <span>{Math.round((summary?.daysDone || 0) / 365 * 100)}%</span>
         </div>
-        <div className={`h-4 rounded-full ${styles.progressBg} overflow-hidden`}>
+        <div className={`h-3 sm:h-4 rounded-full ${styles.progressBg} overflow-hidden`}>
           <div 
             className={`h-full rounded-full ${styles.progressBar} transition-all duration-1000`}
             style={{ width: `${((summary?.daysDone || 0) / 365) * 100}%` }}
@@ -434,33 +452,34 @@ const Strava2026 = () => {
 
   // External Links Section
   const renderExternalLinks = () => (
-    <div className="flex flex-wrap justify-center gap-4 mt-6">
+    <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 mt-4 sm:mt-6">
       <a
         href="https://www.strava.com/athletes/185666796"
         target="_blank"
         rel="noopener noreferrer"
-        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-pixel transition-all hover:scale-105 ${styles.button}`}
+        className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-pixel text-sm sm:text-base transition-all hover:scale-105 ${styles.button}`}
       >
-        <TrendingUp className="w-5 h-5" />
+        <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
         {getText('stravaProfile')}
-        <ExternalLink className="w-4 h-4" />
+        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
       </a>
       <a
         href="https://www.tiktok.com/@henri.running"
         target="_blank"
         rel="noopener noreferrer"
-        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-pixel transition-all hover:scale-105 ${styles.buttonSecondary}`}
+        className={`flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-pixel text-sm sm:text-base transition-all hover:scale-105 ${styles.buttonSecondary}`}
       >
         🎵 {getText('tiktokProfile')}
-        <ExternalLink className="w-4 h-4" />
+        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4" />
       </a>
     </div>
   );
 
   // Home View
   const renderHomeView = () => (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {renderHeroHeader()}
+      {renderGoalDescription()}
       {renderMonthCalendar()}
       {renderExternalLinks()}
     </div>
