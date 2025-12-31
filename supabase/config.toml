@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.strava-challenge]
 verify_jwt = false
+
+[functions.strava-oauth-callback]
+verify_jwt = false

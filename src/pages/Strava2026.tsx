@@ -53,6 +53,10 @@ const Strava2026 = () => {
   const [dayDetails, setDayDetails] = useState<DayDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [dayLoading, setDayLoading] = useState(false);
+  const [needsAuth, setNeedsAuth] = useState(false);
+
+  // Strava OAuth URL
+  const stravaOAuthUrl = 'https://uwwxkkkzkwiftbekezvl.supabase.co/functions/v1/strava-oauth-callback';
 
   const getWindowStyles = () => {
     if (theme === 'space-mood') {
@@ -146,6 +150,11 @@ const Strava2026 = () => {
       const description =
         edgeError ??
         (typeof error?.message === 'string' ? error.message : 'Failed to load challenge data. Please try again.');
+
+      // Check if it's a 401 / auth error
+      if (description.includes('401') || description.includes('activity:read') || description.includes('Authorization')) {
+        setNeedsAuth(true);
+      }
 
       toast({
         title: 'Error',
@@ -596,6 +605,26 @@ Zeitdruck ist brutal: Ich muss jeden Tag ran — keine Ausreden.`,
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <div className={`font-pixel text-xl ${styles.text}`}>{getText('loading')}</div>
+            </div>
+          ) : needsAuth ? (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="text-6xl mb-4">🔐</div>
+              <h2 className={`font-pixel text-2xl mb-2 ${styles.text}`}>
+                {language === 'deutsch' ? 'Strava-Verbindung erforderlich' : 'Strava Connection Required'}
+              </h2>
+              <p className={`font-pixel mb-6 ${styles.textMuted}`}>
+                {language === 'deutsch' 
+                  ? 'Klicke unten, um Strava mit activity:read_all Berechtigung zu verbinden.' 
+                  : 'Click below to connect Strava with activity:read_all permission.'}
+              </p>
+              <a
+                href={stravaOAuthUrl}
+                className={`flex items-center gap-2 px-6 py-3 rounded-lg border-2 border-black/20 font-pixel text-lg transition-all hover:scale-105 ${styles.button}`}
+              >
+                <TrendingUp className="w-5 h-5" />
+                {language === 'deutsch' ? 'Mit Strava verbinden' : 'Connect to Strava'}
+                <ExternalLink className="w-4 h-4" />
+              </a>
             </div>
           ) : summary?.todayDayNumber === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
