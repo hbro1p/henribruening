@@ -603,13 +603,6 @@ const Strava2026 = () => {
           </div>
         )}
 
-        {/* Activity Name */}
-        {dayDetails.strava && (
-          <div className={`p-4 rounded-xl ${styles.cardBg} text-center`}>
-            <p className={`font-pixel ${styles.text}`}>"{dayDetails.strava.activityName}"</p>
-          </div>
-        )}
-
         {/* Splits Table */}
         {dayDetails.strava?.splits && dayDetails.strava.splits.length > 0 && (
           <div className={`p-4 rounded-xl ${styles.cardBg}`}>
