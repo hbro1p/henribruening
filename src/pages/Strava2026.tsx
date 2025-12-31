@@ -7,6 +7,16 @@ import { toast } from '@/hooks/use-toast';
 import AnimatedCounter from '@/components/AnimatedCounter';
 import stravaLogo from '@/assets/strava-logo-new.png';
 
+// Helper: Parse ISO date string (YYYY-MM-DD) to local midnight Date
+// This avoids timezone issues from new Date('YYYY-MM-DD') which parses as UTC
+const parseISODateToLocal = (isoString: string): Date => {
+  const [year, month, day] = isoString.split('-').map(Number);
+  return new Date(year, month - 1, day, 0, 0, 0, 0);
+};
+
+// Challenge start date - fixed constant
+const CHALLENGE_START_ISO = '2025-12-14';
+
 interface ChallengeSummary {
   startDateISO: string;
   totalDays: number;
@@ -99,11 +109,11 @@ const Strava2026 = () => {
     fetchChallengeData();
   }, []);
 
-  // Set current month based on today's date
+  // Set current month based on today's date relative to challenge start
   useEffect(() => {
     if (calendar?.todayDayNumber) {
       const todayDate = new Date();
-      const startDate = new Date('2025-12-14');
+      const startDate = parseISODateToLocal(CHALLENGE_START_ISO);
       const monthsDiff = (todayDate.getFullYear() - startDate.getFullYear()) * 12 + (todayDate.getMonth() - startDate.getMonth());
       setCurrentMonth(Math.max(0, monthsDiff));
     }
@@ -244,7 +254,7 @@ const Strava2026 = () => {
 
   // Get month data for calendar
   const getMonthData = (monthOffset: number) => {
-    const startDate = new Date('2025-12-14');
+    const startDate = parseISODateToLocal(CHALLENGE_START_ISO);
     const targetDate = new Date(startDate);
     targetDate.setMonth(startDate.getMonth() + monthOffset);
     
@@ -264,12 +274,16 @@ const Strava2026 = () => {
     return { year, month, daysInMonth, firstDayOfWeek, monthName: monthNames[month], weekDays };
   };
 
-  // Convert calendar date to challenge day number
+  // Convert calendar date to challenge day number (using local dates consistently)
   const getChallengeDayForDate = (year: number, month: number, day: number): number | null => {
-    const date = new Date(year, month, day);
-    const startDate = new Date('2025-12-14');
+    // Create date at local midnight
+    const date = new Date(year, month, day, 0, 0, 0, 0);
+    const startDate = parseISODateToLocal(CHALLENGE_START_ISO);
+    
+    // Calculate difference in days (both are local midnight, so division is clean)
     const diffTime = date.getTime() - startDate.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    
     if (diffDays < 1 || diffDays > 365) return null;
     return diffDays;
   };
@@ -343,8 +357,8 @@ const Strava2026 = () => {
               if (isDone) {
                 bgClass = 'bg-gradient-to-br from-green-400 to-green-500 text-white shadow-md';
               } else if (isToday) {
-                // Today not done yet - orange/pending
-                bgClass = 'bg-gradient-to-br from-orange-400 to-orange-500 text-white shadow-md';
+                // Today not done yet - yellow/pending
+                bgClass = 'bg-gradient-to-br from-yellow-400 to-yellow-500 text-white shadow-md';
               } else if (isFuture) {
                 bgClass = 'bg-orange-100 text-orange-300';
               } else if (isPastNotDone) {
@@ -362,17 +376,22 @@ const Strava2026 = () => {
                   aspect-square rounded-lg sm:rounded-xl flex flex-col items-center justify-center
                   font-pixel transition-all duration-200 text-xs sm:text-base
                   ${bgClass}
-                  ${isToday ? 'ring-2 sm:ring-4 ring-red-500 ring-offset-1 sm:ring-offset-2' : ''}
+                  ${isToday ? 'ring-2 sm:ring-4 ring-yellow-600 ring-offset-1 sm:ring-offset-2' : ''}
                   ${isInChallenge && !isFuture ? 'hover:scale-105 cursor-pointer hover:shadow-lg' : ''}
                   ${!isInChallenge ? 'cursor-default' : ''}
                 `}
               >
-                <span className="text-sm sm:text-lg font-bold">{dayOfMonth}</span>
-                {isInChallenge && (
-                  <span className="text-[8px] sm:text-[10px] opacity-70 hidden sm:block">Tag {challengeDay}</span>
+                {/* Show challenge day number prominently for challenge days */}
+                {isInChallenge ? (
+                  <>
+                    <span className="text-sm sm:text-lg font-bold">{challengeDay}</span>
+                    <span className="text-[8px] sm:text-[10px] opacity-70">{dayOfMonth}.{month + 1 < 10 ? '0' : ''}{month + 1}</span>
+                  </>
+                ) : (
+                  <span className="text-sm sm:text-lg font-bold">{dayOfMonth}</span>
                 )}
                 {isDone && (
-                  <Check className="w-3 h-3 sm:w-4 sm:h-4 mt-0.5" />
+                  <Check className="w-3 h-3 sm:w-4 sm:h-4 absolute bottom-0.5 right-0.5 sm:static sm:mt-0.5" />
                 )}
               </button>
             );
