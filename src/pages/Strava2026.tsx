@@ -381,14 +381,10 @@ const Strava2026 = () => {
                   ${!isInChallenge ? 'cursor-default' : ''}
                 `}
               >
-                {/* Show challenge day number prominently for challenge days */}
-                {isInChallenge ? (
-                  <>
-                    <span className="text-sm sm:text-lg font-bold">{challengeDay}</span>
-                    <span className="text-[8px] sm:text-[10px] opacity-70">{dayOfMonth}.{month + 1 < 10 ? '0' : ''}{month + 1}</span>
-                  </>
-                ) : (
-                  <span className="text-sm sm:text-lg font-bold">{dayOfMonth}</span>
+                {/* Show day of month prominently, challenge day number below */}
+                <span className="text-sm sm:text-lg font-bold">{dayOfMonth}</span>
+                {isInChallenge && (
+                  <span className="text-[8px] sm:text-[10px] opacity-70">Tag {challengeDay}</span>
                 )}
                 {isDone && (
                   <Check className="w-3 h-3 sm:w-4 sm:h-4 absolute bottom-0.5 right-0.5 sm:static sm:mt-0.5" />
