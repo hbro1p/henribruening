@@ -432,49 +432,28 @@ const Strava2026 = () => {
     </div>
   );
 
-  // Today's Quick Card
-  const renderTodayCard = () => (
-    <div className={`p-5 rounded-xl ${styles.cardBg}`}>
-      <div className="flex items-center justify-between mb-3">
-        <span className={`font-pixel ${styles.textMuted}`}>{getText('today')}</span>
-        {summary?.todayDone ? (
-          <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-500 text-white font-pixel rounded-full text-sm">
-            <Check className="w-3 h-3" />
-            {getText('done')}
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 px-3 py-1 bg-orange-500 text-white font-pixel rounded-full text-sm animate-pulse">
-            <Clock className="w-3 h-3" />
-            {getText('pending')}
-          </span>
-        )}
-      </div>
-
-      <div className="text-center py-3">
-        <span className={`text-5xl font-pixel font-black ${styles.text}`}>
-          <AnimatedCounter value={summary?.todayDayNumber || 0} duration={1500} />
-        </span>
-        <p className={`font-pixel ${styles.textMuted}`}>{getText('day')}</p>
-      </div>
-
-      {summary?.todayStats && (
-        <div className="grid grid-cols-2 gap-2 mt-3">
-          <div className="bg-white/50 rounded-lg p-2 text-center">
-            <div className={`text-lg font-pixel font-bold ${styles.text}`}>{summary.todayStats.distanceKm} km</div>
-          </div>
-          <div className="bg-white/50 rounded-lg p-2 text-center">
-            <div className={`text-lg font-pixel font-bold ${styles.text}`}>{formatTime(summary.todayStats.movingTimeSec)}</div>
-          </div>
-        </div>
-      )}
-
-      <button
-        onClick={() => summary?.todayDayNumber && fetchDayDetails(summary.todayDayNumber)}
-        disabled={!summary?.todayDayNumber || dayLoading}
-        className={`w-full mt-4 py-2 rounded-lg font-pixel transition-all hover:scale-[1.02] ${styles.button}`}
+  // External Links Section
+  const renderExternalLinks = () => (
+    <div className="flex flex-wrap justify-center gap-4 mt-6">
+      <a
+        href="https://www.strava.com/athletes/185666796"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-pixel transition-all hover:scale-105 ${styles.button}`}
       >
-        {dayLoading ? '...' : getText('viewDay')}
-      </button>
+        <TrendingUp className="w-5 h-5" />
+        {getText('stravaProfile')}
+        <ExternalLink className="w-4 h-4" />
+      </a>
+      <a
+        href="https://www.tiktok.com/@henri.running"
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`flex items-center gap-2 px-6 py-3 rounded-xl font-pixel transition-all hover:scale-105 ${styles.buttonSecondary}`}
+      >
+        🎵 {getText('tiktokProfile')}
+        <ExternalLink className="w-4 h-4" />
+      </a>
     </div>
   );
 
@@ -482,41 +461,8 @@ const Strava2026 = () => {
   const renderHomeView = () => (
     <div className="space-y-6">
       {renderHeroHeader()}
-
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Calendar - Takes 2 columns */}
-        <div className="lg:col-span-2">
-          {renderMonthCalendar()}
-        </div>
-
-        {/* Today + Links */}
-        <div className="space-y-4">
-          {renderTodayCard()}
-          
-          {/* Links */}
-          <div className="flex flex-col gap-2">
-            <a
-              href="https://www.strava.com/athletes/185666796"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-pixel transition-all hover:scale-105 ${styles.button}`}
-            >
-              <TrendingUp className="w-4 h-4" />
-              {getText('stravaProfile')}
-              <ExternalLink className="w-3 h-3" />
-            </a>
-            <a
-              href="https://www.tiktok.com/@henri.running"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-pixel transition-all hover:scale-105 ${styles.buttonSecondary}`}
-            >
-              🎵 {getText('tiktokProfile')}
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-        </div>
-      </div>
+      {renderMonthCalendar()}
+      {renderExternalLinks()}
     </div>
   );
 
