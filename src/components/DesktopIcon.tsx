@@ -125,13 +125,11 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, imageSrc, fullIma
   
   const content = (
     <>
-      <div className="w-20 h-20 flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-110">
+      <div className="w-20 h-20 flex items-center justify-center">
         {fullImage && imageSrc ? (
-          <div className="relative w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg border-2 border-white/20 shadow-lg group-hover:shadow-xl group-hover:shadow-orange-400/40 transition-all duration-300 flex items-center justify-center p-2">
-            <img src={imageSrc} alt={label} className="w-full h-full object-contain drop-shadow-md" />
-          </div>
+          <img src={imageSrc} alt={label} className="w-16 h-16 object-contain" />
         ) : (
-          <div className={`relative w-16 h-16 bg-gradient-to-br ${styles.gradient} rounded border-2 ${styles.border} ${styles.hoverBorder} ${styles.shadow} transition-all duration-300 flex items-center justify-center`}>
+          <div className={`relative w-16 h-16 bg-gradient-to-br ${styles.gradient} rounded border-2 ${styles.border} ${styles.hoverBorder} ${styles.shadow} transition-all duration-200 flex items-center justify-center`}>
             {imageSrc ? (
               <img src={imageSrc} alt={label} className="w-10 h-10 object-contain relative z-10" />
             ) : Icon ? (
