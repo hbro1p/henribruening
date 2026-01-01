@@ -175,19 +175,20 @@ const Strava2026 = () => {
   };
 
   const fetchDayDetails = async (day: number) => {
-    setDayLoading(true);
     setSelectedDay(day);
+    setView('day'); // Switch view immediately for better UX
+    setDayLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('strava-challenge', {
         body: { action: 'day', day },
       });
       if (error) throw error;
       setDayDetails(data as DayDetails);
-      setView('day');
     } catch (error: any) {
       console.error('Error fetching day details:', error);
       const edgeError = await extractEdgeFunctionError(error);
       toast({ title: 'Error', description: edgeError ?? 'Failed to load day details', variant: 'destructive' });
+      setView('home'); // Go back on error
     } finally {
       setDayLoading(false);
     }
@@ -360,40 +361,39 @@ const Strava2026 = () => {
             const isInChallenge = challengeDay !== null;
             const isPastNotDone = isInChallenge && !isDone && !isFuture && !isToday;
 
-            let bgClass = 'bg-gray-200/50 text-gray-400';
-            if (isInChallenge) {
-              if (isDone) {
-                bgClass = 'bg-gradient-to-br from-green-400 to-green-500 text-white shadow-md';
-              } else if (isToday) {
-                // Today not done yet - yellow/pending
-                bgClass = 'bg-gradient-to-br from-yellow-400 to-yellow-500 text-white shadow-md';
-              } else if (isFuture) {
-                bgClass = 'bg-orange-100 text-orange-300';
-              } else if (isPastNotDone) {
-                // Past day not done - red/missed
-                bgClass = 'bg-gradient-to-br from-red-400 to-red-500 text-white shadow-md';
-              }
+            // Hide non-challenge days completely for cleaner look
+            if (!isInChallenge) {
+              return <div key={dayOfMonth} className="aspect-square" />;
+            }
+
+            let bgClass = 'bg-orange-100/50 text-orange-300';
+            if (isDone) {
+              bgClass = 'bg-gradient-to-br from-green-400 to-green-500 text-white shadow-md';
+            } else if (isToday) {
+              bgClass = 'bg-gradient-to-br from-yellow-400 to-yellow-500 text-white shadow-md';
+            } else if (isFuture) {
+              bgClass = 'bg-orange-100/50 text-orange-300';
+            } else if (isPastNotDone) {
+              bgClass = 'bg-gradient-to-br from-red-400 to-red-500 text-white shadow-md';
             }
 
             return (
               <button
                 key={dayOfMonth}
-                onClick={() => isInChallenge && !isFuture && fetchDayDetails(challengeDay!)}
-                disabled={!isInChallenge || isFuture || dayLoading}
+                onClick={() => !isFuture && fetchDayDetails(challengeDay!)}
+                disabled={isFuture || dayLoading}
                 className={`
-                  aspect-square rounded-lg sm:rounded-xl flex flex-col items-center justify-center
-                  font-pixel transition-all duration-200 text-xs sm:text-base
+                  aspect-square rounded-lg sm:rounded-xl flex flex-col items-center justify-center relative
+                  font-pixel text-xs sm:text-base
                   ${bgClass}
-                  ${isToday ? 'ring-1 sm:ring-2 ring-black' : ''}
-                  ${isInChallenge && !isFuture ? 'hover:scale-105 cursor-pointer hover:shadow-lg' : ''}
-                  ${!isInChallenge ? 'cursor-default' : ''}
+                  ${isToday ? 'ring-2 ring-black ring-offset-1' : ''}
+                  ${!isFuture ? 'cursor-pointer active:scale-95' : 'cursor-default'}
+                  transition-all duration-150 ease-out
+                  ${!isFuture ? 'hover:scale-105 hover:shadow-lg hover:z-10' : ''}
                 `}
               >
-                {/* Show day of month prominently, challenge day number below */}
                 <span className="text-sm sm:text-lg font-bold">{dayOfMonth}</span>
-                {isInChallenge && (
-                  <span className="text-[8px] sm:text-[10px] opacity-70">Tag {challengeDay}</span>
-                )}
+                <span className="text-[8px] sm:text-[10px] opacity-70">Tag {challengeDay}</span>
                 {isDone && (
                   <Check className="w-3 h-3 sm:w-4 sm:h-4 absolute bottom-0.5 right-0.5 sm:static sm:mt-0.5" />
                 )}
@@ -540,7 +540,7 @@ const Strava2026 = () => {
 
   // Home View
   const renderHomeView = () => (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4 sm:space-y-6 animate-fade-in">
       {renderHeroHeader()}
       {renderTotalStats()}
       {renderGoalDescription()}
@@ -551,10 +551,44 @@ const Strava2026 = () => {
 
   // Day View
   const renderDayView = () => {
-    if (!dayDetails) return null;
+    // Show loading skeleton while fetching
+    if (dayLoading || !dayDetails) {
+      return (
+        <div className="space-y-6 animate-fade-in">
+          {/* Header skeleton */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => setView('home')}
+              className={`flex items-center gap-2 font-pixel ${styles.link}`}
+            >
+              <ArrowLeft className="w-5 h-5" />
+              {getText('backToChallenge')}
+            </button>
+          </div>
+          
+          {/* Day Title skeleton */}
+          <div className="text-center py-4">
+            <div className={`inline-block px-6 py-3 rounded-xl ${styles.cardBgAlt}`}>
+              <span className={`text-4xl font-pixel font-black ${styles.text}`}>{getText('day')} {selectedDay}</span>
+            </div>
+          </div>
+          
+          {/* Loading indicator */}
+          <div className="flex flex-col items-center justify-center py-12">
+            <div className="relative w-12 h-12 mb-3">
+              <div className="absolute inset-0 rounded-full border-3 border-orange-200" />
+              <div className="absolute inset-0 rounded-full border-3 border-orange-500 border-t-transparent animate-spin" style={{ animationDuration: '0.7s' }} />
+            </div>
+            <p className={`font-pixel text-sm ${styles.textMuted} animate-pulse`}>
+              {language === 'deutsch' ? 'Lade Daten...' : 'Loading data...'}
+            </p>
+          </div>
+        </div>
+      );
+    }
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 animate-fade-in">
         {/* Header */}
         <div className="flex items-center justify-between">
           <button
@@ -727,9 +761,13 @@ const Strava2026 = () => {
         {/* Window Content */}
         <div className={`p-4 sm:p-6 border-2 border-white/20 shadow-inner rounded-b ${styles.windowContent}`}>
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-20">
-              <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4" />
-              <div className={`font-pixel ${styles.text}`}>{getText('loading')}</div>
+            <div className="flex flex-col items-center justify-center py-20 animate-fade-in">
+              <div className="relative w-16 h-16 mb-4">
+                <div className="absolute inset-0 rounded-full border-4 border-orange-200" />
+                <div className="absolute inset-0 rounded-full border-4 border-orange-500 border-t-transparent animate-spin" style={{ animationDuration: '0.8s' }} />
+                <img src={stravaLogo} alt="Strava" className="absolute inset-2 w-12 h-12 object-contain opacity-60" />
+              </div>
+              <div className={`font-pixel ${styles.text} animate-pulse`}>{getText('loading')}</div>
             </div>
           ) : needsAuth ? (
             <div className="flex flex-col items-center justify-center py-20 text-center">
