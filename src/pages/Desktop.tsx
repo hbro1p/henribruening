@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
 import TvApp from '@/components/TvApp';
 import MiniMusicPlayer from '@/components/MiniMusicPlayer';
@@ -8,6 +8,10 @@ import { useSettings } from '@/contexts/SettingsContext';
 import { useThemeMusic } from '@/hooks/useThemeMusic';
 import { useTvMusicControl } from '@/hooks/useTvMusicControl';
 import { useGlobalMusicPlayer } from '@/hooks/useGlobalMusicPlayer';
+
+// Preload Strava logo immediately on module load
+const preloadImage = new Image();
+preloadImage.src = stravaLogo;
 
 const Desktop = () => {
   const { t, language } = useSettings();

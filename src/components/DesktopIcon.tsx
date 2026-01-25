@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSettings } from '@/contexts/SettingsContext';
 
@@ -122,16 +122,33 @@ const getIconStyles = (label: string, theme: string) => {
 const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, imageSrc, fullImage, label, to, onClick }) => {
   const { theme } = useSettings();
   const styles = getIconStyles(label, theme);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  // Preload image immediately
+  useEffect(() => {
+    if (imageSrc) {
+      const img = new Image();
+      img.onload = () => setImageLoaded(true);
+      img.src = imageSrc;
+      // If already cached, it will load instantly
+      if (img.complete) setImageLoaded(true);
+    }
+  }, [imageSrc]);
   
   const content = (
     <>
       <div className="w-20 h-20 flex items-center justify-center">
         {fullImage && imageSrc ? (
-          <img src={imageSrc} alt={label} className="w-16 h-16 object-contain" />
+          <img 
+            src={imageSrc} 
+            alt={label} 
+            className={`w-16 h-16 object-contain transition-opacity duration-150 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            loading="eager"
+          />
         ) : (
           <div className={`relative w-16 h-16 bg-gradient-to-br ${styles.gradient} rounded border-2 ${styles.border} ${styles.hoverBorder} ${styles.shadow} transition-all duration-200 flex items-center justify-center`}>
             {imageSrc ? (
-              <img src={imageSrc} alt={label} className="w-10 h-10 object-contain relative z-10" />
+              <img src={imageSrc} alt={label} className="w-10 h-10 object-contain relative z-10" loading="eager" />
             ) : Icon ? (
               <Icon className="w-8 h-8 text-white drop-shadow-sm relative z-10" />
             ) : null}
