@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, ExternalLink, Check, Clock, Calendar as CalendarIcon, TrendingUp, MapPin, Timer, Flame, Heart, Zap, Mountain, ChevronLeft, ChevronRight, Route } from 'lucide-react';
+import { ArrowLeft, ExternalLink, Check, Clock, Calendar as CalendarIcon, TrendingUp, MapPin, Timer, Flame, Heart, Zap, Mountain, ChevronLeft, ChevronRight, Route, Footprints } from 'lucide-react';
 import { useSettings } from '@/contexts/SettingsContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import AnimatedCounter from '@/components/AnimatedCounter';
 import RouteMap from '@/components/RouteMap';
 import stravaLogo from '@/assets/strava-logo-new.png';
-
 // Helper: Parse ISO date string (YYYY-MM-DD) to local midnight Date
 // This avoids timezone issues from new Date('YYYY-MM-DD') which parses as UTC
 const parseISODateToLocal = (isoString: string): Date => {
@@ -17,6 +16,13 @@ const parseISODateToLocal = (isoString: string): Date => {
 
 // Challenge start date - fixed constant
 const CHALLENGE_START_ISO = '2025-12-14';
+
+interface ActivityStats {
+  totalDistanceKm: number;
+  totalMovingTimeSec: number;
+  avgPaceSecPerKm: number;
+  activityCount: number;
+}
 
 interface ChallengeSummary {
   startDateISO: string;
@@ -31,12 +37,9 @@ interface ChallengeSummary {
     movingTimeSec: number;
     activityName: string;
   } | null;
-  totalStats: {
-    totalDistanceKm: number;
-    totalMovingTimeSec: number;
-    avgPaceSecPerKm: number;
-    activityCount: number;
-  };
+  totalStats: ActivityStats;
+  runStats?: ActivityStats;
+  walkStats?: ActivityStats;
 }
 
 interface CalendarData {
@@ -93,6 +96,7 @@ const Strava2026 = () => {
   const [dayLoading, setDayLoading] = useState(false);
   const [needsAuth, setNeedsAuth] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(0); // 0 = current month relative to challenge start
+  const [showRunStats, setShowRunStats] = useState(true); // Toggle between run and walk stats
 
   const stravaOAuthUrl = 'https://uwwxkkkzkwiftbekezvl.supabase.co/functions/v1/strava-oauth-callback';
 
@@ -477,18 +481,66 @@ const Strava2026 = () => {
   const renderTotalStats = () => {
     if (!summary?.totalStats) return null;
     
-    const { totalDistanceKm, totalMovingTimeSec, avgPaceSecPerKm } = summary.totalStats;
+    // Choose which stats to display based on toggle
+    const hasRunStats = summary.runStats && summary.runStats.activityCount > 0;
+    const hasWalkStats = summary.walkStats && summary.walkStats.activityCount > 0;
+    const hasBothStats = hasRunStats && hasWalkStats;
+    
+    // Get the stats to display
+    const displayStats = showRunStats && hasRunStats
+      ? summary.runStats!
+      : hasWalkStats
+        ? summary.walkStats!
+        : summary.totalStats;
+    
+    const { totalDistanceKm, totalMovingTimeSec, avgPaceSecPerKm, activityCount } = displayStats;
     
     // Format total time as hours and minutes
     const totalHours = Math.floor(totalMovingTimeSec / 3600);
     const totalMinutes = Math.floor((totalMovingTimeSec % 3600) / 60);
     
+    const toggleLabel = showRunStats
+      ? (language === 'deutsch' ? 'Gelaufen' : 'Running')
+      : (language === 'deutsch' ? 'Spaziert' : 'Walking');
+    
     return (
       <div className={`p-4 sm:p-6 rounded-xl ${styles.cardBg}`}>
-        <h2 className={`text-lg sm:text-xl font-pixel font-bold mb-4 flex items-center gap-2 ${styles.text}`}>
-          <TrendingUp className="w-5 h-5" />
-          {language === 'deutsch' ? 'Gesamtstatistiken' : 'Total Stats'}
-        </h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className={`text-lg sm:text-xl font-pixel font-bold flex items-center gap-2 ${styles.text}`}>
+            <TrendingUp className="w-5 h-5" />
+            {language === 'deutsch' ? 'Statistiken' : 'Stats'}
+            <span className={`text-sm font-normal ${styles.textMuted}`}>({activityCount}x)</span>
+          </h2>
+          
+          {/* Toggle Button - only show if both run and walk stats exist */}
+          {hasBothStats && (
+            <button
+              onClick={() => setShowRunStats(!showRunStats)}
+              className={`
+                flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-pixel
+                transition-all duration-200 hover:scale-105
+                ${showRunStats 
+                  ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md' 
+                  : 'bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-md'
+                }
+              `}
+              title={language === 'deutsch' ? 'Zwischen Laufen und Spazieren wechseln' : 'Toggle between running and walking'}
+            >
+              {showRunStats ? (
+                <>
+                  <Zap className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">{toggleLabel}</span>
+                </>
+              ) : (
+                <>
+                  <Footprints className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">{toggleLabel}</span>
+                </>
+              )}
+            </button>
+          )}
+        </div>
+        
         <div className="grid grid-cols-3 gap-3 sm:gap-4">
           <div className="text-center">
             <div className={`text-2xl sm:text-4xl font-pixel font-black ${styles.textAccent} tabular-nums`}>

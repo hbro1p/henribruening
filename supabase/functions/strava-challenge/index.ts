@@ -239,21 +239,45 @@ Deno.serve(async (req) => {
       // Get today's activity
       const todayActivity = todayDayNumber > 0 ? findActivityForDay(activities, todayDayNumber) : null
 
-      // Calculate total stats from all completed activities
+      // Calculate total stats from all completed activities, separated by type
       let totalDistanceKm = 0
       let totalMovingTimeSec = 0
       let activityCount = 0
 
+      // Run stats (Run, VirtualRun)
+      let runDistanceKm = 0
+      let runMovingTimeSec = 0
+      let runCount = 0
+
+      // Walk stats (Walk, Hike)
+      let walkDistanceKm = 0
+      let walkMovingTimeSec = 0
+      let walkCount = 0
+
       for (let day = 1; day <= todayDayNumber; day++) {
         const activity = findActivityForDay(activities, day)
         if (activity) {
-          totalDistanceKm += activity.distance / 1000
+          const distKm = activity.distance / 1000
+          totalDistanceKm += distKm
           totalMovingTimeSec += activity.moving_time
           activityCount++
+
+          // Categorize by activity type
+          if (activity.type === 'Run' || activity.type === 'VirtualRun') {
+            runDistanceKm += distKm
+            runMovingTimeSec += activity.moving_time
+            runCount++
+          } else if (activity.type === 'Walk' || activity.type === 'Hike') {
+            walkDistanceKm += distKm
+            walkMovingTimeSec += activity.moving_time
+            walkCount++
+          }
         }
       }
 
       const avgPaceSecPerKm = activityCount > 0 ? Math.round(totalMovingTimeSec / totalDistanceKm) : 0
+      const runAvgPace = runCount > 0 ? Math.round(runMovingTimeSec / runDistanceKm) : 0
+      const walkAvgPace = walkCount > 0 ? Math.round(walkMovingTimeSec / walkDistanceKm) : 0
 
       const response = {
         startDateISO: CHALLENGE_START_DATE,
@@ -275,6 +299,18 @@ Deno.serve(async (req) => {
           totalMovingTimeSec,
           avgPaceSecPerKm,
           activityCount,
+        },
+        runStats: {
+          totalDistanceKm: Math.round(runDistanceKm * 100) / 100,
+          totalMovingTimeSec: runMovingTimeSec,
+          avgPaceSecPerKm: runAvgPace,
+          activityCount: runCount,
+        },
+        walkStats: {
+          totalDistanceKm: Math.round(walkDistanceKm * 100) / 100,
+          totalMovingTimeSec: walkMovingTimeSec,
+          avgPaceSecPerKm: walkAvgPace,
+          activityCount: walkCount,
         },
       }
 
