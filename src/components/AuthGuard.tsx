@@ -30,15 +30,10 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
     }
   }, [isAuthenticated, isLoading, location.pathname, navigate]);
 
-  // Show loading state while checking authentication
+  // Show minimal loading state - quick fade
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent animate-spin rounded-full"></div>
-          <p className="mt-4 text-blue-900 font-pixel">Loading...</p>
-        </div>
-      </div>
+      <div className="min-h-screen bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400" />
     );
   }
 
