@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGlobalAuth } from '@/hooks/useGlobalAuth';
 import { useSettings } from '@/contexts/SettingsContext';
-import ProgressBar from '@/components/ProgressBar';
 import BlinkingCursor from '@/components/BlinkingCursor';
 import { supabase } from '@/integrations/supabase/client';
 import { Eye, EyeOff } from 'lucide-react';
@@ -13,7 +12,6 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import henriProfile from '@/assets/henri-profile.jpg';
 
 const Landing = () => {
-  const [loading, setLoading] = useState(true);
   const [showContent, setShowContent] = useState(false);
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -24,36 +22,28 @@ const Landing = () => {
   const { language, setLanguage, t } = useSettings();
   const navigate = useNavigate();
 
-  // Handle authenticated user redirect - only redirect if authenticated and not loading
   // Preload profile image
   useEffect(() => {
     const img = new Image();
     img.src = henriProfile;
   }, []);
 
-  // Handle authenticated user redirect - only redirect if authenticated and not loading
+  // Handle authenticated user redirect
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
       navigate('/desktop', { replace: true });
     }
   }, [isAuthenticated, authLoading, navigate]);
 
+  // Smooth content fade-in after auth check completes
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2500);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    if (!loading) {
-      const timer = setTimeout(() => {
+    if (!authLoading && !isAuthenticated) {
+      // Small delay for smooth transition
+      requestAnimationFrame(() => {
         setShowContent(true);
-      }, 500);
-      return () => clearTimeout(timer);
+      });
     }
-  }, [loading]);
+  }, [authLoading, isAuthenticated]);
 
   const sanitizeInput = (input: string): string => {
     return input.replace(/[<>'"&]/g, '');
@@ -226,18 +216,6 @@ const Landing = () => {
     }
   };
 
-  // Show loading while auth is being determined
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent animate-spin rounded-full"></div>
-          <p className="mt-4 text-blue-900 font-pixel">Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-200 via-blue-300 to-blue-400 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Retro pixel grid background */}
@@ -252,18 +230,7 @@ const Landing = () => {
         }}
       />
 
-
-      {loading ? (
-        <div className="text-center z-10">
-          <div className="mb-8">
-            <p className="text-3xl text-blue-900 font-pixel tracking-wider">
-              BOOTING UP<BlinkingCursor />
-            </p>
-          </div>
-          <ProgressBar />
-        </div>
-      ) : (
-        <div className={`transition-all duration-1000 z-10 max-w-6xl mx-auto ${showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+      <div className={`transition-all duration-500 ease-out z-10 max-w-6xl mx-auto ${showContent ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
           {/* Desktop Layout: Side by side cards */}
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 items-center justify-center">
             {/* Main Login Card */}
@@ -391,7 +358,6 @@ const Landing = () => {
             </DialogContent>
           </Dialog>
         </div>
-      )}
     </div>
   );
 };
