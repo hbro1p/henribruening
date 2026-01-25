@@ -10,6 +10,12 @@ const CHALLENGE_START_DATE = '2025-12-14'
 const TOTAL_DAYS = 365
 const MIN_DISTANCE_KM = 5
 
+// Manual overrides for specific days (when Strava data is incorrect, e.g., forgot to pause)
+// Format: dayNumber -> { movingTimeSec, paceSecPerKm }
+const MANUAL_OVERRIDES: Record<number, { movingTimeSec: number; paceSecPerKm?: number }> = {
+  41: { movingTimeSec: 2579 }, // 42:59 min - forgot to pause
+}
+
 interface StravaTokenResponse {
   access_token: string
   refresh_token: string
@@ -258,18 +264,22 @@ Deno.serve(async (req) => {
         const activity = findActivityForDay(activities, day)
         if (activity) {
           const distKm = activity.distance / 1000
+          // Check for manual override on moving time
+          const override = MANUAL_OVERRIDES[day]
+          const movingTime = override?.movingTimeSec ?? activity.moving_time
+          
           totalDistanceKm += distKm
-          totalMovingTimeSec += activity.moving_time
+          totalMovingTimeSec += movingTime
           activityCount++
 
           // Categorize by activity type
           if (activity.type === 'Run' || activity.type === 'VirtualRun') {
             runDistanceKm += distKm
-            runMovingTimeSec += activity.moving_time
+            runMovingTimeSec += movingTime
             runCount++
           } else if (activity.type === 'Walk' || activity.type === 'Hike') {
             walkDistanceKm += distKm
-            walkMovingTimeSec += activity.moving_time
+            walkMovingTimeSec += movingTime
             walkCount++
           }
         }
@@ -357,6 +367,13 @@ Deno.serve(async (req) => {
         .eq('day_number', dayNumber)
         .maybeSingle()
 
+      // Check for manual override
+      const override = MANUAL_OVERRIDES[dayNumber]
+      const movingTimeSec = override?.movingTimeSec ?? activity?.moving_time ?? 0
+      const paceSecPerKm = activity 
+        ? (override?.paceSecPerKm ?? Math.round(movingTimeSec / (activity.distance / 1000)))
+        : 0
+
       const response = {
         dayNumber,
         dateISO: targetDate.toISOString().split('T')[0],
@@ -364,8 +381,8 @@ Deno.serve(async (req) => {
         strava: activity
           ? {
               distanceKm: Math.round(activity.distance / 10) / 100,
-              movingTimeSec: activity.moving_time,
-              paceSecPerKm: Math.round(activity.moving_time / (activity.distance / 1000)),
+              movingTimeSec: movingTimeSec,
+              paceSecPerKm: paceSecPerKm,
               elevationM: Math.round(activity.total_elevation_gain),
               activityName: activity.name,
               polyline: activity.map?.summary_polyline || null,
