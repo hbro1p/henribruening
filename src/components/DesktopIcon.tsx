@@ -122,18 +122,26 @@ const getIconStyles = (label: string, theme: string) => {
 const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, imageSrc, fullImage, label, to, onClick }) => {
   const { theme } = useSettings();
   const styles = getIconStyles(label, theme);
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  // Preload image immediately
-  useEffect(() => {
+  
+  // Initialize with cached state to prevent flash - check synchronously if already loaded
+  const [imageLoaded, setImageLoaded] = useState(() => {
     if (imageSrc) {
+      const img = new Image();
+      img.src = imageSrc;
+      return img.complete && img.naturalWidth > 0;
+    }
+    return false;
+  });
+
+  // Fallback for images that aren't cached yet
+  useEffect(() => {
+    if (imageSrc && !imageLoaded) {
       const img = new Image();
       img.onload = () => setImageLoaded(true);
       img.src = imageSrc;
-      // If already cached, it will load instantly
-      if (img.complete) setImageLoaded(true);
+      if (img.complete && img.naturalWidth > 0) setImageLoaded(true);
     }
-  }, [imageSrc]);
+  }, [imageSrc, imageLoaded]);
   
   const content = (
     <>
