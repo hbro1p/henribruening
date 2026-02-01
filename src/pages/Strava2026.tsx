@@ -58,6 +58,7 @@ interface DayDetails {
     paceSecPerKm: number;
     elevationM: number;
     activityName: string;
+    description?: string | null;
     polyline?: string;
     calories?: number;
     avgHeartRate?: number;
@@ -660,6 +661,15 @@ const Strava2026 = () => {
               <div className={`text-2xl font-pixel font-bold ${styles.text}`}>{dayDetails.strava.elevationM}</div>
               <div className={`text-xs font-pixel ${styles.textMuted}`}>m</div>
             </div>
+          </div>
+        )}
+
+        {/* Activity Description */}
+        {dayDetails.strava?.description && (
+          <div className={`p-4 rounded-xl ${styles.cardBg}`}>
+            <p className={`font-pixel text-sm sm:text-base ${styles.textMuted} whitespace-pre-line`}>
+              {dayDetails.strava.description}
+            </p>
           </div>
         )}
 
