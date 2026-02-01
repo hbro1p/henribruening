@@ -24,6 +24,7 @@ interface StravaTokenResponse {
 interface StravaActivity {
   id: number
   name: string
+  description?: string
   distance: number // in meters
   moving_time: number // in seconds
   elapsed_time: number
@@ -383,6 +384,7 @@ Deno.serve(async (req) => {
               paceSecPerKm: paceSecPerKm,
               elevationM: Math.round(activity.total_elevation_gain),
               activityName: activity.name,
+              description: activity.description || null,
               polyline: activity.map?.summary_polyline || null,
             }
           : null,
