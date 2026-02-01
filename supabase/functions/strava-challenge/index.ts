@@ -8,7 +8,6 @@ const corsHeaders = {
 // Challenge configuration
 const CHALLENGE_START_DATE = '2025-12-14'
 const TOTAL_DAYS = 365
-const MIN_DISTANCE_KM = 5
 
 // Manual overrides for specific days (when Strava data is incorrect, e.g., forgot to pause)
 // Format: dayNumber -> { movingTimeSec, paceSecPerKm }
@@ -151,11 +150,10 @@ function getTodayDayNumber(): number {
   return dayNum
 }
 
-// Check if an activity qualifies (>= 5km run or walk)
+// Check if an activity qualifies (any run or walk counts)
 function isQualifyingActivity(activity: StravaActivity): boolean {
-  const distanceKm = activity.distance / 1000
   const validTypes = ['Run', 'Walk', 'Hike', 'VirtualRun']
-  return distanceKm >= MIN_DISTANCE_KM && validTypes.includes(activity.type)
+  return validTypes.includes(activity.type)
 }
 
 // Find the best qualifying activity for a specific day
