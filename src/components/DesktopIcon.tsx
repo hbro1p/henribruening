@@ -150,7 +150,7 @@ const DesktopIcon: React.FC<DesktopIconProps> = ({ icon: Icon, imageSrc, fullIma
           <img 
             src={imageSrc} 
             alt={label} 
-            className={`w-16 h-16 object-contain transition-opacity duration-150 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+            className="w-16 h-16 object-contain"
             loading="eager"
           />
         ) : (
