@@ -1,6 +1,5 @@
-
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createHash } from "https://deno.land/std@0.168.0/hash/mod.ts"
+import { crypto } from "https://deno.land/std@0.208.0/crypto/mod.ts"
+import { encodeHex } from "https://deno.land/std@0.208.0/encoding/hex.ts"
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -29,16 +28,17 @@ const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const PROGRESSIVE_DELAY_BASE = 2000; // Start with 2 second delay
 const MAX_BLOCK_TIME = 60 * 60 * 1000; // 1 hour max block
 
-function getRateLimitKey(req: Request): string {
+async function getRateLimitKey(req: Request): Promise<string> {
   const forwarded = req.headers.get('x-forwarded-for');
   const realIp = req.headers.get('x-real-ip');
   const cfConnectingIp = req.headers.get('cf-connecting-ip');
   const ip = cfConnectingIp || realIp || (forwarded ? forwarded.split(',')[0] : 'unknown');
   
   // Create a hash of the IP to prevent IP exposure in logs
-  const hasher = createHash("sha256");
-  hasher.update(ip + "salt_string_for_privacy");
-  return `verify_${hasher.toString()}`;
+  const encoder = new TextEncoder();
+  const data = encoder.encode(ip + "salt_string_for_privacy");
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  return `verify_${encodeHex(new Uint8Array(hashBuffer))}`;
 }
 
 async function checkRateLimit(key: string): Promise<boolean> {
@@ -126,7 +126,7 @@ function validateSection(section: string): boolean {
   return allowedSections.includes(section);
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Add anti-debugging headers
   const response_headers = { 
     ...corsHeaders, 
@@ -139,7 +139,7 @@ serve(async (req) => {
     return new Response('ok', { headers: response_headers })
   }
 
-  const rateLimitKey = getRateLimitKey(req);
+  const rateLimitKey = await getRateLimitKey(req);
   
   try {
     // Enhanced rate limiting check with IP blocking
