@@ -50,7 +50,7 @@ const MyProjects = () => {
       },
       links: [
         { url: 'https://www.instagram.com/coesfeld.flohmarkt/', label: 'Instagram' },
-        { url: 'https://www.youtube.com/watch?v=OZNhzwlcP0M', label: 'YouTube' }
+        { url: 'https://coesfeldflohmarkt.de/', label: 'Website' }
       ]
     },
     {
@@ -66,7 +66,7 @@ const MyProjects = () => {
         es: 'Apoyo al agente inmobiliario Kelwin Lamparter (FALC Immobilien Coesfeld) en la construcción de su presencia en redes sociales. Desarrollo ideas de contenido, hooks, guiones y Reels sobre inmobiliaria, ventas y el día a día como agente. En unos dos meses la cuenta creció aproximadamente 1.400 seguidores. El foco no era solo alcance, sino construir una marca local clara, generar confianza y producir contenido adaptado al público objetivo.'
       },
       links: [
-        { url: 'https://www.instagram.com/kelwin.lamparter/', label: 'Instagram' }
+        { url: 'https://www.instagram.com/kelwinlamparter/', label: 'Instagram' }
       ]
     },
     {
@@ -94,9 +94,9 @@ const MyProjects = () => {
         es: 'Internly'
       },
       description: {
-        en: 'Currently developing a platform to connect students with internships',
-        de: 'Entwickle derzeit eine Plattform, um Studenten mit Praktikumsplätzen zu verbinden',
-        es: 'Actualmente desarrollando una plataforma para conectar estudiantes con prácticas profesionales'
+        en: 'No longer active. I built Internly as a platform to connect students with internships and learned a huge amount along the way — about product, growth, marketing and what it really takes to launch something. In the end I decided to stop and focus on other projects, but the experience shaped how I approach everything I build today.',
+        de: 'Nicht mehr aktiv. Ich habe Internly als Plattform aufgebaut, um Studenten mit Praktikumsplätzen zu verbinden, und dabei extrem viel gelernt – über Produkt, Wachstum, Marketing und was es wirklich braucht, etwas zu launchen. Am Ende habe ich entschieden aufzuhören und mich auf andere Projekte zu konzentrieren, aber die Erfahrung prägt bis heute, wie ich an neue Ideen herangehe.',
+        es: 'Ya no está activo. Construí Internly como una plataforma para conectar estudiantes con prácticas y aprendí muchísimo en el camino: sobre producto, crecimiento, marketing y lo que realmente cuesta lanzar algo. Al final decidí parar y centrarme en otros proyectos, pero la experiencia marcó cómo enfoco hoy todo lo que construyo.'
       },
       links: [
         {
