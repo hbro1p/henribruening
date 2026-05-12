@@ -182,8 +182,8 @@ function buildDoneMap(activities: StravaActivity[], todayDayNumber: number): boo
       // Future day - not done yet
       doneMap.push(false)
     } else {
-      const activity = findActivityForDay(activities, day)
-      doneMap.push(activity !== null)
+      // All past days count as done — Strava-tracked or Fitbit fallback
+      doneMap.push(true)
     }
   }
 
@@ -295,7 +295,7 @@ Deno.serve(async (req) => {
         daysRemaining: TOTAL_DAYS - daysDone,
         pct,
         todayDayNumber,
-        todayDone: todayActivity !== null,
+        todayDone: todayDayNumber > 0,
         todayStats: todayActivity
           ? {
               distanceKm: Math.round(todayActivity.distance / 10) / 100,
@@ -373,10 +373,12 @@ Deno.serve(async (req) => {
         ? (override?.paceSecPerKm ?? Math.round(movingTimeSec / (activity.distance / 1000)))
         : 0
 
+      const isPastOrToday = dayNumber <= todayDayNumber
       const response = {
         dayNumber,
         dateISO: targetDate.toISOString().split('T')[0],
-        done: activity !== null,
+        done: isPastOrToday,
+        fitbit: isPastOrToday && !activity,
         strava: activity
           ? {
               distanceKm: Math.round(activity.distance / 10) / 100,
