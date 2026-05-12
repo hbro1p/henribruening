@@ -46,7 +46,7 @@ const Desktop = () => {
           {/* Challenge App Icon */}
           <DesktopIcon 
             icon={Clock} 
-            label={t('Challenge')}
+            label="Quiz"
             to="/challenges"
           />
 
