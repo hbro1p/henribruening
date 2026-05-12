@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DesktopIcon from '@/components/DesktopIcon';
 import TvApp from '@/components/TvApp';
 import MiniMusicPlayer from '@/components/MiniMusicPlayer';
-import { Folder, User, Mail, Video, Code, Settings, Radio, Tv, Clock, ShoppingBag } from 'lucide-react';
+import { Folder, User, Mail, Video, Code, Settings, Tv, Clock, ShoppingBag } from 'lucide-react';
 import stravaLogo from '@/assets/strava-logo.png';
 import { useSettings } from '@/contexts/SettingsContext';
 import { useThemeMusic } from '@/hooks/useThemeMusic';
@@ -33,13 +33,6 @@ const Desktop = () => {
           <DesktopIcon icon={Folder} label={t('My Pictures')} to="/pictures" />
           <DesktopIcon icon={Video} label={t('My Videos')} to="/videos" />
           <DesktopIcon icon={Code} label={t('My Projects')} to="/projects" />
-          
-          {/* Radio App Icon */}
-          <DesktopIcon 
-            icon={Radio} 
-            label={t('Radio')}
-            to="/radio"
-          />
 
           {/* TV App Icon */}
           <DesktopIcon 

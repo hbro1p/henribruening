@@ -15,7 +15,6 @@ import MyProjects from "./pages/MyProjects";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Settings from "./pages/Settings";
-import Radio from "./pages/Radio";
 import Challenges from "./pages/Challenges";
 import Shop from "./pages/Shop";
 import Strava2026 from "./pages/Strava2026";
@@ -41,7 +40,6 @@ const App = () => (
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/settings" element={<Settings />} />
-                <Route path="/radio" element={<Radio />} />
                 <Route path="/challenges" element={<Challenges />} />
                 <Route path="/shop" element={<Shop />} />
                 <Route path="/strava2026" element={<Strava2026 />} />
