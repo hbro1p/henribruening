@@ -431,7 +431,9 @@ const Challenges = () => {
   }, [order, step, score, picked, phase]);
 
   const startFresh = () => {
-    const indices = QUESTIONS.map((_, i) => i).sort(() => Math.random() - 0.5);
+    const indices = QUESTIONS.map((_, i) => i)
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 5);
     setOrder(indices);
     setStep(0);
     setPicked(null);
