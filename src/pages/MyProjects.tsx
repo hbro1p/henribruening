@@ -37,6 +37,56 @@ const MyProjects = () => {
 
   const projects: Project[] = [
     {
+      id: 'flohmarkt',
+      title: {
+        en: 'Coesfeld Flea Market',
+        de: 'Coesfelder Flohmarkt',
+        es: 'Mercadillo de Coesfeld'
+      },
+      description: {
+        en: 'Together with Arne, I organized a free neighborhood flea market in Coesfeld. The idea: bring people from the area together, make sustainability local and easy, and give used items a second life. I handled the full organization — seller registration, communication with participants, cooperation with the city of Coesfeld, social media posts, flyers and public promotion. The project shows that I do not just plan ideas, but actually realize them and make them visible.',
+        de: 'Gemeinsam mit Arne habe ich einen kostenlosen Nachbarschaftsflohmarkt in Coesfeld organisiert. Die Idee: Menschen aus der Umgebung zusammenbringen, Nachhaltigkeit lokal und einfach machen und gebrauchten Dingen ein zweites Leben geben. Dazu gehörten die komplette Organisation, die Anmeldung für Verkäufer, die Kommunikation mit Teilnehmern, die Zusammenarbeit mit der Stadt Coesfeld, Social-Media-Beiträge, Flyer und die öffentliche Bewerbung. Das Projekt zeigt, dass ich eigene Ideen nicht nur plane, sondern wirklich umsetze und sichtbar mache.',
+        es: 'Junto con Arne organicé un mercadillo de barrio gratuito en Coesfeld. La idea: unir a la gente de la zona, hacer la sostenibilidad local y sencilla y darles una segunda vida a los objetos usados. Me encargué de toda la organización: inscripción de vendedores, comunicación con los participantes, cooperación con la ciudad de Coesfeld, publicaciones en redes sociales, flyers y promoción pública. El proyecto demuestra que no solo planeo ideas, sino que realmente las llevo a cabo y las hago visibles.'
+      },
+      links: [
+        { url: 'https://www.instagram.com/coesfeld.flohmarkt/', label: 'Instagram' },
+        { url: 'https://www.youtube.com/watch?v=OZNhzwlcP0M', label: 'YouTube' }
+      ]
+    },
+    {
+      id: 'falc',
+      title: {
+        en: 'FALC Immobilien Coesfeld – Social Media for Kelwin Lamparter',
+        de: 'FALC Immobilien Coesfeld – Social Media für Kelwin Lamparter',
+        es: 'FALC Immobilien Coesfeld – Redes sociales para Kelwin Lamparter'
+      },
+      description: {
+        en: 'I support real estate agent Kelwin Lamparter (FALC Immobilien Coesfeld) in building his social media presence. I develop content ideas, hooks, scripts and Reels around real estate, sales and the everyday life of an agent. Within roughly two months, the account grew by about 1,400 followers. The focus was not only reach, but also building a clear local brand, creating trust and producing content that fits the target group.',
+        de: 'Ich unterstütze den Makler Kelwin Lamparter (FALC Immobilien Coesfeld) beim Aufbau seines Social-Media-Auftritts. Ich entwickle Content-Ideen, Hooks, Skripte und Reels rund um Immobilien, Verkauf und den Alltag als Makler. Innerhalb von ca. zwei Monaten konnte der Account um etwa 1.400 Follower wachsen. Dabei ging es nicht nur um Reichweite, sondern auch darum, eine klare lokale Marke aufzubauen, Vertrauen zu schaffen und Inhalte zu produzieren, die zur Zielgruppe passen.',
+        es: 'Apoyo al agente inmobiliario Kelwin Lamparter (FALC Immobilien Coesfeld) en la construcción de su presencia en redes sociales. Desarrollo ideas de contenido, hooks, guiones y Reels sobre inmobiliaria, ventas y el día a día como agente. En unos dos meses la cuenta creció aproximadamente 1.400 seguidores. El foco no era solo alcance, sino construir una marca local clara, generar confianza y producir contenido adaptado al público objetivo.'
+      },
+      links: [
+        { url: 'https://www.instagram.com/kelwin.lamparter/', label: 'Instagram' }
+      ]
+    },
+    {
+      id: 'facharbeit',
+      title: {
+        en: 'English Research Paper – The Fading American Dream?',
+        de: 'Facharbeit Englisch – The Fading American Dream?',
+        es: 'Trabajo de investigación de inglés – The Fading American Dream?'
+      },
+      description: {
+        en: 'My English research paper "The Fading American Dream? Gentrification, Housing Affordability, and the Immigrant Experience in Brooklyn, New York" asks whether the American Dream is still reachable in Brooklyn today. After cold emails to brokers and activists barely worked, I found locals through a Reddit post that reached over 17,000 views and led to five video interviews with people from Brooklyn. I combined those personal perspectives with data and sources. Conclusion: the classic American Dream — especially owning a home — is barely reachable for many in Brooklyn, but the dream itself has shifted toward belonging, freedom and personal fulfillment.',
+        de: 'In meiner Facharbeit „The Fading American Dream? Gentrification, Housing Affordability, and the Immigrant Experience in Brooklyn, New York" habe ich mich mit der Frage beschäftigt, ob der American Dream in Brooklyn heute noch erreichbar ist. Nachdem normale E-Mails an Makler und Aktivisten kaum funktionierten, habe ich über einen Reddit-Post mit über 17.000 Aufrufen Locals aus Brooklyn gefunden und fünf Video-Interviews geführt. So konnte ich persönliche Perspektiven mit Daten und Quellen verbinden. Ergebnis: Der klassische American Dream – vor allem das eigene Haus – ist für viele in Brooklyn kaum noch erreichbar, hat sich aber gewandelt und steht heute eher für Zugehörigkeit, Freiheit und persönliche Erfüllung.',
+        es: 'En mi trabajo de investigación „The Fading American Dream? Gentrification, Housing Affordability, and the Immigrant Experience in Brooklyn, New York" me pregunté si el sueño americano sigue siendo alcanzable hoy en Brooklyn. Como los correos a agentes y activistas apenas funcionaron, encontré a locales mediante una publicación en Reddit con más de 17.000 visualizaciones y realicé cinco entrevistas en video. Así pude unir perspectivas personales con datos y fuentes. Conclusión: el sueño americano clásico — sobre todo tener casa propia — apenas es alcanzable para muchos en Brooklyn, pero ha cambiado y hoy significa más bien pertenencia, libertad y realización personal.'
+      },
+      links: [
+        { url: 'https://drive.google.com/file/d/1i-K5SjLzHxTqLpM1ZwG8FGUhMXqZRKB1/view?usp=sharing', label: 'Read paper (PDF)' },
+        { url: 'https://www.youtube.com/watch?v=OZNhzwlcP0M', label: 'Brooklyn interviews (YouTube)' }
+      ]
+    },
+    {
       id: '1',
       title: {
         en: 'Internly',

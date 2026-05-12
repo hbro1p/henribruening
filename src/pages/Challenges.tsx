@@ -217,7 +217,7 @@ const Challenges = () => {
   };
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isActive && timeLeft > 0) {
       interval = setInterval(() => {
         setTimeLeft(time => time - 1);
