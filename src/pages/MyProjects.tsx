@@ -44,9 +44,9 @@ const MyProjects = () => {
         es: 'Mercadillo de Coesfeld'
       },
       description: {
-        en: 'Together with Arne, I organized a free neighborhood flea market in Coesfeld. The idea: bring people from the area together, make sustainability local and easy, and give used items a second life. I handled the full organization — seller registration, communication with participants, cooperation with the city of Coesfeld, social media posts, flyers and public promotion. The project shows that I do not just plan ideas, but actually realize them and make them visible.',
-        de: 'Gemeinsam mit Arne habe ich einen kostenlosen Nachbarschaftsflohmarkt in Coesfeld organisiert. Die Idee: Menschen aus der Umgebung zusammenbringen, Nachhaltigkeit lokal und einfach machen und gebrauchten Dingen ein zweites Leben geben. Dazu gehörten die komplette Organisation, die Anmeldung für Verkäufer, die Kommunikation mit Teilnehmern, die Zusammenarbeit mit der Stadt Coesfeld, Social-Media-Beiträge, Flyer und die öffentliche Bewerbung. Das Projekt zeigt, dass ich eigene Ideen nicht nur plane, sondern wirklich umsetze und sichtbar mache.',
-        es: 'Junto con Arne organicé un mercadillo de barrio gratuito en Coesfeld. La idea: unir a la gente de la zona, hacer la sostenibilidad local y sencilla y darles una segunda vida a los objetos usados. Me encargué de toda la organización: inscripción de vendedores, comunicación con los participantes, cooperación con la ciudad de Coesfeld, publicaciones en redes sociales, flyers y promoción pública. El proyecto demuestra que no solo planeo ideas, sino que realmente las llevo a cabo y las hago visibles.'
+        en: 'Creation and management of short, engaging videos for Kebab Bros Coesfeld. The content was produced for TikTok and Instagram and reached tens of thousands of views.',
+        de: 'Erstellung und Verwaltung kurzer, ansprechender Videos für Kebab Bros Coesfeld. Die Inhalte wurden für TikTok und Instagram produziert und erreichten dort mehrere zehntausend Aufrufe.',
+        es: 'Creación y gestión de videos cortos y atractivos para Kebab Bros Coesfeld. Los contenidos fueron producidos para TikTok e Instagram y alcanzaron decenas de miles de visualizaciones.'
       },
       links: [
         { url: 'https://www.instagram.com/coesfeld.flohmarkt/', label: 'Instagram' },
@@ -56,9 +56,9 @@ const MyProjects = () => {
     {
       id: 'falc',
       title: {
-        en: 'FALC Immobilien Coesfeld – Social Media for Kelwin Lamparter',
-        de: 'FALC Immobilien Coesfeld – Social Media für Kelwin Lamparter',
-        es: 'FALC Immobilien Coesfeld – Redes sociales para Kelwin Lamparter'
+        en: 'Social Media for Kelwin Lamparter',
+        de: 'Social Media für Kelwin Lamparter',
+        es: 'Redes sociales para Kelwin Lamparter'
       },
       description: {
         en: 'I support real estate agent Kelwin Lamparter (FALC Immobilien Coesfeld) in building his social media presence. I develop content ideas, hooks, scripts and Reels around real estate, sales and the everyday life of an agent. Within roughly two months, the account grew by about 1,400 followers. The focus was not only reach, but also building a clear local brand, creating trust and producing content that fits the target group.',
