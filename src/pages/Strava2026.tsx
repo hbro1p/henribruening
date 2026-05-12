@@ -52,6 +52,7 @@ interface DayDetails {
   dayNumber: number;
   dateISO: string;
   done: boolean;
+  fitbit?: boolean;
   strava: {
     distanceKm: number;
     movingTimeSec: number;
@@ -767,8 +768,14 @@ const Strava2026 = () => {
         {/* No activity message */}
         {!dayDetails.strava && (
           <div className={`p-8 rounded-xl ${styles.cardBg} text-center`}>
-            <div className="text-4xl mb-2">📊</div>
-            <p className={`font-pixel ${styles.textMuted}`}>{getText('noActivity')}</p>
+            <div className="text-4xl mb-2">⌚</div>
+            <p className={`font-pixel ${styles.text} leading-relaxed`}>
+              {dayDetails.fitbit
+                ? (language === 'deutsch'
+                    ? 'Du denkst wohl ich hab\u2019s nicht geschafft, was? Falsch gedacht – ich bin auf Fitbit umgestiegen. Tracking läuft, der Tag zählt.'
+                    : 'You think I didn\u2019t make it, huh? Wrong — I switched to Fitbit. Tracking is on, this day counts.')
+                : getText('noActivity')}
+            </p>
           </div>
         )}
       </div>
