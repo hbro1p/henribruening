@@ -44,9 +44,9 @@ const MyProjects = () => {
         es: 'Mercadillo de Coesfeld'
       },
       description: {
-        en: 'Creation and management of short, engaging videos for Kebab Bros Coesfeld. The content was produced for TikTok and Instagram and reached tens of thousands of views.',
-        de: 'Erstellung und Verwaltung kurzer, ansprechender Videos für Kebab Bros Coesfeld. Die Inhalte wurden für TikTok und Instagram produziert und erreichten dort mehrere zehntausend Aufrufe.',
-        es: 'Creación y gestión de videos cortos y atractivos para Kebab Bros Coesfeld. Los contenidos fueron producidos para TikTok e Instagram y alcanzaron decenas de miles de visualizaciones.'
+        en: 'Together with Arne Hericks, I organize free neighborhood flea markets in Coesfeld.\n\nThe idea: bring people from the area together, make sustainability local and easy, and give used things a second life. This included the entire organization, programming the website, registration for sellers and visitors, communication with participants, cooperation with the city of Coesfeld, social media posts, flyers, and public visibility. The project shows that I don’t just plan my own ideas, but actually implement them and make them visible.',
+        de: '​Gemeinsam mit Arne Hericks organisiere ich kostenlose Nachbarschaftsflohmärkte in Coesfeld.\n\nDie Idee: Menschen aus der Umgebung zusammenbringen, Nachhaltigkeit lokal und einfach machen und gebrauchten Dingen ein zweites Leben geben. Dazu gehörten die komplette Organisation, die Programmierung der Website, die Anmeldung für Verkäufer und Besucher, die Kommunikation mit Teilnehmern, die Zusammenarbeit mit der Stadt Coesfeld, Social-Media-Beiträge, Flyer und die öffentliche Sichtbarkeit. Das Projekt zeigt, dass ich eigene Ideen nicht nur plane, sondern wirklich umsetze und sichtbar mache.',
+        es: 'Junto con Arne Hericks, organizo mercadillos de barrio gratuitos en Coesfeld.\n\nLa idea: reunir a personas de la zona, hacer que la sostenibilidad sea local y fácil, y dar una segunda vida a las cosas usadas. Esto incluyó toda la organización, la programación del sitio web, el registro de vendedores y visitantes, la comunicación con los participantes, la cooperación con la ciudad de Coesfeld, publicaciones en redes sociales, folletos y visibilidad pública. El proyecto demuestra que no solo planeo mis propias ideas, sino que las pongo en práctica y las hago visibles.'
       },
       links: [
         { url: 'https://www.instagram.com/coesfeld.flohmarkt/', label: 'Instagram' },
